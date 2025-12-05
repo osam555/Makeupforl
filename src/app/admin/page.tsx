@@ -29,7 +29,7 @@ export default function AdminPage() {
   const [filter, setFilter] = useState<'all' | 'pending' | 'confirmed' | 'completed' | 'cancelled'>('all')
 
   // Simple password authentication (환경변수로 관리 권장)
-  const ADMIN_PASSWORD = 'makeupforl2024' // 실제 운영 시 환경변수로 변경 필요!
+  const ADMIN_PASSWORD = '8888' // 실제 운영 시 환경변수로 변경 필요!
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
