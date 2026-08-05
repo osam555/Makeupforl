@@ -2,14 +2,10 @@ import { NextResponse } from 'next/server'
 import { MsEdgeTTS, OUTPUT_FORMAT } from 'msedge-tts'
 
 import { SILENCE_MP3_BASE64 } from '@/lib/tts/silence'
+import { getAdminApp, verifyAdmin } from '@/lib/firebase/admin'
 
 export const runtime = 'nodejs'
 export const maxDuration = 60
-
-const ADMIN_EMAILS = (process.env.NEXT_PUBLIC_ADMIN_EMAILS ?? 'makeupforl77@gmail.com')
-  .split(',')
-  .map((s) => s.trim().toLowerCase())
-  .filter(Boolean)
 
 /** scripts/wed100/3_gen_tts.py 와 동일한 화자 설정 (음성 일관성 유지) */
 const VOICE = 'ko-KR-SunHiNeural'
@@ -55,13 +51,13 @@ async function mapLimit<T, R>(items: T[], limit: number, fn: (x: T, i: number) =
  * 어드민 [음성 재생성] — 질문 + 자막 큐를 다시 합성해 MP3와 타임코드를 돌려준다.
  * 업로드(Storage)와 저장(Firestore)은 로그인한 클라이언트가 수행한다.
  *
- * POST { email, question, cues: string[] }
+ * POST { password?|idToken?, question, cues: string[] }
  *  → { audioBase64, duration, questionAudio:{start,end}, cues:[{start,end}] }
  */
 export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}))
-  const email = typeof body?.email === 'string' ? body.email.toLowerCase() : ''
-  if (!ADMIN_EMAILS.includes(email)) {
+  const editor = await verifyAdmin({ password: body?.password, idToken: body?.idToken })
+  if (!editor) {
     return NextResponse.json({ ok: false, error: '관리자만 사용할 수 있습니다.' }, { status: 401 })
   }
 
@@ -101,9 +97,33 @@ export async function POST(req: Request) {
     }
 
     const audio = Buffer.concat(parts)
+
+    // 서비스 계정이 있으면 서버가 Storage 에 직접 올린다 (비밀번호 로그인도 가능해짐)
+    let audioUrl: string | null = null
+    const slug = typeof body?.slug === 'string' ? body.slug : ''
+    const app = await getAdminApp()
+    if (app && slug) {
+      try {
+        const { getStorage } = await import('firebase-admin/storage')
+        const bucketName =
+          process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET ||
+          `${process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID}.appspot.com`
+        const file = getStorage(app).bucket(bucketName).file(`wed100/audio/${slug}.mp3`)
+        await file.save(audio, {
+          contentType: 'audio/mpeg',
+          metadata: { cacheControl: 'public,max-age=31536000' },
+        })
+        await file.makePublic()
+        audioUrl = `https://storage.googleapis.com/${bucketName}/wed100/audio/${slug}.mp3`
+      } catch {
+        audioUrl = null // 업로드 실패 시 클라이언트가 base64 로 처리
+      }
+    }
+
     return NextResponse.json({
       ok: true,
-      audioBase64: audio.toString('base64'),
+      audioUrl,
+      audioBase64: audioUrl ? null : audio.toString('base64'),
       bytes: audio.length,
       duration: round(audio.length / BYTES_PER_SEC),
       questionAudio,

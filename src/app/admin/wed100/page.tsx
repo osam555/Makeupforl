@@ -42,7 +42,15 @@ function splitSentences(text: string, maxLen = 90): string[] {
 
 type Status = { kind: 'ok' | 'err'; msg: string } | null
 
-function AdminWed100Editor({ email }: { email: string | null }) {
+function AdminWed100Editor({
+  email,
+  password,
+  canWrite,
+}: {
+  email: string | null
+  password: string | null
+  canWrite: boolean
+}) {
   const authed = true
 
   const [items, setItems] = useState<Wed100Item[]>([])
@@ -128,13 +136,24 @@ function AdminWed100Editor({ email }: { email: string | null }) {
     })
   }
 
+  /** 저장 API 인증 정보 — 구글 로그인이면 ID 토큰, 아니면 비밀번호 */
+  const authPayload = useCallback(async () => {
+    if (email) {
+      const { getFirebaseApp } = await import('@/lib/firebase/client')
+      const app = getFirebaseApp()
+      if (app) {
+        const { getAuth } = await import('firebase/auth')
+        const token = await getAuth(app).currentUser?.getIdToken()
+        if (token) return { idToken: token }
+      }
+    }
+    return { password }
+  }, [email, password])
+
   /** 서버에서 음성을 다시 합성 → Storage 업로드 → 드래프트에 타임코드 반영 */
   const regenAudio = async () => {
     if (!draft) return
-    if (!email) {
-      setStatus({ kind: 'err', msg: '관리자 로그인이 필요합니다.' })
-      return
-    }
+
     if (!confirm(`"${draft.question}"\n\n현재 자막 ${draft.cues.length}개로 음성을 다시 만듭니다. 1~2분 걸릴 수 있습니다. 계속할까요?`)) return
 
     setTts(true)
@@ -143,13 +162,22 @@ function AdminWed100Editor({ email }: { email: string | null }) {
       const res = await fetch('/api/wed100/tts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, question: draft.question, cues: draft.cues.map((c) => c.ko) }),
+        body: JSON.stringify({
+          ...(await authPayload()),
+          slug: draft.slug,
+          question: draft.question,
+          cues: draft.cues.map((c) => c.ko),
+        }),
       })
       const j = await res.json()
       if (!j.ok) throw new Error(j.error)
 
-      const bin = Uint8Array.from(atob(j.audioBase64), (ch) => ch.charCodeAt(0))
-      const url = await uploadAudio(draft.slug, new Blob([bin], { type: 'audio/mpeg' }))
+      let url: string = j.audioUrl ?? ''
+      if (!url) {
+        // 서버 업로드가 불가한 경우: 로그인한 클라이언트가 직접 업로드
+        const bin = Uint8Array.from(atob(j.audioBase64), (ch) => ch.charCodeAt(0))
+        url = await uploadAudio(draft.slug, new Blob([bin], { type: 'audio/mpeg' }))
+      }
 
       patch((d) => {
         d.audio = url
@@ -173,46 +201,21 @@ function AdminWed100Editor({ email }: { email: string | null }) {
     setSaving(true)
     setStatus(null)
     try {
-      const db = getDb()
-      if (!db) throw new Error('Firebase 환경변수가 설정되지 않았습니다')
-      const { doc, setDoc } = await import('firebase/firestore')
-      const row = {
-        id: draft.id,
-        slug: draft.slug,
-        part: draft.part,
-        partTitle: draft.partTitle,
-        n: draft.n,
-        question: draft.question,
-        question_en: draft.question_en ?? null,
-        answer: draft.answer,
-        cues: draft.cues.map((c, i) => ({
-          i,
-          ko: c.ko,
-          en: c.en ?? null,
-          start: c.start ?? null,
-          end: c.end ?? null,
-        })),
-        keywords: draft.keywords,
-        questionAudio: draft.questionAudio ?? null,
-        audio: draft.audio ?? null,
-        duration: draft.duration ?? null,
-        heroImage: draft.heroImage ?? null,
-        thumbImage: draft.thumbImage ?? null,
-        published: draft.published ?? true,
-        updatedAt: new Date().toISOString(),
-      }
-      await setDoc(doc(db, 'wed100_questions', draft.slug), row)
+      const res = await fetch('/api/wed100/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...(await authPayload()), action: 'save', item: draft }),
+      })
+      const j = await res.json()
+      if (!j.ok) throw new Error(j.error)
       setItems((arr) => arr.map((x) => (x.slug === draft.slug ? { ...draft } : x)))
       setDirty(false)
-      setStatus({ kind: 'ok', msg: '저장되었습니다. 사이트에는 최대 1시간 내(재검증 주기) 반영됩니다.' })
-    } catch (e) {
       setStatus({
-        kind: 'err',
-        msg:
-          'DB 저장 실패: ' +
-          (e instanceof Error ? e.message : String(e)) +
-          ' — Firebase 프로젝트 세팅(FIREBASE_SETUP.md) 후 [DB에 시드 넣기]를 먼저 눌러주세요.',
+        kind: 'ok',
+        msg: `저장되었습니다 (${j.editor}). 사이트에는 최대 1시간 내 반영됩니다.`,
       })
+    } catch (e) {
+      setStatus({ kind: 'err', msg: '저장 실패: ' + (e instanceof Error ? e.message : String(e)) })
     } finally {
       setSaving(false)
     }
@@ -225,17 +228,18 @@ function AdminWed100Editor({ email }: { email: string | null }) {
     )
       return
     setStatus(null)
-    const res = await fetch('/api/wed100/seed', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, overwrite }),
-    })
-    const j = await res.json()
-    if (j.ok) {
-      setStatus({ kind: 'ok', msg: `시드 완료: ${j.upserted}건 입력, ${j.skipped ?? 0}건 유지` })
+    try {
+      const res = await fetch('/api/wed100/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...(await authPayload()), action: 'seed', overwrite }),
+      })
+      const j = await res.json()
+      if (!j.ok) throw new Error(j.error)
+      setStatus({ kind: 'ok', msg: `시드 완료: ${j.upserted}건 입력, ${j.skipped}건 유지` })
       void load()
-    } else {
-      setStatus({ kind: 'err', msg: '시드 실패: ' + j.error })
+    } catch (e) {
+      setStatus({ kind: 'err', msg: '시드 실패: ' + (e instanceof Error ? e.message : String(e)) })
     }
   }
 
@@ -499,12 +503,12 @@ function AdminWed100Editor({ email }: { email: string | null }) {
               <div className="mt-5 flex flex-wrap gap-2 border-t border-[#E7DDD4] pt-4">
                 <Button
                   onClick={save}
-                  disabled={saving || !dirty}
+                  disabled={saving || !dirty || !canWrite}
                   className="bg-[#A63D5A] hover:bg-[#8A2E48]"
                 >
                   <Save className="mr-1.5 h-4 w-4" /> {saving ? '저장 중…' : '저장'}
                 </Button>
-                <Button variant="outline" onClick={regenAudio} disabled={tts}>
+                <Button variant="outline" onClick={regenAudio} disabled={tts || !canWrite}>
                   <Volume2 className="mr-1.5 h-4 w-4" />
                   {tts ? '음성 만드는 중…' : '음성 재생성'}
                 </Button>
@@ -531,7 +535,9 @@ function AdminWed100Editor({ email }: { email: string | null }) {
 export default function AdminWed100Page() {
   return (
     <AdminGate title="100문100답 관리">
-      {({ email }) => <AdminWed100Editor email={email} />}
+      {({ email, password, canWrite }) => (
+        <AdminWed100Editor email={email} password={password} canWrite={canWrite} />
+      )}
     </AdminGate>
   )
 }
