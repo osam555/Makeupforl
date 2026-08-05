@@ -1,0 +1,175 @@
+import type { Metadata } from 'next'
+import Link from 'next/link'
+
+import Wed100Browser from '@/components/wed100/Wed100Browser'
+import { getPublishedWed100Items, wed100Meta, wed100Parts } from '@/lib/wed100'
+import { PART_THEME } from '@/types/wed100'
+
+export const metadata: Metadata = {
+  title: '혼주메이크업 100문 100답 | 메이크업포엘',
+  description:
+    '결혼식 날, 후회하면 늦습니다. 25년간 1만 명의 혼주님을 만난 대표원장 김성희가 가장 많이 받은 질문에 답합니다. 예약·사전컨설팅·메이크업·헤어·한복·예식 당일까지.',
+  keywords:
+    '혼주메이크업, 혼주화장, 혼주헤어, 어머니 메이크업, 혼주 올림머리, 한복 메이크업, 강남 혼주메이크업, 혼주 메이크업 가격',
+  openGraph: {
+    title: '혼주메이크업 100문 100답 | 메이크업포엘',
+    description: '결혼식 날, 후회하면 늦습니다. 혼주님이 가장 많이 묻는 질문에 원장이 직접 답합니다.',
+    type: 'article',
+  },
+}
+
+export default async function Wed100Page() {
+  const items = await getPublishedWed100Items()
+  const counts = new Map<number, number>()
+  items.forEach((x) => counts.set(x.part, (counts.get(x.part) ?? 0) + 1))
+  const totalSec = items.reduce(
+    (a, x) => a + (x.duration ?? x.cues.reduce((b, c) => b + c.ko.length, 0) / 5.2 + 6),
+    0,
+  )
+
+  return (
+    <div className="bg-[#FBF7F3]">
+      {/* 히어로 */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-[#FDFAF7] to-[#F7EFE8]">
+        <div
+          className="pointer-events-none absolute -right-24 -top-32 h-[520px] w-[520px] rounded-full opacity-60 blur-3xl"
+          style={{ background: 'radial-gradient(circle, #F0DAE1 0%, transparent 70%)' }}
+        />
+        <div className="relative mx-auto max-w-7xl px-6 py-20 lg:px-8">
+          <p className="text-xs font-extrabold tracking-[0.34em] text-[#A63D5A]">
+            HONJU MAKEUP · Q&amp;A {items.length}
+          </p>
+          <h1 className="mt-4 text-4xl font-black leading-tight text-[#2E2724] sm:text-5xl">
+            혼주메이크업
+            <br />
+            100문 100답
+          </h1>
+          <p className="mt-5 max-w-xl text-lg leading-relaxed text-[#6B5D57]">
+            {wed100Meta.subtitle}.
+            <br />
+            25년간 1만 명의 혼주님을 만난 원장이 가장 많이 받은 질문에 하나씩 답했습니다.
+          </p>
+          <p className="mt-5 text-sm text-[#8A7B73]">
+            {wed100Meta.author} · 예약 준비부터 예식 당일까지 {wed100Parts.length}개 파트
+          </p>
+
+          <div className="mt-8 flex flex-wrap gap-3">
+            {items[0] && (
+              <Link
+                href={`/wed100/${items[0].slug}`}
+                className="rounded-xl bg-[#A63D5A] px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-[#A63D5A]/30 transition hover:bg-[#8A2E48]"
+              >
+                ▶ 1번부터 이어듣기
+              </Link>
+            )}
+            <Link
+              href="/consultation"
+              className="rounded-xl border border-[#E7DDD4] bg-white px-6 py-3.5 text-sm font-bold text-[#2E2724] transition hover:border-[#D9C6BA]"
+            >
+              1:1 사전컨설팅 예약
+            </Link>
+            <Link
+              href="tel:02-323-3321"
+              className="rounded-xl border border-[#E7DDD4] bg-white px-6 py-3.5 text-sm font-bold text-[#2E2724] transition hover:border-[#D9C6BA]"
+            >
+              02-323-3321
+            </Link>
+          </div>
+
+          <dl className="mt-10 flex flex-wrap gap-x-10 gap-y-4">
+            {[
+              [String(items.length), '질문'],
+              [String(wed100Parts.length), '파트'],
+              [`약 ${Math.round(totalSec / 60)}분`, '오디오'],
+              ['한 / EN', '자막'],
+            ].map(([v, l]) => (
+              <div key={l}>
+                <dt className="text-2xl font-black text-[#A63D5A]">{v}</dt>
+                <dd className="text-xs text-[#6B5D57]">{l}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </section>
+
+      {/* 파트 */}
+      <section className="bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-14 lg:px-8">
+          <h2 className="text-2xl font-extrabold text-[#2E2724]">어디부터 궁금하세요?</h2>
+          <p className="mt-2 text-sm text-[#6B5D57]">준비 순서 그대로 {wed100Parts.length}개 파트로 나눴습니다.</p>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {wed100Parts.map((p) => {
+              const theme = PART_THEME[p.part]
+              return (
+                <a
+                  key={p.part}
+                  href={`#part-${p.part}`}
+                  className="rounded-2xl border border-[#E7DDD4] bg-white p-5 transition hover:-translate-y-0.5 hover:shadow-lg"
+                  style={{ borderTopColor: theme.accent, borderTopWidth: 3 }}
+                >
+                  <p className="text-[11px] font-extrabold tracking-[0.22em]" style={{ color: theme.accent }}>
+                    PART {p.part}
+                  </p>
+                  <h3 className="mt-2 text-base font-bold text-[#2E2724]">{p.title}</h3>
+                  <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-[#6B5D57]">
+                    {p.intro[0] ?? ''}
+                  </p>
+                  <p className="mt-3 text-xs font-bold" style={{ color: theme.accent }}>
+                    {counts.get(p.part) ?? 0}개 질문 →
+                  </p>
+                </a>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* 검색 + 목록 */}
+      <section className="mx-auto max-w-7xl px-6 py-14 lg:px-8">
+        <h2 className="text-2xl font-extrabold text-[#2E2724]">질문 찾아보기</h2>
+        <Wed100Browser
+          items={items.map((x) => ({
+            slug: x.slug,
+            part: x.part,
+            n: x.n,
+            question: x.question,
+            question_en: x.question_en ?? '',
+            keywords: x.keywords,
+            thumbImage: x.thumbImage!,
+            duration: x.duration ?? Math.round(x.cues.reduce((a, c) => a + c.ko.length, 0) / 5.2 + 6),
+            hasAudio: !!x.audio,
+          }))}
+          parts={wed100Parts.map((p) => ({ part: p.part, title: p.title }))}
+        />
+      </section>
+
+      {/* 하단 CTA */}
+      <section className="bg-[#2E2724]">
+        <div className="mx-auto max-w-7xl px-6 py-14 text-center lg:px-8">
+          <h2 className="text-2xl font-extrabold text-white">
+            읽고 들으셨다면, 이제 얼굴을 직접 봐야 합니다
+          </h2>
+          <p className="mt-3 text-sm leading-relaxed text-[#C9BDB6]">
+            혼주 메이크업은 얼굴 골격·피부 상태·한복 색에 따라 답이 달라집니다.
+            <br />
+            1:1 사전 컨설팅에서 원장이 직접 진단해 드립니다.
+          </p>
+          <div className="mt-7 flex flex-wrap justify-center gap-3">
+            <Link
+              href="/consultation"
+              className="rounded-xl bg-[#A63D5A] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#8A2E48]"
+            >
+              1:1 사전컨설팅 예약
+            </Link>
+            <Link
+              href="/reservation"
+              className="rounded-xl border border-[#544944] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#3A322F]"
+            >
+              예약 안내 보기
+            </Link>
+          </div>
+        </div>
+      </section>
+    </div>
+  )
+}

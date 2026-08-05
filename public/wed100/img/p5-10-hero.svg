@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img" aria-label="무광 소재와 유광 소재 중 어느 쪽을 선택할까요?">
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0" stop-color="#FBF8F0"/><stop offset="1" stop-color="#EFE1C4"/>
+ </linearGradient>
+ <radialGradient id="glow" cx="0.78" cy="0.28" r="0.6">
+  <stop offset="0" stop-color="#ffffff" stop-opacity="0.85"/>
+  <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+ </radialGradient>
+</defs>
+<rect width="1600" height="900" fill="url(#bg)"/>
+<rect width="1600" height="900" fill="url(#glow)"/>
+<path d="M1180 0 C1300 220 1240 520 1420 900 L1600 900 L1600 0 Z" fill="#9A7B33" opacity="0.07"/>
+<circle cx="1245" cy="330" r="235" fill="#ffffff" opacity="0.55"/>
+<circle cx="1245" cy="330" r="235" fill="none" stroke="#9A7B33" stroke-width="1.5" opacity="0.35"/>
+<g transform="translate(1245,330) scale(1.55)" fill="none" stroke="#9A7B33" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"><path d="M-52 -34 c16 -18 34 -26 52 -26 c18 0 36 8 52 26"/><path d="M-52 -34 l-8 42 l22 8"/><path d="M52 -34 l8 42 l-22 8"/><path d="M-38 16 h76 v34 h-76 z"/><path d="M0 -58 v46 l-22 26"/><circle cx="0" cy="-2" r="7"/><circle cx="-20" cy="-14" r="5"/><circle cx="20" cy="-14" r="5"/></g>
+<rect x="56" y="56" width="1488" height="788" fill="none" stroke="#9A7B33" stroke-width="1" opacity="0.28"/>
+<text x="120" y="168" font-family="'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif" font-size="26" letter-spacing="8" fill="#9A7B33" font-weight="700">PART 5</text>
+<text x="120" y="212" font-family="'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif" font-size="30" fill="#37301F" opacity="0.62">의상·퍼스널컬러·액세서리</text>
+<text x="120" y="330" font-family="'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif" font-size="150" font-weight="900" fill="#9A7B33" opacity="0.16">10</text>
+<text x="120" y="374" font-family="'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif" font-size="62" font-weight="700" fill="#37301F" letter-spacing="-1"><tspan x="120" dy="0">무광 소재와 유광 소재 중 어느 쪽을</tspan><tspan x="120" dy="84">선택할까요?</tspan></text>
+<text x="120" y="568" font-family="'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif" font-size="25" fill="#37301F" opacity="0.55"><tspan x="120" dy="0">Matte or glossy fabric — which should you choose?</tspan></text>
+<line x1="120" y1="750" x2="330" y2="750" stroke="#9A7B33" stroke-width="3"/>
+<text x="120" y="804" font-family="'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif" font-size="27" letter-spacing="3" fill="#37301F" opacity="0.7">혼주메이크업 100문 100답 · 메이크업포엘</text>
+</svg>

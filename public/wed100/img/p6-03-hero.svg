@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img" aria-label="아버지 양복은 입고 가도 되나요?">
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0" stop-color="#F4F6FA"/><stop offset="1" stop-color="#D9E2F0"/>
+ </linearGradient>
+ <radialGradient id="glow" cx="0.78" cy="0.28" r="0.6">
+  <stop offset="0" stop-color="#ffffff" stop-opacity="0.85"/>
+  <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+ </radialGradient>
+</defs>
+<rect width="1600" height="900" fill="url(#bg)"/>
+<rect width="1600" height="900" fill="url(#glow)"/>
+<path d="M1180 0 C1300 220 1240 520 1420 900 L1600 900 L1600 0 Z" fill="#3C5A86" opacity="0.07"/>
+<circle cx="1245" cy="330" r="235" fill="#ffffff" opacity="0.55"/>
+<circle cx="1245" cy="330" r="235" fill="none" stroke="#3C5A86" stroke-width="1.5" opacity="0.35"/>
+<g transform="translate(1245,330) scale(1.55)" fill="none" stroke="#3C5A86" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"><circle cx="-16" cy="14" r="30"/><circle cx="20" cy="14" r="30"/><path d="M-16 -30 l-10 12 h20 z"/><path d="M-56 -46 l-10 -16 M0 -54 v-18 M58 -46 l10 -16"/></g>
+<rect x="56" y="56" width="1488" height="788" fill="none" stroke="#3C5A86" stroke-width="1" opacity="0.28"/>
+<text x="120" y="168" font-family="'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif" font-size="26" letter-spacing="8" fill="#3C5A86" font-weight="700">PART 6</text>
+<text x="120" y="212" font-family="'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif" font-size="30" fill="#242E3D" opacity="0.62">결혼식 당일</text>
+<text x="120" y="330" font-family="'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif" font-size="150" font-weight="900" fill="#3C5A86" opacity="0.16">03</text>
+<text x="120" y="400" font-family="'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif" font-size="62" font-weight="700" fill="#242E3D" letter-spacing="-1"><tspan x="120" dy="0">아버지 양복은 입고 가도 되나요?</tspan></text>
+<text x="120" y="510" font-family="'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif" font-size="25" fill="#242E3D" opacity="0.55"><tspan x="120" dy="0">Can the father wear his suit from home?</tspan></text>
+<line x1="120" y1="750" x2="330" y2="750" stroke="#3C5A86" stroke-width="3"/>
+<text x="120" y="804" font-family="'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif" font-size="27" letter-spacing="3" fill="#242E3D" opacity="0.7">혼주메이크업 100문 100답 · 메이크업포엘</text>
+</svg>
