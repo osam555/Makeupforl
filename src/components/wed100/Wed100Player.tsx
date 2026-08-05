@@ -183,7 +183,7 @@ export default function Wed100Player(p: PlayerProps) {
                 onClick={() => setLang(l.key)}
                 className={`rounded-lg border px-2.5 py-1 text-[11px] backdrop-blur transition ${
                   lang === l.key
-                    ? 'border-white bg-white font-bold text-[#1E1917]'
+                    ? 'border-white bg-[var(--w-card)] font-bold text-[#1E1917]'
                     : 'border-white/20 bg-black/45 text-[#F0E6E0] hover:bg-black/60'
                 }`}
               >
@@ -219,11 +219,11 @@ export default function Wed100Player(p: PlayerProps) {
             }}
           >
             <div
-              className="h-full rounded-full bg-gradient-to-r from-[#A63D5A] to-[#C0A16B]"
+              className="h-full rounded-full bg-gradient-to-r from-[var(--w-rose)] to-[var(--w-gold)]"
               style={{ width: `${pct}%` }}
             />
             <span
-              className="absolute top-1/2 -ml-1.5 h-3 w-3 -translate-y-1/2 rounded-full bg-white shadow"
+              className="absolute top-1/2 -ml-1.5 h-3 w-3 -translate-y-1/2 rounded-full bg-[var(--w-card)] shadow"
               style={{ left: `${pct}%` }}
             />
           </div>
@@ -235,7 +235,7 @@ export default function Wed100Player(p: PlayerProps) {
             <button
               onClick={toggle}
               aria-label={playing ? '일시정지' : '재생'}
-              className="grid h-10 w-10 place-items-center rounded-full bg-[#A63D5A] text-white"
+              className="grid h-10 w-10 place-items-center rounded-full bg-[var(--w-rose)] text-white"
             >
               {playing ? <Pause className="h-4 w-4 fill-current" /> : <Play className="h-4 w-4 fill-current" />}
             </button>
@@ -300,13 +300,13 @@ export default function Wed100Player(p: PlayerProps) {
       </div>
 
       {/* 스크립트 */}
-      <div className="flex flex-col overflow-hidden rounded-2xl border border-[#E7DDD4] bg-white">
-        <div className="border-b border-[#E7DDD4] px-5 py-4">
-          <p className="text-[10px] font-extrabold tracking-[0.18em] text-[#C0A16B]">
+      <div className="flex flex-col overflow-hidden rounded-2xl border border-[var(--w-line)] bg-[var(--w-card)]">
+        <div className="border-b border-[var(--w-line)] px-5 py-4">
+          <p className="text-[10px] font-extrabold tracking-[0.18em] text-[var(--w-gold)]">
             PART {p.part} · {p.partTitle} · {String(p.n).padStart(2, '0')}
           </p>
-          <h1 className="mt-2 text-lg font-bold leading-snug text-[#2E2724]">{p.question}</h1>
-          <p className="mt-1 text-xs leading-relaxed text-[#9C8D86]">{p.questionEn}</p>
+          <h1 className="mt-2 text-lg font-bold leading-snug text-[var(--w-ink)]">{p.question}</h1>
+          <p className="mt-1 text-xs leading-relaxed text-[var(--w-mut2)]">{p.questionEn}</p>
         </div>
 
         <div ref={scriptRef} className="max-h-[420px] overflow-auto p-2.5">
@@ -317,27 +317,27 @@ export default function Wed100Player(p: PlayerProps) {
               onClick={() => seek(timeline[i].start)}
               className={`block w-full rounded-lg px-3 py-2 text-left text-[13px] leading-relaxed transition ${
                 i === idx
-                  ? 'bg-[#F6E9ED] font-semibold text-[#2E2724]'
-                  : 'text-[#5D524C] hover:bg-[#FAF5F1]'
+                  ? 'bg-[var(--w-rose-l)] font-semibold text-[var(--w-ink)]'
+                  : 'text-[var(--w-ink2)] hover:bg-[var(--w-hover)]'
               }`}
             >
               {c.ko}
-              {c.en && <span className="mt-1 block text-[11px] font-normal text-[#9C8D86]">{c.en}</span>}
+              {c.en && <span className="mt-1 block text-[11px] font-normal text-[var(--w-mut2)]">{c.en}</span>}
             </button>
           ))}
         </div>
 
-        <div className="flex gap-2 border-t border-[#E7DDD4] px-4 py-3">
+        <div className="flex gap-2 border-t border-[var(--w-line)] px-4 py-3">
           <a
             href="/consultation"
             onClick={() => track(p.slug, 'cta_click')}
-            className="flex-1 rounded-lg bg-[#A63D5A] px-4 py-2.5 text-center text-[13px] font-bold text-white hover:bg-[#8A2E48]"
+            className="flex-1 rounded-lg bg-[var(--w-rose)] px-4 py-2.5 text-center text-[13px] font-bold text-white hover:bg-[var(--w-rose-d)]"
           >
             이 내용으로 상담 예약
           </a>
           <a
             href="tel:02-323-3321"
-            className="rounded-lg border border-[#E7DDD4] px-4 py-2.5 text-[13px] font-bold text-[#2E2724]"
+            className="rounded-lg border border-[var(--w-line)] px-4 py-2.5 text-[13px] font-bold text-[var(--w-ink)]"
           >
             전화
           </a>

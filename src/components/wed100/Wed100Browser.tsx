@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import { Search, Play, List, LayoutGrid } from 'lucide-react'
 
-import { PART_THEME } from '@/types/wed100'
 
 export interface BrowserItem {
   slug: string
@@ -51,17 +50,17 @@ export default function Wed100Browser({
     <div>
       <div className="mt-5 flex flex-wrap items-center gap-3">
         <div className="relative min-w-[240px] flex-1">
-          <Search className="pointer-events-none absolute left-3.5 top-3.5 h-4 w-4 text-[#B3A69F]" />
+          <Search className="pointer-events-none absolute left-3.5 top-3.5 h-4 w-4 text-[var(--w-mut2)]" />
           <input
             value={kw}
             onChange={(e) => setKw(e.target.value)}
             placeholder="예: 한복, 가격, 올림머리, 예약 시기…"
-            className="w-full rounded-xl border border-[#E7DDD4] bg-white py-3 pl-10 pr-4 text-sm outline-none focus:border-[#A63D5A]"
+            className="w-full rounded-xl border border-[var(--w-line)] bg-[var(--w-card)] py-3 pl-10 pr-4 text-sm outline-none focus:border-[var(--w-rose)]"
           />
         </div>
         <button
           onClick={() => setView(view === 'grid' ? 'list' : 'grid')}
-          className="flex items-center gap-2 rounded-xl border border-[#E7DDD4] bg-white px-4 py-3 text-xs font-bold text-[#5B4F49]"
+          className="flex items-center gap-2 rounded-xl border border-[var(--w-line)] bg-[var(--w-card)] px-4 py-3 text-xs font-bold text-[var(--w-ink2)]"
         >
           {view === 'grid' ? <List className="h-4 w-4" /> : <LayoutGrid className="h-4 w-4" />}
           {view === 'grid' ? '목록으로' : '카드로'}
@@ -73,8 +72,8 @@ export default function Wed100Browser({
           onClick={() => setPart(0)}
           className={`rounded-full border px-3.5 py-2 text-xs transition ${
             part === 0
-              ? 'border-[#A63D5A] bg-[#A63D5A] font-bold text-white'
-              : 'border-[#E7DDD4] bg-white text-[#5B4F49] hover:border-[#D9C6BA]'
+              ? 'border-[var(--w-rose)] bg-[var(--w-rose)] font-bold text-white'
+              : 'border-[var(--w-line)] bg-[var(--w-card)] text-[var(--w-ink2)] hover:border-[var(--w-line)]'
           }`}
         >
           전체 {items.length}
@@ -85,8 +84,8 @@ export default function Wed100Browser({
             onClick={() => setPart(p.part)}
             className={`rounded-full border px-3.5 py-2 text-xs transition ${
               part === p.part
-                ? 'border-[#A63D5A] bg-[#A63D5A] font-bold text-white'
-                : 'border-[#E7DDD4] bg-white text-[#5B4F49] hover:border-[#D9C6BA]'
+                ? 'border-[var(--w-rose)] bg-[var(--w-rose)] font-bold text-white'
+                : 'border-[var(--w-line)] bg-[var(--w-card)] text-[var(--w-ink2)] hover:border-[var(--w-line)]'
             }`}
           >
             P{p.part}. {p.title}
@@ -95,7 +94,7 @@ export default function Wed100Browser({
       </div>
 
       {rows.length === 0 && (
-        <p className="mt-10 text-center text-sm text-[#8A7B73]">
+        <p className="mt-10 text-center text-sm text-[var(--w-mut)]">
           검색 결과가 없습니다. 다른 단어로 찾아보세요.
         </p>
       )}
@@ -103,15 +102,14 @@ export default function Wed100Browser({
       {view === 'grid' ? (
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {rows.map((x) => {
-            const theme = PART_THEME[x.part]
             return (
               <Link
                 key={x.slug}
                 href={`/wed100/${x.slug}`}
                 id={`part-${x.part}`}
-                className="group overflow-hidden rounded-2xl border border-[#E7DDD4] bg-white transition hover:-translate-y-1 hover:shadow-xl"
+                className="group overflow-hidden rounded-2xl border border-[var(--w-line)] bg-[var(--w-card)] transition hover:-translate-y-1 hover:shadow-xl"
               >
-                <div className="relative aspect-square bg-[#F3ECE6]">
+                <div className="relative aspect-square bg-[var(--w-thumb-bg)]">
                   <Image
                     src={x.thumbImage}
                     alt={x.question}
@@ -119,31 +117,31 @@ export default function Wed100Browser({
                     sizes="(max-width:640px) 100vw, 25vw"
                     className="object-cover"
                   />
-                  <span className="absolute bottom-3 right-3 grid h-9 w-9 place-items-center rounded-full bg-white/95 text-[#A63D5A] shadow">
+                  <span className="absolute bottom-3 right-3 grid h-9 w-9 place-items-center rounded-full bg-[var(--w-card)]/95 text-[var(--w-rose)] shadow">
                     <Play className="h-3.5 w-3.5 fill-current" />
                   </span>
                 </div>
                 <div className="p-4">
                   <p
                     className="text-[10px] font-extrabold tracking-[0.13em]"
-                    style={{ color: theme.accent }}
+                    style={{ color: `var(--w-p${x.part})` }}
                   >
                     PART {x.part} · {String(x.n).padStart(2, '0')}
                   </p>
-                  <h3 className="mt-1.5 line-clamp-3 min-h-[60px] text-sm font-bold leading-snug text-[#2E2724]">
+                  <h3 className="mt-1.5 line-clamp-3 min-h-[60px] text-sm font-bold leading-snug text-[var(--w-ink)]">
                     {x.question}
                   </h3>
                   <div className="mt-2 flex flex-wrap gap-1.5">
                     {x.keywords.slice(0, 3).map((k) => (
                       <span
                         key={k}
-                        className="rounded bg-[#F6E9ED] px-1.5 py-0.5 text-[10px] text-[#8A2E48]"
+                        className="rounded bg-[var(--w-rose-l)] px-1.5 py-0.5 text-[10px] text-[var(--w-rose-t)]"
                       >
                         {k}
                       </span>
                     ))}
                   </div>
-                  <p className="mt-2.5 text-[11px] text-[#9A8B84]">
+                  <p className="mt-2.5 text-[11px] text-[var(--w-mut2)]">
                     🎧 {fmt(x.duration)} · 자막 한/영{!x.hasAudio && ' · 음성 준비중'}
                   </p>
                 </div>
@@ -152,24 +150,24 @@ export default function Wed100Browser({
           })}
         </div>
       ) : (
-        <div className="mt-6 overflow-hidden rounded-2xl border border-[#E7DDD4] bg-white">
+        <div className="mt-6 overflow-hidden rounded-2xl border border-[var(--w-line)] bg-[var(--w-card)]">
           {rows.map((x) => (
             <Link
               key={x.slug}
               href={`/wed100/${x.slug}`}
-              className="flex items-center gap-4 border-b border-[#F2EAE3] px-5 py-3.5 text-sm last:border-0 hover:bg-[#FDF9F6]"
+              className="flex items-center gap-4 border-b border-[var(--w-line2)] px-5 py-3.5 text-sm last:border-0 hover:bg-[var(--w-hover)]"
             >
               <span
                 className="w-14 shrink-0 text-[11px] font-extrabold tracking-wider"
-                style={{ color: PART_THEME[x.part].accent }}
+                style={{ color: `var(--w-p${x.part})` }}
               >
                 P{x.part}·{String(x.n).padStart(2, '0')}
               </span>
               <span className="flex-1">
-                <span className="block font-medium text-[#2E2724]">{x.question}</span>
-                <span className="mt-0.5 block text-[11px] text-[#9C8D86]">{x.question_en}</span>
+                <span className="block font-medium text-[var(--w-ink)]">{x.question}</span>
+                <span className="mt-0.5 block text-[11px] text-[var(--w-mut2)]">{x.question_en}</span>
               </span>
-              <span className="shrink-0 text-[11px] text-[#9C8D86]">🎧 {fmt(x.duration)}</span>
+              <span className="shrink-0 text-[11px] text-[var(--w-mut2)]">🎧 {fmt(x.duration)}</span>
             </Link>
           ))}
         </div>
