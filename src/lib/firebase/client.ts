@@ -30,3 +30,13 @@ export function getDb(): Firestore | null {
   const a = getFirebaseApp()
   return a ? getFirestore(a) : null
 }
+
+/** Firebase Storage (오디오 업로드용) */
+export async function uploadAudio(slug: string, blob: Blob): Promise<string> {
+  const app = getFirebaseApp()
+  if (!app) throw new Error('Firebase 환경변수가 설정되지 않았습니다.')
+  const { getStorage, ref, uploadBytes, getDownloadURL } = await import('firebase/storage')
+  const r = ref(getStorage(app), `wed100/audio/${slug}.mp3`)
+  await uploadBytes(r, blob, { contentType: 'audio/mpeg', cacheControl: 'public,max-age=31536000' })
+  return getDownloadURL(r)
+}

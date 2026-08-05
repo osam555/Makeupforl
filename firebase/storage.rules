@@ -1,0 +1,36 @@
+rules_version = '2';
+
+// 메이크업포엘 Firebase Storage 규칙
+// 배포: Firebase Console > Storage > Rules 탭에 붙여넣기
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email in ['makeupforl77@gmail.com'];
+    }
+
+    // 100문100답 오디오: 공개 재생, 업로드는 관리자만 (20MB 이하 mp3)
+    match /wed100/audio/{file} {
+      allow read: if true;
+      allow write: if isAdmin()
+                   && request.resource.size < 20 * 1024 * 1024
+                   && request.resource.contentType == 'audio/mpeg';
+    }
+
+    // 100문100답 대표 이미지(사진 교체용)
+    match /wed100/img/{file} {
+      allow read: if true;
+      allow write: if isAdmin()
+                   && request.resource.size < 10 * 1024 * 1024
+                   && request.resource.contentType.matches('image/.*');
+    }
+
+    // 갤러리 이미지
+    match /gallery/{file} {
+      allow read: if true;
+      allow write: if isAdmin() && request.resource.contentType.matches('image/.*');
+    }
+  }
+}

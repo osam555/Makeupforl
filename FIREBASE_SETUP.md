@@ -57,9 +57,20 @@
 - `gallery_images`: category ASC + order_position ASC
 - `reviews`: published ASC + created_at DESC
 
-## 사진 업로드 (이미지 교체)
-1. 빌드 → **Storage** → 시작하기 (Seoul)
-2. 파일 업로드 후 URL 복사 → `/admin/wed100` 편집 화면의 이미지 URL 칸에 붙여넣기
+## 6단계: Storage 설정 (음성 재생성 · 사진 교체에 필요)
+1. 빌드 → **Storage** → 시작하기 (위치: asia-northeast3)
+2. **Rules 탭** → `firebase/storage.rules` 내용 붙여넣기 → 게시
+
+### 어드민 [음성 재생성] 사용법
+`/admin/wed100` 에서 질문·답변·자막을 고친 뒤 **[음성 재생성]** 버튼을 누르면
+서버가 음성을 다시 합성해 Storage에 올리고 자막 타임코드까지 갱신합니다.
+그 다음 **[저장]** 을 눌러야 사이트에 반영됩니다.
+- 화자: 진행자(여성, +18Hz) 질문 → 원장님(여성, 1.25배속) 답변
+- 자막이 40개를 넘으면 시간 초과가 날 수 있으니, 답변을 나누거나 로컬 스크립트
+  (`python3 scripts/wed100/3_gen_tts.py {slug} --force`)를 사용하세요
+
+### 사진으로 이미지 교체
+Storage에 업로드 → 다운로드 URL 복사 → `/admin/wed100` 편집 화면의 이미지 URL 칸에 붙여넣기
 
 ## 관리자 계정 추가/변경
 1. `firebase/firestore.rules` 의 `isAdmin()` 안 이메일 목록 수정 → 콘솔 규칙 탭에 다시 붙여넣기

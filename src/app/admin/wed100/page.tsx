@@ -3,10 +3,10 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Search, Save, Eye, RefreshCw, Database, CheckCircle2, XCircle } from 'lucide-react'
+import { Search, Save, Eye, RefreshCw, Database, CheckCircle2, XCircle, Volume2 } from 'lucide-react'
 
 import seedRaw from '@/data/wed100.json'
-import { getDb } from '@/lib/firebase/client'
+import { getDb, uploadAudio } from '@/lib/firebase/client'
 import AdminGate from '@/components/admin/AdminGate'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -51,6 +51,7 @@ function AdminWed100Editor({ email }: { email: string | null }) {
   const [draft, setDraft] = useState<Wed100Item | null>(null)
   const [dirty, setDirty] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [tts, setTts] = useState(false)
   const [status, setStatus] = useState<Status>(null)
 
   const [part, setPart] = useState(0)
@@ -125,6 +126,46 @@ function AdminWed100Editor({ email }: { email: string | null }) {
       d.duration = undefined
       d.questionAudio = undefined
     })
+  }
+
+  /** 서버에서 음성을 다시 합성 → Storage 업로드 → 드래프트에 타임코드 반영 */
+  const regenAudio = async () => {
+    if (!draft) return
+    if (!email) {
+      setStatus({ kind: 'err', msg: '관리자 로그인이 필요합니다.' })
+      return
+    }
+    if (!confirm(`"${draft.question}"\n\n현재 자막 ${draft.cues.length}개로 음성을 다시 만듭니다. 1~2분 걸릴 수 있습니다. 계속할까요?`)) return
+
+    setTts(true)
+    setStatus(null)
+    try {
+      const res = await fetch('/api/wed100/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, question: draft.question, cues: draft.cues.map((c) => c.ko) }),
+      })
+      const j = await res.json()
+      if (!j.ok) throw new Error(j.error)
+
+      const bin = Uint8Array.from(atob(j.audioBase64), (ch) => ch.charCodeAt(0))
+      const url = await uploadAudio(draft.slug, new Blob([bin], { type: 'audio/mpeg' }))
+
+      patch((d) => {
+        d.audio = url
+        d.duration = j.duration
+        d.questionAudio = j.questionAudio
+        d.cues = d.cues.map((c, i) => ({ ...c, start: j.cues[i]?.start, end: j.cues[i]?.end }))
+      })
+      setStatus({
+        kind: 'ok',
+        msg: `음성 재생성 완료 (${Math.round(j.duration)}초). [저장]을 눌러야 사이트에 반영됩니다.`,
+      })
+    } catch (e) {
+      setStatus({ kind: 'err', msg: e instanceof Error ? e.message : String(e) })
+    } finally {
+      setTts(false)
+    }
   }
 
   const save = async () => {
@@ -449,11 +490,8 @@ function AdminWed100Editor({ email }: { email: string | null }) {
                   </div>
                 </div>
                 <p className="mt-2 text-[11px] leading-relaxed text-[#9C8D86]">
-                  자막·본문을 수정한 뒤에는 로컬에서{' '}
-                  <code className="rounded bg-[#F2EAE3] px-1">
-                    python3 scripts/wed100/3_gen_tts.py {draft.slug} --force
-                  </code>{' '}
-                  로 음성을 재생성해 타임코드를 갱신하세요. (수정 항목만 다시 합성됩니다)
+                  자막·본문을 고친 뒤 아래 <b>[음성 재생성]</b>을 누르면 이 문항의 음성과 자막
+                  타임코드가 다시 만들어집니다. (진행자 여성 · 원장님 1.25배속)
                 </p>
               </div>
 
@@ -465,6 +503,10 @@ function AdminWed100Editor({ email }: { email: string | null }) {
                   className="bg-[#A63D5A] hover:bg-[#8A2E48]"
                 >
                   <Save className="mr-1.5 h-4 w-4" /> {saving ? '저장 중…' : '저장'}
+                </Button>
+                <Button variant="outline" onClick={regenAudio} disabled={tts}>
+                  <Volume2 className="mr-1.5 h-4 w-4" />
+                  {tts ? '음성 만드는 중…' : '음성 재생성'}
                 </Button>
                 <Link href={`/wed100/${draft.slug}`} target="_blank">
                   <Button variant="outline">

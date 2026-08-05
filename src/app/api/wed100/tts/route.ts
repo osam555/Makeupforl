@@ -1,0 +1,122 @@
+import { NextResponse } from 'next/server'
+import { MsEdgeTTS, OUTPUT_FORMAT } from 'msedge-tts'
+
+import { SILENCE_MP3_BASE64 } from '@/lib/tts/silence'
+
+export const runtime = 'nodejs'
+export const maxDuration = 60
+
+const ADMIN_EMAILS = (process.env.NEXT_PUBLIC_ADMIN_EMAILS ?? 'makeupforl77@gmail.com')
+  .split(',')
+  .map((s) => s.trim().toLowerCase())
+  .filter(Boolean)
+
+/** scripts/wed100/3_gen_tts.py 와 동일한 화자 설정 (음성 일관성 유지) */
+const VOICE = 'ko-KR-SunHiNeural'
+const HOST = { rate: '+6%', pitch: '+18Hz' } // 진행자: 질문
+const EXPERT = { rate: '+25%', pitch: '-6Hz' } // 원장님: 답변 (1.25배속)
+
+const FORMAT = OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3
+/** CBR 48kbps → 1초당 6000바이트. ffmpeg 없이 길이를 정확히 계산할 수 있다. */
+const BYTES_PER_SEC = 6000
+const CONCURRENCY = 6
+
+const SILENCE = Buffer.from(SILENCE_MP3_BASE64, 'base64')
+const SILENCE_SEC = SILENCE.length / BYTES_PER_SEC
+
+async function synth(text: string, opt: { rate: string; pitch: string }): Promise<Buffer> {
+  const tts = new MsEdgeTTS()
+  await tts.setMetadata(VOICE, FORMAT)
+  const { audioStream } = await tts.toStream(text, opt)
+  const chunks: Buffer[] = []
+  return new Promise((resolve, reject) => {
+    audioStream.on('data', (c: Buffer) => chunks.push(c))
+    audioStream.on('end', () => resolve(Buffer.concat(chunks)))
+    audioStream.on('error', reject)
+  })
+}
+
+/** 동시 실행 수를 제한해 순서를 지키면서 병렬 합성 */
+async function mapLimit<T, R>(items: T[], limit: number, fn: (x: T, i: number) => Promise<R>) {
+  const out = new Array<R>(items.length)
+  let cursor = 0
+  await Promise.all(
+    Array.from({ length: Math.min(limit, items.length) }, async () => {
+      while (cursor < items.length) {
+        const i = cursor++
+        out[i] = await fn(items[i], i)
+      }
+    }),
+  )
+  return out
+}
+
+/**
+ * 어드민 [음성 재생성] — 질문 + 자막 큐를 다시 합성해 MP3와 타임코드를 돌려준다.
+ * 업로드(Storage)와 저장(Firestore)은 로그인한 클라이언트가 수행한다.
+ *
+ * POST { email, question, cues: string[] }
+ *  → { audioBase64, duration, questionAudio:{start,end}, cues:[{start,end}] }
+ */
+export async function POST(req: Request) {
+  const body = await req.json().catch(() => ({}))
+  const email = typeof body?.email === 'string' ? body.email.toLowerCase() : ''
+  if (!ADMIN_EMAILS.includes(email)) {
+    return NextResponse.json({ ok: false, error: '관리자만 사용할 수 있습니다.' }, { status: 401 })
+  }
+
+  const question: string = typeof body?.question === 'string' ? body.question.trim() : ''
+  const cues: string[] = Array.isArray(body?.cues)
+    ? body.cues.map((c: unknown) => String(c ?? '').trim()).filter(Boolean)
+    : []
+
+  if (!question || cues.length === 0) {
+    return NextResponse.json({ ok: false, error: '질문과 자막이 필요합니다.' }, { status: 400 })
+  }
+  if (cues.length > 40) {
+    return NextResponse.json(
+      { ok: false, error: `자막이 ${cues.length}개로 너무 많습니다. 40개 이하로 나눠 주세요.` },
+      { status: 400 },
+    )
+  }
+
+  try {
+    const [qBuf, cueBufs] = await Promise.all([
+      synth(question, HOST),
+      mapLimit(cues, CONCURRENCY, (t) => synth(t, EXPERT)),
+    ])
+
+    const parts: Buffer[] = [qBuf]
+    let t = qBuf.length / BYTES_PER_SEC
+    const questionAudio = { start: 0, end: round(t) }
+    const timings: { start: number; end: number }[] = []
+
+    for (const buf of cueBufs) {
+      parts.push(SILENCE)
+      t += SILENCE_SEC
+      const start = t
+      parts.push(buf)
+      t += buf.length / BYTES_PER_SEC
+      timings.push({ start: round(start), end: round(t) })
+    }
+
+    const audio = Buffer.concat(parts)
+    return NextResponse.json({
+      ok: true,
+      audioBase64: audio.toString('base64'),
+      bytes: audio.length,
+      duration: round(audio.length / BYTES_PER_SEC),
+      questionAudio,
+      cues: timings,
+    })
+  } catch (e) {
+    return NextResponse.json(
+      { ok: false, error: '음성 합성 실패: ' + (e instanceof Error ? e.message : String(e)) },
+      { status: 500 },
+    )
+  }
+}
+
+function round(n: number) {
+  return Math.round(n * 1000) / 1000
+}
