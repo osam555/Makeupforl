@@ -6,6 +6,20 @@ import { Play, Pause, SkipBack, SkipForward, Repeat } from 'lucide-react'
 
 import type { SubtitleLang, Wed100Cue } from '@/types/wed100'
 
+/** 조회/재생 이벤트 적재 (Supabase 미설정/실패 시 조용히 무시) */
+function track(slug: string, event: 'view' | 'play' | 'complete' | 'cta_click', lang?: string) {
+  try {
+    void import('@/lib/supabase/client').then(({ createClient }) =>
+      createClient()
+        .from('wed100_events')
+        .insert({ slug, event, lang })
+        .then(() => undefined),
+    )
+  } catch {
+    /* noop */
+  }
+}
+
 const RATES = [0.8, 1, 1.25, 1.5]
 const LANGS: { key: SubtitleLang; label: string }[] = [
   { key: 'ko', label: '한국어' },
@@ -43,6 +57,21 @@ export default function Wed100Player(p: PlayerProps) {
   const [lang, setLang] = useState<SubtitleLang>('both')
   const [loop, setLoop] = useState(false)
   const [dur, setDur] = useState(p.duration)
+  const playedRef = useRef(false)
+  const doneRef = useRef(false)
+
+  useEffect(() => {
+    playedRef.current = false
+    doneRef.current = false
+    track(p.slug, 'view')
+  }, [p.slug])
+
+  useEffect(() => {
+    if (playing && !playedRef.current) {
+      playedRef.current = true
+      track(p.slug, 'play', lang)
+    }
+  }, [playing, p.slug, lang])
 
   /** 타임코드가 없는 항목(음성 미생성)도 읽을 수 있도록 추정 타임라인을 만든다 */
   const timeline = useMemo(() => {
@@ -248,7 +277,13 @@ export default function Wed100Player(p: PlayerProps) {
             loop={loop}
             onPlay={() => setPlaying(true)}
             onPause={() => setPlaying(false)}
-            onEnded={() => setPlaying(false)}
+            onEnded={() => {
+              setPlaying(false)
+              if (!doneRef.current) {
+                doneRef.current = true
+                track(p.slug, 'complete', lang)
+              }
+            }}
             onTimeUpdate={(e) => setT(e.currentTarget.currentTime)}
             onLoadedMetadata={(e) => {
               setDur(e.currentTarget.duration || p.duration)
@@ -289,6 +324,7 @@ export default function Wed100Player(p: PlayerProps) {
         <div className="flex gap-2 border-t border-[#E7DDD4] px-4 py-3">
           <a
             href="/consultation"
+            onClick={() => track(p.slug, 'cta_click')}
             className="flex-1 rounded-lg bg-[#A63D5A] px-4 py-2.5 text-center text-[13px] font-bold text-white hover:bg-[#8A2E48]"
           >
             이 내용으로 상담 예약
