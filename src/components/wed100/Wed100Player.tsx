@@ -6,18 +6,24 @@ import { Play, Pause, SkipBack, SkipForward, Repeat } from 'lucide-react'
 
 import type { SubtitleLang, Wed100Cue } from '@/types/wed100'
 
-/** 조회/재생 이벤트 적재 (Supabase 미설정/실패 시 조용히 무시) */
+/** 조회/재생 이벤트 적재 (Firebase 미설정/실패 시 조용히 무시) */
 function track(slug: string, event: 'view' | 'play' | 'complete' | 'cta_click', lang?: string) {
-  try {
-    void import('@/lib/supabase/client').then(({ createClient }) =>
-      createClient()
-        .from('wed100_events')
-        .insert({ slug, event, lang })
-        .then(() => undefined),
-    )
-  } catch {
-    /* noop */
-  }
+  void (async () => {
+    try {
+      const { getDb } = await import('@/lib/firebase/client')
+      const db = getDb()
+      if (!db) return
+      const { addDoc, collection } = await import('firebase/firestore')
+      await addDoc(collection(db, 'wed100_events'), {
+        slug,
+        event,
+        lang: lang ?? null,
+        createdAt: new Date().toISOString(),
+      })
+    } catch {
+      /* noop */
+    }
+  })()
 }
 
 const RATES = [0.8, 1, 1.25, 1.5]

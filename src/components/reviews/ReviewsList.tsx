@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { getDb } from '@/lib/firebase/client'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Star } from 'lucide-react'
 import Image from 'next/image'
@@ -84,21 +84,20 @@ export default function ReviewsList() {
 
   async function loadReviews() {
     setLoading(true)
-    const supabase = createClient()
 
     try {
-      const { data, error } = await supabase
-        .from('reviews')
-        .select('*')
-        .eq('published', true)
-        .order('created_at', { ascending: false })
-
-      if (error) {
-        console.error('Error loading reviews:', error)
-        setReviews(sampleReviews)
-      } else {
-        setReviews(data && data.length > 0 ? data : sampleReviews)
-      }
+      const db = getDb()
+      if (!db) throw new Error('firebase-not-configured')
+      const { collection, getDocs, orderBy, query, where } = await import('firebase/firestore')
+      const snap = await getDocs(
+        query(
+          collection(db, 'reviews'),
+          where('published', '==', true),
+          orderBy('created_at', 'desc'),
+        ),
+      )
+      const data = snap.docs.map((d) => ({ id: d.id, ...d.data() }) as Review)
+      setReviews(data.length > 0 ? data : sampleReviews)
     } catch (error) {
       console.error('Error:', error)
       setReviews(sampleReviews)

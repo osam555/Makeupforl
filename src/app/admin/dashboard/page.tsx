@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { BarChart3, RefreshCw } from 'lucide-react'
 
 import seedRaw from '@/data/wed100.json'
-import { createClient } from '@/lib/supabase/client'
+import { getDb } from '@/lib/firebase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import type { Wed100Data } from '@/types/wed100'
@@ -40,14 +40,24 @@ export default function AdminDashboardPage() {
     setDbError(null)
     try {
       const since = new Date(Date.now() - days * 86400_000).toISOString()
-      const supabase = createClient()
-      const { data, error } = await supabase
-        .from('wed100_events')
-        .select('slug,event,lang,created_at')
-        .gte('created_at', since)
-        .limit(50000)
-      if (error) throw new Error(error.message)
-      setEvents((data ?? []) as EventRow[])
+      const db = getDb()
+      if (!db) throw new Error('Firebase 환경변수 미설정')
+      const { collection, getDocs, limit, orderBy, query, where } = await import(
+        'firebase/firestore'
+      )
+      const q = query(
+        collection(db, 'wed100_events'),
+        where('createdAt', '>=', since),
+        orderBy('createdAt', 'desc'),
+        limit(50000),
+      )
+      const snap = await getDocs(q)
+      setEvents(
+        snap.docs.map((d) => {
+          const v = d.data() as { slug: string; event: EventRow['event']; lang: string | null; createdAt: string }
+          return { slug: v.slug, event: v.event, lang: v.lang, created_at: v.createdAt }
+        }),
+      )
     } catch (e) {
       setDbError(e instanceof Error ? e.message : String(e))
       setEvents([])
@@ -174,9 +184,8 @@ export default function AdminDashboardPage() {
         <div className="rounded-b-2xl bg-white p-5 shadow lg:p-6">
           {dbError && (
             <div className="mb-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs leading-relaxed text-amber-800">
-              이벤트 테이블을 읽지 못했습니다 ({dbError}). Supabase에서{' '}
-              <code className="rounded bg-amber-100 px-1">supabase/wed100_schema.sql</code> 을 실행하면
-              방문·재생·전환이 자동 집계됩니다. 아래 콘텐츠 커버리지는 정상 표시됩니다.
+              이벤트 데이터를 읽지 못했습니다 ({dbError}). Firebase 프로젝트 세팅(FIREBASE_SETUP.md)
+              후 방문·재생·전환이 자동 집계됩니다. 아래 콘텐츠 커버리지는 정상 표시됩니다.
             </div>
           )}
 

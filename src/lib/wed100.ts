@@ -15,31 +15,27 @@ function normalize(item: Wed100Item): Wed100Item {
   }
 }
 
-const supabaseConfigured =
-  !!process.env.NEXT_PUBLIC_SUPABASE_URL && !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-
 /**
- * 100문100답 전체를 가져온다.
- * Supabase 테이블(wed100_questions)이 준비돼 있으면 그쪽을 우선 사용하고,
- * 아직 없거나 조회에 실패하면 리포에 포함된 시드 JSON으로 폴백한다.
- * 덕분에 DB 세팅 전에도 사이트가 정상 동작한다.
+ * 100문100답 전체 조회.
+ * Firestore(wed100_questions 컬렉션)가 세팅돼 있으면 그쪽을 우선 사용하고,
+ * 미설정·비어있음·오류 시 리포에 포함된 시드 JSON으로 폴백한다.
+ * 덕분에 Firebase 프로젝트 생성 전에도 사이트 전체가 정상 동작한다.
  */
 export async function getWed100Items(): Promise<Wed100Item[]> {
-  if (supabaseConfigured) {
-    try {
-      const { createClient } = await import('@/lib/supabase/server')
-      const supabase = await createClient()
-      const { data, error } = await supabase
-        .from('wed100_questions')
-        .select('*')
-        .order('part', { ascending: true })
-        .order('n', { ascending: true })
-      if (!error && data && data.length > 0) {
-        return (data as Wed100Item[]).map(normalize)
+  try {
+    const { getDb } = await import('@/lib/firebase/client')
+    const db = getDb()
+    if (db) {
+      const { collection, getDocs } = await import('firebase/firestore')
+      const snap = await getDocs(collection(db, 'wed100_questions'))
+      if (!snap.empty) {
+        const items = snap.docs.map((d) => d.data() as Wed100Item)
+        items.sort((a, b) => a.part - b.part || a.n - b.n)
+        return items.map(normalize)
       }
-    } catch {
-      // 테이블 미생성 등 — 시드로 폴백
     }
+  } catch {
+    // Firebase 미설정/권한 오류 — 시드로 폴백
   }
   return seed.items.map(normalize)
 }

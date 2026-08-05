@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { createClient } from '@/lib/supabase/client'
+import { getDb } from '@/lib/firebase/client'
 import { Calendar, Clock, User, Phone, Mail, MessageSquare } from 'lucide-react'
 
 export default function BookingForm() {
@@ -27,26 +27,22 @@ export default function BookingForm() {
     e.preventDefault()
     setLoading(true)
 
-    const supabase = createClient()
-
     try {
-      const { error } = await supabase.from('bookings').insert([
-        {
-          name: formData.name,
-          phone: formData.phone,
-          email: formData.email || null,
-          service_type: formData.serviceType,
-          booking_date: formData.bookingDate,
-          booking_time: formData.bookingTime,
-          message: formData.message || null,
-          status: 'pending',
-        },
-      ])
-
-      if (error) {
-        console.error('Error submitting booking:', error)
-        alert('예약 신청 중 오류가 발생했습니다. 전화로 문의해 주세요.')
-      } else {
+      const db = getDb()
+      if (!db) throw new Error('firebase-not-configured')
+      const { addDoc, collection } = await import('firebase/firestore')
+      await addDoc(collection(db, 'bookings'), {
+        name: formData.name,
+        phone: formData.phone,
+        email: formData.email || null,
+        service_type: formData.serviceType,
+        booking_date: formData.bookingDate,
+        booking_time: formData.bookingTime,
+        message: formData.message || null,
+        status: 'pending',
+        created_at: new Date().toISOString(),
+      })
+      {
         setSubmitted(true)
         // Reset form
         setFormData({

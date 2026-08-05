@@ -1,0 +1,46 @@
+rules_version = '2';
+
+// 메이크업포엘 Firestore 보안 규칙
+// 배포: Firebase Console > Firestore Database > 규칙 탭에 붙여넣기 (또는 firebase deploy --only firestore:rules)
+//
+// 주의: 어드민이 클라이언트 비밀번호 게이트 방식이라 쓰기 규칙이 느슨합니다.
+// 운영 강화 시 Firebase Auth(이메일 로그인) 도입 후
+// `request.auth != null && request.auth.token.admin == true` 조건으로 좁히세요.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 100문100답 콘텐츠: 공개 읽기, 쓰기 허용(어드민 편집)
+    match /wed100_questions/{slug} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // 조회/재생 이벤트: 생성만 허용, 수정·삭제 금지
+    match /wed100_events/{id} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasAll(['slug', 'event', 'createdAt'])
+                    && request.resource.data.event in ['view', 'play', 'complete', 'cta_click'];
+      allow update, delete: if false;
+    }
+
+    // 예약: 생성(고객 폼) + 읽기/상태변경(어드민)
+    match /bookings/{id} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasAll(['name', 'phone', 'status']);
+      allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status']);
+      allow delete: if false;
+    }
+
+    // 후기: 공개된 것만 읽기 (published 필드), 쓰기는 어드민
+    match /reviews/{id} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // 갤러리 이미지
+    match /gallery_images/{id} {
+      allow read: if true;
+      allow write: if true;
+    }
+  }
+}

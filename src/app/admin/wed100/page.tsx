@@ -6,7 +6,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Search, Save, Eye, RefreshCw, Database, CheckCircle2, XCircle } from 'lucide-react'
 
 import seedRaw from '@/data/wed100.json'
-import { createClient } from '@/lib/supabase/client'
+import { getDb } from '@/lib/firebase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import type { Wed100Data, Wed100Item } from '@/types/wed100'
@@ -59,19 +59,20 @@ export default function AdminWed100Page() {
 
   const load = useCallback(async () => {
     try {
-      const supabase = createClient()
-      const { data, error } = await supabase
-        .from('wed100_questions')
-        .select('*')
-        .order('part')
-        .order('n')
-      if (!error && data && data.length > 0) {
-        setItems(data as Wed100Item[])
-        setSource('db')
-        return
+      const db = getDb()
+      if (db) {
+        const { collection, getDocs } = await import('firebase/firestore')
+        const snap = await getDocs(collection(db, 'wed100_questions'))
+        if (!snap.empty) {
+          const arr = snap.docs.map((d) => d.data() as Wed100Item)
+          arr.sort((a, b) => a.part - b.part || a.n - b.n)
+          setItems(arr)
+          setSource('db')
+          return
+        }
       }
     } catch {
-      /* supabase 미설정 */
+      /* firebase 미설정 */
     }
     setItems(seed.items)
     setSource('seed')
@@ -132,7 +133,9 @@ export default function AdminWed100Page() {
     setSaving(true)
     setStatus(null)
     try {
-      const supabase = createClient()
+      const db = getDb()
+      if (!db) throw new Error('Firebase 환경변수가 설정되지 않았습니다')
+      const { doc, setDoc } = await import('firebase/firestore')
       const row = {
         id: draft.id,
         slug: draft.slug,
@@ -142,7 +145,13 @@ export default function AdminWed100Page() {
         question: draft.question,
         question_en: draft.question_en ?? null,
         answer: draft.answer,
-        cues: draft.cues,
+        cues: draft.cues.map((c, i) => ({
+          i,
+          ko: c.ko,
+          en: c.en ?? null,
+          start: c.start ?? null,
+          end: c.end ?? null,
+        })),
         keywords: draft.keywords,
         questionAudio: draft.questionAudio ?? null,
         audio: draft.audio ?? null,
@@ -152,8 +161,7 @@ export default function AdminWed100Page() {
         published: draft.published ?? true,
         updatedAt: new Date().toISOString(),
       }
-      const { error } = await supabase.from('wed100_questions').upsert(row, { onConflict: 'slug' })
-      if (error) throw new Error(error.message)
+      await setDoc(doc(db, 'wed100_questions', draft.slug), row)
       setItems((arr) => arr.map((x) => (x.slug === draft.slug ? { ...draft } : x)))
       setDirty(false)
       setStatus({ kind: 'ok', msg: '저장되었습니다. 사이트에는 최대 1시간 내(재검증 주기) 반영됩니다.' })
@@ -163,7 +171,7 @@ export default function AdminWed100Page() {
         msg:
           'DB 저장 실패: ' +
           (e instanceof Error ? e.message : String(e)) +
-          ' — Supabase에 wed100_schema.sql 실행 후 [DB에 시드 넣기]를 먼저 눌러주세요.',
+          ' — Firebase 프로젝트 세팅(FIREBASE_SETUP.md) 후 [DB에 시드 넣기]를 먼저 눌러주세요.',
       })
     } finally {
       setSaving(false)
@@ -412,7 +420,7 @@ export default function AdminWed100Page() {
                   </div>
                   <div className="flex-1 text-xs leading-relaxed text-[#6B5D57]">
                     기본값은 자동 생성 SVG입니다. 사진으로 바꾸려면 이미지 URL을 입력하세요
-                    (Supabase Storage 업로드 후 URL 붙여넣기). 비우면 SVG로 돌아갑니다.
+                    (Firebase Storage 업로드 후 URL 붙여넣기). 비우면 SVG로 돌아갑니다.
                     <input
                       value={draft.heroImage ?? ''}
                       onChange={(e) => patch((d) => (d.heroImage = e.target.value || undefined))}
