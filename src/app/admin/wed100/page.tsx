@@ -7,13 +7,13 @@ import { Search, Save, Eye, RefreshCw, Database, CheckCircle2, XCircle } from 'l
 
 import seedRaw from '@/data/wed100.json'
 import { getDb } from '@/lib/firebase/client'
+import AdminGate from '@/components/admin/AdminGate'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import type { Wed100Data, Wed100Item } from '@/types/wed100'
 import { PART_THEME } from '@/types/wed100'
 
 const seed = seedRaw as unknown as Wed100Data
-const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_WED100_ADMIN_PASSWORD ?? '8888'
 
 /** 한국어 문장 분리 (파서 스크립트와 동일 규칙) */
 function splitSentences(text: string, maxLen = 90): string[] {
@@ -42,9 +42,8 @@ function splitSentences(text: string, maxLen = 90): string[] {
 
 type Status = { kind: 'ok' | 'err'; msg: string } | null
 
-export default function AdminWed100Page() {
-  const [password, setPassword] = useState('')
-  const [authed, setAuthed] = useState(false)
+function AdminWed100Editor({ email }: { email: string | null }) {
+  const authed = true
 
   const [items, setItems] = useState<Wed100Item[]>([])
   const [source, setSource] = useState<'db' | 'seed'>('seed')
@@ -188,7 +187,7 @@ export default function AdminWed100Page() {
     const res = await fetch('/api/wed100/seed', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password, overwrite }),
+      body: JSON.stringify({ email, overwrite }),
     })
     const j = await res.json()
     if (j.ok) {
@@ -199,36 +198,6 @@ export default function AdminWed100Page() {
     }
   }
 
-  if (!authed) {
-    return (
-      <div className="flex min-h-[60vh] items-center justify-center bg-[#FBF7F3] px-6">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault()
-            if (password === ADMIN_PASSWORD) setAuthed(true)
-            else {
-              alert('비밀번호가 올바르지 않습니다.')
-              setPassword('')
-            }
-          }}
-          className="w-full max-w-sm rounded-2xl border border-[#E7DDD4] bg-white p-8 shadow"
-        >
-          <h1 className="text-lg font-extrabold text-[#2E2724]">100문100답 관리</h1>
-          <p className="mt-1 text-xs text-[#8A7B73]">관리자 비밀번호를 입력하세요.</p>
-          <Input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="mt-4"
-            placeholder="비밀번호"
-          />
-          <Button type="submit" className="mt-4 w-full bg-[#A63D5A] hover:bg-[#8A2E48]">
-            로그인
-          </Button>
-        </form>
-      </div>
-    )
-  }
 
   return (
     <div className="bg-[#EFE9E3] px-4 py-6 lg:px-8">
@@ -253,6 +222,7 @@ export default function AdminWed100Page() {
             >
               <Database className="mr-1 h-3.5 w-3.5" /> DB에 시드 넣기
             </Button>
+            <Link href="/admin/dashboard" className="self-center text-xs text-[#B3A69F] hover:text-white">통계 →</Link>
             <Link href="/admin" className="self-center text-xs text-[#B3A69F] hover:text-white">
               예약관리 →
             </Link>
@@ -513,5 +483,13 @@ export default function AdminWed100Page() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function AdminWed100Page() {
+  return (
+    <AdminGate title="100문100답 관리">
+      {({ email }) => <AdminWed100Editor email={email} />}
+    </AdminGate>
   )
 }

@@ -6,13 +6,13 @@ import { BarChart3, RefreshCw } from 'lucide-react'
 
 import seedRaw from '@/data/wed100.json'
 import { getDb } from '@/lib/firebase/client'
+import AdminGate from '@/components/admin/AdminGate'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import type { Wed100Data } from '@/types/wed100'
 import { PART_THEME } from '@/types/wed100'
 
 const seed = seedRaw as unknown as Wed100Data
-const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_WED100_ADMIN_PASSWORD ?? '8888'
 
 interface EventRow {
   slug: string
@@ -27,9 +27,8 @@ const RANGES = [
   { key: 90, label: '90일' },
 ] as const
 
-export default function AdminDashboardPage() {
-  const [password, setPassword] = useState('')
-  const [authed, setAuthed] = useState(false)
+function AdminDashboard() {
+  const authed = true
   const [days, setDays] = useState<number>(30)
   const [events, setEvents] = useState<EventRow[]>([])
   const [loading, setLoading] = useState(false)
@@ -112,35 +111,6 @@ export default function AdminDashboardPage() {
     return { total, withAudio, withEn, cueCount }
   }, [])
 
-  if (!authed) {
-    return (
-      <div className="flex min-h-[60vh] items-center justify-center bg-[#FBF7F3] px-6">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault()
-            if (password === ADMIN_PASSWORD) setAuthed(true)
-            else {
-              alert('비밀번호가 올바르지 않습니다.')
-              setPassword('')
-            }
-          }}
-          className="w-full max-w-sm rounded-2xl border border-[#E7DDD4] bg-white p-8 shadow"
-        >
-          <h1 className="text-lg font-extrabold text-[#2E2724]">통계 대시보드</h1>
-          <Input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="mt-4"
-            placeholder="관리자 비밀번호"
-          />
-          <Button type="submit" className="mt-4 w-full bg-[#A63D5A] hover:bg-[#8A2E48]">
-            로그인
-          </Button>
-        </form>
-      </div>
-    )
-  }
 
   const kpi = [
     { l: '100문100답 조회수', v: stats.views },
@@ -283,4 +253,8 @@ export default function AdminDashboardPage() {
       </div>
     </div>
   )
+}
+
+export default function AdminDashboardPage() {
+  return <AdminGate title="100문100답 통계">{() => <AdminDashboard />}</AdminGate>
 }

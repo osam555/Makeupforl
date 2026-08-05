@@ -3,20 +3,27 @@ import { NextResponse } from 'next/server'
 import raw from '@/data/wed100.json'
 import type { Wed100Data } from '@/types/wed100'
 
+const ADMIN_EMAILS = (process.env.NEXT_PUBLIC_ADMIN_EMAILS ?? 'makeupforl77@gmail.com')
+  .split(',')
+  .map((s) => s.trim().toLowerCase())
+  .filter(Boolean)
+
 /**
  * 시드 JSON -> Firestore 업서트 (어드민 [DB에 시드 넣기] 버튼)
- * POST /api/wed100/seed  { password: string, overwrite?: boolean }
+ * POST /api/wed100/seed  { email: string, overwrite?: boolean }
  * - overwrite=false(기본): 이미 있는 slug 는 건너뜀 (어드민 수정 보존)
  * - overwrite=true: 전체 덮어쓰기
  */
 export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}))
-  const password = body?.password
+  const email = typeof body?.email === 'string' ? body.email.toLowerCase() : ''
   const overwrite = !!body?.overwrite
 
-  const expected = process.env.WED100_ADMIN_PASSWORD ?? '8888'
-  if (password !== expected) {
-    return NextResponse.json({ ok: false, error: 'unauthorized' }, { status: 401 })
+  if (!ADMIN_EMAILS.includes(email)) {
+    return NextResponse.json(
+      { ok: false, error: '관리자 계정으로 로그인한 뒤 다시 시도해 주세요.' },
+      { status: 401 },
+    )
   }
 
   const { getDb } = await import('@/lib/firebase/client')

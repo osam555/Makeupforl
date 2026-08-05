@@ -21,17 +21,23 @@
 | `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` | storageBucket |
 | `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | messagingSenderId |
 | `NEXT_PUBLIC_FIREBASE_APP_ID` | appId |
-| `WED100_ADMIN_PASSWORD` | (직접 정하는 어드민 비밀번호) |
+| `NEXT_PUBLIC_ADMIN_EMAILS` | `makeupforl77@gmail.com` (관리자 계정, 쉼표로 여러 명 가능) |
 
 로컬 개발용은 `.env.local` 에 같은 키로 넣으세요.
 
-## 3단계: Firestore 데이터베이스 생성
+## 3단계: 관리자 로그인(Authentication) 설정
+1. 빌드 → **Authentication** → 시작하기
+2. Sign-in method 탭 → **Google** 사용 설정 → 프로젝트 지원 이메일 선택 → 저장
+3. Settings → 승인된 도메인에 `makeupforl.vercel.app` 추가 (없으면)
+4. 관리자 계정: **makeupforl77@gmail.com** — 이 계정으로만 `/admin`, `/admin/wed100`, `/admin/dashboard` 접근 및 저장이 가능합니다
+
+## 4단계: Firestore 데이터베이스 생성
 1. 빌드 → **Firestore Database** → 데이터베이스 만들기
 2. 위치: `asia-northeast3 (Seoul)` → **프로덕션 모드**로 시작
 3. **규칙 탭** → `firebase/firestore.rules` 파일 내용 붙여넣기 → 게시
 
-## 4단계: 100문100답 데이터 넣기
-1. 배포된 사이트에서 `/admin/wed100` 접속 → 관리자 비밀번호 로그인
+## 5단계: 100문100답 데이터 넣기
+1. 배포된 사이트에서 `/admin/wed100` 접속 → **makeupforl77@gmail.com 구글 계정으로 로그인**
 2. 상단 **[DB에 시드 넣기]** 클릭 → 105문이 Firestore에 입력됨
 3. 이후 어드민에서 수정하면 Firestore에 저장되고, 사이트에 최대 1시간 내 반영
 
@@ -55,8 +61,8 @@
 1. 빌드 → **Storage** → 시작하기 (Seoul)
 2. 파일 업로드 후 URL 복사 → `/admin/wed100` 편집 화면의 이미지 URL 칸에 붙여넣기
 
-## 운영 보안 강화 (권장, 추후)
-현재 어드민은 비밀번호 게이트 + 느슨한 쓰기 규칙입니다. 트래픽이 늘면:
-1. Firebase Authentication 활성화 (이메일/비밀번호)
-2. 원장님 계정에 admin 커스텀 클레임 부여
-3. `firestore.rules` 의 `allow write: if true` → `if request.auth != null` 로 교체
+## 관리자 계정 추가/변경
+1. `firebase/firestore.rules` 의 `isAdmin()` 안 이메일 목록 수정 → 콘솔 규칙 탭에 다시 붙여넣기
+2. Vercel 환경변수 `NEXT_PUBLIC_ADMIN_EMAILS` 에 같은 이메일을 쉼표로 추가 → 재배포
+
+두 곳을 함께 고쳐야 화면 접근(1)과 DB 쓰기 권한(2)이 모두 열립니다.

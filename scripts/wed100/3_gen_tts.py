@@ -42,10 +42,14 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 DATA = os.path.join(ROOT, "src", "data", "wed100.json")
 OUTDIR = os.path.join(ROOT, "public", "wed100", "audio")
 
-VOICE_HOST = "ko-KR-InJoonNeural"    # 진행자: 질문
-VOICE_EXPERT = "ko-KR-SunHiNeural"   # 원장님: 답변
-RATE_HOST = "+0%"
-RATE_EXPERT = "-4%"                  # 중년 청취자 배려: 살짝 느리게
+# 한국어 여성 뉴럴 보이스는 SunHi 한 가지뿐이라,
+# 피치/속도를 달리해 두 화자(진행자·원장님)를 구분한다.
+VOICE_HOST = "ko-KR-SunHiNeural"     # 진행자: 질문 (밝고 조금 높게)
+VOICE_EXPERT = "ko-KR-SunHiNeural"   # 원장님: 답변 (차분하고 낮게)
+RATE_HOST = "+6%"
+RATE_EXPERT = "+25%"                 # 원장님 답변: 1.25배속 기본
+PITCH_HOST = "+18Hz"
+PITCH_EXPERT = "-6Hz"
 GAP = 0.28                           # 문장 사이 간격(초)
 BITRATE = "48k"                      # 최종 인코딩(모노)
 
@@ -58,8 +62,8 @@ def ffprobe_dur(path: str) -> float:
     return float(out.stdout.strip())
 
 
-async def synth(text: str, voice: str, rate: str, path: str):
-    c = edge_tts.Communicate(text, voice, rate=rate)
+async def synth(text: str, voice: str, rate: str, pitch: str, path: str):
+    c = edge_tts.Communicate(text, voice, rate=rate, pitch=pitch)
     await c.save(path)
 
 
@@ -85,12 +89,12 @@ async def build_item(item: dict, tmp: str) -> dict:
     segs = []  # (path, dur, kind, cue_index)
 
     qpath = os.path.join(tmp, "q.mp3")
-    await synth(item["question"], VOICE_HOST, RATE_HOST, qpath)
+    await synth(item["question"], VOICE_HOST, RATE_HOST, PITCH_HOST, qpath)
     segs.append((qpath, ffprobe_dur(qpath), "q", -1))
 
     for i, cue in enumerate(item["cues"]):
         p = os.path.join(tmp, f"c{i:03d}.mp3")
-        await synth(cue["ko"], VOICE_EXPERT, RATE_EXPERT, p)
+        await synth(cue["ko"], VOICE_EXPERT, RATE_EXPERT, PITCH_EXPERT, p)
         segs.append((p, ffprobe_dur(p), "a", i))
 
     # 무음 패딩

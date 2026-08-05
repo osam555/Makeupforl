@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { getDb } from '@/lib/firebase/client'
+import AdminGate from '@/components/admin/AdminGate'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -21,26 +22,13 @@ interface Booking {
   created_at: string
 }
 
-export default function AdminPage() {
-  const [password, setPassword] = useState('')
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+function AdminBookings() {
+  const isAuthenticated = true
   const [bookings, setBookings] = useState<Booking[]>([])
   const [loading, setLoading] = useState(false)
   const [filter, setFilter] = useState<'all' | 'pending' | 'confirmed' | 'completed' | 'cancelled'>('all')
 
-  // Simple password authentication (환경변수로 관리 권장)
-  const ADMIN_PASSWORD = '8888' // 실제 운영 시 환경변수로 변경 필요!
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (password === ADMIN_PASSWORD) {
-      setIsAuthenticated(true)
-      loadBookings()
-    } else {
-      alert('비밀번호가 올바르지 않습니다.')
-      setPassword('')
-    }
-  }
 
   const loadBookings = async () => {
     setLoading(true)
@@ -112,36 +100,6 @@ export default function AdminPage() {
     }
   }
 
-  // Login Screen
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-pink-50 to-white flex items-center justify-center p-6">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle className="text-2xl text-center">관리자 로그인</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div>
-                <Input
-                  type="password"
-                  placeholder="비밀번호를 입력하세요"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="text-center"
-                  autoFocus
-                />
-              </div>
-              <Button type="submit" className="w-full bg-pink-600 hover:bg-pink-700">
-                로그인
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
-
   // Admin Dashboard
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -150,14 +108,6 @@ export default function AdminPage() {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <h1 className="text-3xl font-bold text-gray-900">예약 관리</h1>
-            <Button
-              variant="outline"
-              onClick={() => setIsAuthenticated(false)}
-              className="gap-2"
-            >
-              <X className="h-4 w-4" />
-              로그아웃
-            </Button>
           </div>
 
           {/* Filters */}
@@ -326,4 +276,8 @@ export default function AdminPage() {
       </div>
     </div>
   )
+}
+
+export default function AdminPage() {
+  return <AdminGate title="예약 관리">{() => <AdminBookings />}</AdminGate>
 }
