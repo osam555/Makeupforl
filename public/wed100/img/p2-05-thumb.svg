@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800" role="img" aria-label="미리 헤어스타일링을 시연해 보는 안심 서비스의 만족도는?">
+<defs><linearGradient id="b" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#F7F4FA"/><stop offset="1" stop-color="#E4DCED"/></linearGradient></defs>
+<rect width="800" height="800" fill="url(#b)"/>
+<circle cx="605" cy="205" r="150" fill="#ffffff" opacity="0.5"/>
+<g transform="translate(605,205) scale(1.0)" fill="none" stroke="#6E4477" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"><ellipse cx="-14" cy="-6" rx="40" ry="48"/><path d="M-14 42 v22 M-30 64 H2"/><path d="M24 -46 h44 a10 10 0 0 1 10 10 v28 a10 10 0 0 1 -10 10 h-24 l-14 14 v-14 a10 10 0 0 1 -6 -10 v-28 a10 10 0 0 1 10 -10 z"/></g>
+<text x="70" y="118" font-family="'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif" font-size="20" letter-spacing="6" fill="#6E4477" font-weight="700">PART 2</text>
+<text x="70" y="330" font-family="'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif" font-size="104" font-weight="900" fill="#6E4477" opacity="0.18">05</text>
+<text x="70" y="438" font-family="'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif" font-size="42" font-weight="700" fill="#312B3A"><tspan x="70" dy="0">미리 헤어스타일링을 시연해</tspan><tspan x="70" dy="52">보는 안심 서비스의</tspan><tspan x="70" dy="52">만족도는?</tspan></text>
+<line x1="70" y1="700" x2="200" y2="700" stroke="#6E4477" stroke-width="3"/>
+<text x="70" y="742" font-family="'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif" font-size="21" fill="#312B3A" opacity="0.65">메이크업포엘</text>
+</svg>

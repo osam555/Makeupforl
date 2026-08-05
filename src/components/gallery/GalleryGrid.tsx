@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { createClient } from '@/lib/supabase/client'
+import { getDb } from '@/lib/firebase/client'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { ChevronLeft, ChevronRight, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -11,7 +11,8 @@ interface GalleryImage {
   id: string
   url: string
   alt_text: string | null
-  gallery_id: string
+  /** 카테고리 슬러그 (all | wedding | honju | party …) */
+  category?: string
   order_position: number
 }
 
@@ -30,40 +31,18 @@ export default function GalleryGrid({ category }: GalleryGridProps) {
 
   async function loadImages() {
     setLoading(true)
-    const supabase = createClient()
 
     try {
-      let query = supabase
-        .from('images')
-        .select(`
-          id,
-          url,
-          alt_text,
-          gallery_id,
-          order_position,
-          galleries (
-            id,
-            category_id,
-            categories (
-              slug
-            )
-          )
-        `)
-        .order('order_position', { ascending: true })
-
-      if (category !== 'all') {
-        // Filter by category slug
-        query = query.eq('galleries.categories.slug', category)
-      }
-
-      const { data, error } = await query
-
-      if (error) {
-        console.error('Error loading images:', error)
-        setImages([])
-      } else {
-        setImages(data || [])
-      }
+      const db = getDb()
+      if (!db) throw new Error('firebase-not-configured')
+      const { collection, getDocs, orderBy, query, where } = await import('firebase/firestore')
+      const base = collection(db, 'gallery_images')
+      const q =
+        category !== 'all'
+          ? query(base, where('category', '==', category), orderBy('order_position', 'asc'))
+          : query(base, orderBy('order_position', 'asc'))
+      const snap = await getDocs(q)
+      setImages(snap.docs.map((d) => ({ id: d.id, ...d.data() }) as GalleryImage))
     } catch (error) {
       console.error('Error:', error)
       setImages([])

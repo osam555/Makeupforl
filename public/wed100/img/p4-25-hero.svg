@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img" aria-label="혼주 헤어 컬러, 어떤 색이 세련돼 보여요?">
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0" stop-color="#F5F7F5"/><stop offset="1" stop-color="#DDE7DF"/>
+ </linearGradient>
+ <radialGradient id="glow" cx="0.78" cy="0.28" r="0.6">
+  <stop offset="0" stop-color="#ffffff" stop-opacity="0.85"/>
+  <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+ </radialGradient>
+</defs>
+<rect width="1600" height="900" fill="url(#bg)"/>
+<rect width="1600" height="900" fill="url(#glow)"/>
+<path d="M1180 0 C1300 220 1240 520 1420 900 L1600 900 L1600 0 Z" fill="#3F6B57" opacity="0.07"/>
+<circle cx="1245" cy="330" r="235" fill="#ffffff" opacity="0.55"/>
+<circle cx="1245" cy="330" r="235" fill="none" stroke="#3F6B57" stroke-width="1.5" opacity="0.35"/>
+<g transform="translate(1245,330) scale(1.55)" fill="none" stroke="#3F6B57" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"><path d="M-34 44 c-14 -34 -8 -74 22 -84 c30 -10 52 14 46 44"/><path d="M-12 -40 c18 -18 44 -10 46 12 c2 20 -16 26 -30 18"/><path d="M-34 44 h68"/><path d="M34 -20 h34 a6 6 0 0 1 6 6 v10 h-46 v-10 a6 6 0 0 1 6 -6 z"/><path d="M30 -4 v18 M42 -4 v18 M54 -4 v18 M66 -4 v18"/></g>
+<rect x="56" y="56" width="1488" height="788" fill="none" stroke="#3F6B57" stroke-width="1" opacity="0.28"/>
+<text x="120" y="168" font-family="'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif" font-size="26" letter-spacing="8" fill="#3F6B57" font-weight="700">PART 4</text>
+<text x="120" y="212" font-family="'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif" font-size="30" fill="#26332C" opacity="0.62">혼주 헤어스타일</text>
+<text x="120" y="330" font-family="'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif" font-size="150" font-weight="900" fill="#3F6B57" opacity="0.16">25</text>
+<text x="120" y="374" font-family="'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif" font-size="62" font-weight="700" fill="#26332C" letter-spacing="-1"><tspan x="120" dy="0">혼주 헤어 컬러, 어떤 색이 세련돼</tspan><tspan x="120" dy="84">보여요?</tspan></text>
+<text x="120" y="568" font-family="'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif" font-size="25" fill="#26332C" opacity="0.55"><tspan x="120" dy="0">What hair color looks the most polished for a</tspan><tspan x="120" dy="34">wedding parent?</tspan></text>
+<line x1="120" y1="750" x2="330" y2="750" stroke="#3F6B57" stroke-width="3"/>
+<text x="120" y="804" font-family="'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif" font-size="27" letter-spacing="3" fill="#26332C" opacity="0.7">혼주메이크업 100문 100답 · 메이크업포엘</text>
+</svg>

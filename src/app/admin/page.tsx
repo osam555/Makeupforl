@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { getDb } from '@/lib/firebase/client'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -44,25 +44,18 @@ export default function AdminPage() {
 
   const loadBookings = async () => {
     setLoading(true)
-    const supabase = createClient()
 
     try {
-      let query = supabase
-        .from('bookings')
-        .select('*')
-        .order('created_at', { ascending: false })
-
-      if (filter !== 'all') {
-        query = query.eq('status', filter)
-      }
-
-      const { data, error } = await query
-
-      if (error) {
-        console.error('Error loading bookings:', error)
-      } else {
-        setBookings(data || [])
-      }
+      const db = getDb()
+      if (!db) throw new Error('firebase-not-configured')
+      const { collection, getDocs, orderBy, query, where } = await import('firebase/firestore')
+      const base = collection(db, 'bookings')
+      const q =
+        filter !== 'all'
+          ? query(base, where('status', '==', filter), orderBy('created_at', 'desc'))
+          : query(base, orderBy('created_at', 'desc'))
+      const snap = await getDocs(q)
+      setBookings(snap.docs.map((d) => ({ ...(d.data() as Omit<Booking, 'id'>), id: d.id })))
     } catch (error) {
       console.error('Error:', error)
     } finally {
@@ -71,20 +64,12 @@ export default function AdminPage() {
   }
 
   const updateBookingStatus = async (id: string, newStatus: string) => {
-    const supabase = createClient()
-
     try {
-      const { error } = await supabase
-        .from('bookings')
-        .update({ status: newStatus })
-        .eq('id', id)
-
-      if (error) {
-        console.error('Error updating booking:', error)
-        alert('상태 업데이트 중 오류가 발생했습니다.')
-      } else {
-        loadBookings() // Reload after update
-      }
+      const db = getDb()
+      if (!db) throw new Error('firebase-not-configured')
+      const { doc, updateDoc } = await import('firebase/firestore')
+      await updateDoc(doc(db, 'bookings', id), { status: newStatus })
+      loadBookings() // Reload after update
     } catch (error) {
       console.error('Error:', error)
       alert('상태 업데이트 중 오류가 발생했습니다.')

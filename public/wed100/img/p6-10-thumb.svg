@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800" role="img" aria-label="예식 종료 후 메이크업과 헤어 클렌징 꿀팁">
+<defs><linearGradient id="b" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#F4F6FA"/><stop offset="1" stop-color="#D9E2F0"/></linearGradient></defs>
+<rect width="800" height="800" fill="url(#b)"/>
+<circle cx="605" cy="205" r="150" fill="#ffffff" opacity="0.5"/>
+<g transform="translate(605,205) scale(1.0)" fill="none" stroke="#3C5A86" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"><circle cx="-16" cy="14" r="30"/><circle cx="20" cy="14" r="30"/><path d="M-16 -30 l-10 12 h20 z"/><path d="M-56 -46 l-10 -16 M0 -54 v-18 M58 -46 l10 -16"/></g>
+<text x="70" y="118" font-family="'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif" font-size="20" letter-spacing="6" fill="#3C5A86" font-weight="700">PART 6</text>
+<text x="70" y="330" font-family="'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif" font-size="104" font-weight="900" fill="#3C5A86" opacity="0.18">10</text>
+<text x="70" y="454" font-family="'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif" font-size="42" font-weight="700" fill="#242E3D"><tspan x="70" dy="0">예식 종료 후 메이크업과</tspan><tspan x="70" dy="52">헤어 클렌징 꿀팁</tspan></text>
+<line x1="70" y1="700" x2="200" y2="700" stroke="#3C5A86" stroke-width="3"/>
+<text x="70" y="742" font-family="'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif" font-size="21" fill="#242E3D" opacity="0.65">메이크업포엘</text>
+</svg>

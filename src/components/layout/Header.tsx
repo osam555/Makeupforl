@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 
 const navigation = [
   { name: '브랜드소개', href: '/brand' },
+  { name: '혼주메이크업 100문100답', href: '/wed100' },
   { name: '샵 / 출장메이크업', href: '/services' },
   { name: '1:1 사전컨설팅', href: '/consultation' },
   { name: '갤러리', href: '/gallery' },
