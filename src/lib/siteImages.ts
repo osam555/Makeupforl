@@ -22,6 +22,22 @@ export async function getSiteImages(): Promise<Record<string, string>> {
   const map: Record<string, string> = {}
   for (const a of ASSETS) map[a.id] = a.url
 
+  // 서버(Admin SDK)로 읽으면 보안 규칙과 무관하게 조회된다
+  try {
+    const { getAdminDb } = await import('@/lib/firebase/admin')
+    const adb = await getAdminDb()
+    if (adb) {
+      const snap = await adb.collection('site_images').get()
+      snap.docs.forEach((d) => {
+        const u = (d.data() as { url?: string }).url
+        if (u) map[d.id] = u
+      })
+      return map
+    }
+  } catch {
+    /* 클라이언트 SDK 로 재시도 */
+  }
+
   try {
     const { getDb } = await import('@/lib/firebase/client')
     const db = getDb()

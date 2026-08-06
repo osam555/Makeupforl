@@ -42,6 +42,12 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // 사이트 UI 이미지: 공개 읽기, 수정은 관리자만
+    match /site_images/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
     // 갤러리 이미지: 공개 읽기, 수정은 관리자만
     match /gallery_images/{id} {
       allow read: if true;
