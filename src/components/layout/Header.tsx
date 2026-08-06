@@ -1,7 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -18,13 +19,40 @@ const navigation = [
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const router = useRouter()
+
+  /** 로고를 빠르게 두 번(모바일은 세 번) 누르면 관리자 화면으로 이동 */
+  const tapRef = useRef<{ n: number; t: number }>({ n: 0, t: 0 })
+  const handleLogoTap = () => {
+    const now = Date.now()
+    const s = tapRef.current
+    s.n = now - s.t < 600 ? s.n + 1 : 1
+    s.t = now
+    if (s.n >= 2) {
+      s.n = 0
+      router.push('/admin/wed100')
+    }
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
       <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
         {/* Logo */}
         <div className="flex lg:flex-1">
-          <Link href="/" className="-m-1.5 p-1.5">
+          <Link
+            href="/"
+            className="-m-1.5 p-1.5 select-none"
+            onClick={(e) => {
+              // 두 번 연속 탭이면 관리자 화면으로 (일반 클릭은 홈으로)
+              const s = tapRef.current
+              const now = Date.now()
+              if (now - s.t < 600 && s.n >= 1) {
+                e.preventDefault()
+              }
+              handleLogoTap()
+            }}
+            title="메이크업포엘"
+          >
             <span className="text-2xl font-bold text-pink-600">메이크업포엘</span>
           </Link>
         </div>
