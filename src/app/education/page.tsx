@@ -1,105 +1,173 @@
 import { Metadata } from 'next'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { BookOpen, Video, FileText } from 'lucide-react'
+import Link from 'next/link'
+import { Headphones, Palette, Scissors, Shirt, CalendarCheck, Search } from 'lucide-react'
+
+import { getPublishedWed100Items, wed100Parts } from '@/lib/wed100'
 
 export const metadata: Metadata = {
   title: '교육자료 | 메이크업포엘',
-  description: '메이크업포엘의 메이크업 팁과 교육 자료를 확인하세요.',
+  description:
+    '혼주메이크업 100문100답을 비롯해 메이크업포엘이 정리한 자료 모음. 예약·컨설팅·메이크업·헤어·한복·예식 당일까지 궁금한 것을 찾아보세요.',
 }
 
-const educationCategories = [
-  {
-    icon: BookOpen,
-    title: '메이크업 기초',
-    description: '메이크업을 처음 시작하시는 분들을 위한 기초 가이드',
-    topics: ['피부 준비', '베이스 메이크업', '컬러 메이크업 순서', '메이크업 도구 사용법'],
-  },
-  {
-    icon: Video,
-    title: '스타일별 메이크업',
-    description: '다양한 상황에 맞는 메이크업 스타일',
-    topics: ['데일리 메이크업', '웨딩 메이크업', '파티 메이크업', '직장인 메이크업'],
-  },
-  {
-    icon: FileText,
-    title: '메이크업 관리',
-    description: '메이크업을 오래 유지하고 관리하는 방법',
-    topics: ['메이크업 고정', '수정 방법', '클렌징 방법', '화장품 보관법'],
-  },
-]
+const PART_ICON = [Search, Palette, Palette, Scissors, Shirt, CalendarCheck]
 
-export default function EducationPage() {
+export default async function EducationPage() {
+  const items = await getPublishedWed100Items()
+  const counts = new Map<number, number>()
+  items.forEach((x) => counts.set(x.part, (counts.get(x.part) ?? 0) + 1))
+  const totalMin = Math.round(
+    items.reduce(
+      (a, x) => a + (x.duration ?? x.cues.reduce((b, c) => b + c.ko.length, 0) / 5.2 + 6),
+      0,
+    ) / 60,
+  )
+  const picks = ['p1-01', 'p1-09', 'p3-01', 'p4-01', 'p5-01', 'p6-01']
+    .map((s) => items.find((x) => x.slug === s))
+    .filter(Boolean)
+
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section */}
+      {/* Hero */}
       <section className="bg-gradient-to-br from-pink-50 to-white py-20">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8 text-center">
-          <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl mb-6">
+        <div className="mx-auto max-w-4xl px-6 text-center lg:px-8">
+          <h1 className="mb-5 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
             교육자료
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            메이크업포엘이 준비한 유용한 메이크업 정보와 팁
+          <p className="mx-auto max-w-2xl text-lg leading-relaxed text-gray-600">
+            25년간 1만 명의 혼주님을 만나며 쌓인 질문과 답을 정리했습니다.
+            읽으셔도 되고, 들으셔도 됩니다.
           </p>
         </div>
       </section>
 
-      {/* Education Categories */}
-      <section className="py-20">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {educationCategories.map((category) => (
-              <Card key={category.title} className="border-2 hover:border-pink-200 transition-colors">
-                <CardHeader>
-                  <div className="inline-flex p-3 rounded-lg bg-pink-100 mb-4 w-fit">
-                    <category.icon className="h-6 w-6 text-pink-600" />
-                  </div>
-                  <CardTitle className="text-2xl">{category.title}</CardTitle>
-                  <p className="text-gray-600 mt-2">{category.description}</p>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
-                    {category.topics.map((topic) => (
-                      <li key={topic} className="flex items-center gap-2 text-gray-700">
-                        <div className="w-1.5 h-1.5 rounded-full bg-pink-600"></div>
-                        {topic}
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
+      {/* 100문100답 메인 */}
+      <section className="py-16">
+        <div className="mx-auto max-w-5xl px-6 lg:px-8">
+          <div className="overflow-hidden rounded-3xl border border-pink-100 bg-gradient-to-br from-white to-pink-50/60 p-8 sm:p-10">
+            <span className="inline-flex items-center gap-2 rounded-full bg-pink-600 px-3 py-1 text-xs font-bold text-white">
+              <Headphones className="h-3.5 w-3.5" /> 대표 자료
+            </span>
+            <h2 className="mt-5 text-3xl font-bold text-gray-900">혼주메이크업 100문 100답</h2>
+            <p className="mt-3 text-[16px] leading-[1.85] text-gray-600">
+              결혼식 날, 후회하면 늦습니다. 업체 선정부터 예식 당일까지 혼주님이 가장 많이 묻는
+              질문에 대표원장이 하나씩 답했습니다. 각 질문마다 음성과 자막(한국어·English)을
+              제공하니 눈이 피로하실 땐 들으셔도 됩니다.
+            </p>
+            <dl className="mt-7 flex flex-wrap gap-x-10 gap-y-4">
+              {[
+                [String(items.length), '질문'],
+                [String(wed100Parts.length), '파트'],
+                [`약 ${totalMin}분`, '오디오'],
+                ['한 / EN', '자막'],
+              ].map(([v, l]) => (
+                <div key={l}>
+                  <dt className="text-2xl font-bold text-pink-600">{v}</dt>
+                  <dd className="text-xs text-gray-500">{l}</dd>
+                </div>
+              ))}
+            </dl>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link
+                href="/wed100"
+                className="rounded-xl bg-pink-600 px-6 py-3.5 text-sm font-bold text-white transition hover:bg-pink-700"
+              >
+                100문100답 전체 보기
+              </Link>
+              {items[0] && (
+                <Link
+                  href={`/wed100/${items[0].slug}`}
+                  className="rounded-xl border border-pink-200 bg-white px-6 py-3.5 text-sm font-bold text-gray-900 transition hover:border-pink-300"
+                >
+                  ▶ 1번부터 듣기
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 파트별 */}
+      <section className="pb-16">
+        <div className="mx-auto max-w-5xl px-6 lg:px-8">
+          <h2 className="text-2xl font-bold text-gray-900">주제별로 찾아보기</h2>
+          <p className="mt-2 text-sm text-gray-600">준비 순서 그대로 6개 파트로 나눴습니다.</p>
+          <div className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {wed100Parts.map((p, i) => {
+              const Icon = PART_ICON[i] ?? Search
+              return (
+                <Link
+                  key={p.part}
+                  href="/wed100"
+                  className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                >
+                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-pink-100 text-pink-600">
+                    <Icon className="h-5 w-5" />
+                  </span>
+                  <p className="mt-4 text-[11px] font-extrabold tracking-widest text-pink-600">
+                    PART {p.part}
+                  </p>
+                  <h3 className="mt-1 text-base font-bold text-gray-900">{p.title}</h3>
+                  <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-gray-600">
+                    {p.intro[0] ?? ''}
+                  </p>
+                  <p className="mt-3 text-xs font-bold text-pink-600">
+                    {counts.get(p.part) ?? 0}개 질문 →
+                  </p>
+                </Link>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* 많이 찾는 질문 */}
+      <section className="bg-gray-50 py-16">
+        <div className="mx-auto max-w-5xl px-6 lg:px-8">
+          <h2 className="text-2xl font-bold text-gray-900">이런 것들을 많이 물어보십니다</h2>
+          <div className="mt-7 overflow-hidden rounded-2xl border border-gray-200 bg-white">
+            {picks.map((x) => (
+              <Link
+                key={x!.slug}
+                href={`/wed100/${x!.slug}`}
+                className="flex items-center gap-4 border-b border-gray-100 px-5 py-4 text-sm last:border-0 hover:bg-pink-50/40"
+              >
+                <span className="w-14 flex-none text-[11px] font-extrabold tracking-wider text-pink-600">
+                  P{x!.part}·{String(x!.n).padStart(2, '0')}
+                </span>
+                <span className="flex-1 font-medium text-gray-900">{x!.question}</span>
+                <span className="flex-none text-xs text-gray-400">듣기 →</span>
+              </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Coming Soon */}
-      <section className="py-20 bg-gray-50">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <Card className="max-w-3xl mx-auto text-center">
-            <CardContent className="pt-12 pb-12">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                더 많은 교육 자료 준비 중
-              </h2>
-              <p className="text-gray-600 mb-6">
-                곧 더 다양하고 유익한 메이크업 교육 자료를 제공할 예정입니다.
-                <br />
-                메이크업에 대한 궁금한 점이 있으시다면 언제든 문의해 주세요!
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="tel:02-323-3321" className="text-pink-600 hover:text-pink-700 font-medium">
-                  전화 문의: 02-323-3321
-                </a>
-                <span className="text-gray-300 hidden sm:block">|</span>
-                <a
-                  href="https://pf.kakao.com/_lXVVxb"
-                  target="_blank"
-                  className="text-pink-600 hover:text-pink-700 font-medium"
-                >
-                  카카오톡 문의
-                </a>
-              </div>
-            </CardContent>
-          </Card>
+      {/* CTA */}
+      <section className="py-16">
+        <div className="mx-auto max-w-3xl px-6 text-center lg:px-8">
+          <h2 className="text-2xl font-bold text-gray-900">
+            읽고 들으셨다면, 이제 얼굴을 직접 봐야 합니다
+          </h2>
+          <p className="mt-3 leading-relaxed text-gray-600">
+            혼주 메이크업은 얼굴 골격·피부 상태·한복 색에 따라 답이 달라집니다.
+            <br />
+            1:1 사전 컨설팅에서 원장이 직접 진단해 드립니다.
+          </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <Link
+              href="/consultation"
+              className="rounded-xl bg-pink-600 px-6 py-3.5 text-sm font-bold text-white transition hover:bg-pink-700"
+            >
+              1:1 사전컨설팅 알아보기
+            </Link>
+            <Link
+              href="/reservation"
+              className="rounded-xl border border-gray-200 px-6 py-3.5 text-sm font-bold text-gray-900 transition hover:border-gray-300"
+            >
+              예약 안내
+            </Link>
+          </div>
         </div>
       </section>
     </div>

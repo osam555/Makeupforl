@@ -1,161 +1,159 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Check, Sparkles, MapPin } from 'lucide-react'
+import { Home, Car, ShieldCheck, AlertTriangle } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: '샵 / 출장메이크업 | 메이크업포엘',
-  description: '메이크업포엘의 샵 서비스와 출장 메이크업 서비스를 확인하세요.',
+  description:
+    '압구정역 3번출구 프라이빗 1인실 샵과, 원하는 시간·장소로 찾아가는 출장 메이크업 O2O 서비스. 국가자격증을 보유한 정식 허가 업체입니다.',
+  keywords: '강남 메이크업샵, 출장메이크업, 혼주 출장메이크업, 압구정 메이크업',
 }
 
-const shopServices = [
-  '전문가 1:1 사전 컨설팅',
-  '퍼스널컬러 진단',
-  '헤어스타일 점검 및 연출',
-  '프라이빗 메이크업 공간',
-  '프리미엄 화장품 사용',
-  '메이크업 유지 팁 제공',
-]
-
-const onsiteServices = [
-  '원하는 장소로 방문',
-  '시간 자유 선택 가능',
-  '웨딩, 행사 전문 메이크업',
-  '이동 장비 완비',
-  '퍼스널컬러 진단 포함',
-  '헤어 스타일링 포함',
-]
-
-const serviceCategories = [
-  { name: '웨딩 메이크업', description: '인생에서 가장 아름다운 날을 위한 완벽한 메이크업' },
-  { name: '혼주 메이크업', description: '우아하고 품격 있는 혼주님을 위한 메이크업' },
-  { name: '하객 메이크업', description: '결혼식, 파티에 어울리는 화사한 메이크업' },
-  { name: '남자 메이크업', description: '자연스러우면서도 깔끔한 남성 메이크업' },
-  { name: '기업행사 메이크업', description: '프레젠테이션, 촬영을 위한 전문 메이크업' },
-  { name: '프로필 메이크업', description: '증명사진, 프로필 촬영을 위한 메이크업' },
+const PROCESS = [
+  { n: 1, t: '문의', d: '전화 또는 카카오채팅으로 문의' },
+  { n: 2, t: '예약', d: '예약금 입금으로 일정 확정' },
+  { n: 3, t: '사전컨설팅', d: '샵 방문 또는 원격 컨설팅' },
+  { n: 4, t: '디자인 및 준비', d: '디자인 확정, 재료 점검' },
+  { n: 5, t: '행사 일주일 전 최종점검', d: '시간·안내사항 재확인' },
+  { n: 6, t: '안내메시지 발송', d: '메이크업 전 준비사항 안내' },
+  { n: 7, t: '당일 서비스', d: '예약 시간에 서비스 제공' },
 ]
 
 export default function ServicesPage() {
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section */}
+      {/* Hero */}
       <section className="bg-gradient-to-br from-pink-50 to-white py-20">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8 text-center">
-          <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl mb-6">
+        <div className="mx-auto max-w-5xl px-6 text-center lg:px-8">
+          <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
             샵 / 출장메이크업
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            고객님의 니즈에 맞는 최적의 메이크업 서비스를 제공합니다
+          <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
+            메이크업포엘의 서비스는 다릅니다. 메이크업 전 전문가의 1:1 사전 컨설팅을 통해 퍼스널컬러
+            진단과 어울리는 헤어스타일 점검을 마친 뒤 메이크업을 진행합니다.
           </p>
         </div>
       </section>
 
-      {/* Service Types */}
-      <section className="py-20">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Shop Service */}
-            <Card className="border-2 hover:border-pink-200 transition-colors">
-              <CardHeader>
-                <div className="inline-flex p-3 rounded-lg bg-gradient-to-br from-pink-500 to-rose-500 mb-4 w-fit">
-                  <Sparkles className="h-6 w-6 text-white" />
-                </div>
-                <CardTitle className="text-2xl">샵 서비스</CardTitle>
-                <CardDescription className="text-base">
-                  고객님 한분한분의 소중한 날을 위한 프라이빗 헤어 메이크업
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-3">
-                  {shopServices.map((service) => (
-                    <div key={service} className="flex items-start gap-3">
-                      <Check className="h-5 w-5 text-pink-600 flex-shrink-0 mt-0.5" />
-                      <span className="text-gray-700">{service}</span>
-                    </div>
-                  ))}
-                </div>
-                <Link href="/reservation">
-                  <Button className="w-full bg-gradient-to-r from-pink-500 to-rose-500 hover:opacity-90">
-                    샵 서비스 예약하기
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
+      {/* 두 가지 서비스 */}
+      <section className="py-16">
+        <div className="mx-auto max-w-5xl px-6 lg:px-8">
+          <div className="grid gap-6 md:grid-cols-2">
+            {/* 샵 */}
+            <div className="rounded-2xl border border-gray-100 bg-white p-8 shadow-sm">
+              <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-pink-100 text-pink-600">
+                <Home className="h-5 w-5" />
+              </span>
+              <h2 className="mt-5 text-xl font-bold text-gray-900">샵 서비스</h2>
+              <p className="mt-2 text-sm font-medium text-pink-600">
+                고객님 한 분 한 분의 소중한 날을 위한 프라이빗 헤어 메이크업
+              </p>
+              <p className="mt-4 text-[15px] leading-[1.85] text-gray-600">
+                깔끔한 실내전경, 분리된 공간, 1인실 보유.
+                <br />
+                압구정역 3번출구 역세권에 위치한 샵에서 조용하고 편리한 메이크업 &amp; 헤어 서비스를
+                받으실 수 있습니다.
+              </p>
+              <ul className="mt-5 space-y-2 text-sm text-gray-600">
+                <li>· 프라이빗 1인실</li>
+                <li>· 압구정역 3번출구 도보 거리</li>
+                <li>· 사전 컨설팅 후 진행</li>
+              </ul>
+            </div>
 
-            {/* Onsite Service */}
-            <Card className="border-2 hover:border-pink-200 transition-colors">
-              <CardHeader>
-                <div className="inline-flex p-3 rounded-lg bg-gradient-to-br from-rose-500 to-pink-500 mb-4 w-fit">
-                  <MapPin className="h-6 w-6 text-white" />
-                </div>
-                <CardTitle className="text-2xl">출장 메이크업</CardTitle>
-                <CardDescription className="text-base">
-                  "Anytime, Anywhere" 고객이 원하는 시간에 원하는 장소에서
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-3">
-                  {onsiteServices.map((service) => (
-                    <div key={service} className="flex items-start gap-3">
-                      <Check className="h-5 w-5 text-pink-600 flex-shrink-0 mt-0.5" />
-                      <span className="text-gray-700">{service}</span>
-                    </div>
-                  ))}
-                </div>
-                <Link href="/reservation">
-                  <Button className="w-full bg-gradient-to-r from-rose-500 to-pink-500 hover:opacity-90">
-                    출장 메이크업 예약하기
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
+            {/* 출장 */}
+            <div className="rounded-2xl border border-gray-100 bg-white p-8 shadow-sm">
+              <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-pink-100 text-pink-600">
+                <Car className="h-5 w-5" />
+              </span>
+              <h2 className="mt-5 text-xl font-bold text-gray-900">출장 메이크업</h2>
+              <p className="mt-2 text-sm font-medium text-pink-600">
+                Anytime, Anywhere — 고객이 원하는 시간에 원하는 장소에서
+              </p>
+              <p className="mt-4 text-[15px] leading-[1.85] text-gray-600">
+                행사 당일, 집 또는 나만의 공간에서 편하게 메이크업을 받고 싶으신가요?
+                모든 준비를 갖춘 전문가 아티스트가 행사 당일 고객님을 찾아가서 메이크업·헤어
+                서비스를 제공해 드리는{' '}
+                <b className="text-gray-800">찾아가는 메이크업 O2O 서비스</b>입니다.
+              </p>
+              <ul className="mt-5 space-y-2 text-sm text-gray-600">
+                <li>· 자택·예식장·촬영장 어디든</li>
+                <li>· 전문가 팀 단위 출장 가능</li>
+                <li>· 사전 컨설팅 후 진행</li>
+              </ul>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Service Categories */}
-      <section className="py-20 bg-gray-50">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">다양한 메이크업 서비스</h2>
-            <p className="text-lg text-gray-600">
-              모든 순간을 특별하게 만들어 드립니다
+      {/* 주의사항 */}
+      <section className="pb-16">
+        <div className="mx-auto max-w-5xl px-6 lg:px-8">
+          <div className="rounded-2xl border border-amber-200 bg-amber-50 p-7">
+            <h2 className="flex items-center gap-2 text-lg font-bold text-amber-900">
+              <AlertTriangle className="h-5 w-5" />
+              출장메이크업 신청 시 꼭 확인하세요
+            </h2>
+            <p className="mt-4 text-[15px] leading-[1.85] text-amber-900/90">
+              출장메이크업 서비스는 오직 <b>메이크업 국가자격증</b>과 <b>면허증</b>을 소지한
+              아티스트만, 정식 영업 허가를 받은 업체를 통해 <b>합법적으로</b> 제공할 수 있는
+              서비스입니다. 메이크업포엘은 위 조건에 모두 부합합니다.
+            </p>
+            <p className="mt-3 text-[15px] leading-[1.85] text-amber-900/90">
+              블로그·인스타그램·카페 등 플랫폼에서 개인 광고를 하고 불법으로 활동하는, 검증되지 않은
+              출장 메이크업으로 인해 다양한 피해 사례가 발생하고 있습니다. 중요한 날인 만큼 합법적인
+              곳을 통해 서비스 받으시길 권해드립니다.
+            </p>
+            <p className="mt-4 inline-flex items-center gap-2 rounded-lg bg-white px-3 py-2 text-xs font-bold text-amber-800">
+              <ShieldCheck className="h-4 w-4" />
+              사업자등록 143-08-02484 · 통신판매업 2017-서울마포-0578
             </p>
           </div>
+        </div>
+      </section>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {serviceCategories.map((category) => (
-              <Card key={category.name} className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <CardTitle className="text-xl">{category.name}</CardTitle>
-                  <CardDescription>{category.description}</CardDescription>
-                </CardHeader>
-              </Card>
+      {/* 진행 과정 */}
+      <section className="bg-gray-50 py-16">
+        <div className="mx-auto max-w-5xl px-6 lg:px-8">
+          <h2 className="text-2xl font-bold text-gray-900">진행 과정</h2>
+          <p className="mt-2 text-sm text-gray-600">
+            문의부터 당일 서비스까지, 빠짐없이 챙겨 드립니다.
+          </p>
+          <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {PROCESS.map((p) => (
+              <div key={p.n} className="rounded-xl border border-gray-200 bg-white p-5">
+                <span className="text-xs font-extrabold tracking-widest text-pink-600">
+                  STEP {p.n}
+                </span>
+                <h3 className="mt-2 font-bold text-gray-900">{p.t}</h3>
+                <p className="mt-1 text-sm text-gray-600">{p.d}</p>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            메이크업 예약은 메이크업포엘에서
+      {/* CTA */}
+      <section className="py-16">
+        <div className="mx-auto max-w-3xl px-6 text-center lg:px-8">
+          <h2 className="text-2xl font-bold text-gray-900">
+            어떤 서비스가 맞을지 고민되시나요?
           </h2>
-          <p className="text-lg text-gray-600 mb-8">
-            전문가의 1:1 컨설팅으로 가장 아름다운 모습을 만들어 드립니다
+          <p className="mt-3 text-gray-600">
+            1:1 사전 컨설팅에서 얼굴·피부·한복까지 보고 가장 맞는 방법을 안내해 드립니다.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/reservation">
-              <Button size="lg" className="bg-pink-600 hover:bg-pink-700">
-                지금 예약하기
-              </Button>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <Link
+              href="/consultation"
+              className="rounded-xl bg-pink-600 px-6 py-3.5 text-sm font-bold text-white transition hover:bg-pink-700"
+            >
+              1:1 사전컨설팅 알아보기
             </Link>
-            <Link href="tel:02-323-3321">
-              <Button size="lg" variant="outline" className="border-pink-600 text-pink-600 hover:bg-pink-50">
-                전화 상담: 02-323-3321
-              </Button>
+            <Link
+              href="/reservation"
+              className="rounded-xl border border-gray-200 px-6 py-3.5 text-sm font-bold text-gray-900 transition hover:border-gray-300"
+            >
+              예약 안내
             </Link>
           </div>
         </div>
