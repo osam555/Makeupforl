@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { getDb } from '@/lib/firebase/client'
+import gallerySeed from '@/data/gallery.json'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { ChevronLeft, ChevronRight, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -32,6 +33,11 @@ export default function GalleryGrid({ category }: GalleryGridProps) {
   async function loadImages() {
     setLoading(true)
 
+    // 시드(원본 홈페이지 이미지) — Firestore 에 등록된 사진이 있으면 그쪽을 우선 사용
+    const seed = (gallerySeed as GalleryImage[]).filter(
+      (x) => category === 'all' || x.category === category,
+    )
+
     try {
       const db = getDb()
       if (!db) throw new Error('firebase-not-configured')
@@ -42,10 +48,10 @@ export default function GalleryGrid({ category }: GalleryGridProps) {
           ? query(base, where('category', '==', category), orderBy('order_position', 'asc'))
           : query(base, orderBy('order_position', 'asc'))
       const snap = await getDocs(q)
-      setImages(snap.docs.map((d) => ({ id: d.id, ...d.data() }) as GalleryImage))
-    } catch (error) {
-      console.error('Error:', error)
-      setImages([])
+      const rows = snap.docs.map((d) => ({ id: d.id, ...d.data() }) as GalleryImage)
+      setImages(rows.length > 0 ? rows : seed)
+    } catch {
+      setImages(seed)
     } finally {
       setLoading(false)
     }
@@ -71,16 +77,7 @@ export default function GalleryGrid({ category }: GalleryGridProps) {
     }
   }
 
-  // Sample placeholder images for demo
-  const placeholderImages = Array.from({ length: 12 }, (_, i) => ({
-    id: `placeholder-${i}`,
-    url: `https://picsum.photos/seed/${category}-${i}/800/600`,
-    alt_text: `${category} 메이크업 ${i + 1}`,
-    gallery_id: 'placeholder',
-    order_position: i,
-  }))
-
-  const displayImages = images.length > 0 ? images : placeholderImages
+  const displayImages = images
 
   if (loading) {
     return (
@@ -95,7 +92,7 @@ export default function GalleryGrid({ category }: GalleryGridProps) {
   if (displayImages.length === 0) {
     return (
       <div className="text-center py-16">
-        <p className="text-gray-500">아직 등록된 이미지가 없습니다.</p>
+        <p className="text-gray-500">이 카테고리는 준비 중입니다.</p>
       </div>
     )
   }
