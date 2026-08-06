@@ -3,6 +3,8 @@ import Link from 'next/link'
 import { Headphones, Palette, Scissors, Shirt, CalendarCheck, Search } from 'lucide-react'
 
 import { getPublishedWed100Items, wed100Parts } from '@/lib/wed100'
+import SubHero from '@/components/layout/SubHero'
+import { getSiteImages } from '@/lib/siteImages'
 
 export const metadata: Metadata = {
   title: '교육자료 | 메이크업포엘',
@@ -14,6 +16,7 @@ const PART_ICON = [Search, Palette, Palette, Scissors, Shirt, CalendarCheck]
 
 export default async function EducationPage() {
   const items = await getPublishedWed100Items()
+  const img = await getSiteImages()
   const counts = new Map<number, number>()
   items.forEach((x) => counts.set(x.part, (counts.get(x.part) ?? 0) + 1))
   const totalMin = Math.round(
@@ -28,12 +31,9 @@ export default async function EducationPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero */}
-      <section className="bg-gradient-to-br from-pink-50 to-white py-20">
+      <SubHero title="교육자료" image={img['sub-hero']} />
+      <section className="bg-gradient-to-br from-pink-50 to-white py-14">
         <div className="mx-auto max-w-4xl px-6 text-center lg:px-8">
-          <h1 className="mb-5 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-            교육자료
-          </h1>
           <p className="mx-auto max-w-2xl text-lg leading-relaxed text-gray-600">
             25년간 1만 명의 혼주님을 만나며 쌓인 질문과 답을 정리했습니다.
             읽으셔도 되고, 들으셔도 됩니다.

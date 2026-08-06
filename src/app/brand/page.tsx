@@ -1,6 +1,10 @@
 import { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { MapPin, Phone, Clock, Award } from 'lucide-react'
+
+import SubHero from '@/components/layout/SubHero'
+import { getSiteImages } from '@/lib/siteImages'
 
 export const metadata: Metadata = {
   title: '브랜드소개 | 메이크업포엘',
@@ -34,28 +38,26 @@ const CAREER = [
   '연세대·서강대 창업박람회',
 ]
 
-export default function BrandPage() {
+export default async function BrandPage() {
+  const img = await getSiteImages()
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero */}
-      <section className="bg-gradient-to-br from-pink-50 to-white py-20">
-        <div className="mx-auto max-w-4xl px-6 lg:px-8">
-          <p className="text-xs font-bold tracking-[0.3em] text-pink-600">BRAND STORY</p>
-          <h1 className="mt-4 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-            메이크업포엘 소개
-          </h1>
-          <p className="mt-5 text-lg leading-relaxed text-gray-600">
-            메이크업 전 전문가의 <b className="text-pink-600">1:1 사전 컨설팅</b>을 통해 퍼스널컬러
-            진단, 어울리는 헤어스타일 점검 후 메이크업을 진행합니다.
-          </p>
-        </div>
-      </section>
-
+      <SubHero
+        title="브랜드 소개"
+        image={img['sub-hero']}
+        tabs={[
+          { name: '대표인사말', href: '/brand' },
+          { name: '회사소개', href: '/brand#company' },
+          { name: '오시는 길', href: '/brand#location' },
+        ]}
+        active="대표인사말"
+      />
       {/* 대표 인사말 */}
       <section className="py-20">
         <div className="mx-auto max-w-3xl px-6 lg:px-8">
           <h2 className="text-2xl font-bold text-gray-900">대표 인사말</h2>
-          <blockquote className="mt-8 space-y-5 border-l-4 border-pink-200 pl-6 text-[17px] leading-[1.95] text-gray-700">
+          <div className="mt-8 grid gap-8 sm:grid-cols-[1fr_200px] sm:items-start">
+          <blockquote className="space-y-5 border-l-4 border-pink-200 pl-6 text-[17px] leading-[1.95] text-gray-700">
             <p>안녕하세요. 메이크업포엘 대표 김성희입니다.</p>
             <p>
               메이크업디자이너로 지낸 20년 동안 <b>1만 명이 넘는 고객</b>을 만났습니다. 20년의
@@ -67,14 +69,20 @@ export default function BrandPage() {
               <b className="text-pink-700">이제 그 사랑을 돌려드리겠습니다.</b>
             </p>
           </blockquote>
-          <p className="mt-6 text-right text-sm font-semibold text-gray-500">
-            메이크업포엘 대표원장 김성희
-          </p>
+          <div className="order-first sm:order-last">
+            <div className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-gray-100">
+              <Image src={img['ceo']} alt="메이크업포엘 대표원장 김성희" fill sizes="200px" className="object-cover object-top" />
+            </div>
+            <p className="mt-3 text-center text-sm font-semibold text-gray-600">
+              대표원장 김성희
+            </p>
+          </div>
+          </div>
         </div>
       </section>
 
       {/* 회사 소개 */}
-      <section className="bg-gray-50 py-20">
+      <section id="company" className="scroll-mt-20 bg-gray-50 py-20">
         <div className="mx-auto max-w-5xl px-6 lg:px-8">
           <h2 className="text-2xl font-bold text-gray-900">회사 소개</h2>
 
@@ -169,7 +177,7 @@ export default function BrandPage() {
       </section>
 
       {/* 오시는 길 */}
-      <section className="bg-gray-50 py-20">
+      <section id="location" className="scroll-mt-20 bg-gray-50 py-20">
         <div className="mx-auto max-w-4xl px-6 lg:px-8">
           <h2 className="text-2xl font-bold text-gray-900">오시는 길</h2>
           <div className="mt-8 grid gap-5 sm:grid-cols-3">

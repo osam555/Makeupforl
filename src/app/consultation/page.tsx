@@ -1,5 +1,9 @@
 import { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
+
+import SubHero from '@/components/layout/SubHero'
+import { getSiteImages } from '@/lib/siteImages'
 
 export const metadata: Metadata = {
   title: '1:1 사전컨설팅 | 메이크업포엘',
@@ -61,16 +65,17 @@ const HELPS = [
   },
 ]
 
-export default function ConsultationPage() {
+export default async function ConsultationPage() {
+  const img = await getSiteImages()
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero */}
+      <SubHero title="1:1 사전컨설팅" image={img['sub-hero']} />
       <section className="bg-gradient-to-br from-pink-50 to-white py-20">
         <div className="mx-auto max-w-4xl px-6 lg:px-8">
           <p className="text-xs font-bold tracking-[0.3em] text-pink-600">MAKEUPFORL ONLY</p>
-          <h1 className="mt-4 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-            1:1 사전 컨설팅
-          </h1>
+          <h2 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            저희만의 특별함을 소개하겠습니다
+          </h2>
           <div className="mt-8 space-y-4 text-[17px] leading-[1.9] text-gray-700">
             <p>
               결혼식 날이 결정되고 혼주가 되는데 무엇을, 어떻게 해야 할지 잘 모르실 거예요.
@@ -115,13 +120,29 @@ export default function ConsultationPage() {
           </h2>
           <div className="mt-10 space-y-6">
             {HELPS.map((h) => (
-              <div key={h.n} className="flex gap-5 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
-                <span className="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-pink-600 text-sm font-bold text-white">
-                  {h.n}
-                </span>
-                <div>
-                  <h3 className="text-base font-bold text-gray-900">{h.t}</h3>
-                  <p className="mt-2 text-[15px] leading-[1.85] text-gray-600">{h.d}</p>
+              <div
+                key={h.n}
+                className="flex flex-col gap-5 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm sm:flex-row sm:items-start"
+              >
+                {img[`consult-${h.n}`] && (
+                  <div className="relative h-32 w-full flex-none overflow-hidden rounded-xl bg-gray-50 sm:h-28 sm:w-40">
+                    <Image
+                      src={img[`consult-${h.n}`]}
+                      alt={h.t}
+                      fill
+                      sizes="(max-width:640px) 100vw, 160px"
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+                <div className="flex gap-4">
+                  <span className="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-pink-600 text-sm font-bold text-white">
+                    {h.n}
+                  </span>
+                  <div>
+                    <h3 className="text-base font-bold text-gray-900">{h.t}</h3>
+                    <p className="mt-2 text-[15px] leading-[1.85] text-gray-600">{h.d}</p>
+                  </div>
                 </div>
               </div>
             ))}

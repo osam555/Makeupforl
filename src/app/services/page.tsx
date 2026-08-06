@@ -1,5 +1,9 @@
 import { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
+
+import SubHero from '@/components/layout/SubHero'
+import { getSiteImages } from '@/lib/siteImages'
 import { Home, Car, ShieldCheck, AlertTriangle } from 'lucide-react'
 
 export const metadata: Metadata = {
@@ -19,15 +23,13 @@ const PROCESS = [
   { n: 7, t: '당일 서비스', d: '예약 시간에 서비스 제공' },
 ]
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const img = await getSiteImages()
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero */}
-      <section className="bg-gradient-to-br from-pink-50 to-white py-20">
+      <SubHero title="샵 / 출장메이크업" image={img['sub-hero']} />
+      <section className="bg-gradient-to-br from-pink-50 to-white py-16">
         <div className="mx-auto max-w-5xl px-6 text-center lg:px-8">
-          <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-            샵 / 출장메이크업
-          </h1>
           <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
             메이크업포엘의 서비스는 다릅니다. 메이크업 전 전문가의 1:1 사전 컨설팅을 통해 퍼스널컬러
             진단과 어울리는 헤어스타일 점검을 마친 뒤 메이크업을 진행합니다.
@@ -40,7 +42,11 @@ export default function ServicesPage() {
         <div className="mx-auto max-w-5xl px-6 lg:px-8">
           <div className="grid gap-6 md:grid-cols-2">
             {/* 샵 */}
-            <div className="rounded-2xl border border-gray-100 bg-white p-8 shadow-sm">
+            <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
+              <div className="relative aspect-[16/10] bg-gray-100">
+                <Image src={img['shop-bg']} alt="메이크업포엘 샵 전경" fill sizes="(max-width:768px) 100vw, 50vw" className="object-cover" />
+              </div>
+              <div className="p-8">
               <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-pink-100 text-pink-600">
                 <Home className="h-5 w-5" />
               </span>
@@ -59,10 +65,15 @@ export default function ServicesPage() {
                 <li>· 압구정역 3번출구 도보 거리</li>
                 <li>· 사전 컨설팅 후 진행</li>
               </ul>
+              </div>
             </div>
 
             {/* 출장 */}
-            <div className="rounded-2xl border border-gray-100 bg-white p-8 shadow-sm">
+            <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
+              <div className="relative aspect-[16/10] bg-gray-100">
+                <Image src={img['makeup-img']} alt="출장 메이크업 서비스" fill sizes="(max-width:768px) 100vw, 50vw" className="object-cover" />
+              </div>
+              <div className="p-8">
               <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-pink-100 text-pink-600">
                 <Car className="h-5 w-5" />
               </span>
@@ -81,6 +92,7 @@ export default function ServicesPage() {
                 <li>· 전문가 팀 단위 출장 가능</li>
                 <li>· 사전 컨설팅 후 진행</li>
               </ul>
+              </div>
             </div>
           </div>
         </div>

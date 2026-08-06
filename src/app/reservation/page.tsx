@@ -1,5 +1,7 @@
 import { Metadata } from 'next'
 import BookingForm from '@/components/booking/BookingForm'
+import SubHero from '@/components/layout/SubHero'
+import { getSiteImages } from '@/lib/siteImages'
 
 export const metadata: Metadata = {
   title: '예약안내 | 메이크업포엘',
@@ -28,15 +30,14 @@ const REFUND = [
   { when: '행사 1주 전', rate: '환불 불가', tone: 'text-red-700 bg-red-50' },
 ]
 
-export default function ReservationPage() {
+export default async function ReservationPage() {
+  const img = await getSiteImages()
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-white py-12">
-      <div className="mx-auto max-w-3xl px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-white">
+      <SubHero title="예약안내" image={img['sub-hero']} />
+      <div className="mx-auto max-w-3xl px-6 py-12 lg:px-8">
         {/* Header */}
         <div className="mb-12 text-center">
-          <h1 className="mb-4 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-            예약안내
-          </h1>
           <p className="text-lg text-gray-600">
             메이크업의 모든 과정은{' '}
             <span className="font-semibold text-pink-600">100% 예약제</span>로 진행됩니다
