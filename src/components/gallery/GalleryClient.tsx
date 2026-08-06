@@ -12,7 +12,6 @@ const categories = [
   { slug: 'men-makeup', name: '남자 메이크업' },
   { slug: 'corporate-video', name: '기업행사&영상메이크업' },
   { slug: 'photoshoot-profile', name: '화보 & 프로필' },
-  { slug: 'fashion-show', name: '패션쇼' },
 ]
 
 export default function GalleryClient() {
