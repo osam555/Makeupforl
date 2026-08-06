@@ -357,7 +357,7 @@ function AdminWed100Editor({
           {/* 우측 편집 */}
           {draft && (
             <div className="max-h-[720px] overflow-auto p-5 lg:p-6">
-              <div className="flex flex-wrap items-center gap-2.5">
+              <div className="sticky -top-5 z-10 -mx-5 flex flex-wrap items-center gap-2.5 border-b border-[#E7DDD4] bg-white/95 px-5 pb-3 pt-1 backdrop-blur lg:-mx-6 lg:-top-6 lg:px-6">
                 <h2 className="text-lg font-extrabold text-[#2E2724]">
                   P{draft.part} · {String(draft.n).padStart(2, '0')} 편집
                 </h2>
@@ -385,6 +385,32 @@ function AdminWed100Editor({
                     수정됨 · 저장 필요
                   </span>
                 )}
+                <div className="ml-auto flex flex-wrap items-center gap-2">
+                  <Button
+                    size="sm"
+                    onClick={save}
+                    disabled={saving || !dirty || !canWrite}
+                    className="bg-[#A63D5A] hover:bg-[#8A2E48]"
+                  >
+                    <Save className="mr-1.5 h-4 w-4" /> {saving ? '저장 중…' : '저장'}
+                  </Button>
+                  <Button size="sm" variant="outline" onClick={regenAudio} disabled={tts || !canWrite}>
+                    <Volume2 className="mr-1.5 h-4 w-4" />
+                    {tts ? '음성 만드는 중…' : '음성 재생성'}
+                  </Button>
+                  <Link href={`/wed100/${draft.slug}`} target="_blank">
+                    <Button size="sm" variant="outline">
+                      <Eye className="mr-1.5 h-4 w-4" /> 미리보기
+                    </Button>
+                  </Link>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => patch((d) => (d.published = d.published === false))}
+                  >
+                    {draft.published !== false ? '비공개로 전환' : '공개로 전환'}
+                  </Button>
+                </div>
               </div>
 
               <div className="mt-5 grid gap-4 lg:grid-cols-2">
@@ -494,36 +520,11 @@ function AdminWed100Editor({
                   </div>
                 </div>
                 <p className="mt-2 text-[11px] leading-relaxed text-[#9C8D86]">
-                  자막·본문을 고친 뒤 아래 <b>[음성 재생성]</b>을 누르면 이 문항의 음성과 자막
+                  자막·본문을 고친 뒤 위쪽 <b>[음성 재생성]</b>을 누르면 이 문항의 음성과 자막
                   타임코드가 다시 만들어집니다. (진행자 여성 · 원장님 1.25배속)
                 </p>
               </div>
 
-              {/* 액션 */}
-              <div className="mt-5 flex flex-wrap gap-2 border-t border-[#E7DDD4] pt-4">
-                <Button
-                  onClick={save}
-                  disabled={saving || !dirty || !canWrite}
-                  className="bg-[#A63D5A] hover:bg-[#8A2E48]"
-                >
-                  <Save className="mr-1.5 h-4 w-4" /> {saving ? '저장 중…' : '저장'}
-                </Button>
-                <Button variant="outline" onClick={regenAudio} disabled={tts || !canWrite}>
-                  <Volume2 className="mr-1.5 h-4 w-4" />
-                  {tts ? '음성 만드는 중…' : '음성 재생성'}
-                </Button>
-                <Link href={`/wed100/${draft.slug}`} target="_blank">
-                  <Button variant="outline">
-                    <Eye className="mr-1.5 h-4 w-4" /> 미리보기
-                  </Button>
-                </Link>
-                <Button
-                  variant="outline"
-                  onClick={() => patch((d) => (d.published = d.published === false))}
-                >
-                  {draft.published !== false ? '비공개로 전환' : '공개로 전환'}
-                </Button>
-              </div>
             </div>
           )}
         </div>
