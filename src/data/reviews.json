@@ -1,0 +1,30 @@
+{
+  "_comment": "원본 홈페이지 고객후기 게시판. 고객이 보낸 문자메시지 캡처 이미지 원본. /api/gallery/migrate 의 reviews 모드로 Storage 에 이전한다.",
+  "items": [
+    { "id": "r34", "title": "고객문자", "date": "2023-10-10", "url": "https://makeupforl.co.kr/uploaded/webedit/2310/e3907c7ecf64b5467eb8b2f305cf07ccc0936afa.jpg" },
+    { "id": "r33", "title": "고객문자", "date": "2023-10-10", "url": "https://makeupforl.co.kr/uploaded/webedit/2310/5f04404cc13c01417666723a6b1de0c3bb5820cd.jpg" },
+    { "id": "r32", "title": "고객문자", "date": "2023-10-10", "url": "https://makeupforl.co.kr/uploaded/webedit/2310/35dab8e22368c0f048b0c0f685c73518f8aeebc6.jpg" },
+    { "id": "r31", "title": "고객문자", "date": "2023-10-10", "url": "https://makeupforl.co.kr/uploaded/webedit/2310/25765cc77af8184102433e98c9dcc57165834ed2.jpg" },
+    { "id": "r30", "title": "고객문자", "date": "2023-10-10", "url": "https://makeupforl.co.kr/uploaded/webedit/2310/c8efe6fee60f8351f4d1387af229cda763c4c0db.jpg" },
+    { "id": "r29", "title": "감사문자", "date": "2023-10-10", "url": "https://makeupforl.co.kr/uploaded/webedit/2310/97a5182d609272aced6233cf9f4b3df1cc858448.jpg" },
+    { "id": "r28", "title": "감사문자", "date": "2023-10-10", "url": "https://makeupforl.co.kr/uploaded/webedit/2310/5976f834f4aa25880c9eaabeffb0ab6041f9848b.jpg" },
+    { "id": "r27", "title": "고객문자", "date": "2023-10-10", "url": "https://makeupforl.co.kr/uploaded/webedit/2310/324216728ff75d97393b63be44b2ecfb9b49e8da.jpg" },
+    { "id": "r26", "title": "감사문자", "date": "2023-10-10", "url": "https://makeupforl.co.kr/uploaded/webedit/2310/c5d23d00ececb42a94efcde6f97dbecd3388535e.jpg" },
+    { "id": "r25", "title": "고객후기", "date": "2023-03-31", "url": "https://makeupforl.co.kr/uploaded/webedit/2303/56e14059bcc1f802ba8416cafbe12e1d66977f03.jpg" },
+    { "id": "r24", "title": "고객후기", "date": "2023-03-31", "url": "https://makeupforl.co.kr/uploaded/webedit/2303/facffc12b20b3b851e2adaa1dcc3039cc6d59686.jpg" },
+    { "id": "r23", "title": "고객후기", "date": "2023-03-31", "url": "https://makeupforl.co.kr/uploaded/webedit/2303/0ab53f898ef234cabd1ac010828ae671cea74621.jpg" },
+    { "id": "r22", "title": "고객후기", "date": "2023-03-31", "url": "https://makeupforl.co.kr/uploaded/webedit/2303/ca81f53ec32fa12a2b18c6654934608e2f363b49.jpg" },
+    { "id": "r21", "title": "고객후기", "date": "2023-03-31", "url": "https://makeupforl.co.kr/uploaded/webedit/2303/b13a4f844c5c3280e5470147bf662c22e8851426.jpg" },
+    { "id": "r20", "title": "고객후기", "date": "2023-03-31", "url": "https://makeupforl.co.kr/uploaded/webedit/2303/3ffac6c913acdf820fb5b0f373268de610326022.jpg" },
+    { "id": "r19", "title": "고객후기", "date": "2023-03-31", "url": "https://makeupforl.co.kr/uploaded/webedit/2303/b7d7453df2a4367200386815e8ef6a985e4a18ab.jpg" },
+    { "id": "r18", "title": "고객후기", "date": "2023-03-31", "url": "https://makeupforl.co.kr/uploaded/webedit/2303/411877be9b0301ccf10e698d5873a34090eaa330.jpg" },
+    { "id": "r17", "title": "고객후기", "date": "2023-03-31", "url": "https://makeupforl.co.kr/uploaded/webedit/2303/67c8781f34d8deaa883b44d57c43fffc3b4f9928.jpg" },
+    { "id": "r15", "title": "고객후기", "date": "2023-03-31", "url": "https://makeupforl.co.kr/uploaded/webedit/2303/d7daaee3c0dab5fbcb06d055d49be134bae5b0c4.jpg" },
+    { "id": "r14", "title": "고객후기", "date": "2023-03-31", "url": "https://makeupforl.co.kr/uploaded/webedit/2303/032822a151e957fd45b2f11de70cd083b2599d1d.jpg" },
+    { "id": "r11", "title": "고객후기", "date": "2023-03-31", "url": "https://makeupforl.co.kr/uploaded/webedit/2303/742fe2534b77edb463eecf3dab5fb335fa7d9d76.jpg" },
+    { "id": "r08", "title": "고객후기", "date": "2023-03-31", "url": "https://makeupforl.co.kr/uploaded/webedit/2303/2e2188418dec1030ade509a1d204c36b5442c68c.jpg" },
+    { "id": "r05", "title": "고객후기", "date": "2023-03-31", "url": "https://makeupforl.co.kr/uploaded/webedit/2303/d928d3c451c726db63875af539ef872eb7b4281d.jpg" },
+    { "id": "r04", "title": "고객후기", "date": "2023-03-31", "url": "https://makeupforl.co.kr/uploaded/webedit/2303/15dea7d5d74d7ad3604a6fcfd44bb43850f2335a.jpg" },
+    { "id": "r01", "title": "고객후기", "date": "2023-01-25", "url": "https://makeupforl.co.kr/uploaded/board/review/845b4dc67f034be382fbe21a556f1bae0.jpg" }
+  ]
+}
