@@ -37,6 +37,7 @@
 1. 빌드 → **Firestore Database** → 데이터베이스 만들기
 2. 위치: `asia-northeast3 (Seoul)` → **프로덕션 모드**로 시작
 3. **규칙 탭** → `firebase/firestore.rules` 파일 내용 붙여넣기 → 게시
+   - 또는 CLI 로 한 번에: `python3 scripts/deploy-rules.py` (아래 참고)
 
 ## 5단계: 100문100답 데이터 넣기
 1. 배포된 사이트에서 `/admin/wed100` 접속 → **makeupforl77@gmail.com 구글 계정으로 로그인**
@@ -100,3 +101,18 @@ Storage에 업로드 → 다운로드 URL 복사 → `/admin/wed100` 편집 화�
 
 > 서비스 계정 키는 절대 GitHub에 올리지 마세요. Vercel 환경변수에만 보관합니다.
 > 키가 없으면 비밀번호 로그인은 화면 확인만 가능하고, 저장은 구글 계정으로만 됩니다.
+
+## 보안 규칙을 CLI 로 배포하기
+
+콘솔에 붙여넣는 대신 스크립트로 배포할 수 있습니다. `firebase/*.rules` 를 고친 뒤:
+
+```bash
+export FIREBASE_SERVICE_ACCOUNT="$(cat serviceAccount.json)"   # base64 값도 인식
+export NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=makeupforl.firebasestorage.app
+
+python3 scripts/deploy-rules.py             # firestore + storage 둘 다
+python3 scripts/deploy-rules.py firestore   # 하나만
+```
+
+필요 패키지: `pip install google-auth`
+규칙 파일이 곧 배포본이 되므로, 콘솔에서 직접 고치지 말고 리포의 `.rules` 파일을 고쳐 배포하세요.
