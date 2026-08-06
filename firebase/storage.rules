@@ -28,6 +28,12 @@ service firebase.storage {
     }
 
     // 갤러리 이미지
+    // 사이트 UI 이미지 (히어로 배너·대표 사진 등)
+    match /site/{file} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
     match /gallery/{file} {
       allow read: if true;
       allow write: if isAdmin() && request.resource.contentType.matches('image/.*');

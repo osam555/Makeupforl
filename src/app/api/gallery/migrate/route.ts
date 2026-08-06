@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 
 import gallerySeed from '@/data/gallery.json'
+import siteImages from '@/data/site-images.json'
 import { getAdminApp, getAdminDb, verifyAdmin } from '@/lib/firebase/admin'
 
 export const runtime = 'nodejs'
@@ -15,6 +16,17 @@ interface SeedItem {
 }
 
 const SEED = gallerySeed as SeedItem[]
+
+/** 사이트 UI/콘텐츠 이미지 (히어로 배너, 대표 사진, 컨설팅 일러스트 등) */
+const ASSETS = (siteImages as { assets: { id: string; url: string; alt: string }[] }).assets.map(
+  (a, i) => ({
+    id: a.id,
+    url: a.url,
+    alt_text: a.alt,
+    category: '_site',
+    order_position: i,
+  }),
+)
 const BUCKET =
   process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET ||
   `${process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID}.firebasestorage.app`
@@ -55,7 +67,9 @@ export async function POST(req: Request) {
 
   const offset = Number(body?.offset ?? 0)
   const limit = Math.min(Number(body?.limit ?? 12), 25)
-  const batch = SEED.slice(offset, offset + limit)
+  // mode: 'gallery'(기본) | 'assets'
+  const list = body?.mode === 'assets' ? ASSETS : SEED
+  const batch = list.slice(offset, offset + limit)
 
   const { getStorage } = await import('firebase-admin/storage')
   const { randomUUID } = await import('node:crypto')
@@ -67,7 +81,7 @@ export async function POST(req: Request) {
 
   for (const item of batch) {
     const ext = extOf(item.url)
-    const path = `gallery/${item.id}.${ext}`
+    const path = item.category === '_site' ? `site/${item.id}.${ext}` : `gallery/${item.id}.${ext}`
     const file = bucket.file(path)
 
     try {
@@ -96,7 +110,8 @@ export async function POST(req: Request) {
         `https://firebasestorage.googleapis.com/v0/b/${BUCKET}/o/` +
         `${encodeURIComponent(path)}?alt=media&token=${token}`
 
-      await db.collection('gallery_images').doc(item.id).set({
+      const col = item.category === '_site' ? 'site_images' : 'gallery_images'
+      await db.collection(col).doc(item.id).set({
         url,
         alt_text: item.alt_text,
         category: item.category,
@@ -117,7 +132,7 @@ export async function POST(req: Request) {
     skipped,
     failed,
     nextOffset,
-    done: nextOffset >= SEED.length,
-    total: SEED.length,
+    done: nextOffset >= list.length,
+    total: list.length,
   })
 }
