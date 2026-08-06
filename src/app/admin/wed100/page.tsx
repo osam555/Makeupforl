@@ -42,6 +42,15 @@ function splitSentences(text: string, maxLen = 90): string[] {
 
 type Status = { kind: 'ok' | 'err'; msg: string } | null
 
+/** 편집 글자 크기 (원장님 가독성용) */
+type FontSize = 'sm' | 'md' | 'lg'
+const FONT_SIZES: { key: FontSize; label: string; px: number; lh: number }[] = [
+  { key: 'sm', label: '작게', px: 13, lh: 1.7 },
+  { key: 'md', label: '보통', px: 16, lh: 1.8 },
+  { key: 'lg', label: '크게', px: 20, lh: 1.85 },
+]
+const FONT_KEY = 'wed100AdminFont'
+
 function AdminWed100Editor({
   email,
   password,
@@ -64,6 +73,19 @@ function AdminWed100Editor({
 
   const [part, setPart] = useState(0)
   const [kw, setKw] = useState('')
+  const [font, setFont] = useState<FontSize>('md')
+
+  useEffect(() => {
+    const v = window.localStorage.getItem(FONT_KEY)
+    if (v === 'sm' || v === 'md' || v === 'lg') setFont(v)
+  }, [])
+  const chooseFont = (v: FontSize) => {
+    window.localStorage.setItem(FONT_KEY, v)
+    setFont(v)
+  }
+  const fs = FONT_SIZES.find((f) => f.key === font) ?? FONT_SIZES[1]
+  const editStyle = { fontSize: `${fs.px}px`, lineHeight: fs.lh }
+  const cueStyle = { fontSize: `${Math.max(12, fs.px - 2)}px`, lineHeight: fs.lh }
 
   const load = useCallback(async () => {
     try {
@@ -419,7 +441,8 @@ function AdminWed100Editor({
                   <input
                     value={draft.question}
                     onChange={(e) => patch((d) => (d.question = e.target.value))}
-                    className="mt-1.5 w-full rounded-lg border border-[#E7DDD4] px-3 py-2.5 text-sm outline-none focus:border-[#A63D5A]"
+                    style={editStyle}
+                    className="mt-1.5 w-full rounded-lg border border-[#E7DDD4] px-3 py-2.5 outline-none focus:border-[#A63D5A]"
                   />
                 </label>
                 <label className="block">
@@ -427,14 +450,35 @@ function AdminWed100Editor({
                   <input
                     value={draft.question_en ?? ''}
                     onChange={(e) => patch((d) => (d.question_en = e.target.value))}
-                    className="mt-1.5 w-full rounded-lg border border-[#E7DDD4] px-3 py-2.5 text-sm outline-none focus:border-[#A63D5A]"
+                    style={editStyle}
+                    className="mt-1.5 w-full rounded-lg border border-[#E7DDD4] px-3 py-2.5 outline-none focus:border-[#A63D5A]"
                   />
                 </label>
               </div>
 
               <label className="mt-4 block">
-                <span className="text-xs font-bold text-[#6B5D57]">
-                  답변 본문 (문단은 빈 줄로 구분 · 본문 수정 후 아래 [큐 재생성]으로 자막 갱신)
+                <span className="flex flex-wrap items-center gap-2 text-xs font-bold text-[#6B5D57]">
+                  답변 본문 (문단은 빈 줄로 구분 · 본문 수정 후 [큐 재생성]으로 자막 갱신)
+                  <span className="ml-auto flex items-center gap-1.5 font-normal">
+                    <span className="text-[11px] text-[#9C8D86]">글자 크기</span>
+                    <span className="flex gap-0.5 rounded-full border border-[#E7DDD4] bg-white p-0.5">
+                      {FONT_SIZES.map((f) => (
+                        <button
+                          key={f.key}
+                          type="button"
+                          onClick={() => chooseFont(f.key)}
+                          aria-pressed={font === f.key}
+                          className={`rounded-full px-2.5 py-1 text-[11px] transition ${
+                            font === f.key
+                              ? 'bg-[#A63D5A] font-bold text-white'
+                              : 'text-[#6B5D57] hover:bg-[#F6E9ED]'
+                          }`}
+                        >
+                          {f.label}
+                        </button>
+                      ))}
+                    </span>
+                  </span>
                 </span>
                 <textarea
                   value={draft.answer.join('\n\n')}
@@ -442,7 +486,8 @@ function AdminWed100Editor({
                     patch((d) => (d.answer = e.target.value.split(/\n\s*\n/).map((s) => s.trim()).filter(Boolean)))
                   }
                   rows={7}
-                  className="mt-1.5 w-full rounded-lg border border-[#E7DDD4] px-3 py-2.5 text-sm leading-relaxed outline-none focus:border-[#A63D5A]"
+                  style={editStyle}
+                  className="mt-1.5 w-full rounded-lg border border-[#E7DDD4] px-3 py-2.5 outline-none focus:border-[#A63D5A]"
                 />
               </label>
 
@@ -502,13 +547,15 @@ function AdminWed100Editor({
                           value={c.ko}
                           onChange={(e) => patch((d) => (d.cues[i] = { ...d.cues[i], ko: e.target.value }))}
                           rows={2}
-                          className="rounded-md border border-transparent px-2 py-1 text-[12.5px] leading-relaxed outline-none hover:border-[#E7DDD4] focus:border-[#A63D5A]"
+                          style={cueStyle}
+                          className="rounded-md border border-transparent px-2 py-1 outline-none hover:border-[#E7DDD4] focus:border-[#A63D5A]"
                         />
                         <textarea
                           value={c.en ?? ''}
                           onChange={(e) => patch((d) => (d.cues[i] = { ...d.cues[i], en: e.target.value }))}
                           rows={2}
-                          className="rounded-md border border-transparent px-2 py-1 text-[12.5px] leading-relaxed outline-none hover:border-[#E7DDD4] focus:border-[#A63D5A]"
+                          style={cueStyle}
+                          className="rounded-md border border-transparent px-2 py-1 outline-none hover:border-[#E7DDD4] focus:border-[#A63D5A]"
                         />
                         <span className="pt-1.5 font-mono text-[10px] text-[#A3948C]">
                           {typeof c.start === 'number'
