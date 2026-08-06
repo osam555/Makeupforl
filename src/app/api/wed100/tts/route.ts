@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto'
+
 import { NextResponse } from 'next/server'
 import { MsEdgeTTS, OUTPUT_FORMAT } from 'msedge-tts'
 
@@ -108,13 +110,20 @@ export async function POST(req: Request) {
         const bucketName =
           process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET ||
           `${process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID}.appspot.com`
-        const file = getStorage(app).bucket(bucketName).file(`wed100/audio/${slug}.mp3`)
+        const path = `wed100/audio/${slug}.mp3`
+        const file = getStorage(app).bucket(bucketName).file(path)
+        // 다운로드 토큰 방식 — 균일한 버킷 수준 액세스(uniform access)에서도 동작한다
+        const token = randomUUID()
         await file.save(audio, {
           contentType: 'audio/mpeg',
-          metadata: { cacheControl: 'public,max-age=31536000' },
+          metadata: {
+            cacheControl: 'public,max-age=31536000',
+            metadata: { firebaseStorageDownloadTokens: token },
+          },
         })
-        await file.makePublic()
-        audioUrl = `https://storage.googleapis.com/${bucketName}/wed100/audio/${slug}.mp3`
+        audioUrl =
+          `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o/` +
+          `${encodeURIComponent(path)}?alt=media&token=${token}`
       } catch {
         audioUrl = null // 업로드 실패 시 클라이언트가 base64 로 처리
       }
