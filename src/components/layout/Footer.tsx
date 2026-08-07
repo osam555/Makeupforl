@@ -3,8 +3,8 @@ import { Phone, Mail, MapPin } from 'lucide-react'
 
 export default function Footer() {
   return (
-    <footer className="bg-[#F46E65] text-white">
-      <div className="mfl-contain mfl-contain-wide pb-[55px] pt-[52px] text-[15px] leading-[1.467]">
+    <footer className="bg-[#F46E65] text-[15px] leading-[1.467] text-white">
+      <div className="mfl-contain mfl-contain-wide pb-[55px] pt-[52px]">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           {/* Company Info */}
           <div>
