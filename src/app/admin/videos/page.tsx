@@ -178,7 +178,7 @@ function AdminVideos({ password, idTokenGetter }: { password: string | null; idT
       <div className="mx-auto max-w-5xl px-6">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">영상자료 관리</h1>
+            <h1 className="text-2xl font-bold text-gray-900">유튜브 채널 관리</h1>
             <p className="mt-1 text-sm text-gray-500">
               최신 영상은 채널 RSS 로 자동 수집됩니다. 여기서는 <b>대표·인기 영상</b>과 노출 순서를
               정하고, 자동 수집분 중 숨길 영상을 지정합니다. ({source === 'db' ? 'DB' : '시드'} 기준)
@@ -386,7 +386,7 @@ function AdminVideos({ password, idTokenGetter }: { password: string | null; idT
 
 export default function AdminVideosPage() {
   return (
-    <AdminGate title="영상자료 관리">
+    <AdminGate title="유튜브 채널 관리">
       {(ctx) => (
         <AdminVideos
           password={ctx.password}

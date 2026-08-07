@@ -35,7 +35,7 @@ const navigation: NavItem[] = [
   },
   { name: '예약안내', href: '/reservation' },
   { name: '고객후기', href: '/reviews' },
-  { name: '영상자료', href: '/videos' },
+  { name: '유튜브 채널', href: '/videos' },
 ]
 
 export default function Header({ logo, logoWhite }: { logo?: string; logoWhite?: string }) {

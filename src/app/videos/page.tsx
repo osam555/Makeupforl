@@ -7,9 +7,9 @@ import { getVideos } from '@/lib/videos'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: '영상자료 | 메이크업포엘',
+  title: '유튜브 채널 | 메이크업포엘',
   description:
-    '혼주메이크업 전문 메이크업포엘의 유튜브 영상자료. 혼주 올림머리, 한복 메이크업, 사전컨설팅 등 최신 영상과 많이 보신 영상을 모았습니다.',
+    '혼주메이크업 전문 메이크업포엘 유튜브 채널. 혼주 올림머리, 한복 메이크업, 사전컨설팅 등 최신 영상과 많이 보신 영상을 모았습니다.',
   keywords: '혼주메이크업 영상, 혼주 올림머리 영상, 메이크업포엘 유튜브, 혼주메이크업 연구소',
 }
 
@@ -18,7 +18,7 @@ export default async function VideosPage() {
 
   return (
     <div className="bg-white">
-      <h1 className="blind">영상자료</h1>
+      <h1 className="blind">유튜브 채널</h1>
 
       <div className="mfl-contain mfl-real-t2 pt-[50px]">
         {/* 상단 안내 + 채널 바로가기 */}
