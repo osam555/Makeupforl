@@ -36,6 +36,16 @@
       "category": "featured",
       "order": 2,
       "published": true
+    },
+    {
+      "id": "8HWaXIMuuQI",
+      "youtubeId": "8HWaXIMuuQI",
+      "title": "",
+      "summary": null,
+      "publishedAt": null,
+      "category": "featured",
+      "order": 3,
+      "published": true
     }
   ]
 }
