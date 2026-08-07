@@ -1,9 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
-import SubHero from '@/components/layout/SubHero'
 import VideoSection from '@/components/videos/VideoSection'
-import { getSiteImages } from '@/lib/siteImages'
 import { getVideos } from '@/lib/videos'
 
 export const revalidate = 3600
@@ -16,12 +14,16 @@ export const metadata: Metadata = {
 }
 
 export default async function VideosPage() {
-  const img = await getSiteImages()
   const { featured, recent, popular, channel, total } = await getVideos()
 
   return (
     <div className="bg-white">
-      <SubHero title="영상자료" image={img['sub-hero']} />
+      {/* 히어로 이미지 없이 제목만 */}
+      <div className="border-b border-[#E5E5E5] bg-[#F4F4F4]">
+        <div className="mfl-contain py-[45px] text-center">
+          <h1 className="text-[30px] font-medium leading-none text-[#242424]">영상자료</h1>
+        </div>
+      </div>
 
       <div className="mfl-contain mfl-real-t2">
         {/* 상단 안내 + 채널 바로가기 */}
