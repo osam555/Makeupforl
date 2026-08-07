@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "../styles/mfl-original.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -187,61 +188,34 @@
 /* ===== 원본 사이트(makeupforl.co.kr) 디자인 토큰 =====
    실측 기준: 컨테이너 1460px / 좌우 30px, 헤더 100px(≤1230px 80px),
    서브비주얼 350px, 탭 220×50 r25, 브랜드 코랄 #F46E65 */
+
+/* ===== 원본 사이트 기준 베이스 (reset.css 발췌) ===== */
 :root {
-  --mfl: #F46E65;          /* 브랜드 코랄 */
+  --mfl: #F46E65;
   --mfl-dark: #E2564C;
-  --mfl-ink: #242424;      /* 본문 진한 글자 */
-  --mfl-body: #454545;     /* 기본 글자 */
-  --mfl-mute: #686868;     /* 보조 글자 */
-  --mfl-line: #E5E5E5;     /* 테두리 */
-  --mfl-bg: #F4F4F4;       /* 회색 블록 */
+  --mfl-ink: #242424;
+  --mfl-body: #454545;
+  --mfl-mute: #686868;
+  --mfl-line: #E5E5E5;
+  --mfl-bg: #F4F4F4;
 }
 
-.mfl-contain {
-  position: relative;
-  max-width: 1460px;
-  padding-left: 30px;
-  padding-right: 30px;
-  margin-left: auto;
-  margin-right: auto;
+.mfl-site {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo',
+    'Malgun Gothic', sans-serif;
+  font-size: 16px;
+  line-height: 1.75;
+  color: #454545;
+  letter-spacing: -0.01em;
+  word-break: keep-all;
 }
-.mfl-contain-wide { max-width: 1780px; }
+.mfl-site img { max-width: 100%; vertical-align: top; }
+.mfl-site a { color: inherit; text-decoration: none; }
+.mfl-site ul, .mfl-site ol { list-style: none; margin: 0; padding: 0; }
+.mfl-site h1, .mfl-site h2, .mfl-site h3, .mfl-site h4 { font-weight: inherit; font-size: inherit; margin: 0; }
+.blind { position: absolute !important; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
-/* 서브 비주얼 */
-.mfl-subvis { position: relative; height: 350px; z-index: 10; }
-.mfl-subvis .mfl-subvis-bg { position: absolute; inset: 0; background-position: 25% 50%; background-size: cover; }
-.mfl-subvis .mfl-subvis-tit {
-  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
-  width: 100%; text-align: center; color: #fff;
-  font-size: 30px; font-weight: 500; line-height: 1; z-index: 1;
-}
-
-/* 하위 탭 */
-.mfl-tabs { display: flex; justify-content: center; margin: 0 -5px; }
-.mfl-tab {
-  display: flex; align-items: center; justify-content: center;
-  width: 220px; height: 50px; margin: 0 5px;
-  border-radius: 25px; border: 1px solid var(--mfl-line);
-  background: #fff; color: var(--mfl-ink);
-  font-size: 18px; font-weight: 500; transition: .2s;
-}
-.mfl-tab:hover { border-color: var(--mfl); color: var(--mfl); }
-.mfl-tab[aria-current='page'] { background: var(--mfl); border-color: var(--mfl); color: #fff; }
-
-/* 본문 영역 */
+/* 서브 페이지 하단 여백 유틸 (원본 .real-cont) */
 .mfl-real { padding: 0 0 100px; }
 .mfl-real-t2 { padding: 60px 0 100px; }
-
-@media (max-width: 1230px) {
-  .mfl-subvis { height: 300px; }
-  .mfl-subvis .mfl-subvis-tit { font-size: 28px; }
-}
-@media (max-width: 767px) {
-  .mfl-contain { padding-left: 20px; padding-right: 20px; }
-  .mfl-subvis { height: 220px; }
-  .mfl-subvis .mfl-subvis-tit { font-size: 24px; }
-  .mfl-tabs { flex-wrap: wrap; gap: 8px 0; }
-  .mfl-tab { width: calc(50% - 10px); height: 46px; font-size: 15px; }
-  .mfl-real { padding-bottom: 60px; }
-  .mfl-real-t2 { padding: 40px 0 60px; }
-}

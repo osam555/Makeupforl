@@ -1,78 +1,46 @@
 import Link from 'next/link'
-import { Phone, Mail, MapPin } from 'lucide-react'
 
+/** 원본 #footer 구조/치수 그대로 (contain max-width 1720, padding 52/55) */
 export default function Footer() {
   return (
-    <footer className="bg-[#F46E65] text-[15px] leading-[1.467] text-white">
-      <div className="mfl-contain mfl-contain-wide pb-[55px] pt-[52px]">
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-          {/* Company Info */}
-          <div>
-            <h3 className="mb-4 text-[17px] font-medium text-white">메이크업포엘</h3>
-            <div className="space-y-2 text-[15px]">
-              <p>대표자: 김성희</p>
-              <p>사업자등록번호: 143-08-02484</p>
-              <p>통신판매업 신고번호: 2017-서울마포-0578</p>
-            </div>
-          </div>
-
-          {/* Contact Info */}
-          <div>
-            <h3 className="mb-4 text-[17px] font-medium text-white">Contact Us</h3>
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4" />
-                <a href="tel:02-323-3321" className="hover:opacity-70 transition-colors">
-                  02-323-3321
-                </a>
-              </div>
-              <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4" />
-                <a href="mailto:makeupforl@naver.com" className="hover:opacity-70 transition-colors">
-                  makeupforl@naver.com
-                </a>
-              </div>
-              <div className="flex items-start gap-2">
-                <MapPin className="h-4 w-4 mt-1" />
-                <p className="text-[15px]">
-                  서울시 강남구 논현로 158길14<br />
-                  영빌딩 3층
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Business Hours */}
-          <div>
-            <h3 className="mb-4 text-[17px] font-medium text-white">영업시간</h3>
-            <div className="space-y-2 text-[15px]">
-              <p>평일: 09:00 ~ 22:00</p>
-              <p>토요일: 09:00 ~ 18:00</p>
-              <p>일요일: 10:00 ~ 17:00</p>
-              <div className="mt-4 pt-4 border-t border-white/25">
-                <p className="font-medium text-white">
-                  모든 과정은 100% 예약제로 진행됩니다
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Privacy & Copyright */}
-        <div className="mt-8 border-t border-white/25 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <div className="flex gap-6 text-[15px]">
-            <Link href="/privacy" className="hover:opacity-70 transition-colors">
-              개인정보처리방침
-            </Link>
-            <Link href="/terms" className="hover:opacity-70 transition-colors">
-              이용약관
-            </Link>
-          </div>
-          <p className="text-[15px] text-white/80">
-            COPYRIGHT 2024 MAKEUPFORL. ALL RIGHTS RESERVED.
+    <div className="mfl-footer">
+      <h2 className="blind">하단영역</h2>
+      <div className="mfl-contain">
+        <div className="foot-info">
+          <div className="tit">메이크업포엘</div>
+          <address>
+            <p>대표자 : 김성희</p>
+            <p>주소 : 서울 강남구 논현로157길 12 평화빌딩 201호</p>
+            <p>사업자등록번호 : 143-08-02484</p>
+            <p>통신판매업 신고번호 : 2017-서울마포-0578</p>
+            <p>전화번호 : 02-323-3321</p>
+            <p>이메일 : makeupforl@naver.com</p>
+          </address>
+          <p className="copy">
+            <span>COPYRIGHT 2022 MAKEUPFORL. ALL RIGHTS RESERVED.</span>
           </p>
         </div>
+
+        <div className="foot-contact area">
+          <div className="tit">Contact Us</div>
+          <p className="num">
+            <a href="tel:02-323-3321">02-323-3321</a>
+          </p>
+          <p className="tt">평&nbsp;일 09:00 ~ 22:00 / 토요일 09:00 ~ 18:00 / 일요일 10:00~17:00</p>
+        </div>
+
+        <div className="foot-menu area">
+          <div className="tit">Privacy</div>
+          <ul>
+            <li>
+              <Link href="/privacy">개인정보처리방침</Link>
+            </li>
+            <li>
+              <Link href="/privacy#email">이메일무단수집거부</Link>
+            </li>
+          </ul>
+        </div>
       </div>
-    </footer>
+    </div>
   )
 }

@@ -3,152 +3,152 @@
   "assets": [
     {
       "id": "logo-white",
-      "url": "https://makeupforl.co.kr/images/common/logo.png",
+      "url": "/mfl/images/common/logo.png",
       "alt": "메이크업포엘"
     },
     {
       "id": "logo",
-      "url": "https://makeupforl.co.kr/images/common/logo_on.png",
+      "url": "/mfl/images/common/logo_on.png",
       "alt": "메이크업포엘"
     },
     {
       "id": "sub-hero",
-      "url": "https://makeupforl.co.kr/images/common/sub_vis1.jpg",
+      "url": "/mfl/images/common/sub_vis1.jpg",
       "alt": "메이크업포엘 서브 페이지 비주얼"
     },
     {
       "id": "main-vis",
-      "url": "https://makeupforl.co.kr/images/main/main_vis1.jpg",
+      "url": "/mfl/images/main/main_vis1.jpg",
       "alt": "메이크업포엘 메인 비주얼"
     },
     {
       "id": "ceo",
-      "url": "https://makeupforl.co.kr/images/sub/ceo.png",
+      "url": "/mfl/images/sub/ceo.png",
       "alt": "메이크업포엘 대표원장 김성희"
     },
     {
       "id": "shop-bg",
-      "url": "https://makeupforl.co.kr/images/sub/shop_bg.jpg",
+      "url": "/mfl/images/sub/shop_bg.jpg",
       "alt": "메이크업포엘 샵 전경"
     },
     {
       "id": "makeup-img",
-      "url": "https://makeupforl.co.kr/images/sub/makeup_img.jpg",
+      "url": "/mfl/images/sub/makeup_img.jpg",
       "alt": "출장 메이크업 서비스"
     },
     {
       "id": "sec1-bg1",
-      "url": "https://makeupforl.co.kr/images/main/sec1_bg1.jpg",
+      "url": "/mfl/images/main/sec1_bg1.jpg",
       "alt": "샵 서비스"
     },
     {
       "id": "sec1-bg2",
-      "url": "https://makeupforl.co.kr/images/main/sec1_bg2.jpg",
+      "url": "/mfl/images/main/sec1_bg2.jpg",
       "alt": "출장 메이크업"
     },
     {
       "id": "btm-bg",
-      "url": "https://makeupforl.co.kr/images/main/btm_bg.jpg",
+      "url": "/mfl/images/main/btm_bg.jpg",
       "alt": "메이크업포엘"
     },
     {
       "id": "consult-1",
-      "url": "https://makeupforl.co.kr/images/sub/consult_img1.png",
+      "url": "/mfl/images/sub/consult_img1.png",
       "alt": "혼주 올림머리 스타일 처방"
     },
     {
       "id": "consult-2",
-      "url": "https://makeupforl.co.kr/images/sub/consult_img2.png",
+      "url": "/mfl/images/sub/consult_img2.png",
       "alt": "정수리 탈모·가는 머리카락 보완"
     },
     {
       "id": "consult-3",
-      "url": "https://makeupforl.co.kr/images/sub/consult_img3.png",
+      "url": "/mfl/images/sub/consult_img3.png",
       "alt": "가발 스타일링"
     },
     {
       "id": "consult-4",
-      "url": "https://makeupforl.co.kr/images/sub/consult_img4.png",
+      "url": "/mfl/images/sub/consult_img4.png",
       "alt": "중년 피부에 맞는 메이크업"
     },
     {
       "id": "consult-5",
-      "url": "https://makeupforl.co.kr/images/sub/consult_img5.png",
+      "url": "/mfl/images/sub/consult_img5.png",
       "alt": "원하는 이미지로 이미지메이킹"
     },
     {
       "id": "consult-6",
-      "url": "https://makeupforl.co.kr/images/sub/consult_img6.png",
+      "url": "/mfl/images/sub/consult_img6.png",
       "alt": "퍼스널 컬러로 한복 색 추천"
     },
     {
       "id": "consult-7",
-      "url": "https://makeupforl.co.kr/images/sub/consult_img7.png",
+      "url": "/mfl/images/sub/consult_img7.png",
       "alt": "개인적인 걱정거리 해결"
     },
     {
       "id": "consult-8",
-      "url": "https://makeupforl.co.kr/images/sub/consult_img8.png",
+      "url": "/mfl/images/sub/consult_img8.png",
       "alt": "사돈 간 조율"
     },
     {
       "id": "consult-9",
-      "url": "https://makeupforl.co.kr/images/sub/consult_img9.png",
+      "url": "/mfl/images/sub/consult_img9.png",
       "alt": "수술 없이 10년 젊어 보이는 혼주"
     },
     {
       "id": "consult-10",
-      "url": "https://makeupforl.co.kr/images/sub/consult_img10.png",
+      "url": "/mfl/images/sub/consult_img10.png",
       "alt": "그 밖의 모든 궁금증"
     },
     {
       "id": "home-1",
-      "url": "https://makeupforl.co.kr/uploaded/webedit/2310/e3907c7ecf64b5467eb8b2f305cf07ccc0936afa.jpg",
+      "url": "/mfl/uploaded/webedit/2310/e3907c7ecf64b5467eb8b2f305cf07ccc0936afa.jpg",
       "alt": "메이크업포엘 작업 사진"
     },
     {
       "id": "home-2",
-      "url": "https://makeupforl.co.kr/uploaded/webedit/2310/5f04404cc13c01417666723a6b1de0c3bb5820cd.jpg",
+      "url": "/mfl/uploaded/webedit/2310/5f04404cc13c01417666723a6b1de0c3bb5820cd.jpg",
       "alt": "메이크업포엘 작업 사진"
     },
     {
       "id": "home-3",
-      "url": "https://makeupforl.co.kr/uploaded/webedit/2310/35dab8e22368c0f048b0c0f685c73518f8aeebc6.jpg",
+      "url": "/mfl/uploaded/webedit/2310/35dab8e22368c0f048b0c0f685c73518f8aeebc6.jpg",
       "alt": "메이크업포엘 작업 사진"
     },
     {
       "id": "home-4",
-      "url": "https://makeupforl.co.kr/uploaded/webedit/2310/25765cc77af8184102433e98c9dcc57165834ed2.jpg",
+      "url": "/mfl/uploaded/webedit/2310/25765cc77af8184102433e98c9dcc57165834ed2.jpg",
       "alt": "메이크업포엘 작업 사진"
     },
     {
       "id": "home-5",
-      "url": "https://makeupforl.co.kr/uploaded/webedit/2310/c8efe6fee60f8351f4d1387af229cda763c4c0db.jpg",
+      "url": "/mfl/uploaded/webedit/2310/c8efe6fee60f8351f4d1387af229cda763c4c0db.jpg",
       "alt": "메이크업포엘 작업 사진"
     },
     {
       "id": "home-6",
-      "url": "https://makeupforl.co.kr/uploaded/webedit/2310/97a5182d609272aced6233cf9f4b3df1cc858448.jpg",
+      "url": "/mfl/uploaded/webedit/2310/97a5182d609272aced6233cf9f4b3df1cc858448.jpg",
       "alt": "메이크업포엘 작업 사진"
     },
     {
       "id": "home-7",
-      "url": "https://makeupforl.co.kr/uploaded/webedit/2310/5976f834f4aa25880c9eaabeffb0ab6041f9848b.jpg",
+      "url": "/mfl/uploaded/webedit/2310/5976f834f4aa25880c9eaabeffb0ab6041f9848b.jpg",
       "alt": "메이크업포엘 작업 사진"
     },
     {
       "id": "home-8",
-      "url": "https://makeupforl.co.kr/uploaded/webedit/2310/324216728ff75d97393b63be44b2ecfb9b49e8da.jpg",
+      "url": "/mfl/uploaded/webedit/2310/324216728ff75d97393b63be44b2ecfb9b49e8da.jpg",
       "alt": "메이크업포엘 작업 사진"
     },
     {
       "id": "home-9",
-      "url": "https://makeupforl.co.kr/uploaded/webedit/2310/c5d23d00ececb42a94efcde6f97dbecd3388535e.jpg",
+      "url": "/mfl/uploaded/webedit/2310/c5d23d00ececb42a94efcde6f97dbecd3388535e.jpg",
       "alt": "메이크업포엘 작업 사진"
     },
     {
       "id": "home-10",
-      "url": "https://makeupforl.co.kr/uploaded/webedit/2303/56e14059bcc1f802ba8416cafbe12e1d66977f03.jpg",
+      "url": "/mfl/uploaded/webedit/2303/56e14059bcc1f802ba8416cafbe12e1d66977f03.jpg",
       "alt": "메이크업포엘 작업 사진"
     }
   ]

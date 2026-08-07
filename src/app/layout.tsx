@@ -1,15 +1,9 @@
 import type { Metadata } from "next";
-import { Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import SiteShell from "@/components/layout/SiteShell";
 import { getSiteImages } from "@/lib/siteImages";
-
-const notoSansKr = Noto_Sans_KR({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "700", "900"],
-  variable: "--font-noto-sans-kr",
-});
 
 export const metadata: Metadata = {
   title: "메이크업포엘 | 강남 메이크업샵",
@@ -31,11 +25,19 @@ export default async function RootLayout({
 }>) {
   const img = await getSiteImages();
   return (
-    <html lang="ko" className={notoSansKr.variable}>
-      <body className="font-sans antialiased">
-        <Header logo={img["logo"]} />
-        <main className="min-h-screen">{children}</main>
-        <Footer />
+    <html lang="ko">
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
+        />
+      </head>
+      <body className="antialiased">
+        <SiteShell>
+          <Header logo={img["logo"]} logoWhite={img["logo-white"]} />
+          <main>{children}</main>
+          <Footer />
+        </SiteShell>
       </body>
     </html>
   );

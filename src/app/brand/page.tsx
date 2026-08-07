@@ -202,11 +202,10 @@ export default async function BrandPage() {
               <MapPin className="h-5 w-5 text-[#F46E65]" />
               <h3 className="mt-3 font-bold text-gray-900">주소</h3>
               <p className="mt-1.5 text-sm leading-relaxed text-gray-600">
-                서울시 강남구 논현로 158길14
+                서울 강남구 논현로157길 12
                 <br />
-                영빌딩 3층
+                평화빌딩 201호
               </p>
-              <p className="mt-2 text-xs text-gray-500">압구정역 3번출구 역세권</p>
             </div>
             <div className="rounded-xl border border-gray-200 bg-white p-6">
               <Phone className="h-5 w-5 text-[#F46E65]" />

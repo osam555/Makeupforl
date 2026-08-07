@@ -1,10 +1,10 @@
 import Link from 'next/link'
 
 /**
- * 원본 홈페이지와 동일한 서브페이지 상단.
- * 실측: .sub-visual { height:350px } / .tit { 30px, 500, #fff, 세로 중앙 }
- *       background-position: 25% 50%, background-size: cover
- *       탭 220×50, radius 25, 활성 #F46E65, 간격 10px, 가운데 정렬
+ * 원본 .sub-visual + #lnb 그대로.
+ *  .sub-visual { height:350px } / .tit { 30px, 500, #fff, 세로 중앙 }
+ *  #lnb { max-width:1460px; padding:0 30px; margin:50px auto 60px }
+ *  .lnb ul li { max-width:230px } / a { height:60px; radius:30px; font-size:20px }
  */
 export default function SubHero({
   title,
@@ -19,31 +19,28 @@ export default function SubHero({
 }) {
   return (
     <>
-      <div className="mfl-subvis">
+      <div className="sub-visual">
         <div
-          className="mfl-subvis-bg"
+          className="background"
           style={{ backgroundImage: `url(${image})` }}
           role="img"
           aria-label={title}
         />
-        <p className="mfl-subvis-tit">{title}</p>
+        <p className="tit">{title}</p>
       </div>
 
       {tabs && tabs.length > 0 && (
-        <div className="pt-[53px]">
-          <div className="mfl-contain">
-            <nav className="mfl-tabs">
+        <div className="mfl-lnb">
+          <div className="lnb">
+            <ul>
               {tabs.map((t) => (
-                <Link
-                  key={t.name}
-                  href={t.href}
-                  className="mfl-tab"
-                  aria-current={t.name === active ? 'page' : undefined}
-                >
-                  {t.name}
-                </Link>
+                <li key={t.name} className={t.name === active ? 'active' : undefined}>
+                  <Link href={t.href} aria-current={t.name === active ? 'page' : undefined}>
+                    {t.name}
+                  </Link>
+                </li>
               ))}
-            </nav>
+            </ul>
           </div>
         </div>
       )}
