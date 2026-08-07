@@ -206,6 +206,7 @@ export default async function BrandPage() {
                 <br />
                 평화빌딩 201호
               </p>
+              <p className="mt-2 text-xs text-gray-500">압구정역 3번출구 역세권</p>
             </div>
             <div className="rounded-xl border border-gray-200 bg-white p-6">
               <Phone className="h-5 w-5 text-[#F46E65]" />
