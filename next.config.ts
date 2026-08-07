@@ -19,7 +19,14 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: '**.googleusercontent.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'i.ytimg.com',
+      },
     ],
+  },
+  async redirects() {
+    return [{ source: '/education', destination: '/videos', permanent: true }]
   },
 };
 

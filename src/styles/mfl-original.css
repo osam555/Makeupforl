@@ -1360,26 +1360,24 @@ html.menu-opened .mobile-overlay {display:block;}
 .mfl-site .mfl-gnb > ul > li:nth-child(7):hover > a:after { display: block; }
 .mfl-site .mfl-gnb > ul > li.no-sub:hover > a:after { display: none !important; }
 
-/* 8개 메뉴(원본 7개 + 100문100답) 수용을 위한 간격 미세조정 */
-.mfl-site .mfl-gnb { margin-right: 0; }
-.mfl-site .mfl-gnb > ul { margin: 0 -16px; }
-.mfl-site .mfl-gnb > ul > li { padding: 0 16px; }
-.mfl-site .mfl-gnb > ul > li > a { white-space: nowrap; }
-@media (max-width: 1560px) {
-  .mfl-site .mfl-gnb > ul { margin: 0 -11px; }
-  .mfl-site .mfl-gnb > ul > li { padding: 0 11px; }
-  .mfl-site .mfl-gnb > ul > li > a { font-size: 17px; }
+/* 8개 메뉴(원본 7개 + 100문100답) — 폭에 따라 매끄럽게 줄어드는 반응형 gnb */
+.mfl-site .mfl-gnb { margin-right: 0; min-width: 0; }
+.mfl-site .mfl-gnb > ul {
+  margin: 0;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  column-gap: clamp(10px, 1.5vw, 40px);
 }
-@media (max-width: 1380px) {
-  .mfl-site .mfl-gnb > ul { margin: 0 -8px; }
-  .mfl-site .mfl-gnb > ul > li { padding: 0 8px; }
-  .mfl-site .mfl-gnb > ul > li > a { font-size: 16px; }
+.mfl-site .mfl-gnb > ul > li { padding: 0; flex: 0 0 auto; }
+.mfl-site .mfl-gnb > ul > li > a {
+  white-space: nowrap;
+  font-size: clamp(14px, 1.06vw, 18px);
 }
+/* 1230 이하에서는 원본대로 헤더가 80px 이므로 line-height 만 맞춘다 */
 @media (max-width: 1230px) {
-  .mfl-site .mfl-gnb { margin-right: 60px; }
-  .mfl-site .mfl-gnb > ul { margin: 0 -7px; }
-  .mfl-site .mfl-gnb > ul > li { padding: 0 7px; }
-  .mfl-site .mfl-gnb > ul > li > a { font-size: 15px; }
+  .mfl-site .mfl-gnb > ul { column-gap: clamp(8px, 1.2vw, 20px); }
+  .mfl-site .mfl-gnb > ul > li > a { font-size: clamp(13px, 1.15vw, 16px); }
 }
 
 /* 헤더 안 contain 은 flex 로 (원본은 float/absolute 혼용) */

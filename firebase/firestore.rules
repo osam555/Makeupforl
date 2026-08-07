@@ -53,5 +53,17 @@ service cloud.firestore {
       allow read: if true;
       allow write: if isAdmin();
     }
+
+    // 영상자료(유튜브): 공개 읽기, 수정은 관리자만
+    match /videos/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 사이트 설정(채널 주소 등): 공개 읽기, 수정은 관리자만
+    match /site_config/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
   }
 }

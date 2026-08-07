@@ -1,0 +1,41 @@
+{
+  "_comment": "영상자료(/videos) 시드. 실제 목록은 어드민(/admin/videos)에서 등록하며 Firestore `videos` 컬렉션에 저장된다. 여기 값은 Firebase 미설정 시 폴백.",
+  "channel": {
+    "url": "https://www.youtube.com/@혼주메이크업전문",
+    "name": "혼주메이크업 연구소",
+    "handle": "@혼주메이크업전문",
+    "channelId": "UCtlSwebjXpbjnasvIMMTLZA"
+  },
+  "items": [
+    {
+      "id": "E2DOGRjnF-s",
+      "youtubeId": "E2DOGRjnF-s",
+      "title": "",
+      "summary": null,
+      "publishedAt": null,
+      "category": "featured",
+      "order": 0,
+      "published": true
+    },
+    {
+      "id": "pC6u6BlUG3Y",
+      "youtubeId": "pC6u6BlUG3Y",
+      "title": "",
+      "summary": null,
+      "publishedAt": null,
+      "category": "featured",
+      "order": 1,
+      "published": true
+    },
+    {
+      "id": "Mx6O-c9dQzE",
+      "youtubeId": "Mx6O-c9dQzE",
+      "title": "",
+      "summary": null,
+      "publishedAt": null,
+      "category": "featured",
+      "order": 2,
+      "published": true
+    }
+  ]
+}
