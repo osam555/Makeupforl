@@ -3,6 +3,7 @@ import Link from 'next/link'
 
 import Wed100Browser from '@/components/wed100/Wed100Browser'
 import { getPublishedWed100Items, wed100Meta, wed100Parts } from '@/lib/wed100'
+import { getSiteImages } from '@/lib/siteImages'
 
 export const metadata: Metadata = {
   title: '혼주메이크업 100문 100답 | 메이크업포엘',
@@ -19,6 +20,7 @@ export const metadata: Metadata = {
 
 export default async function Wed100Page() {
   const items = await getPublishedWed100Items()
+  const img = await getSiteImages()
   const counts = new Map<number, number>()
   items.forEach((x) => counts.set(x.part, (counts.get(x.part) ?? 0) + 1))
   const totalSec = items.reduce(
@@ -34,7 +36,8 @@ export default async function Wed100Page() {
           className="pointer-events-none absolute -right-24 -top-32 h-[520px] w-[520px] rounded-full opacity-60 blur-3xl"
           style={{ background: 'radial-gradient(circle, #F0DAE1 0%, transparent 70%)' }}
         />
-        <div className="relative mx-auto max-w-7xl px-6 py-20 lg:px-8">
+        <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-10 px-6 py-20 lg:grid-cols-[minmax(0,1fr)_440px] lg:items-end lg:gap-8 lg:px-8 lg:pb-0 lg:pt-24">
+          <div>
           <p className="text-xs font-extrabold tracking-[0.34em] text-[var(--w-rose)]">
             HONJU MAKEUP · Q&amp;A {items.length}
           </p>
@@ -88,6 +91,55 @@ export default async function Wed100Page() {
               </div>
             ))}
           </dl>
+          </div>
+
+          {/* 우측 비주얼 — 원장 사진 + 지금 듣기 카드 */}
+          <div className="relative hidden lg:block lg:h-[476px]">
+            <div
+              className="pointer-events-none absolute bottom-0 right-0 h-[440px] w-[440px] rounded-full opacity-70 blur-3xl"
+              style={{ background: 'radial-gradient(circle, var(--w-rose-l) 0%, transparent 70%)' }}
+            />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={img['ceo'] || '/mfl/images/sub/ceo.png'}
+              alt="메이크업포엘 대표원장 김성희"
+              width={389}
+              height={476}
+              className="absolute bottom-0 right-0 h-[476px] w-[389px] object-contain object-bottom"
+            />
+            {items[0] && (
+              <Link
+                href={`/wed100/${items[0].slug}`}
+                className="group absolute bottom-16 left-0 w-[300px] rounded-2xl border border-[var(--w-line)] bg-[var(--w-card)]/95 p-4 shadow-xl backdrop-blur transition hover:-translate-y-0.5 hover:shadow-2xl"
+              >
+                <p className="text-[10px] font-extrabold tracking-[0.22em] text-[var(--w-rose)]">
+                  NOW PLAYING · PART {items[0].part}
+                </p>
+                <p className="mt-2 line-clamp-2 text-sm font-bold leading-snug text-[var(--w-ink)]">
+                  {items[0].question}
+                </p>
+                <div className="mt-3 flex items-center gap-3">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--w-rose)] text-[11px] text-white transition group-hover:bg-[var(--w-rose-d)]">
+                    ▶
+                  </span>
+                  <span className="flex h-8 flex-1 items-end gap-[3px]" aria-hidden>
+                    {[6, 13, 9, 20, 14, 26, 18, 30, 22, 15, 24, 11, 19, 8, 14, 21, 10, 16, 7, 12].map(
+                      (h, i) => (
+                        <i
+                          key={i}
+                          className="block w-[3px] rounded-full bg-[var(--w-rose)] opacity-45"
+                          style={{ height: `${h}px` }}
+                        />
+                      ),
+                    )}
+                  </span>
+                </div>
+                <p className="mt-2 text-[11px] text-[var(--w-mut)]">
+                  105문 전체 약 {Math.round(totalSec / 60)}분 · 한/EN 자막
+                </p>
+              </Link>
+            )}
+          </div>
         </div>
       </section>
 
