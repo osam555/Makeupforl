@@ -1361,12 +1361,13 @@ html.menu-opened .mobile-overlay {display:block;}
 .mfl-site .mfl-gnb > ul > li.no-sub:hover > a:after { display: none !important; }
 
 /* 8개 메뉴(원본 7개 + 100문100답) — 폭에 따라 매끄럽게 줄어드는 반응형 gnb */
-.mfl-site .mfl-gnb { margin-right: 0; min-width: 0; }
+.mfl-site .mfl-gnb { margin-right: 0; min-width: 0; flex: 1 1 auto; }
 .mfl-site .mfl-gnb > ul {
   margin: 0;
   display: flex;
   flex-wrap: nowrap;
-  justify-content: flex-end;
+  /* 로고 오른쪽 남는 공간의 가운데에 놓아 우측으로 쏠리지 않게 */
+  justify-content: center;
   column-gap: clamp(10px, 1.5vw, 40px);
 }
 .mfl-site .mfl-gnb > ul > li { padding: 0; flex: 0 0 auto; }

@@ -18,14 +18,9 @@ export default async function VideosPage() {
 
   return (
     <div className="bg-white">
-      {/* 히어로 이미지 없이 제목만 */}
-      <div className="border-b border-[#E5E5E5] bg-[#F4F4F4]">
-        <div className="mfl-contain py-[45px] text-center">
-          <h1 className="text-[30px] font-medium leading-none text-[#242424]">영상자료</h1>
-        </div>
-      </div>
+      <h1 className="blind">영상자료</h1>
 
-      <div className="mfl-contain mfl-real-t2">
+      <div className="mfl-contain mfl-real-t2 pt-[50px]">
         {/* 상단 안내 + 채널 바로가기 */}
         <div className="mb-[55px] flex flex-col gap-6 border-b border-[#E5E5E5] pb-[45px] lg:flex-row lg:items-end lg:justify-between">
           <div>
