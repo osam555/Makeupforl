@@ -33,14 +33,14 @@ const REFUND = [
 export default async function ReservationPage() {
   const img = await getSiteImages()
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-white">
+    <div className="min-h-screen bg-gradient-to-br from-[#FDF4F3] to-white">
       <SubHero title="예약안내" image={img['sub-hero']} />
-      <div className="mx-auto max-w-3xl px-6 py-12 lg:px-8">
+      <div className="mfl-contain max-w-[900px] py-12">
         {/* Header */}
         <div className="mb-12 text-center">
           <p className="text-lg text-gray-600">
             메이크업의 모든 과정은{' '}
-            <span className="font-semibold text-pink-600">100% 예약제</span>로 진행됩니다
+            <span className="font-semibold text-[#F46E65]">100% 예약제</span>로 진행됩니다
           </p>
           <p className="mt-2 text-sm text-gray-500">
             아래 중 편한 방법으로 문의 주시면 친절하고 상세하게 안내드리겠습니다.
@@ -51,7 +51,7 @@ export default async function ReservationPage() {
         <div className="mb-10 grid gap-3 sm:grid-cols-2">
           <a
             href="tel:02-323-3321"
-            className="rounded-xl bg-pink-600 px-6 py-5 text-center text-white shadow-sm transition hover:bg-pink-700"
+            className="rounded-xl bg-[#F46E65] px-6 py-5 text-center text-white shadow-sm transition hover:bg-[#E2564C]"
           >
             <span className="block text-xs opacity-90">전화 문의</span>
             <span className="mt-1 block text-xl font-bold">02-323-3321</span>
@@ -60,7 +60,7 @@ export default async function ReservationPage() {
             href="https://pf.kakao.com/_lXVVxb"
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-xl border border-pink-200 bg-white px-6 py-5 text-center shadow-sm transition hover:border-pink-300"
+            className="rounded-xl border border-[#F8C3BF] bg-white px-6 py-5 text-center shadow-sm transition hover:border-[#F46E65]"
           >
             <span className="block text-xs text-gray-500">카카오톡 채팅</span>
             <span className="mt-1 block text-xl font-bold text-gray-900">메이크업포엘</span>
@@ -79,7 +79,7 @@ export default async function ReservationPage() {
           <ol className="space-y-4">
             {STEPS.map((s) => (
               <li key={s.n} className="flex gap-4">
-                <span className="flex h-7 w-7 flex-none items-center justify-center rounded-full bg-pink-600 text-xs font-bold text-white">
+                <span className="flex h-7 w-7 flex-none items-center justify-center rounded-full bg-[#F46E65] text-xs font-bold text-white">
                   {s.n}
                 </span>
                 <span>
@@ -94,9 +94,9 @@ export default async function ReservationPage() {
         {/* 예약금 */}
         <div className="mt-6 rounded-lg bg-white p-6 shadow-sm">
           <h2 className="mb-4 text-xl font-bold text-gray-900">예약금 안내</h2>
-          <div className="rounded-lg bg-pink-50 p-4">
+          <div className="rounded-lg bg-[#FDF4F3] p-4">
             <p className="text-sm text-gray-700">
-              예약금 <span className="font-bold text-pink-700">여자 1인 기준 5만원</span>
+              예약금 <span className="font-bold text-[#E2564C]">여자 1인 기준 5만원</span>
             </p>
             <p className="mt-2 text-sm text-gray-700">
               신한은행 <span className="font-semibold">110-474-881691</span>
@@ -132,7 +132,7 @@ export default async function ReservationPage() {
           <div className="space-y-3 text-gray-700">
             <p className="flex items-center gap-2">
               <span className="font-semibold">전화:</span>
-              <a href="tel:02-323-3321" className="text-pink-600 hover:text-pink-700">
+              <a href="tel:02-323-3321" className="text-[#F46E65] hover:text-[#E2564C]">
                 02-323-3321
               </a>
             </p>
@@ -142,14 +142,14 @@ export default async function ReservationPage() {
                 href="https://pf.kakao.com/_lXVVxb"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-pink-600 hover:text-pink-700"
+                className="text-[#F46E65] hover:text-[#E2564C]"
               >
                 메이크업포엘
               </a>
             </p>
             <p className="flex items-center gap-2">
               <span className="font-semibold">이메일:</span>
-              <a href="mailto:makeupforl@naver.com" className="text-pink-600 hover:text-pink-700">
+              <a href="mailto:makeupforl@naver.com" className="text-[#F46E65] hover:text-[#E2564C]">
                 makeupforl@naver.com
               </a>
             </p>

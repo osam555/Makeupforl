@@ -118,7 +118,7 @@ function AdminBookings() {
                 variant={filter === status ? 'default' : 'outline'}
                 onClick={() => setFilter(status)}
                 size="sm"
-                className={filter === status ? 'bg-pink-600 hover:bg-pink-700' : ''}
+                className={filter === status ? 'bg-[#F46E65] hover:bg-[#E2564C]' : ''}
               >
                 {status === 'all' ? '전체' : getStatusText(status)}
               </Button>
@@ -171,7 +171,7 @@ function AdminBookings() {
         {/* Bookings List */}
         {loading ? (
           <div className="text-center py-12">
-            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-pink-600 border-r-transparent"></div>
+            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-[#F46E65] border-r-transparent"></div>
             <p className="mt-4 text-gray-600">로딩 중...</p>
           </div>
         ) : bookings.length === 0 ? (
@@ -204,14 +204,14 @@ function AdminBookings() {
                         </div>
                         <div className="flex items-center gap-2">
                           <Phone className="h-4 w-4 text-gray-400" />
-                          <a href={`tel:${booking.phone}`} className="text-pink-600 hover:underline">
+                          <a href={`tel:${booking.phone}`} className="text-[#F46E65] hover:underline">
                             {booking.phone}
                           </a>
                         </div>
                         {booking.email && (
                           <div className="flex items-center gap-2">
                             <Mail className="h-4 w-4 text-gray-400" />
-                            <a href={`mailto:${booking.email}`} className="text-pink-600 hover:underline">
+                            <a href={`mailto:${booking.email}`} className="text-[#F46E65] hover:underline">
                               {booking.email}
                             </a>
                           </div>

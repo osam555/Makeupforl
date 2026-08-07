@@ -69,11 +69,11 @@ export default function BookingForm() {
 
   if (submitted) {
     return (
-      <Card className="border-pink-200 bg-pink-50">
+      <Card className="border-[#F8C3BF] bg-[#FDF4F3]">
         <CardContent className="pt-6 text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-pink-100 mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#FDECEA] mb-4">
             <svg
-              className="w-8 h-8 text-pink-600"
+              className="w-8 h-8 text-[#F46E65]"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -114,7 +114,7 @@ export default function BookingForm() {
           <div className="space-y-2">
             <Label htmlFor="name" className="flex items-center gap-2">
               <User className="h-4 w-4" />
-              이름 <span className="text-pink-600">*</span>
+              이름 <span className="text-[#F46E65]">*</span>
             </Label>
             <Input
               id="name"
@@ -129,7 +129,7 @@ export default function BookingForm() {
           <div className="space-y-2">
             <Label htmlFor="phone" className="flex items-center gap-2">
               <Phone className="h-4 w-4" />
-              연락처 <span className="text-pink-600">*</span>
+              연락처 <span className="text-[#F46E65]">*</span>
             </Label>
             <Input
               id="phone"
@@ -159,7 +159,7 @@ export default function BookingForm() {
           {/* Service Type */}
           <div className="space-y-2">
             <Label htmlFor="serviceType" className="flex items-center gap-2">
-              서비스 종류 <span className="text-pink-600">*</span>
+              서비스 종류 <span className="text-[#F46E65]">*</span>
             </Label>
             <Select value={formData.serviceType} onValueChange={(value) => handleChange('serviceType', value)} required>
               <SelectTrigger>
@@ -177,7 +177,7 @@ export default function BookingForm() {
             <div className="space-y-2">
               <Label htmlFor="date" className="flex items-center gap-2">
                 <Calendar className="h-4 w-4" />
-                희망 날짜 <span className="text-pink-600">*</span>
+                희망 날짜 <span className="text-[#F46E65]">*</span>
               </Label>
               <Input
                 id="date"
@@ -192,7 +192,7 @@ export default function BookingForm() {
             <div className="space-y-2">
               <Label htmlFor="time" className="flex items-center gap-2">
                 <Clock className="h-4 w-4" />
-                희망 시간 <span className="text-pink-600">*</span>
+                희망 시간 <span className="text-[#F46E65]">*</span>
               </Label>
               <Input
                 id="time"
@@ -222,7 +222,7 @@ export default function BookingForm() {
           {/* Submit Button */}
           <Button
             type="submit"
-            className="w-full bg-pink-600 hover:bg-pink-700"
+            className="w-full bg-[#F46E65] hover:bg-[#E2564C]"
             size="lg"
             disabled={loading}
           >
@@ -232,7 +232,7 @@ export default function BookingForm() {
           <p className="text-xs text-gray-500 text-center">
             예약 신청 후 1-2일 내에 확인 연락을 드립니다.
             <br />
-            급하신 경우 <a href="tel:02-323-3321" className="text-pink-600 hover:underline">02-323-3321</a>로 전화 주세요.
+            급하신 경우 <a href="tel:02-323-3321" className="text-[#F46E65] hover:underline">02-323-3321</a>로 전화 주세요.
           </p>
         </form>
       </CardContent>

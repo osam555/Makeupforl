@@ -70,9 +70,9 @@ export default async function ConsultationPage() {
   return (
     <div className="min-h-screen bg-white">
       <SubHero title="1:1 사전컨설팅" image={img['sub-hero']} />
-      <section className="bg-gradient-to-br from-pink-50 to-white py-20">
-        <div className="mx-auto max-w-4xl px-6 lg:px-8">
-          <p className="text-xs font-bold tracking-[0.3em] text-pink-600">MAKEUPFORL ONLY</p>
+      <section className="bg-gradient-to-br from-[#FDF4F3] to-white py-20">
+        <div className="mfl-contain max-w-[1000px]">
+          <p className="text-xs font-bold tracking-[0.3em] text-[#F46E65]">MAKEUPFORL ONLY</p>
           <h2 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
             저희만의 특별함을 소개하겠습니다
           </h2>
@@ -89,7 +89,7 @@ export default async function ConsultationPage() {
             <p>
               이럴 때 많은 혼주들을 도와드린 전문가가 있다면 어떨까요? 그래서 준비했습니다.
               혼주 화장과 혼주 헤어에 필요한 궁금증을 다 풀어드리고,{' '}
-              <b className="text-pink-700">
+              <b className="text-[#E2564C]">
                 내게 가장 잘 어울리는 모습으로 결혼식 날의 혼주가 될 수 있도록
               </b>{' '}
               메이크업포엘이 도와드리겠습니다.
@@ -98,13 +98,13 @@ export default async function ConsultationPage() {
           <div className="mt-9 flex flex-wrap gap-3">
             <Link
               href="/reservation"
-              className="rounded-xl bg-pink-600 px-6 py-3.5 text-sm font-bold text-white shadow-sm transition hover:bg-pink-700"
+              className="rounded-xl bg-[#F46E65] px-6 py-3.5 text-sm font-bold text-white shadow-sm transition hover:bg-[#E2564C]"
             >
               사전컨설팅 예약하기
             </Link>
             <Link
               href="/wed100"
-              className="rounded-xl border border-pink-200 bg-white px-6 py-3.5 text-sm font-bold text-gray-900 transition hover:border-pink-300"
+              className="rounded-xl border border-[#F8C3BF] bg-white px-6 py-3.5 text-sm font-bold text-gray-900 transition hover:border-[#F46E65]"
             >
               혼주메이크업 100문100답 보기
             </Link>
@@ -114,7 +114,7 @@ export default async function ConsultationPage() {
 
       {/* 10가지 도움 */}
       <section className="py-20">
-        <div className="mx-auto max-w-4xl px-6 lg:px-8">
+        <div className="mfl-contain max-w-[1000px]">
           <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl">
             1:1 사전 컨설팅은 이런 도움을 드립니다
           </h2>
@@ -136,7 +136,7 @@ export default async function ConsultationPage() {
                   </div>
                 )}
                 <div className="flex gap-4">
-                  <span className="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-pink-600 text-sm font-bold text-white">
+                  <span className="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-[#F46E65] text-sm font-bold text-white">
                     {h.n}
                   </span>
                   <div>
@@ -152,7 +152,7 @@ export default async function ConsultationPage() {
 
       {/* 마무리 */}
       <section className="bg-gray-900 py-20">
-        <div className="mx-auto max-w-3xl px-6 text-center lg:px-8">
+        <div className="mfl-contain max-w-[900px] text-center">
           <p className="text-xl leading-relaxed text-gray-300 sm:text-2xl">
             아직도, 신부 따라가서 하는
             <br />
@@ -162,11 +162,11 @@ export default async function ConsultationPage() {
           <p className="mt-8 text-lg leading-relaxed text-gray-300">
             이젠 혼주메이크업도 <b className="text-white">혼주만을 위한 전문가</b>가 필요합니다.
           </p>
-          <p className="mt-6 text-2xl font-bold text-pink-400">혼주는 결혼식장의 첫인상입니다.</p>
+          <p className="mt-6 text-2xl font-bold text-[#F46E65]">혼주는 결혼식장의 첫인상입니다.</p>
           <div className="mt-10 flex flex-wrap justify-center gap-3">
             <Link
               href="/reservation"
-              className="rounded-xl bg-pink-600 px-6 py-3.5 text-sm font-bold text-white transition hover:bg-pink-700"
+              className="rounded-xl bg-[#F46E65] px-6 py-3.5 text-sm font-bold text-white transition hover:bg-[#E2564C]"
             >
               사전컨설팅 예약하기
             </Link>

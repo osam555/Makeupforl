@@ -1,9 +1,10 @@
-import Image from 'next/image'
 import Link from 'next/link'
 
 /**
- * 원본 홈페이지와 동일한 서브페이지 상단 구조.
- * 비주얼 배너(제목 오버레이) + 하위 탭 버튼.
+ * 원본 홈페이지와 동일한 서브페이지 상단.
+ * 실측: .sub-visual { height:350px } / .tit { 30px, 500, #fff, 세로 중앙 }
+ *       background-position: 25% 50%, background-size: cover
+ *       탭 220×50, radius 25, 활성 #F46E65, 간격 10px, 가운데 정렬
  */
 export default function SubHero({
   title,
@@ -18,42 +19,31 @@ export default function SubHero({
 }) {
   return (
     <>
-      <div className="relative h-[220px] w-full overflow-hidden sm:h-[300px]">
-        <Image
-          src={image}
-          alt={title}
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-[center_30%]"
+      <div className="mfl-subvis">
+        <div
+          className="mfl-subvis-bg"
+          style={{ backgroundImage: `url(${image})` }}
+          role="img"
+          aria-label={title}
         />
-        <div className="absolute inset-0 bg-black/25" />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <h1 className="text-3xl font-semibold tracking-[0.06em] text-white drop-shadow-lg sm:text-4xl">
-            {title}
-          </h1>
-        </div>
+        <p className="mfl-subvis-tit">{title}</p>
       </div>
 
       {tabs && tabs.length > 0 && (
-        <div className="border-b border-gray-100 bg-white">
-          <div className="mx-auto flex max-w-5xl flex-wrap justify-center gap-3 px-6 py-7 lg:px-8">
-            {tabs.map((t) => {
-              const on = t.name === active
-              return (
+        <div className="pt-[53px]">
+          <div className="mfl-contain">
+            <nav className="mfl-tabs">
+              {tabs.map((t) => (
                 <Link
                   key={t.name}
                   href={t.href}
-                  className={`min-w-[130px] rounded-full border px-6 py-3 text-center text-sm font-medium transition ${
-                    on
-                      ? 'border-pink-500 bg-pink-500 text-white shadow-sm'
-                      : 'border-gray-200 bg-white text-gray-700 hover:border-pink-300 hover:text-pink-600'
-                  }`}
+                  className="mfl-tab"
+                  aria-current={t.name === active ? 'page' : undefined}
                 >
                   {t.name}
                 </Link>
-              )
-            })}
+              ))}
+            </nav>
           </div>
         </div>
       )}

@@ -37,7 +37,7 @@ export default function GalleryClient() {
               <TabsTrigger
                 key={category.slug}
                 value={category.slug}
-                className="px-6 py-2 data-[state=active]:bg-pink-600 data-[state=active]:text-white"
+                className="px-6 py-2 data-[state=active]:bg-[#F46E65] data-[state=active]:text-white"
               >
                 {category.name}
               </TabsTrigger>

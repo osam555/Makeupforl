@@ -17,7 +17,7 @@ const navigation = [
   { name: '교육자료', href: '/education' },
 ]
 
-export default function Header() {
+export default function Header({ logo }: { logo?: string }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const router = useRouter()
 
@@ -35,10 +35,13 @@ export default function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
+    <header className="sticky top-0 z-[90] w-full bg-white">
+      <nav
+        className="mfl-contain mfl-contain-wide flex h-20 items-center justify-between xl:h-[100px]"
+        aria-label="Global"
+      >
         {/* Logo */}
-        <div className="flex lg:flex-1">
+        <div className="flex">
           <Link
             href="/"
             className="-m-1.5 p-1.5 select-none"
@@ -53,7 +56,14 @@ export default function Header() {
             }}
             title="메이크업포엘"
           >
-            <span className="text-2xl font-bold text-pink-600">메이크업포엘</span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={logo || "https://makeupforl.co.kr/images/common/logo_on.png"}
+              alt="메이크업포엘"
+              width={130}
+              height={20}
+              className="h-5 w-auto"
+            />
           </Link>
         </div>
 
@@ -74,12 +84,12 @@ export default function Header() {
         </div>
 
         {/* Desktop navigation */}
-        <div className="hidden lg:flex lg:gap-x-8">
+        <div className="hidden items-center gap-x-9 lg:flex">
           {navigation.map((item) => (
             <Link
               key={item.name}
               href={item.href}
-              className="text-sm font-semibold leading-6 text-gray-900 hover:text-pink-600 transition-colors"
+              className="text-[17px] font-medium tracking-[-0.16px] text-[#242424] transition-colors hover:text-[#F46E65]"
             >
               {item.name}
             </Link>
@@ -87,11 +97,11 @@ export default function Header() {
         </div>
 
         {/* Contact button */}
-        <div className="hidden lg:flex lg:flex-1 lg:justify-end">
+        <div className="hidden lg:flex lg:justify-end">
           <Link href="tel:02-323-3321">
-            <Button className="bg-pink-600 hover:bg-pink-700">
+            <span className="flex h-[46px] w-[170px] items-center justify-center rounded-[23px] bg-[#F46E65] text-[16px] font-medium text-white transition hover:bg-[#E2564C]">
               02-323-3321
-            </Button>
+            </span>
           </Link>
         </div>
       </nav>
@@ -104,7 +114,7 @@ export default function Header() {
               <Link
                 key={item.name}
                 href={item.href}
-                className="block rounded-md px-3 py-2 text-base font-medium text-gray-900 hover:bg-pink-50 hover:text-pink-600"
+                className="block rounded-md px-3 py-2 text-base font-medium text-gray-900 hover:bg-[#FDF4F3] hover:text-[#F46E65]"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {item.name}
@@ -112,7 +122,7 @@ export default function Header() {
             ))}
             <Link
               href="tel:02-323-3321"
-              className="block rounded-md bg-pink-600 px-3 py-2 text-center text-base font-medium text-white hover:bg-pink-700"
+              className="block rounded-md bg-[#F46E65] px-3 py-2 text-center text-base font-medium text-white hover:bg-[#E2564C]"
               onClick={() => setMobileMenuOpen(false)}
             >
               02-323-3321

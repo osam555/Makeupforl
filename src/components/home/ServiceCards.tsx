@@ -15,7 +15,7 @@ const services = [
       '프라이빗 공간 제공',
     ],
     href: '/services/shop',
-    gradient: 'from-pink-500 to-rose-500',
+    gradient: 'from-[#FDF4F3]0 to-rose-500',
   },
   {
     icon: MapPin,
@@ -28,7 +28,7 @@ const services = [
       '이동 장비 완비',
     ],
     href: '/services/onsite',
-    gradient: 'from-rose-500 to-pink-500',
+    gradient: 'from-rose-500 to-[#FDF4F3]0',
   },
 ]
 
@@ -94,7 +94,7 @@ export default function ServiceCards() {
         {/* Additional Info */}
         <div className="mt-16 text-center">
           <p className="text-sm text-gray-600">
-            메이크업과 에스테틱의 모든 과정은 <span className="font-semibold text-pink-600">100% 예약제</span>로 진행됩니다.
+            메이크업과 에스테틱의 모든 과정은 <span className="font-semibold text-[#F46E65]">100% 예약제</span>로 진행됩니다.
           </p>
         </div>
       </div>

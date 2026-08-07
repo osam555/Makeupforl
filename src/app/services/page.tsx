@@ -28,8 +28,8 @@ export default async function ServicesPage() {
   return (
     <div className="min-h-screen bg-white">
       <SubHero title="샵 / 출장메이크업" image={img['sub-hero']} />
-      <section className="bg-gradient-to-br from-pink-50 to-white py-16">
-        <div className="mx-auto max-w-5xl px-6 text-center lg:px-8">
+      <section className="bg-gradient-to-br from-[#FDF4F3] to-white py-16">
+        <div className="mfl-contain max-w-[1200px] text-center">
           <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
             메이크업포엘의 서비스는 다릅니다. 메이크업 전 전문가의 1:1 사전 컨설팅을 통해 퍼스널컬러
             진단과 어울리는 헤어스타일 점검을 마친 뒤 메이크업을 진행합니다.
@@ -39,7 +39,7 @@ export default async function ServicesPage() {
 
       {/* 두 가지 서비스 */}
       <section className="py-16">
-        <div className="mx-auto max-w-5xl px-6 lg:px-8">
+        <div className="mfl-contain max-w-[1200px]">
           <div className="grid gap-6 md:grid-cols-2">
             {/* 샵 */}
             <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
@@ -47,11 +47,11 @@ export default async function ServicesPage() {
                 <Image src={img['shop-bg']} alt="메이크업포엘 샵 전경" fill sizes="(max-width:768px) 100vw, 50vw" className="object-cover" />
               </div>
               <div className="p-8">
-              <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-pink-100 text-pink-600">
+              <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[#FDECEA] text-[#F46E65]">
                 <Home className="h-5 w-5" />
               </span>
               <h2 className="mt-5 text-xl font-bold text-gray-900">샵 서비스</h2>
-              <p className="mt-2 text-sm font-medium text-pink-600">
+              <p className="mt-2 text-sm font-medium text-[#F46E65]">
                 고객님 한 분 한 분의 소중한 날을 위한 프라이빗 헤어 메이크업
               </p>
               <p className="mt-4 text-[15px] leading-[1.85] text-gray-600">
@@ -74,11 +74,11 @@ export default async function ServicesPage() {
                 <Image src={img['makeup-img']} alt="출장 메이크업 서비스" fill sizes="(max-width:768px) 100vw, 50vw" className="object-cover" />
               </div>
               <div className="p-8">
-              <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-pink-100 text-pink-600">
+              <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[#FDECEA] text-[#F46E65]">
                 <Car className="h-5 w-5" />
               </span>
               <h2 className="mt-5 text-xl font-bold text-gray-900">출장 메이크업</h2>
-              <p className="mt-2 text-sm font-medium text-pink-600">
+              <p className="mt-2 text-sm font-medium text-[#F46E65]">
                 Anytime, Anywhere — 고객이 원하는 시간에 원하는 장소에서
               </p>
               <p className="mt-4 text-[15px] leading-[1.85] text-gray-600">
@@ -100,7 +100,7 @@ export default async function ServicesPage() {
 
       {/* 주의사항 */}
       <section className="pb-16">
-        <div className="mx-auto max-w-5xl px-6 lg:px-8">
+        <div className="mfl-contain max-w-[1200px]">
           <div className="rounded-2xl border border-amber-200 bg-amber-50 p-7">
             <h2 className="flex items-center gap-2 text-lg font-bold text-amber-900">
               <AlertTriangle className="h-5 w-5" />
@@ -126,7 +126,7 @@ export default async function ServicesPage() {
 
       {/* 진행 과정 */}
       <section className="bg-gray-50 py-16">
-        <div className="mx-auto max-w-5xl px-6 lg:px-8">
+        <div className="mfl-contain max-w-[1200px]">
           <h2 className="text-2xl font-bold text-gray-900">진행 과정</h2>
           <p className="mt-2 text-sm text-gray-600">
             문의부터 당일 서비스까지, 빠짐없이 챙겨 드립니다.
@@ -134,7 +134,7 @@ export default async function ServicesPage() {
           <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {PROCESS.map((p) => (
               <div key={p.n} className="rounded-xl border border-gray-200 bg-white p-5">
-                <span className="text-xs font-extrabold tracking-widest text-pink-600">
+                <span className="text-xs font-extrabold tracking-widest text-[#F46E65]">
                   STEP {p.n}
                 </span>
                 <h3 className="mt-2 font-bold text-gray-900">{p.t}</h3>
@@ -147,7 +147,7 @@ export default async function ServicesPage() {
 
       {/* CTA */}
       <section className="py-16">
-        <div className="mx-auto max-w-3xl px-6 text-center lg:px-8">
+        <div className="mfl-contain max-w-[900px] text-center">
           <h2 className="text-2xl font-bold text-gray-900">
             어떤 서비스가 맞을지 고민되시나요?
           </h2>
@@ -157,7 +157,7 @@ export default async function ServicesPage() {
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link
               href="/consultation"
-              className="rounded-xl bg-pink-600 px-6 py-3.5 text-sm font-bold text-white transition hover:bg-pink-700"
+              className="rounded-xl bg-[#F46E65] px-6 py-3.5 text-sm font-bold text-white transition hover:bg-[#E2564C]"
             >
               1:1 사전컨설팅 알아보기
             </Link>

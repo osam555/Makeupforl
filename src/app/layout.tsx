@@ -3,6 +3,7 @@ import { Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { getSiteImages } from "@/lib/siteImages";
 
 const notoSansKr = Noto_Sans_KR({
   subsets: ["latin"],
@@ -23,15 +24,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const img = await getSiteImages();
   return (
     <html lang="ko" className={notoSansKr.variable}>
       <body className="font-sans antialiased">
-        <Header />
+        <Header logo={img["logo"]} />
         <main className="min-h-screen">{children}</main>
         <Footer />
       </body>
