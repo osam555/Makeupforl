@@ -202,10 +202,22 @@ function AdminWed100Editor({
       const res = await fetch('/api/wed100/save', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...(await authPayload()), action: 'save', item: draft }),
+        body: JSON.stringify({
+          ...(await authPayload()),
+          action: 'save',
+          item: draft,
+          baseUpdatedAt: (draft as { updatedAt?: string }).updatedAt ?? null,
+        }),
       })
       const j = await res.json()
-      if (!j.ok) throw new Error(j.error)
+      if (!j.ok) {
+        if (res.status === 409) {
+          setStatus({ kind: 'err', msg: j.error })
+          return
+        }
+        throw new Error(j.error)
+      }
+      ;(draft as { updatedAt?: string }).updatedAt = j.updatedAt
       setItems((arr) => arr.map((x) => (x.slug === draft.slug ? { ...draft } : x)))
       setDirty(false)
       setStatus({

@@ -97,10 +97,30 @@ export async function POST(req: Request) {
     if (!item?.slug) {
       return NextResponse.json({ ok: false, error: '저장할 항목이 없습니다.' }, { status: 400 })
     }
+    // 동시 수정 보호 — 편집을 시작한 시점(baseUpdatedAt) 이후 다른 저장이 있었으면 거부
+    const prev = await db.collection('wed100_questions').doc(item.slug).get()
+    const serverUpdatedAt = prev.exists
+      ? ((prev.data() as { updatedAt?: string }).updatedAt ?? null)
+      : null
+    // baseUpdatedAt 미제공(구버전 어드민 탭 포함)도 충돌로 간주 — 새로고침을 강제해
+    // 낡은 초안이 최신 데이터를 덮어쓰는 사고를 막는다
+    const base = typeof body?.baseUpdatedAt === 'string' ? body.baseUpdatedAt : undefined
+    if (serverUpdatedAt && base !== serverUpdatedAt) {
+      return NextResponse.json(
+        {
+          ok: false,
+          conflict: true,
+          error:
+            '이 문항이 다른 화면에서 먼저 수정되었습니다. 저장하지 않았습니다 — 새로고침 후 다시 편집해 주세요.',
+          serverUpdatedAt,
+        },
+        { status: 409 },
+      )
+    }
+
     // 본문만 고친 경우 같은 문장을 쓰던 자막 큐도 함께 따라가게 한다
     let cueSync = 0
     try {
-      const prev = await db.collection('wed100_questions').doc(item.slug).get()
       const prevAnswer = prev.exists ? (prev.data() as Wed100Item).answer : undefined
       const r = syncCuesWithAnswer(prevAnswer, item.answer, item.cues)
       if (r.changed) {
@@ -111,11 +131,12 @@ export async function POST(req: Request) {
       /* 동기화 실패해도 저장은 진행 */
     }
 
-    await db.collection('wed100_questions').doc(item.slug).set(toRow(item, editor))
+    const row = toRow(item, editor)
+    await db.collection('wed100_questions').doc(item.slug).set(row)
     // 저장 즉시 공개 페이지 캐시를 새로 굽는다 (배포 없이 바로 반영)
     revalidatePath('/wed100')
     revalidatePath(`/wed100/${item.slug}`)
-    return NextResponse.json({ ok: true, slug: item.slug, editor, cueSync })
+    return NextResponse.json({ ok: true, slug: item.slug, editor, cueSync, updatedAt: row.updatedAt })
   } catch (e) {
     return NextResponse.json(
       { ok: false, error: (e instanceof Error ? e.message : String(e)) },
