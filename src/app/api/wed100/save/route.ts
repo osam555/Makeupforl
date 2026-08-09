@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server'
 
 import raw from '@/data/wed100.json'
 import { adminConfigured, getAdminDb, verifyAdmin } from '@/lib/firebase/admin'
+import { syncCuesWithAnswer } from '@/lib/wed100-text'
 import type { Wed100Data, Wed100Item } from '@/types/wed100'
 
 export const runtime = 'nodejs'
@@ -96,11 +97,27 @@ export async function POST(req: Request) {
     if (!item?.slug) {
       return NextResponse.json({ ok: false, error: '저장할 항목이 없습니다.' }, { status: 400 })
     }
+    // 본문만 고친 경우 같은 문장을 쓰던 자막 큐도 함께 따라가게 한다
+    let cueSync = 0
+    try {
+      const prev = await db.collection('wed100_questions').doc(item.slug).get()
+      if (prev.exists) {
+        const prevAnswer = (prev.data() as Wed100Item).answer
+        const r = syncCuesWithAnswer(prevAnswer, item.answer, item.cues)
+        if (r.changed) {
+          item.cues = r.cues
+          cueSync = r.changed
+        }
+      }
+    } catch {
+      /* 동기화 실패해도 저장은 진행 */
+    }
+
     await db.collection('wed100_questions').doc(item.slug).set(toRow(item, editor))
     // 저장 즉시 공개 페이지 캐시를 새로 굽는다 (배포 없이 바로 반영)
     revalidatePath('/wed100')
     revalidatePath(`/wed100/${item.slug}`)
-    return NextResponse.json({ ok: true, slug: item.slug, editor })
+    return NextResponse.json({ ok: true, slug: item.slug, editor, cueSync })
   } catch (e) {
     return NextResponse.json(
       { ok: false, error: (e instanceof Error ? e.message : String(e)) },

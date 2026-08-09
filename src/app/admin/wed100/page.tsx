@@ -234,7 +234,9 @@ function AdminWed100Editor({
       setDirty(false)
       setStatus({
         kind: 'ok',
-        msg: `저장되었습니다 (${j.editor}). 사이트에는 최대 1시간 내 반영됩니다.`,
+        msg:
+          `저장되었습니다 (${j.editor}). 사이트 새로고침하면 바로 반영됩니다.` +
+          (j.cueSync ? ` 본문 수정에 맞춰 자막 ${j.cueSync}줄도 함께 고쳤습니다.` : ''),
       })
     } catch (e) {
       setStatus({ kind: 'err', msg: '저장 실패: ' + (e instanceof Error ? e.message : String(e)) })
