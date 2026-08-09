@@ -23,38 +23,85 @@ export function splitSentences(text: string, maxLen = 90): string[] {
   return out
 }
 
+/** 편집 거리 (짧은 문장 대상이라 단순 DP 로 충분) */
+function editDistance(a: string, b: string): number {
+  if (a === b) return 0
+  const m = a.length
+  const n = b.length
+  if (!m) return n
+  if (!n) return m
+  let prev = Array.from({ length: n + 1 }, (_, j) => j)
+  const cur = new Array<number>(n + 1)
+  for (let i = 1; i <= m; i++) {
+    cur[0] = i
+    for (let j = 1; j <= n; j++) {
+      cur[j] = Math.min(
+        prev[j] + 1,
+        cur[j - 1] + 1,
+        prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1),
+      )
+    }
+    prev = cur.slice()
+  }
+  return prev[n]
+}
+
+/** 0~1 유사도 */
+function similarity(a: string, b: string): number {
+  const len = Math.max(a.length, b.length)
+  if (!len) return 1
+  return 1 - editDistance(a, b) / len
+}
+
 /**
- * 본문(answer)만 고친 경우 자막 큐도 같은 문장으로 따라가게 한다.
+ * 본문(answer)을 고쳤을 때 자막 큐도 같은 문장으로 따라가게 한다.
  *
- * - 이전 본문에서 나온 문장과 **정확히 일치하던** 큐만 새 문장으로 바꾼다.
- *   → 관리자가 손으로 다듬어 둔 큐는 건드리지 않는다.
- * - 타임코드·영문 자막·오디오는 그대로 유지하므로 TTS 재생성이 필요 없다.
- *   (문장 길이가 크게 달라지면 싱크가 약간 어긋날 수 있어, 그럴 땐 [큐 재생성]을 쓴다)
+ * 두 단계로 판단한다.
+ *  1) 이전 본문의 문장과 **정확히 일치**하던 큐 → 새 문장으로 교체 (가장 안전)
+ *  2) 문장 수가 같을 때, 같은 자리의 큐가 새 문장과 **거의 같으면**(유사도 0.7 이상) 교체
+ *     → 단어 몇 개 고친 경우를 잡아준다. 완전히 다르게 손봐 둔 큐는 그대로 둔다.
+ *
+ * 타임코드·영문 자막·오디오는 유지하므로 TTS 재생성이 필요 없다.
+ * (문장 자체를 새로 쓰거나 개수가 달라지면 어드민의 [큐 재생성]을 쓴다)
  */
 export function syncCuesWithAnswer<T extends { ko: string }>(
   prevAnswer: string[] | undefined,
   nextAnswer: string[] | undefined,
   cues: T[] | undefined,
+  minSimilarity = 0.7,
 ): { cues: T[]; changed: number } {
   const list = cues ?? []
-  if (!prevAnswer?.length || !nextAnswer?.length || !list.length) return { cues: list, changed: 0 }
+  if (!nextAnswer?.length || !list.length) return { cues: list, changed: 0 }
 
-  const prev = prevAnswer.flatMap((p) => splitSentences(p))
   const next = nextAnswer.flatMap((p) => splitSentences(p))
-  if (prev.length !== next.length) return { cues: list, changed: 0 }
+  if (!next.length) return { cues: list, changed: 0 }
 
-  const map = new Map<string, string>()
-  prev.forEach((s, i) => {
-    if (s !== next[i]) map.set(s, next[i])
-  })
-  if (!map.size) return { cues: list, changed: 0 }
+  const prev = (prevAnswer ?? []).flatMap((p) => splitSentences(p))
+  const exact = new Map<string, string>()
+  if (prev.length === next.length) {
+    prev.forEach((s, i) => {
+      if (s !== next[i]) exact.set(s, next[i])
+    })
+  }
+
+  const byPosition = next.length === list.length
 
   let changed = 0
-  const out = list.map((c) => {
-    const to = map.get(c.ko)
-    if (!to) return c
-    changed++
-    return { ...c, ko: to }
+  const out = list.map((c, i) => {
+    const hit = exact.get(c.ko)
+    if (hit) {
+      changed++
+      return { ...c, ko: hit }
+    }
+    if (byPosition) {
+      const target = next[i]
+      if (c.ko !== target && similarity(c.ko, target) >= minSimilarity) {
+        changed++
+        return { ...c, ko: target }
+      }
+    }
+    return c
   })
+
   return { cues: out, changed }
 }

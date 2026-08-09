@@ -22,6 +22,23 @@ function normalize(item: Wed100Item): Wed100Item {
  * 덕분에 Firebase 프로젝트 생성 전에도 사이트 전체가 정상 동작한다.
  */
 export async function getWed100Items(): Promise<Wed100Item[]> {
+  // 1) 서버에서는 Admin SDK 로 먼저 읽는다 (보안 규칙·클라이언트 SDK 상태와 무관)
+  try {
+    const { getAdminDb } = await import('@/lib/firebase/admin')
+    const adb = await getAdminDb()
+    if (adb) {
+      const snap = await adb.collection('wed100_questions').get()
+      if (!snap.empty) {
+        const items = snap.docs.map((d) => d.data() as Wed100Item)
+        items.sort((a, b) => a.part - b.part || a.n - b.n)
+        return items.map(normalize)
+      }
+    }
+  } catch {
+    // Admin SDK 미설정 — 클라이언트 SDK 로 재시도
+  }
+
+  // 2) 클라이언트 SDK (브라우저 또는 서비스 계정 미설정 환경)
   try {
     const { getDb } = await import('@/lib/firebase/client')
     const db = getDb()

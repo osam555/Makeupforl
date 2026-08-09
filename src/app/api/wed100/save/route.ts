@@ -101,13 +101,11 @@ export async function POST(req: Request) {
     let cueSync = 0
     try {
       const prev = await db.collection('wed100_questions').doc(item.slug).get()
-      if (prev.exists) {
-        const prevAnswer = (prev.data() as Wed100Item).answer
-        const r = syncCuesWithAnswer(prevAnswer, item.answer, item.cues)
-        if (r.changed) {
-          item.cues = r.cues
-          cueSync = r.changed
-        }
+      const prevAnswer = prev.exists ? (prev.data() as Wed100Item).answer : undefined
+      const r = syncCuesWithAnswer(prevAnswer, item.answer, item.cues)
+      if (r.changed) {
+        item.cues = r.cues
+        cueSync = r.changed
       }
     } catch {
       /* 동기화 실패해도 저장은 진행 */

@@ -112,7 +112,10 @@ export default async function Wed100DetailPage({
           <h2 className="text-xl font-extrabold text-[var(--w-ink)]">원장님 답변 전문</h2>
           <div className="mt-6 space-y-5">
             {item.answer.map((para, i) => (
-              <p key={i} className="text-[15px] leading-[1.95] text-[var(--w-body)]">
+              <p
+                key={i}
+                className="whitespace-pre-line text-[15px] leading-[1.95] text-[var(--w-body)]"
+              >
                 {para}
               </p>
             ))}
