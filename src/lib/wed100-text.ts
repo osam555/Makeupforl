@@ -1,7 +1,12 @@
-/** 한국어 문장 분리 — 파서 스크립트/어드민과 동일 규칙 */
+/**
+ * 한국어 문장 분리.
+ * 줄바꿈은 무조건 끊는다 — 본문에서 줄을 나눈 그대로 자막 한 줄이 된다.
+ * 그 안에서 다시 문장부호 기준으로 나누고, 너무 길면 쉼표에서 접는다.
+ */
 export function splitSentences(text: string, maxLen = 90): string[] {
   const raw = text
-    .split(/(?<=[.!?…])\s+|(?<=[.!?…]["”’])\s+/)
+    .split(/\n+/)
+    .flatMap((line) => line.split(/(?<=[.!?…])\s+|(?<=[.!?…]["”’])\s+/))
     .map((s) => s.trim())
     .filter(Boolean)
   const out: string[] = []

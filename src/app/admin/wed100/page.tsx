@@ -10,35 +10,11 @@ import { getDb, uploadAudio } from '@/lib/firebase/client'
 import AdminGate from '@/components/admin/AdminGate'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { splitSentences } from '@/lib/wed100-text'
 import type { Wed100Data, Wed100Item } from '@/types/wed100'
 import { PART_THEME } from '@/types/wed100'
 
 const seed = seedRaw as unknown as Wed100Data
-
-/** 한국어 문장 분리 (파서 스크립트와 동일 규칙) */
-function splitSentences(text: string, maxLen = 90): string[] {
-  const raw = text
-    .split(/(?<=[.!?…])\s+|(?<=[.!?…]["”’])\s+/)
-    .map((s) => s.trim())
-    .filter(Boolean)
-  const out: string[] = []
-  for (const s of raw) {
-    if (s.length <= maxLen) {
-      out.push(s)
-      continue
-    }
-    let buf = ''
-    for (const piece of s.split(/(?<=,)\s*/)) {
-      if (buf.length + piece.length <= maxLen || buf.length < 20) buf += piece
-      else {
-        out.push(buf.trim())
-        buf = piece
-      }
-    }
-    if (buf.trim()) out.push(buf.trim())
-  }
-  return out
-}
 
 type Status = { kind: 'ok' | 'err'; msg: string } | null
 
