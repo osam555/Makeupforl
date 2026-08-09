@@ -1,3 +1,4 @@
+import { revalidatePath } from 'next/cache'
 import { NextResponse } from 'next/server'
 
 import raw from '@/data/wed100.json'
@@ -86,6 +87,8 @@ export async function POST(req: Request) {
         }
         await batch.commit()
       }
+      revalidatePath('/wed100')
+      revalidatePath('/wed100/[slug]', 'page')
       return NextResponse.json({ ok: true, upserted, skipped: skip.size, editor })
     }
 
@@ -94,6 +97,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: false, error: '저장할 항목이 없습니다.' }, { status: 400 })
     }
     await db.collection('wed100_questions').doc(item.slug).set(toRow(item, editor))
+    // 저장 즉시 공개 페이지 캐시를 새로 굽는다 (배포 없이 바로 반영)
+    revalidatePath('/wed100')
+    revalidatePath(`/wed100/${item.slug}`)
     return NextResponse.json({ ok: true, slug: item.slug, editor })
   } catch (e) {
     return NextResponse.json(

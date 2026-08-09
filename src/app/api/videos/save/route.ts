@@ -1,3 +1,4 @@
+import { revalidatePath } from 'next/cache'
 import { NextResponse } from 'next/server'
 
 import { getAdminDb, verifyAdmin } from '@/lib/firebase/admin'
@@ -49,6 +50,8 @@ export async function POST(req: Request) {
   const db = await getAdminDb()
   if (!db) return NextResponse.json({ ok: false, error: NOT_CONFIGURED }, { status: 503 })
 
+  const done = () => revalidatePath('/videos')
+
   try {
     if (body.action === 'upsert' && body.item) {
       const id = parseYoutubeId(body.item.youtubeId)
@@ -72,11 +75,13 @@ export async function POST(req: Request) {
           },
           { merge: true },
         )
+      done()
       return NextResponse.json({ ok: true, id, title })
     }
 
     if (body.action === 'delete' && body.item?.youtubeId) {
       await db.collection('videos').doc(body.item.youtubeId).delete()
+      done()
       return NextResponse.json({ ok: true })
     }
 
@@ -90,6 +95,7 @@ export async function POST(req: Request) {
         )
       })
       await batch.commit()
+      done()
       return NextResponse.json({ ok: true, count: body.items.length })
     }
 
@@ -98,6 +104,7 @@ export async function POST(req: Request) {
         .collection('site_config')
         .doc('videos')
         .set({ ...body.channel, updatedAt: new Date().toISOString(), updatedBy: editor }, { merge: true })
+      done()
       return NextResponse.json({ ok: true })
     }
 
