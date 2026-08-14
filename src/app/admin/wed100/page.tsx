@@ -201,6 +201,38 @@ function AdminWed100Editor({
     }
   }
 
+  /** 삭제로 생긴 번호 공백 메우기 — 파트별로 1부터 다시 매긴다 (slug/URL 은 그대로) */
+  const renumber = async () => {
+    if (
+      !confirm(
+        '파트별 문항 번호를 1부터 다시 매깁니다.\n\n삭제로 생긴 번호 공백이 사라집니다.\n문항 주소(slug)와 음성 파일은 그대로 유지됩니다. 계속할까요?',
+      )
+    )
+      return
+    setSaving(true)
+    setStatus(null)
+    try {
+      const res = await fetch('/api/wed100/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...(await authPayload()), action: 'renumber' }),
+      })
+      const j = await res.json()
+      if (!j.ok) throw new Error(j.error)
+      setStatus({
+        kind: 'ok',
+        msg: j.changed
+          ? `번호를 다시 매겼습니다 — ${j.changed}개 문항 변경`
+          : '번호 공백이 없어 변경할 항목이 없습니다.',
+      })
+      void load()
+    } catch (e) {
+      setStatus({ kind: 'err', msg: '번호 재정렬 실패: ' + (e instanceof Error ? e.message : String(e)) })
+    } finally {
+      setSaving(false)
+    }
+  }
+
   /** 문항 삭제 — 슬러그를 직접 입력해 확인받는다 */
   const removeItem = async () => {
     if (!draft) return
@@ -311,8 +343,21 @@ function AdminWed100Editor({
           >
             {source === 'db' ? 'DB 연결됨' : '시드 JSON (읽기전용 폴백)'}
           </span>
-          <span className="text-xs text-[#B3A69F]">{items.length}문</span>
+          <span className="text-xs text-[#B3A69F]">
+            질문 {items.filter((x) => x.part >= 1 && x.part <= 6).length}문
+            {items.some((x) => x.part === 0 || x.part === 7) &&
+              ` · 프롤로그/에필로그 ${items.filter((x) => x.part === 0 || x.part === 7).length}`}
+          </span>
           <div className="ml-auto flex gap-2">
+            <Button
+              size="sm"
+              variant="secondary"
+              className="h-8 text-xs"
+              onClick={renumber}
+              disabled={saving || !canWrite}
+            >
+              <RefreshCw className="mr-1 h-3.5 w-3.5" /> 번호 다시 매기기
+            </Button>
             <Button
               size="sm"
               variant="secondary"

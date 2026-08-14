@@ -89,7 +89,7 @@ export default async function VideosPage() {
             글과 음성으로 정리된 자료도 있습니다
           </p>
           <p className="mt-2.5 text-[16px] leading-[1.647] text-[#454545]">
-            혼주님이 가장 많이 묻는 질문 105개에 대표원장이 하나씩 답했습니다. 한국어·영어 자막 제공.
+            혼주님이 가장 많이 묻는 질문에 대표원장이 하나씩 답했습니다. 한국어·영어 자막 제공.
           </p>
           <Link
             href="/wed100"

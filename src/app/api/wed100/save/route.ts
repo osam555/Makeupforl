@@ -93,6 +93,38 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: true, upserted, skipped: skip.size, editor })
     }
 
+    // 번호 다시 매기기 — 삭제로 생긴 번호 공백을 파트별로 메운다.
+    // 슬러그(=URL·오디오 경로)는 그대로 두고 표시 번호(n)만 조정한다.
+    if (body?.action === 'renumber') {
+      const snap = await db.collection('wed100_questions').get()
+      const rows = snap.docs
+        .map((d) => ({ docId: d.id, data: d.data() as Wed100Item }))
+        .sort((a, b) => a.data.part - b.data.part || a.data.n - b.data.n)
+
+      const seq = new Map<number, number>()
+      const batch = db.batch()
+      let changed = 0
+      const stamp = new Date().toISOString()
+      for (const { docId, data } of rows) {
+        // 프롤로그(0)·에필로그(7)는 번호를 쓰지 않는다
+        if (data.part === 0 || data.part === 7) continue
+        const next = (seq.get(data.part) ?? 0) + 1
+        seq.set(data.part, next)
+        if (data.n !== next) {
+          batch.update(db.collection('wed100_questions').doc(docId), {
+            n: next,
+            updatedAt: stamp,
+            updatedBy: editor,
+          })
+          changed++
+        }
+      }
+      if (changed) await batch.commit()
+      revalidatePath('/wed100')
+      revalidatePath('/wed100/[slug]', 'page')
+      return NextResponse.json({ ok: true, changed, total: rows.length, editor })
+    }
+
     // 문항 삭제 — 슬러그 확인 문자열을 함께 받아 오조작을 막는다
     if (body?.action === 'delete') {
       const slug = typeof body?.slug === 'string' ? body.slug : ''
