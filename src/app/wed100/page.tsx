@@ -197,7 +197,9 @@ export default async function Wed100Page() {
             duration: x.duration ?? Math.round(x.cues.reduce((a, c) => a + c.ko.length, 0) / 5.2 + 6),
             hasAudio: !!x.audio,
           }))}
-          parts={wed100Parts.map((p) => ({ part: p.part, title: p.title }))}
+          parts={wed100Parts
+            .filter((p) => (p.part >= 1 && p.part <= 6) || (counts.get(p.part) ?? 0) > 0)
+            .map((p) => ({ part: p.part, title: p.title }))}
         />
       </section>
 
