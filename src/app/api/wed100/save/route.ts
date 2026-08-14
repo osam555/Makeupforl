@@ -93,6 +93,60 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: true, upserted, skipped: skip.size, editor })
     }
 
+    // 삭제 보관함 조회
+    if (body?.action === 'trash') {
+      const snap = await db.collection('wed100_deleted').get()
+      const rows = snap.docs
+        .map((d) => {
+          const x = d.data() as Wed100Item & { deletedAt?: string; deletedBy?: string }
+          return {
+            id: d.id,
+            slug: x.slug,
+            part: x.part,
+            n: x.n,
+            question: x.question,
+            deletedAt: x.deletedAt ?? null,
+            deletedBy: x.deletedBy ?? null,
+            hasAudio: !!x.audio,
+            cues: (x.cues ?? []).length,
+          }
+        })
+        .sort((a, b) => (b.deletedAt ?? '').localeCompare(a.deletedAt ?? ''))
+      return NextResponse.json({ ok: true, rows })
+    }
+
+    // 보관함에서 복구 — 같은 파트의 마지막 번호 다음으로 되돌린다
+    if (body?.action === 'restore') {
+      const id = typeof body?.id === 'string' ? body.id : ''
+      if (!id) return NextResponse.json({ ok: false, error: '복구할 항목이 없습니다.' }, { status: 400 })
+      const arc = await db.collection('wed100_deleted').doc(id).get()
+      if (!arc.exists) {
+        return NextResponse.json({ ok: false, error: '보관함에 없는 항목입니다.' }, { status: 404 })
+      }
+      const data = arc.data() as Wed100Item & { deletedAt?: string; deletedBy?: string }
+      const slug = data.slug
+      if ((await db.collection('wed100_questions').doc(slug).get()).exists) {
+        return NextResponse.json(
+          { ok: false, error: `이미 목록에 있는 문항입니다 (${slug}).` },
+          { status: 409 },
+        )
+      }
+      const sameParts = await db.collection('wed100_questions').where('part', '==', data.part).get()
+      const maxN = sameParts.docs.reduce((m, d) => Math.max(m, (d.data() as Wed100Item).n ?? 0), 0)
+
+      const row: Record<string, unknown> = { ...data, n: maxN + 1 }
+      delete row.deletedAt
+      delete row.deletedBy
+      row.updatedAt = new Date().toISOString()
+      row.updatedBy = editor
+
+      await db.collection('wed100_questions').doc(slug).set(row)
+      await db.collection('wed100_deleted').doc(id).delete()
+      revalidatePath('/wed100')
+      revalidatePath(`/wed100/${slug}`)
+      return NextResponse.json({ ok: true, slug, part: data.part, n: maxN + 1, editor })
+    }
+
     // 번호 다시 매기기 — 삭제로 생긴 번호 공백을 파트별로 메운다.
     // 슬러그(=URL·오디오 경로)는 그대로 두고 표시 번호(n)만 조정한다.
     if (body?.action === 'renumber') {

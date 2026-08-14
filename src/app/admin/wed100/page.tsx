@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Search, Save, Eye, RefreshCw, Database, CheckCircle2, XCircle, Volume2, Trash2 } from 'lucide-react'
+import { Search, Save, Eye, RefreshCw, Database, CheckCircle2, XCircle, Volume2, Trash2, Undo2, Archive } from 'lucide-react'
 
 import seedRaw from '@/data/wed100.json'
 import { getDb, uploadAudio } from '@/lib/firebase/client'
@@ -57,6 +57,21 @@ function AdminWed100Editor({
   const [part, setPart] = useState(-1)
   const [kw, setKw] = useState('')
   const [font, setFont] = useState<FontSize>('md')
+
+  /** 삭제 보관함 */
+  type TrashRow = {
+    id: string
+    slug: string
+    part: number
+    n: number
+    question: string
+    deletedAt: string | null
+    deletedBy: string | null
+    hasAudio: boolean
+    cues: number
+  }
+  const [trash, setTrash] = useState<TrashRow[] | null>(null)
+  const [trashOpen, setTrashOpen] = useState(false)
 
   useEffect(() => {
     const v = window.localStorage.getItem(FONT_KEY)
@@ -198,6 +213,47 @@ function AdminWed100Editor({
       setStatus({ kind: 'err', msg: e instanceof Error ? e.message : String(e) })
     } finally {
       setTts(false)
+    }
+  }
+
+  /** 삭제 보관함 열기 */
+  const loadTrash = async () => {
+    setTrashOpen(true)
+    try {
+      const res = await fetch('/api/wed100/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...(await authPayload()), action: 'trash' }),
+      })
+      const j = await res.json()
+      if (!j.ok) throw new Error(j.error)
+      setTrash(j.rows as TrashRow[])
+    } catch (e) {
+      setTrash([])
+      setStatus({ kind: 'err', msg: '보관함 조회 실패: ' + (e instanceof Error ? e.message : String(e)) })
+    }
+  }
+
+  /** 보관함에서 복구 */
+  const restoreItem = async (row: TrashRow) => {
+    if (!confirm(`"${row.question}" 문항을 되살립니다.\n\n파트 ${row.part} 의 마지막 번호로 들어갑니다. 계속할까요?`)) return
+    setSaving(true)
+    setStatus(null)
+    try {
+      const res = await fetch('/api/wed100/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...(await authPayload()), action: 'restore', id: row.id }),
+      })
+      const j = await res.json()
+      if (!j.ok) throw new Error(j.error)
+      setStatus({ kind: 'ok', msg: `복구했습니다 — P${j.part}·${String(j.n).padStart(2, '0')} ${row.question}` })
+      setTrash((t) => (t ?? []).filter((x) => x.id !== row.id))
+      void load()
+    } catch (e) {
+      setStatus({ kind: 'err', msg: '복구 실패: ' + (e instanceof Error ? e.message : String(e)) })
+    } finally {
+      setSaving(false)
     }
   }
 
@@ -353,6 +409,14 @@ function AdminWed100Editor({
               size="sm"
               variant="secondary"
               className="h-8 text-xs"
+              onClick={loadTrash}
+            >
+              <Archive className="mr-1 h-3.5 w-3.5" /> 삭제 보관함
+            </Button>
+            <Button
+              size="sm"
+              variant="secondary"
+              className="h-8 text-xs"
               onClick={renumber}
               disabled={saving || !canWrite}
             >
@@ -372,6 +436,71 @@ function AdminWed100Editor({
             </Link>
           </div>
         </div>
+
+        {trashOpen && (
+          <div
+            className="fixed inset-0 z-[200] flex items-start justify-center bg-black/50 p-4 pt-[8vh]"
+            onClick={() => setTrashOpen(false)}
+          >
+            <div
+              className="w-full max-w-3xl overflow-hidden rounded-2xl bg-white shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center gap-2 bg-[#221D1B] px-5 py-3.5 text-white">
+                <Archive className="h-4 w-4" />
+                <b className="text-sm">삭제 보관함</b>
+                <span className="text-xs text-[#B3A69F]">
+                  {trash === null ? '불러오는 중…' : `${trash.length}개 보관 중`}
+                </span>
+                <button
+                  onClick={() => setTrashOpen(false)}
+                  className="ml-auto text-xs text-[#B3A69F] hover:text-white"
+                >
+                  닫기 ✕
+                </button>
+              </div>
+              <div className="max-h-[60vh] overflow-auto p-4">
+                <p className="mb-3 text-xs leading-relaxed text-[#6B5D57]">
+                  삭제한 문항은 내용 그대로 여기에 보관됩니다. [되살리기]를 누르면 본문·자막·음성까지
+                  그대로 복구되며, 해당 파트의 <b>마지막 번호</b>로 들어갑니다.
+                </p>
+                {trash !== null && trash.length === 0 && (
+                  <p className="py-10 text-center text-sm text-[#9A8B84]">보관된 문항이 없습니다.</p>
+                )}
+                <ul className="space-y-2">
+                  {(trash ?? []).map((row) => (
+                    <li
+                      key={row.id}
+                      className="flex flex-wrap items-center gap-3 rounded-xl border border-[#E7DDD4] px-3.5 py-3"
+                    >
+                      <span
+                        className="min-w-[52px] text-[10px] font-extrabold"
+                        style={{ color: PART_THEME[row.part]?.accent ?? '#7A6A5F' }}
+                      >
+                        P{row.part}·{String(row.n).padStart(2, '0')}
+                      </span>
+                      <span className="flex-1 text-[13px] leading-snug text-[#2E2724]">
+                        {row.question}
+                        <span className="mt-0.5 block text-[11px] text-[#9A8B84]">
+                          {row.slug} · 자막 {row.cues}줄 · {row.hasAudio ? '음성 있음' : '음성 없음'}
+                          {row.deletedAt ? ` · ${row.deletedAt.slice(0, 16).replace('T', ' ')} 삭제` : ''}
+                        </span>
+                      </span>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        disabled={saving || !canWrite}
+                        onClick={() => restoreItem(row)}
+                      >
+                        <Undo2 className="mr-1.5 h-3.5 w-3.5" /> 되살리기
+                      </Button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        )}
 
         {status && (
           <div
