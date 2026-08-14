@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Search, Save, Eye, RefreshCw, Database, CheckCircle2, XCircle, Volume2 } from 'lucide-react'
+import { Search, Save, Eye, RefreshCw, Database, CheckCircle2, XCircle, Volume2, Trash2 } from 'lucide-react'
 
 import seedRaw from '@/data/wed100.json'
 import { getDb, uploadAudio } from '@/lib/firebase/client'
@@ -15,6 +15,13 @@ import type { Wed100Data, Wed100Item } from '@/types/wed100'
 import { PART_THEME } from '@/types/wed100'
 
 const seed = seedRaw as unknown as Wed100Data
+
+/** 프롤로그(part 0)·에필로그(part 7)는 번호 대신 이름으로 표시한다 */
+function itemLabel(x: { part: number; n: number }): string {
+  if (x.part === 0) return '프롤로그'
+  if (x.part === 7) return '에필로그'
+  return `P${x.part}·${String(x.n).padStart(2, '0')}`
+}
 
 type Status = { kind: 'ok' | 'err'; msg: string } | null
 
@@ -47,7 +54,7 @@ function AdminWed100Editor({
   const [tts, setTts] = useState(false)
   const [status, setStatus] = useState<Status>(null)
 
-  const [part, setPart] = useState(0)
+  const [part, setPart] = useState(-1)
   const [kw, setKw] = useState('')
   const [font, setFont] = useState<FontSize>('md')
 
@@ -101,7 +108,7 @@ function AdminWed100Editor({
     () =>
       items.filter(
         (x) =>
-          (!part || x.part === part) &&
+          (part === -1 || x.part === part) &&
           (!kw || x.question.includes(kw) || x.slug.includes(kw)),
       ),
     [items, part, kw],
@@ -191,6 +198,41 @@ function AdminWed100Editor({
       setStatus({ kind: 'err', msg: e instanceof Error ? e.message : String(e) })
     } finally {
       setTts(false)
+    }
+  }
+
+  /** 문항 삭제 — 슬러그를 직접 입력해 확인받는다 */
+  const removeItem = async () => {
+    if (!draft) return
+    const label = `${itemLabel(draft)} ${draft.question}`
+    const typed = window.prompt(
+      `이 문항을 삭제합니다.\n\n  ${label}\n\n삭제하려면 아래에 문항 코드 "${draft.slug}" 를 그대로 입력하세요.\n(삭제본은 복구용으로 보관됩니다)`,
+    )
+    if (typed === null) return
+    if (typed.trim() !== draft.slug) {
+      setStatus({ kind: 'err', msg: '문항 코드가 일치하지 않아 삭제하지 않았습니다.' })
+      return
+    }
+    setSaving(true)
+    setStatus(null)
+    try {
+      const res = await fetch('/api/wed100/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...(await authPayload()), action: 'delete', slug: draft.slug }),
+      })
+      const j = await res.json()
+      if (!j.ok) throw new Error(j.error)
+      const rest = items.filter((x) => x.slug !== draft.slug)
+      setItems(rest)
+      setDraft(null)
+      setDirty(false)
+      setSel(rest[0]?.slug ?? '')
+      setStatus({ kind: 'ok', msg: `삭제했습니다 — ${label}` })
+    } catch (e) {
+      setStatus({ kind: 'err', msg: '삭제 실패: ' + (e instanceof Error ? e.message : String(e)) })
+    } finally {
+      setSaving(false)
     }
   }
 
@@ -315,7 +357,7 @@ function AdminWed100Editor({
                 />
               </div>
               <div className="mt-2 flex flex-wrap gap-1">
-                {[0, 1, 2, 3, 4, 5, 6].map((v) => (
+                {[-1, 0, 1, 2, 3, 4, 5, 6, 7].map((v) => (
                   <button
                     key={v}
                     onClick={() => setPart(v)}
@@ -325,7 +367,7 @@ function AdminWed100Editor({
                         : 'border-[#E7DDD4] bg-white text-[#5B4F49]'
                     }`}
                   >
-                    {v === 0 ? '전체' : `P${v}`}
+                    {v === -1 ? '전체' : v === 0 ? '프롤로그' : v === 7 ? '에필로그' : `P${v}`}
                   </button>
                 ))}
               </div>
@@ -343,10 +385,10 @@ function AdminWed100Editor({
                   }`}
                 >
                   <span
-                    className="mt-0.5 min-w-[42px] text-[10px] font-extrabold"
+                    className="mt-0.5 min-w-[52px] text-[10px] font-extrabold"
                     style={{ color: PART_THEME[x.part].accent }}
                   >
-                    P{x.part}·{String(x.n).padStart(2, '0')}
+                    {itemLabel(x)}
                   </span>
                   <span className="flex-1 text-[#2E2724]">{x.question}</span>
                   <span className="mt-1 flex gap-1">
@@ -370,9 +412,7 @@ function AdminWed100Editor({
           {draft && (
             <div className="max-h-[720px] overflow-auto p-5 lg:p-6">
               <div className="sticky -top-5 z-10 -mx-5 flex flex-wrap items-center gap-2.5 border-b border-[#E7DDD4] bg-white/95 px-5 pb-3 pt-1 backdrop-blur lg:-mx-6 lg:-top-6 lg:px-6">
-                <h2 className="text-lg font-extrabold text-[#2E2724]">
-                  P{draft.part} · {String(draft.n).padStart(2, '0')} 편집
-                </h2>
+                <h2 className="text-lg font-extrabold text-[#2E2724]">{itemLabel(draft)} 편집</h2>
                 <span className="rounded bg-[#EFE7E1] px-2 py-0.5 text-[10px] font-bold text-[#6B5D57]">
                   {draft.slug}
                 </span>
@@ -421,6 +461,15 @@ function AdminWed100Editor({
                     onClick={() => patch((d) => (d.published = d.published === false))}
                   >
                     {draft.published !== false ? '비공개로 전환' : '공개로 전환'}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={removeItem}
+                    disabled={saving || !canWrite}
+                    className="border-red-300 text-red-600 hover:bg-red-50"
+                  >
+                    <Trash2 className="mr-1.5 h-4 w-4" /> 삭제
                   </Button>
                 </div>
               </div>

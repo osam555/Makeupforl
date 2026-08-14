@@ -79,7 +79,9 @@ export default async function Wed100DetailPage({
             혼주메이크업 100문100답
           </Link>
           <span className="mx-1.5">›</span>
-          <span style={{ color: `var(--w-p${item.part})` }}>PART {item.part}</span>
+          <span style={{ color: `var(--w-p${item.part})` }}>
+            {item.part === 0 ? '프롤로그' : item.part === 7 ? '에필로그' : `PART ${item.part}`}
+          </span>
           <span className="mx-1.5">›</span>
           <span className="text-[var(--w-ink2)]">{item.question}</span>
           <span className="ml-2 text-[var(--w-mut2)]">
@@ -182,7 +184,11 @@ export default async function Wed100DetailPage({
                       className="text-[10px] font-extrabold tracking-[0.13em]"
                       style={{ color: `var(--w-p${x.part})` }}
                     >
-                      PART {x.part} · {String(x.n).padStart(2, '0')}
+                      {x.part === 0
+                        ? 'PROLOGUE'
+                        : x.part === 7
+                          ? 'EPILOGUE'
+                          : `PART ${x.part} · ${String(x.n).padStart(2, '0')}`}
                     </p>
                     <h3 className="mt-1.5 line-clamp-3 text-sm font-bold leading-snug text-[var(--w-ink)]">
                       {x.question}

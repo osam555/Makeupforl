@@ -23,6 +23,13 @@ function fmt(sec: number) {
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
 }
 
+/** 프롤로그(part 0)·에필로그(part 7)는 PART 번호 대신 이름으로 표시 */
+function partLabel(x: { part: number; n: number }): string {
+  if (x.part === 0) return 'PROLOGUE'
+  if (x.part === 7) return 'EPILOGUE'
+  return `PART ${x.part} · ${String(x.n).padStart(2, '0')}`
+}
+
 export default function Wed100Browser({
   items,
   parts,
@@ -30,7 +37,7 @@ export default function Wed100Browser({
   items: BrowserItem[]
   parts: { part: number; title: string }[]
 }) {
-  const [part, setPart] = useState(0)
+  const [part, setPart] = useState(-1)
   const [kw, setKw] = useState('')
   const [view, setView] = useState<'grid' | 'list'>('grid')
 
@@ -38,7 +45,7 @@ export default function Wed100Browser({
     const q = kw.trim()
     return items.filter(
       (x) =>
-        (!part || x.part === part) &&
+        (part === -1 || x.part === part) &&
         (!q ||
           x.question.includes(q) ||
           x.question_en.toLowerCase().includes(q.toLowerCase()) ||
@@ -69,9 +76,9 @@ export default function Wed100Browser({
 
       <div className="mt-3 flex flex-wrap gap-2">
         <button
-          onClick={() => setPart(0)}
+          onClick={() => setPart(-1)}
           className={`rounded-full border px-3.5 py-2 text-xs transition ${
-            part === 0
+            part === -1
               ? 'border-[var(--w-rose)] bg-[var(--w-rose)] font-bold text-white'
               : 'border-[var(--w-line)] bg-[var(--w-card)] text-[var(--w-ink2)] hover:border-[var(--w-line)]'
           }`}
@@ -88,7 +95,7 @@ export default function Wed100Browser({
                 : 'border-[var(--w-line)] bg-[var(--w-card)] text-[var(--w-ink2)] hover:border-[var(--w-line)]'
             }`}
           >
-            P{p.part}. {p.title}
+            {p.part === 0 || p.part === 7 ? p.title : `P${p.part}. ${p.title}`}
           </button>
         ))}
       </div>
@@ -126,7 +133,7 @@ export default function Wed100Browser({
                     className="text-[10px] font-extrabold tracking-[0.13em]"
                     style={{ color: `var(--w-p${x.part})` }}
                   >
-                    PART {x.part} · {String(x.n).padStart(2, '0')}
+                    {partLabel(x)}
                   </p>
                   <h3 className="mt-1.5 line-clamp-3 min-h-[60px] text-sm font-bold leading-snug text-[var(--w-ink)]">
                     {x.question}
@@ -161,7 +168,7 @@ export default function Wed100Browser({
                 className="w-14 shrink-0 text-[11px] font-extrabold tracking-wider"
                 style={{ color: `var(--w-p${x.part})` }}
               >
-                P{x.part}·{String(x.n).padStart(2, '0')}
+                {x.part === 0 ? '프롤로그' : x.part === 7 ? '에필로그' : `P${x.part}·${String(x.n).padStart(2, '0')}`}
               </span>
               <span className="flex-1">
                 <span className="block font-medium text-[var(--w-ink)]">{x.question}</span>

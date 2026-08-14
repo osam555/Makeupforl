@@ -93,6 +93,28 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: true, upserted, skipped: skip.size, editor })
     }
 
+    // 문항 삭제 — 슬러그 확인 문자열을 함께 받아 오조작을 막는다
+    if (body?.action === 'delete') {
+      const slug = typeof body?.slug === 'string' ? body.slug : ''
+      if (!slug) {
+        return NextResponse.json({ ok: false, error: '삭제할 문항이 없습니다.' }, { status: 400 })
+      }
+      const ref = db.collection('wed100_questions').doc(slug)
+      const snap = await ref.get()
+      if (!snap.exists) {
+        return NextResponse.json({ ok: false, error: '이미 삭제된 문항입니다.' }, { status: 404 })
+      }
+      // 되돌릴 수 있도록 삭제 직전 내용을 보관한다
+      await db
+        .collection('wed100_deleted')
+        .doc(`${slug}__${Date.now()}`)
+        .set({ ...snap.data(), deletedAt: new Date().toISOString(), deletedBy: editor })
+      await ref.delete()
+      revalidatePath('/wed100')
+      revalidatePath(`/wed100/${slug}`)
+      return NextResponse.json({ ok: true, slug, editor, deleted: true })
+    }
+
     const item = body?.item as Wed100Item | undefined
     if (!item?.slug) {
       return NextResponse.json({ ok: false, error: '저장할 항목이 없습니다.' }, { status: 400 })

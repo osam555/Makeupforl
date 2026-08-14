@@ -55,10 +55,12 @@ export type SubtitleLang = 'ko' | 'en' | 'both'
 
 /** PART별 테마 컬러 (SVG 일러스트 생성기와 동일한 팔레트) */
 export const PART_THEME: Record<number, { accent: string; soft: string; label: string }> = {
+  0: { accent: '#7A6A5F', soft: '#F2EEEA', label: '프롤로그' },
   1: { accent: '#A63D5A', soft: '#F6E9ED', label: '업체 선정 및 예약' },
   2: { accent: '#6E4477', soft: '#F1ECF5', label: '사전 컨설팅 및 준비' },
   3: { accent: '#B0475A', soft: '#FBEDEE', label: '혼주 메이크업' },
   4: { accent: '#3F6B57', soft: '#E9F0EC', label: '혼주 헤어스타일' },
   5: { accent: '#9A7B33', soft: '#F7F0E0', label: '의상·퍼스널컬러·액세서리' },
   6: { accent: '#3C5A86', soft: '#E9EEF6', label: '결혼식 당일' },
+  7: { accent: '#7A6A5F', soft: '#F2EEEA', label: '에필로그' },
 }

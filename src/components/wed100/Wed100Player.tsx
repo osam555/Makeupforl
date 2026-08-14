@@ -303,7 +303,9 @@ export default function Wed100Player(p: PlayerProps) {
       <div className="flex flex-col overflow-hidden rounded-2xl border border-[var(--w-line)] bg-[var(--w-card)]">
         <div className="border-b border-[var(--w-line)] px-5 py-4">
           <p className="text-[10px] font-extrabold tracking-[0.18em] text-[var(--w-gold)]">
-            PART {p.part} · {p.partTitle} · {String(p.n).padStart(2, '0')}
+            {p.part === 0 || p.part === 7
+              ? p.partTitle
+              : `PART ${p.part} · ${p.partTitle} · ${String(p.n).padStart(2, '0')}`}
           </p>
           <h1 className="mt-2 text-lg font-bold leading-snug text-[var(--w-ink)]">{p.question}</h1>
           <p className="mt-1 text-xs leading-relaxed text-[var(--w-mut2)]">{p.questionEn}</p>

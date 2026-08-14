@@ -151,6 +151,8 @@
   --w-p4: #3F6B57;
   --w-p5: #9A7B33;
   --w-p6: #3C5A86;
+  --w-p0: #7A6A5F;   /* 프롤로그 */
+  --w-p7: #7A6A5F;   /* 에필로그 */
   background: var(--w-bg);
   color: var(--w-ink);
 }
@@ -182,6 +184,8 @@
   --w-p4: #83B29B;
   --w-p5: #CDA95F;
   --w-p6: #82A3D0;
+  --w-p0: #B3A396;
+  --w-p7: #B3A396;
   color-scheme: dark;
 }
 

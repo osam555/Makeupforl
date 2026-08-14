@@ -20,6 +20,11 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // 삭제 보관함: 관리자만 (복구용)
+    match /wed100_deleted/{id} {
+      allow read, write: if isAdmin();
+    }
+
     // 조회/재생 이벤트: 누구나 생성만, 수정·삭제 금지
     match /wed100_events/{id} {
       allow read: if isAdmin();

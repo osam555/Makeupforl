@@ -39,7 +39,7 @@ export default async function Wed100Page() {
         <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-10 px-6 py-20 lg:grid-cols-[minmax(0,1fr)_440px] lg:items-end lg:gap-8 lg:px-8 lg:pb-0 lg:pt-24">
           <div>
           <p className="text-xs font-extrabold tracking-[0.34em] text-[var(--w-rose)]">
-            HONJU MAKEUP · Q&amp;A {items.length}
+            HONJU MAKEUP · Q&amp;A {items.filter((x) => x.part >= 1 && x.part <= 6).length}
           </p>
           <h1 className="mt-4 text-4xl font-black leading-tight text-[var(--w-ink)] sm:text-5xl">
             혼주메이크업
@@ -52,7 +52,8 @@ export default async function Wed100Page() {
             25년간 1만 명의 혼주님을 만난 원장이 가장 많이 받은 질문에 하나씩 답했습니다.
           </p>
           <p className="mt-5 text-sm text-[var(--w-mut)]">
-            {wed100Meta.author} · 예약 준비부터 예식 당일까지 {wed100Parts.length}개 파트
+            {wed100Meta.author} · 예약 준비부터 예식 당일까지{' '}
+            {wed100Parts.filter((p) => p.part >= 1 && p.part <= 6).length}개 파트
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
@@ -80,8 +81,8 @@ export default async function Wed100Page() {
 
           <dl className="mt-10 flex flex-wrap gap-x-10 gap-y-4">
             {[
-              [String(items.length), '질문'],
-              [String(wed100Parts.length), '파트'],
+              [String(items.filter((x) => x.part >= 1 && x.part <= 6).length), '질문'],
+              [String(wed100Parts.filter((p) => p.part >= 1 && p.part <= 6).length), '파트'],
               [`약 ${Math.round(totalSec / 60)}분`, '오디오'],
               ['한 / EN', '자막'],
             ].map(([v, l]) => (
@@ -113,7 +114,12 @@ export default async function Wed100Page() {
                 className="group absolute bottom-16 left-0 w-[300px] rounded-2xl border border-[var(--w-line)] bg-[var(--w-card)]/95 p-4 shadow-xl backdrop-blur transition hover:-translate-y-0.5 hover:shadow-2xl"
               >
                 <p className="text-[10px] font-extrabold tracking-[0.22em] text-[var(--w-rose)]">
-                  NOW PLAYING · PART {items[0].part}
+                  NOW PLAYING ·{' '}
+                  {items[0].part === 0
+                    ? 'PROLOGUE'
+                    : items[0].part === 7
+                      ? 'EPILOGUE'
+                      : `PART ${items[0].part}`}
                 </p>
                 <p className="mt-2 line-clamp-2 text-sm font-bold leading-snug text-[var(--w-ink)]">
                   {items[0].question}
@@ -135,7 +141,7 @@ export default async function Wed100Page() {
                   </span>
                 </div>
                 <p className="mt-2 text-[11px] text-[var(--w-mut)]">
-                  105문 전체 약 {Math.round(totalSec / 60)}분 · 한/EN 자막
+                  전체 약 {Math.round(totalSec / 60)}분 · 한/EN 자막
                 </p>
               </Link>
             )}
@@ -147,9 +153,11 @@ export default async function Wed100Page() {
       <section className="bg-[var(--w-card)]">
         <div className="mx-auto max-w-7xl px-6 py-14 lg:px-8">
           <h2 className="text-2xl font-extrabold text-[var(--w-ink)]">어디부터 궁금하세요?</h2>
-          <p className="mt-2 text-sm text-[var(--w-ink2)]">준비 순서 그대로 {wed100Parts.length}개 파트로 나눴습니다.</p>
+          <p className="mt-2 text-sm text-[var(--w-ink2)]">
+            준비 순서 그대로 {wed100Parts.filter((p) => p.part >= 1 && p.part <= 6).length}개 파트로 나눴습니다.
+          </p>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {wed100Parts.map((p) => {
+            {wed100Parts.filter((p) => p.part >= 1 && p.part <= 6).map((p) => {
               return (
                 <a
                   key={p.part}
