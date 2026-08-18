@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server'
 import { MsEdgeTTS, OUTPUT_FORMAT } from 'msedge-tts'
 
 import { SILENCE_MP3_BASE64 } from '@/lib/tts/silence'
+import { TYPECAST_ENABLED, synthHost as synthHostTypecast } from '@/lib/tts/typecast'
 import { getAdminApp, verifyAdmin } from '@/lib/firebase/admin'
 
 export const runtime = 'nodejs'
@@ -11,7 +12,8 @@ export const maxDuration = 60
 
 /** scripts/wed100/3_gen_tts.py 와 동일한 화자 설정 (음성 일관성 유지) */
 const VOICE = 'ko-KR-SunHiNeural'
-const HOST = { rate: '+6%', pitch: '+18Hz' } // 진행자: 질문
+/** 진행자(질문) — TYPECAST_API_KEY 가 없을 때만 쓰는 폴백 */
+const HOST = { rate: '+6%', pitch: '+18Hz' }
 const EXPERT = { rate: '+25%', pitch: '-6Hz' } // 원장님: 답변 (1.25배속)
 
 const FORMAT = OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3
@@ -79,8 +81,16 @@ export async function POST(req: Request) {
   }
 
   try {
+    // 질문(MC)은 Typecast, 답변은 edge-tts. 키가 없으면 질문도 edge-tts 로 폴백한다.
+    const host = async () => {
+      if (TYPECAST_ENABLED) {
+        const buf = await synthHostTypecast(question)
+        if (buf) return buf
+      }
+      return synth(question, HOST)
+    }
     const [qBuf, cueBufs] = await Promise.all([
-      synth(question, HOST),
+      host(),
       mapLimit(cues, CONCURRENCY, (t) => synth(t, EXPERT)),
     ])
 
