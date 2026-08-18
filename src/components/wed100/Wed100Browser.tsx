@@ -2,8 +2,8 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useMemo, useState } from 'react'
-import { Search, Play, List, LayoutGrid } from 'lucide-react'
+import { useEffect, useMemo, useState } from 'react'
+import { Search, Play, List, LayoutGrid, Check, History } from 'lucide-react'
 
 
 export interface BrowserItem {
@@ -16,6 +16,15 @@ export interface BrowserItem {
   thumbImage: string
   duration: number
   hasAudio: boolean
+}
+
+const LS_RESUME = 'wed100:resume'
+const LS_DONE = 'wed100:done'
+
+interface Resume {
+  slug: string
+  t: number
+  duration: number
 }
 
 function fmt(sec: number) {
@@ -40,6 +49,29 @@ export default function Wed100Browser({
   const [part, setPart] = useState(-1)
   const [kw, setKw] = useState('')
   const [view, setView] = useState<'grid' | 'list'>('grid')
+  const [done, setDone] = useState<Set<string>>(new Set())
+  const [resume, setResume] = useState<Resume | null>(null)
+
+  // 이어듣기 위치와 들은 문항은 이 브라우저에만 저장한다 (로그인 없이 동작)
+  useEffect(() => {
+    try {
+      const d = window.localStorage.getItem(LS_DONE)
+      if (d) setDone(new Set(JSON.parse(d) as string[]))
+      const r = window.localStorage.getItem(LS_RESUME)
+      if (r) {
+        const v = JSON.parse(r) as Resume
+        // 거의 다 들은 건 이어듣기로 안내하지 않는다
+        if (v?.slug && v.t > 5 && v.t < (v.duration || 0) - 10) setResume(v)
+      }
+    } catch {
+      /* 사파리 프라이빗 모드 등 */
+    }
+  }, [])
+
+  const resumeItem = useMemo(
+    () => (resume ? items.find((x) => x.slug === resume.slug) ?? null : null),
+    [resume, items],
+  )
 
   const rows = useMemo(() => {
     const q = kw.trim()
@@ -55,6 +87,28 @@ export default function Wed100Browser({
 
   return (
     <div>
+      {resumeItem && resume && (
+        <Link
+          href={`/wed100/${resumeItem.slug}`}
+          className="mt-5 flex items-center gap-3.5 rounded-2xl border border-[var(--w-rose)] bg-[var(--w-rose-l)] px-4 py-3.5 transition hover:shadow-md"
+        >
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[var(--w-rose)] text-white">
+            <History className="h-4 w-4" />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-[11px] font-extrabold tracking-[0.1em] text-[var(--w-rose-t)]">
+              이어듣기
+            </span>
+            <span className="mt-0.5 line-clamp-1 block text-sm font-bold text-[var(--w-ink)]">
+              {resumeItem.question}
+            </span>
+          </span>
+          <span className="shrink-0 font-mono text-xs font-bold text-[var(--w-rose-t)]">
+            {fmt(resume.t)}부터
+          </span>
+        </Link>
+      )}
+
       <div className="mt-5 flex flex-wrap items-center gap-3">
         <div className="relative min-w-[240px] flex-1">
           <Search className="pointer-events-none absolute left-3.5 top-3.5 h-4 w-4 text-[var(--w-mut2)]" />
@@ -127,6 +181,14 @@ export default function Wed100Browser({
                   <span className="absolute bottom-3 right-3 grid h-9 w-9 place-items-center rounded-full bg-[var(--w-card)]/95 text-[var(--w-rose)] shadow">
                     <Play className="h-3.5 w-3.5 fill-current" />
                   </span>
+                  {done.has(x.slug) && (
+                    <span
+                      title="들은 질문"
+                      className="absolute left-3 top-3 flex items-center gap-1 rounded-full bg-[var(--w-card)]/95 px-2 py-1 text-[10px] font-bold text-[var(--w-p4)] shadow"
+                    >
+                      <Check className="h-3 w-3" /> 들음
+                    </span>
+                  )}
                 </div>
                 <div className="p-4">
                   <p
@@ -148,7 +210,7 @@ export default function Wed100Browser({
                       </span>
                     ))}
                   </div>
-                  <p className="mt-2.5 text-[11px] text-[var(--w-mut2)]">
+                  <p className="mt-2.5 text-[11px] text-[var(--w-ink2)]">
                     🎧 {fmt(x.duration)} · 자막 한/영{!x.hasAudio && ' · 음성 준비중'}
                   </p>
                 </div>
@@ -172,9 +234,9 @@ export default function Wed100Browser({
               </span>
               <span className="flex-1">
                 <span className="block font-medium text-[var(--w-ink)]">{x.question}</span>
-                <span className="mt-0.5 block text-[11px] text-[var(--w-mut2)]">{x.question_en}</span>
+                <span className="mt-0.5 block text-[11px] text-[var(--w-ink2)]">{x.question_en}</span>
               </span>
-              <span className="shrink-0 text-[11px] text-[var(--w-mut2)]">🎧 {fmt(x.duration)}</span>
+              <span className="shrink-0 text-[11px] text-[var(--w-ink2)]">🎧 {fmt(x.duration)}</span>
             </Link>
           ))}
         </div>

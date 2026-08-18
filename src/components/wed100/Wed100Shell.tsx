@@ -23,37 +23,18 @@ export default function Wed100Shell({ children }: { children: React.ReactNode })
 
   return (
     <div className={`w100 ${dark ? 'w100-dark' : ''}`}>
-      {/* 테마 선택 */}
+      {/* 테마 선택 — 한 번 정하면 잘 안 바꾸는 설정이라 아이콘 하나로 줄였다 */}
       <div className="sticky top-0 z-40 border-b border-[var(--w-line)] bg-[var(--w-bg)]/85 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-end gap-2 px-6 py-2 lg:px-8">
-          <span className="text-[11px] font-medium text-[var(--w-mut)]">화면 테마</span>
-          <div
-            className="flex gap-0.5 rounded-full border border-[var(--w-line)] bg-[var(--w-card)] p-0.5"
+        <div className="mx-auto flex max-w-7xl items-center justify-end px-4 py-1 lg:px-8">
+          <button
+            onClick={() => choose(!dark)}
+            aria-label={dark ? '라이트 모드로 바꾸기' : '다크 모드로 바꾸기'}
+            title={dark ? '라이트 모드' : '다크 모드'}
+            className="grid h-9 w-9 place-items-center rounded-full text-[var(--w-ink2)] transition hover:bg-[var(--w-hover)]"
             style={{ opacity: ready ? 1 : 0, transition: 'opacity .2s' }}
           >
-            <button
-              onClick={() => choose(false)}
-              aria-pressed={!dark}
-              className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-bold transition ${
-                dark
-                  ? 'text-[var(--w-mut)] hover:text-[var(--w-ink)]'
-                  : 'bg-[var(--w-rose)] text-white'
-              }`}
-            >
-              <Sun className="h-3.5 w-3.5" /> 라이트
-            </button>
-            <button
-              onClick={() => choose(true)}
-              aria-pressed={dark}
-              className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-bold transition ${
-                dark
-                  ? 'bg-[var(--w-rose)] text-white'
-                  : 'text-[var(--w-mut)] hover:text-[var(--w-ink)]'
-              }`}
-            >
-              <Moon className="h-3.5 w-3.5" /> 다크
-            </button>
-          </div>
+            {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </button>
         </div>
       </div>
 

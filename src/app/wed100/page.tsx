@@ -62,7 +62,7 @@ export default async function Wed100Page() {
                 href={`/wed100/${items[0].slug}`}
                 className="rounded-xl bg-[var(--w-rose)] px-6 py-3.5 text-sm font-bold text-white shadow-lg transition hover:bg-[var(--w-rose-d)]"
               >
-                ▶ 1번부터 이어듣기
+                ▶ 1번부터 듣기
               </Link>
             )}
             <Link

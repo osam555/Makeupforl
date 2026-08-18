@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { notFound } from 'next/navigation'
 
 import Wed100Player from '@/components/wed100/Wed100Player'
+import type { PlayerNav } from '@/components/wed100/Wed100Player'
 import {
   estimateDuration,
   formatDuration,
@@ -11,6 +12,7 @@ import {
   getWed100Item,
   getWed100Neighbors,
 } from '@/lib/wed100'
+import type { Wed100Item } from '@/types/wed100'
 
 export const revalidate = 3600
 
@@ -41,6 +43,73 @@ export async function generateMetadata({
   }
 }
 
+const norm = (s: string) => s.replace(/\s+/g, '')
+
+/**
+ * 자막 큐를 답변 문단에 다시 매핑해 문단이 시작하는 지점을 찾는다.
+ * 자막은 문장 단위로 쪼개져 있어서 이대로 이어 붙이면 문단 구분이 사라진다.
+ */
+function paragraphStarts(answer: string[], cues: { ko: string }[]): number[] {
+  const starts: number[] = []
+  let para = 0
+  let rest = norm(answer[0] ?? '')
+
+  for (let i = 0; i < cues.length; i++) {
+    const c = norm(cues[i].ko)
+    if (!c) continue
+    if (!rest.includes(c) && para + 1 < answer.length) {
+      // 현재 문단에서 더 못 찾으면 다음 문단으로 넘어간 것으로 본다
+      for (let j = para + 1; j < answer.length; j++) {
+        if (norm(answer[j]).includes(c)) {
+          para = j
+          rest = norm(answer[j])
+          starts.push(i)
+          break
+        }
+      }
+    }
+    rest = rest.replace(c, '')
+  }
+  return starts
+}
+
+/** 키워드가 겹치는 문항을 추천한다. 바로 앞뒤 문항은 이미 플레이어에 있으니 뺀다. */
+function relatedItems(
+  item: Wed100Item,
+  all: Wed100Item[],
+  exclude: Set<string>,
+  limit = 4,
+): Wed100Item[] {
+  const mine = new Set(item.keywords ?? [])
+  const scored = all
+    .filter((x) => x.slug !== item.slug && !exclude.has(x.slug))
+    .map((x) => {
+      const overlap = (x.keywords ?? []).filter((k) => mine.has(k)).length
+      // 키워드가 같을수록, 그다음은 같은 파트일수록 위로
+      return { x, score: overlap * 10 + (x.part === item.part ? 1 : 0) }
+    })
+    .filter((r) => r.score > 0)
+    .sort((a, b) => b.score - a.score || a.x.part - b.x.part || a.x.n - b.x.n)
+    .map((r) => r.x)
+
+  if (scored.length >= limit) return scored.slice(0, limit)
+  // 겹치는 키워드가 부족하면 같은 파트에서 채운다
+  const filler = all.filter(
+    (x) => x.part === item.part && x.slug !== item.slug && !exclude.has(x.slug) && !scored.includes(x),
+  )
+  return [...scored, ...filler].slice(0, limit)
+}
+
+function toNav(x: Wed100Item | null | undefined): PlayerNav | null {
+  if (!x) return null
+  return {
+    slug: x.slug,
+    question: x.question,
+    thumb: x.thumbImage ?? `/wed100/img/${x.slug}-thumb.svg`,
+    href: `/wed100/${x.slug}`,
+  }
+}
+
 export default async function Wed100DetailPage({
   params,
 }: {
@@ -52,7 +121,13 @@ export default async function Wed100DetailPage({
 
   const { prev, next, index, total } = await getWed100Neighbors(slug)
   const all = await getPublishedWed100Items()
-  const related = all.filter((x) => x.part === item.part && x.slug !== item.slug).slice(0, 4)
+
+  const exclude = new Set([prev?.slug, next?.slug].filter(Boolean) as string[])
+  const related = relatedItems(item, all, exclude)
+
+  // 파트 안에서의 위치
+  const samePart = all.filter((x) => x.part === item.part)
+  const partIndex = samePart.findIndex((x) => x.slug === item.slug) + 1
 
   const faqJsonLd = {
     '@context': 'https://schema.org',
@@ -74,17 +149,17 @@ export default async function Wed100DetailPage({
       />
 
       <div className="mx-auto max-w-7xl px-6 pt-6 lg:px-8">
-        <nav className="text-xs text-[var(--w-mut2)]">
+        <nav className="text-xs text-[var(--w-ink2)]">
           <Link href="/wed100" className="hover:text-[var(--w-rose)]">
             혼주메이크업 100문100답
           </Link>
-          <span className="mx-1.5">›</span>
+          <span className="mx-1.5 text-[var(--w-mut)]">›</span>
           <span style={{ color: `var(--w-p${item.part})` }}>
             {item.part === 0 ? '프롤로그' : item.part === 7 ? '에필로그' : `PART ${item.part}`}
           </span>
-          <span className="mx-1.5">›</span>
+          <span className="mx-1.5 text-[var(--w-mut)]">›</span>
           <span className="text-[var(--w-ink2)]">{item.question}</span>
-          <span className="ml-2 text-[var(--w-mut2)]">
+          <span className="ml-2 font-semibold text-[var(--w-ink2)]">
             ({index + 1}/{total})
           </span>
         </nav>
@@ -99,71 +174,28 @@ export default async function Wed100DetailPage({
           question={item.question}
           questionEn={item.question_en ?? ''}
           cues={item.cues}
+          paraStarts={paragraphStarts(item.answer, item.cues)}
+          keywords={item.keywords}
           heroImage={item.heroImage ?? `/wed100/img/${item.slug}-hero.svg`}
           audio={item.audio}
           questionAudio={item.questionAudio}
           duration={estimateDuration(item)}
-          prevHref={prev ? `/wed100/${prev.slug}` : null}
-          nextHref={next ? `/wed100/${next.slug}` : null}
+          prev={toNav(prev)}
+          next={toNav(next)}
+          partIndex={partIndex}
+          partTotal={samePart.length}
         />
-      </div>
-
-      {/* 본문 (SEO + 읽기용) */}
-      <section className="bg-[var(--w-card)]">
-        <div className="mx-auto max-w-3xl px-6 py-14 lg:px-8">
-          <h2 className="text-xl font-extrabold text-[var(--w-ink)]">원장님 답변 전문</h2>
-          <div className="mt-6 space-y-5">
-            {item.answer.map((para, i) => (
-              <p
-                key={i}
-                className="whitespace-pre-line text-[15px] leading-[1.95] text-[var(--w-body)]"
-              >
-                {para}
-              </p>
-            ))}
-          </div>
-          <div className="mt-8 flex flex-wrap gap-2">
-            {item.keywords.map((k) => (
-              <span key={k} className="rounded-md bg-[var(--w-rose-l)] px-2.5 py-1 text-xs text-[var(--w-rose-t)]">
-                #{k}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 이전/다음 */}
-      <div className="mx-auto max-w-7xl px-6 py-10 lg:px-8">
-        <div className="grid gap-3 sm:grid-cols-2">
-          {prev ? (
-            <Link
-              href={`/wed100/${prev.slug}`}
-              className="rounded-xl border border-[var(--w-line)] bg-[var(--w-card)] p-4 transition hover:shadow-md"
-            >
-              <p className="text-[11px] font-bold text-[var(--w-mut2)]">← 이전</p>
-              <p className="mt-1.5 text-sm font-bold text-[var(--w-ink)]">{prev.question}</p>
-            </Link>
-          ) : (
-            <span />
-          )}
-          {next && (
-            <Link
-              href={`/wed100/${next.slug}`}
-              className="rounded-xl border border-[var(--w-line)] bg-[var(--w-card)] p-4 text-right transition hover:shadow-md"
-            >
-              <p className="text-[11px] font-bold text-[var(--w-mut2)]">다음 →</p>
-              <p className="mt-1.5 text-sm font-bold text-[var(--w-ink)]">{next.question}</p>
-            </Link>
-          )}
-        </div>
       </div>
 
       {/* 관련 질문 */}
       {related.length > 0 && (
         <section className="bg-[var(--w-card)]">
           <div className="mx-auto max-w-7xl px-6 py-12 lg:px-8">
-            <h2 className="text-lg font-extrabold text-[var(--w-ink)]">이어서 들으면 좋은 질문</h2>
-            <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <h2 className="text-lg font-extrabold text-[var(--w-ink)]">함께 보면 좋은 질문</h2>
+            <p className="mt-1 text-xs text-[var(--w-ink2)]">
+              지금 질문과 키워드가 겹치는 문항입니다.
+            </p>
+            <div className="mt-5 grid grid-cols-2 gap-4 lg:grid-cols-4">
               {related.map((x) => (
                 <Link
                   key={x.slug}
@@ -175,7 +207,7 @@ export default async function Wed100DetailPage({
                       src={x.thumbImage ?? `/wed100/img/${x.slug}-thumb.svg`}
                       alt={x.question}
                       fill
-                      sizes="25vw"
+                      sizes="(max-width:1024px) 45vw, 25vw"
                       className="object-cover"
                     />
                   </div>
@@ -193,7 +225,7 @@ export default async function Wed100DetailPage({
                     <h3 className="mt-1.5 line-clamp-3 text-sm font-bold leading-snug text-[var(--w-ink)]">
                       {x.question}
                     </h3>
-                    <p className="mt-2 text-[11px] text-[var(--w-mut2)]">
+                    <p className="mt-2 text-[11px] text-[var(--w-ink2)]">
                       🎧 {formatDuration(estimateDuration(x))}
                     </p>
                   </div>
