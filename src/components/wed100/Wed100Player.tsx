@@ -14,6 +14,7 @@ import {
   ChevronRight,
   ListVideo,
   Type,
+  Languages,
 } from 'lucide-react'
 
 import type { SubtitleLang, Wed100Cue } from '@/types/wed100'
@@ -492,22 +493,6 @@ export default function Wed100Player(p: PlayerProps) {
 
           {/* 보조 컨트롤 — 자막 언어 · 반복 · 연속 재생 */}
           <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-[#2A231F] pt-3">
-            <span className="flex gap-1">
-              {LANGS.map((l) => (
-                <button
-                  key={l.key}
-                  onClick={() => setLang(l.key)}
-                  aria-pressed={lang === l.key}
-                  className={`rounded-md px-2.5 py-1.5 text-[12px] font-semibold transition ${
-                    lang === l.key
-                      ? 'bg-[#3A322D] text-white'
-                      : 'text-[#BDAEA6] hover:text-white'
-                  }`}
-                >
-                  {l.label}
-                </button>
-              ))}
-            </span>
             <button
               onClick={() => setLoop((v) => !v)}
               aria-pressed={loop}
@@ -604,9 +589,26 @@ export default function Wed100Player(p: PlayerProps) {
           <h1 className="mt-2 text-lg font-bold leading-snug text-[var(--w-ink)]">{p.question}</h1>
           <p className="mt-1 text-xs leading-relaxed text-[var(--w-ink2)]">{p.questionEn}</p>
 
-          <div className="mt-3 flex items-center gap-2">
-            <Type className="h-3.5 w-3.5 text-[var(--w-mut)]" aria-hidden />
-            <span className="flex gap-1">
+          <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2">
+            <span className="flex gap-1" role="group" aria-label="자막 언어">
+              <Languages className="mr-0.5 h-3.5 w-3.5 self-center text-[var(--w-ink2)]" aria-hidden />
+              {LANGS.map((l) => (
+                <button
+                  key={l.key}
+                  onClick={() => setLang(l.key)}
+                  aria-pressed={lang === l.key}
+                  className={`rounded-md border px-2.5 py-1 text-[12px] font-semibold transition ${
+                    lang === l.key
+                      ? 'border-[var(--w-rose)] bg-[var(--w-rose-l)] text-[var(--w-rose-t)]'
+                      : 'border-[var(--w-line)] text-[var(--w-ink2)] hover:bg-[var(--w-hover)]'
+                  }`}
+                >
+                  {l.label}
+                </button>
+              ))}
+            </span>
+            <span className="flex gap-1" role="group" aria-label="글자 크기">
+              <Type className="mr-0.5 h-3.5 w-3.5 self-center text-[var(--w-ink2)]" aria-hidden />
               {FONTS.map((f) => (
                 <button
                   key={f.key}

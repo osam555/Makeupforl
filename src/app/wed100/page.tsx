@@ -154,7 +154,7 @@ export default async function Wed100Page() {
         <div className="mx-auto max-w-7xl px-6 py-14 lg:px-8">
           <h2 className="text-2xl font-extrabold text-[var(--w-ink)]">어디부터 궁금하세요?</h2>
           <p className="mt-2 text-sm text-[var(--w-ink2)]">
-            준비 순서 그대로 {wed100Parts.filter((p) => p.part >= 1 && p.part <= 6).length}개 파트로 나눠습니다.
+            준비 순서 그대로 {wed100Parts.filter((p) => p.part >= 1 && p.part <= 6).length}개 파트로 나눴습니다.
           </p>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {wed100Parts.filter((p) => p.part >= 1 && p.part <= 6).map((p) => {
