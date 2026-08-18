@@ -36,17 +36,17 @@ export default async function Wed100Page() {
           className="pointer-events-none absolute -right-24 -top-32 h-[520px] w-[520px] rounded-full opacity-60 blur-3xl"
           style={{ background: 'radial-gradient(circle, #F0DAE1 0%, transparent 70%)' }}
         />
-        <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-10 px-6 py-20 lg:grid-cols-[minmax(0,1fr)_440px] lg:items-end lg:gap-8 lg:px-8 lg:pb-0 lg:pt-24">
+        <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-8 px-6 py-12 lg:grid-cols-[minmax(0,1fr)_400px] lg:items-end lg:gap-8 lg:px-8 lg:pb-0 lg:pt-12">
           <div>
           <p className="text-xs font-extrabold tracking-[0.34em] text-[var(--w-rose)]">
             HONJU MAKEUP · Q&amp;A {items.filter((x) => x.part >= 1 && x.part <= 6).length}
           </p>
-          <h1 className="mt-4 text-4xl font-black leading-tight text-[var(--w-ink)] sm:text-5xl">
+          <h1 className="mt-3 text-4xl font-black leading-tight text-[var(--w-ink)] sm:text-5xl">
             혼주메이크업
             <br />
             100문 100답
           </h1>
-          <p className="mt-5 max-w-xl text-lg leading-relaxed text-[var(--w-ink2)]">
+          <p className="mt-4 max-w-xl text-lg leading-relaxed text-[var(--w-ink2)]">
             {wed100Meta.subtitle}.
             <br />
             25년간 1만 명의 혼주님을 만난 원장이 가장 많이 받은 질문에 하나씩 답했습니다.
@@ -79,7 +79,7 @@ export default async function Wed100Page() {
             </Link>
           </div>
 
-          <dl className="mt-10 flex flex-wrap gap-x-10 gap-y-4">
+          <dl className="mt-8 flex flex-wrap gap-x-10 gap-y-4">
             {[
               [String(items.filter((x) => x.part >= 1 && x.part <= 6).length), '질문'],
               [String(wed100Parts.filter((p) => p.part >= 1 && p.part <= 6).length), '파트'],
@@ -95,7 +95,7 @@ export default async function Wed100Page() {
           </div>
 
           {/* 우측 비주얼 — 원장 사진 + 지금 듣기 카드 */}
-          <div className="relative hidden lg:block lg:h-[476px]">
+          <div className="relative hidden lg:block lg:h-[400px]">
             <div
               className="pointer-events-none absolute bottom-0 right-0 h-[440px] w-[440px] rounded-full opacity-70 blur-3xl"
               style={{ background: 'radial-gradient(circle, var(--w-rose-l) 0%, transparent 70%)' }}
@@ -104,14 +104,14 @@ export default async function Wed100Page() {
             <img
               src={img['ceo'] || '/mfl/images/sub/ceo.png'}
               alt="메이크업포엘 대표원장 김성희"
-              width={389}
-              height={476}
-              className="absolute bottom-0 right-0 h-[476px] w-[389px] object-contain object-bottom"
+              width={327}
+              height={400}
+              className="absolute bottom-0 right-0 h-[400px] w-[327px] object-contain object-bottom"
             />
             {items[0] && (
               <Link
                 href={`/wed100/${items[0].slug}`}
-                className="group absolute bottom-16 left-0 w-[300px] rounded-2xl border border-[var(--w-line)] bg-[var(--w-card)]/95 p-4 shadow-xl backdrop-blur transition hover:-translate-y-0.5 hover:shadow-2xl"
+                className="group absolute bottom-2 -left-8 w-[290px] rounded-2xl border border-[var(--w-line)] bg-[var(--w-card)]/95 p-4 shadow-xl backdrop-blur transition hover:-translate-y-0.5 hover:shadow-2xl"
               >
                 <p className="text-[10px] font-extrabold tracking-[0.22em] text-[var(--w-rose)]">
                   NOW PLAYING ·{' '}
@@ -154,7 +154,7 @@ export default async function Wed100Page() {
         <div className="mx-auto max-w-7xl px-6 py-14 lg:px-8">
           <h2 className="text-2xl font-extrabold text-[var(--w-ink)]">어디부터 궁금하세요?</h2>
           <p className="mt-2 text-sm text-[var(--w-ink2)]">
-            준비 순서 그대로 {wed100Parts.filter((p) => p.part >= 1 && p.part <= 6).length}개 파트로 나눴습니다.
+            준비 순서 그대로 {wed100Parts.filter((p) => p.part >= 1 && p.part <= 6).length}개 파트로 나눠습니다.
           </p>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {wed100Parts.filter((p) => p.part >= 1 && p.part <= 6).map((p) => {
