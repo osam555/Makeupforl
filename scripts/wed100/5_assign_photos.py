@@ -126,23 +126,31 @@ def main():
         from google.cloud import firestore
         db = firestore.Client(project="makeupforl")
         col = db.collection("wed100_questions")
-        batch, n = db.batch(), 0
+
+        # 삭제된 문항을 되살리지 않도록, DB 에 이미 있는 문서만 갱신한다
+        live = {d.id for d in col.select([]).stream()}
+
+        batch, n, skipped = db.batch(), 0, 0
         for it in items:
             if not it.get("photo"):
                 continue
-            ref = col.document(it["slug"])
-            batch.set(ref, {
+            if it["slug"] not in live:
+                skipped += 1
+                continue
+            batch.update(col.document(it["slug"]), {
                 "photo": it["photo"],
                 "photoAuto": it.get("photoAuto", True),
                 "heroImage": it["heroImage"],
                 "thumbImage": it["thumbImage"],
-            }, merge=True)
+            })
             n += 1
             if n % 400 == 0:
                 batch.commit()
                 batch = db.batch()
         batch.commit()
-        print(f"[OK] Firestore {n}문 반영 — 저장 API 로 한 번 재저장해 캐시를 갱신하세요")
+        print(f"[OK] Firestore {n}문 반영"
+              + (f" · DB 에 없는 {skipped}문 건너뜀" if skipped else ""))
+        print("     저장 API 로 한 번 재저장하거나 재배포해 페이지 캐시를 갱신하세요")
 
 
 if __name__ == "__main__":
