@@ -12,7 +12,7 @@ db=firestore.Client(project='makeupforl')
 docs=[d.to_dict() for d in db.collection('wed100_questions').stream()]
 docs.sort(key=lambda x:(x['part'],x['n']))
 FIELDS=['id','slug','part','partTitle','n','question','question_en','answer','cues','keywords',
-        'questionAudio','audio','duration','heroImage','thumbImage','published']
+        'questionAudio','audio','duration','heroImage','thumbImage','photo','photoAuto','published']
 items=[]
 for x in docs:
     row={k:x.get(k) for k in FIELDS if x.get(k) is not None}

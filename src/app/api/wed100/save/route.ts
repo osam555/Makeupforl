@@ -37,6 +37,8 @@ function toRow(item: Wed100Item, editor: string) {
     duration: item.duration ?? null,
     heroImage: item.heroImage ?? null,
     thumbImage: item.thumbImage ?? null,
+    photo: item.photo ?? null,
+    photoAuto: item.photoAuto ?? true,
     published: item.published ?? true,
     updatedAt: new Date().toISOString(),
     updatedBy: editor,

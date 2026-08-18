@@ -28,6 +28,13 @@ export interface Wed100Item {
   /** 대표 이미지 (기본값은 자동 생성 SVG, 어드민에서 사진으로 교체 가능) */
   heroImage?: string
   thumbImage?: string
+  /** 배정된 사진 이름 (src/data/wed100-photos.json 의 name) */
+  photo?: string
+  /**
+   * true  = 파트별 자동 배정 대상 (5_assign_photos.py 가 다시 배정할 수 있음)
+   * false = 어드민에서 직접 고른 사진 — 자동 배정이 건드리지 않는다
+   */
+  photoAuto?: boolean
   published?: boolean
   updatedAt?: string
 }

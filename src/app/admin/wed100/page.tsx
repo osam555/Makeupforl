@@ -11,6 +11,7 @@ import AdminGate from '@/components/admin/AdminGate'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { splitSentences } from '@/lib/wed100-text'
+import { photosByCat } from '@/lib/wed100-photos'
 import type { Wed100Data, Wed100Item } from '@/types/wed100'
 import { PART_THEME } from '@/types/wed100'
 
@@ -128,6 +129,8 @@ function AdminWed100Editor({
       ),
     [items, part, kw],
   )
+
+  const photoGroups = useMemo(() => photosByCat(), [])
 
   const patch = (fn: (d: Wed100Item) => void) => {
     setDraft((d) => {
@@ -704,30 +707,139 @@ function AdminWed100Editor({
                 />
               </label>
 
-              {/* 이미지 */}
+              {/* 대표 이미지 */}
               <div className="mt-4 rounded-xl border border-[#E7DDD4] bg-[#FCFAF8] p-3.5">
-                <p className="text-xs font-bold text-[#6B5D57]">대표 이미지</p>
-                <div className="mt-2 flex flex-wrap items-center gap-3.5">
-                  <div className="relative aspect-video w-36 overflow-hidden rounded-lg bg-[#eee]">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <p className="text-xs font-bold text-[#6B5D57]">대표 이미지</p>
+                  <span className="flex items-center gap-2">
+                    <span
+                      className={`rounded-full px-2.5 py-1 text-[11px] font-extrabold ${
+                        draft.photoAuto === false
+                          ? 'bg-[#A63D5A] text-white'
+                          : 'bg-[#EFE7DF] text-[#6B5D57]'
+                      }`}
+                    >
+                      {draft.photoAuto === false ? '직접 지정' : '자동 배정'}
+                    </span>
+                    {draft.photoAuto === false && (
+                      <button
+                        onClick={() =>
+                          patch((d) => {
+                            d.photoAuto = true
+                          })
+                        }
+                        className="flex items-center gap-1 text-[11px] font-bold text-[#A63D5A] hover:underline"
+                      >
+                        <Undo2 className="h-3 w-3" /> 자동 배정으로
+                      </button>
+                    )}
+                  </span>
+                </div>
+
+                <div className="mt-2.5 flex flex-wrap items-start gap-3.5">
+                  <div className="relative aspect-video w-40 overflow-hidden rounded-lg bg-[#eee]">
                     <Image
                       src={draft.heroImage ?? `/wed100/img/${draft.slug}-hero.svg`}
                       alt=""
                       fill
-                      sizes="144px"
+                      sizes="160px"
                       className="object-cover"
                     />
                   </div>
-                  <div className="flex-1 text-xs leading-relaxed text-[#6B5D57]">
-                    기본값은 자동 생성 SVG입니다. 사진으로 바꾸려면 이미지 URL을 입력하세요
-                    (Firebase Storage 업로드 후 URL 붙여넣기). 비우면 SVG로 돌아갑니다.
-                    <input
-                      value={draft.heroImage ?? ''}
-                      onChange={(e) => patch((d) => (d.heroImage = e.target.value || undefined))}
-                      placeholder={`/wed100/img/${draft.slug}-hero.svg (기본)`}
-                      className="mt-2 w-full rounded-lg border border-[#E7DDD4] bg-white px-3 py-2 text-xs outline-none focus:border-[#A63D5A]"
+                  <div className="relative aspect-square w-20 overflow-hidden rounded-lg bg-[#eee]">
+                    <Image
+                      src={draft.thumbImage ?? `/wed100/img/${draft.slug}-thumb.svg`}
+                      alt=""
+                      fill
+                      sizes="80px"
+                      className="object-cover"
                     />
                   </div>
+                  <p className="flex-1 min-w-[200px] text-[11px] leading-relaxed text-[#6B5D57]">
+                    사진을 고르면 이 문항만 <b>직접 지정</b>으로 바뀌어, 다음에 자동 배정을
+                    다시 돌려도 그대로 유지됩니다.
+                    {draft.photo && (
+                      <span className="mt-1 block font-bold text-[#8A6A48]">
+                        현재: {draft.photo}
+                      </span>
+                    )}
+                  </p>
                 </div>
+
+                {/* 사진 고르기 */}
+                <div className="mt-3 space-y-2.5">
+                  {photoGroups.map((g) => (
+                    <div key={g.cat}>
+                      <p className="text-[11px] font-extrabold text-[#8A7C74]">
+                        {g.label} {g.photos.length}장
+                      </p>
+                      <div className="mt-1.5 flex flex-wrap gap-1.5">
+                        {g.photos.map((ph) => {
+                          const on = draft.photo === ph.name
+                          return (
+                            <button
+                              key={ph.name}
+                              title={`${ph.name}${ph.note ? ` — ${ph.note}` : ''}`}
+                              onClick={() =>
+                                patch((d) => {
+                                  d.photo = ph.name
+                                  d.photoAuto = false
+                                  d.heroImage = ph.hero
+                                  d.thumbImage = ph.thumb
+                                })
+                              }
+                              className={`relative h-14 w-14 overflow-hidden rounded-lg border-2 transition ${
+                                on ? 'border-[#A63D5A]' : 'border-transparent hover:border-[#DFD2C7]'
+                              }`}
+                            >
+                              <Image src={ph.thumb} alt={ph.name} fill sizes="56px" className="object-cover" />
+                            </button>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* 직접 URL 입력 (외부 이미지·Storage 업로드본) */}
+                <details className="mt-3">
+                  <summary className="cursor-pointer text-[11px] font-bold text-[#8A7C74]">
+                    이미지 URL 직접 입력
+                  </summary>
+                  <div className="mt-2 grid gap-2 sm:grid-cols-2">
+                    <input
+                      value={draft.heroImage ?? ''}
+                      onChange={(e) =>
+                        patch((d) => {
+                          d.heroImage = e.target.value || undefined
+                          d.photoAuto = false
+                          d.photo = undefined
+                        })
+                      }
+                      placeholder={`hero — ${`/wed100/img/${draft.slug}-hero.svg`} (기본)`}
+                      className="w-full rounded-lg border border-[#E7DDD4] bg-white px-3 py-2 text-xs outline-none focus:border-[#A63D5A]"
+                    />
+                    <input
+                      value={draft.thumbImage ?? ''}
+                      onChange={(e) =>
+                        patch((d) => {
+                          d.thumbImage = e.target.value || undefined
+                          d.photoAuto = false
+                          d.photo = undefined
+                        })
+                      }
+                      placeholder={`thumb — ${`/wed100/img/${draft.slug}-thumb.svg`} (기본)`}
+                      className="w-full rounded-lg border border-[#E7DDD4] bg-white px-3 py-2 text-xs outline-none focus:border-[#A63D5A]"
+                    />
+                  </div>
+                  <p className="mt-1.5 text-[11px] text-[#8A7C74]">
+                    비우면 자동 생성 SVG로 돌아갑니다. 새 사진을 늘리려면 photos 폴더에 넣고
+                    <code className="mx-1 rounded bg-[#F2EAE3] px-1">4_build_photos.py</code>
+                    →
+                    <code className="mx-1 rounded bg-[#F2EAE3] px-1">5_assign_photos.py</code>
+                    를 실행하세요.
+                  </p>
+                </details>
               </div>
 
               {/* 자막 큐 */}

@@ -1,0 +1,310 @@
+{
+ "photos": [
+  {
+   "name": "portrait-01",
+   "src": "IMG_0015 복사.jpg",
+   "cat": "portrait",
+   "focus": [
+    0.542,
+    0.341
+   ],
+   "enabled": true,
+   "note": "자주+백색 한복 측면 전신, 살롱 자연광",
+   "w": 5184,
+   "h": 3126,
+   "hero": "/wed100/photo/hero/portrait-01.webp",
+   "thumb": "/wed100/photo/thumb/portrait-01.webp",
+   "focusLocked": true,
+   "catLocked": true
+  },
+  {
+   "name": "portrait-02",
+   "src": "IMG_9876 복사.jpg",
+   "cat": "portrait",
+   "focus": [
+    0.466,
+    0.333
+   ],
+   "enabled": true,
+   "note": "핑크+그레이 한복 정면",
+   "w": 5184,
+   "h": 3456,
+   "hero": "/wed100/photo/hero/portrait-02.webp",
+   "thumb": "/wed100/photo/thumb/portrait-02.webp",
+   "focusLocked": true,
+   "catLocked": true
+  },
+  {
+   "name": "portrait-03",
+   "src": "IMG_9921 복사.jpg",
+   "cat": "portrait",
+   "focus": [
+    0.53,
+    0.43
+   ],
+   "enabled": true,
+   "note": "핑크 한복 측면 전신 (세로 원본)",
+   "w": 3456,
+   "h": 5184,
+   "hero": "/wed100/photo/hero/portrait-03.webp",
+   "thumb": "/wed100/photo/thumb/portrait-03.webp",
+   "focusLocked": true,
+   "catLocked": true
+  },
+  {
+   "name": "portrait-04",
+   "src": "화면 캡처 2026-07-05 161303.jpg",
+   "cat": "portrait",
+   "focus": [
+    0.542,
+    0.364
+   ],
+   "enabled": true,
+   "note": "코랄핑크 한복 정면 미소",
+   "w": 1254,
+   "h": 1573,
+   "hero": "/wed100/photo/hero/portrait-04.webp",
+   "thumb": "/wed100/photo/thumb/portrait-04.webp",
+   "focusLocked": true,
+   "catLocked": true
+  },
+  {
+   "name": "portrait-05",
+   "src": "화면 캡처 2026-07-05 163952.jpg",
+   "cat": "portrait",
+   "focus": [
+    0.532,
+    0.308
+   ],
+   "enabled": true,
+   "note": "아이보리 꽃무늬 한복 정면",
+   "w": 1516,
+   "h": 1603,
+   "hero": "/wed100/photo/hero/portrait-05.webp",
+   "thumb": "/wed100/photo/thumb/portrait-05.webp",
+   "focusLocked": true,
+   "catLocked": true
+  },
+  {
+   "name": "portrait-06",
+   "src": "화면 캡처 2026-07-05 164021.jpg",
+   "cat": "portrait",
+   "focus": [
+    0.499,
+    0.294
+   ],
+   "enabled": true,
+   "note": "연핑크 한복 정면",
+   "w": 1524,
+   "h": 1602,
+   "hero": "/wed100/photo/hero/portrait-06.webp",
+   "thumb": "/wed100/photo/thumb/portrait-06.webp",
+   "focusLocked": true,
+   "catLocked": true
+  },
+  {
+   "name": "portrait-07",
+   "src": "화면 캡처 2026-08-17 223218.jpg",
+   "cat": "portrait",
+   "focus": [
+    0.52,
+    0.22
+   ],
+   "enabled": true,
+   "note": "청록 한복 측면 상반신",
+   "w": 2062,
+   "h": 1372,
+   "hero": "/wed100/photo/hero/portrait-07.webp",
+   "thumb": "/wed100/photo/thumb/portrait-07.webp",
+   "focusLocked": true,
+   "catLocked": true
+  },
+  {
+   "name": "hair-01",
+   "src": "IMG_0069 복사.jpg",
+   "cat": "hair",
+   "focus": [
+    0.5,
+    0.42
+   ],
+   "enabled": true,
+   "note": "하늘색 한복 뒷모습 올림머리 + 비녀",
+   "w": 5184,
+   "h": 3456,
+   "hero": "/wed100/photo/hero/hair-01.webp",
+   "thumb": "/wed100/photo/thumb/hair-01.webp",
+   "focusLocked": true,
+   "catLocked": true
+  },
+  {
+   "name": "hair-02",
+   "src": "IMG_9822 복사.jpg",
+   "cat": "hair",
+   "focus": [
+    0.44,
+    0.5
+   ],
+   "enabled": true,
+   "note": "올림머리 클로즈업 (시술 중)",
+   "w": 5184,
+   "h": 3456,
+   "hero": "/wed100/photo/hero/hair-02.webp",
+   "thumb": "/wed100/photo/thumb/hair-02.webp",
+   "focusLocked": true,
+   "catLocked": true
+  },
+  {
+   "name": "hair-03",
+   "src": "화면 캡처 2026-07-05 164110.jpg",
+   "cat": "hair",
+   "focus": [
+    0.422,
+    0.412
+   ],
+   "enabled": true,
+   "note": "민트 한복 측면 올림머리",
+   "w": 1515,
+   "h": 1587,
+   "hero": "/wed100/photo/hero/hair-03.webp",
+   "thumb": "/wed100/photo/thumb/hair-03.webp",
+   "focusLocked": true,
+   "catLocked": true
+  },
+  {
+   "name": "hair-04",
+   "src": "화면 캡처 2026-08-17 222808 복사.jpg",
+   "cat": "hair",
+   "focus": [
+    0.42,
+    0.55
+   ],
+   "enabled": true,
+   "note": "살롱 화장대 앞 올림머리 — 거울 반사가 잘리도록 아래로 내림",
+   "w": 2050,
+   "h": 1360,
+   "hero": "/wed100/photo/hero/hair-04.webp",
+   "thumb": "/wed100/photo/thumb/hair-04.webp",
+   "focusLocked": true,
+   "catLocked": true
+  },
+  {
+   "name": "hair-05",
+   "src": "화면 캡처 2026-08-17 222931.jpg",
+   "cat": "hair",
+   "focus": [
+    0.72,
+    0.45
+   ],
+   "enabled": true,
+   "note": "측면·후면 2컷 비교 올림머리",
+   "w": 2350,
+   "h": 1363,
+   "hero": "/wed100/photo/hero/hair-05.webp",
+   "thumb": "/wed100/photo/thumb/hair-05.webp",
+   "focusLocked": true,
+   "catLocked": true
+  },
+  {
+   "name": "hair-06",
+   "src": "화면 캡처 2026-08-17 223004.jpg",
+   "cat": "hair",
+   "focus": [
+    0.42,
+    0.45
+   ],
+   "enabled": true,
+   "note": "쪽머리 클로즈업",
+   "w": 1875,
+   "h": 1372,
+   "hero": "/wed100/photo/hero/hair-06.webp",
+   "thumb": "/wed100/photo/thumb/hair-06.webp",
+   "focusLocked": true,
+   "catLocked": true
+  },
+  {
+   "name": "hanbok-01",
+   "src": "화면 캡처 2026-08-17 222337.jpg",
+   "cat": "hanbok",
+   "focus": [
+    0.48,
+    0.55
+   ],
+   "enabled": true,
+   "note": "핑크 저고리 + 자수 노리개",
+   "w": 2715,
+   "h": 1375,
+   "hero": "/wed100/photo/hero/hanbok-01.webp",
+   "thumb": "/wed100/photo/thumb/hanbok-01.webp",
+   "focusLocked": true,
+   "catLocked": true
+  },
+  {
+   "name": "hanbok-02",
+   "src": "화면 캡처 2026-08-17 222424.jpg",
+   "cat": "hanbok",
+   "focus": [
+    0.42,
+    0.4
+   ],
+   "enabled": true,
+   "note": "하늘 저고리 + 자수 노리개",
+   "w": 2578,
+   "h": 1384,
+   "hero": "/wed100/photo/hero/hanbok-02.webp",
+   "thumb": "/wed100/photo/thumb/hanbok-02.webp",
+   "focusLocked": true,
+   "catLocked": true
+  },
+  {
+   "name": "hanbok-03",
+   "src": "화면 캡처 2026-08-17 222524.jpg",
+   "cat": "hanbok",
+   "focus": [
+    0.55,
+    0.45
+   ],
+   "enabled": true,
+   "note": "블루 저고리 어깨 라인",
+   "w": 2554,
+   "h": 1353,
+   "hero": "/wed100/photo/hero/hanbok-03.webp",
+   "thumb": "/wed100/photo/thumb/hanbok-03.webp",
+   "focusLocked": true,
+   "catLocked": true
+  },
+  {
+   "name": "hanbok-04",
+   "src": "화면 캡처 2026-08-17 222612.jpg",
+   "cat": "hanbok",
+   "focus": [
+    0.42,
+    0.35
+   ],
+   "enabled": true,
+   "note": "핑크+그레이 + 삼작노리개",
+   "w": 2611,
+   "h": 1381,
+   "hero": "/wed100/photo/hero/hanbok-04.webp",
+   "thumb": "/wed100/photo/thumb/hanbok-04.webp",
+   "focusLocked": true,
+   "catLocked": true
+  },
+  {
+   "name": "hanbok-05",
+   "src": "화면 캡처 2026-08-17 222652.jpg",
+   "cat": "hanbok",
+   "focus": [
+    0.42,
+    0.3
+   ],
+   "enabled": true,
+   "note": "백색+자주 + 노리개",
+   "w": 2641,
+   "h": 1386,
+   "hero": "/wed100/photo/hero/hanbok-05.webp",
+   "thumb": "/wed100/photo/thumb/hanbok-05.webp",
+   "focusLocked": true,
+   "catLocked": true
+  }
+ ]
+}
