@@ -149,7 +149,7 @@ export default async function Wed100DetailPage({
       />
 
       <div className="mx-auto max-w-7xl px-6 pt-6 lg:px-8">
-        <nav className="text-xs text-[var(--w-ink2)]">
+        <nav className="pr-12 text-xs text-[var(--w-ink2)] lg:pr-14">
           <Link href="/wed100" className="hover:text-[var(--w-rose)]">
             혼주메이크업 100문100답
           </Link>
