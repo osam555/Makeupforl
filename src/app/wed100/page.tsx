@@ -62,7 +62,7 @@ export default async function Wed100Page() {
                 href={`/wed100/${items[0].slug}`}
                 className="rounded-xl bg-[var(--w-rose)] px-6 py-3.5 text-sm font-bold text-white shadow-lg transition hover:bg-[var(--w-rose-d)]"
               >
-                ▶ 1번부터 듣기
+                ▶ 처음부터 듣기
               </Link>
             )}
             <Link
@@ -183,7 +183,8 @@ export default async function Wed100Page() {
       </section>
 
       {/* 검색 + 목록 */}
-      <section className="mx-auto max-w-7xl px-6 py-14 lg:px-8">
+      {/* 화면이 넓어지면 카드 한 줄에 5개까지 들어가도록 이 구역만 더 넓게 쓴다 */}
+      <section className="mx-auto max-w-7xl px-6 py-14 lg:px-8 2xl:max-w-[1560px]">
         <h2 className="text-2xl font-extrabold text-[var(--w-ink)]">질문 찾아보기</h2>
         <Wed100Browser
           items={items.map((x) => ({
