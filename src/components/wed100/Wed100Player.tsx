@@ -44,6 +44,8 @@ const LS_RESUME = 'wed100:resume'
 const LS_DONE = 'wed100:done'
 const LS_AUTOPLAY = 'wed100:autoplay'
 const LS_FONT = 'wed100:font'
+const LS_LANG = 'wed100:lang'
+const LS_RATE = 'wed100:rate'
 const SS_PLAY_ON_LOAD = 'wed100:playOnLoad'
 
 function saveResume(slug: string, t: number, duration: number) {
@@ -68,7 +70,7 @@ function markDone(slug: string) {
   }
 }
 
-const RATES = [0.8, 1, 1.25, 1.5]
+const RATES = [0.8, 1, 1.25, 1.5, 2]
 const LANGS: { key: SubtitleLang; label: string }[] = [
   { key: 'ko', label: '한국어' },
   { key: 'en', label: 'English' },
@@ -146,6 +148,10 @@ export default function Wed100Player(p: PlayerProps) {
       if (a !== null) setAutoNext(a === '1')
       const f = window.localStorage.getItem(LS_FONT)
       if (f === 'sm' || f === 'md' || f === 'lg') setFont(f)
+      const g = window.localStorage.getItem(LS_LANG)
+      if (g === 'ko' || g === 'en' || g === 'both') setLang(g)
+      const r = Number(window.localStorage.getItem(LS_RATE))
+      if (RATES.includes(r)) setRate(r)
     } catch {
       /* noop */
     }
@@ -225,11 +231,21 @@ export default function Wed100Player(p: PlayerProps) {
     return () => window.clearInterval(id)
   }, [playing, p.audio, rate, dur])
 
-  /* ── 현재 자막 줄로 자동 스크롤 ── */
+  /* ── 현재 자막 줄로 자동 스크롤 ──
+     scrollIntoView 는 자막 상자뿐 아니라 창까지 함께 끌어당겨 페이지가 위아래로
+     흔들린다. 그래서 상자의 scrollTop 만 직접 계산해 움직인다. */
   useEffect(() => {
     if (!playing || idx < 0) return
-    const el = scriptRef.current?.querySelector(`[data-cue="${idx}"]`)
-    el?.scrollIntoView({ block: 'center', behavior: 'smooth' })
+    const box = scriptRef.current
+    const el = box?.querySelector<HTMLElement>(`[data-cue="${idx}"]`)
+    if (!box || !el) return
+    const br = box.getBoundingClientRect()
+    const er = el.getBoundingClientRect()
+    // 줄의 중앙이 상자의 중앙에 오도록
+    const delta = er.top - br.top - (br.height - er.height) / 2
+    const top = Math.max(0, Math.min(box.scrollHeight - box.clientHeight, box.scrollTop + delta))
+    if (Math.abs(top - box.scrollTop) < 2) return
+    box.scrollTo({ top, behavior: 'smooth' })
   }, [idx, playing])
 
   /* ── 이어듣기 위치 저장 ── */
@@ -282,6 +298,21 @@ export default function Wed100Player(p: PlayerProps) {
   const chooseRate = (r: number) => {
     setRate(r)
     if (audioRef.current) audioRef.current.playbackRate = r
+    try {
+      window.localStorage.setItem(LS_RATE, String(r))
+    } catch {
+      /* noop */
+    }
+  }
+
+  /** 연속 재생으로 다음 화에 넘어가도 같은 자막 설정을 쓰도록 기억한다 */
+  const chooseLang = (k: SubtitleLang) => {
+    setLang(k)
+    try {
+      window.localStorage.setItem(LS_LANG, k)
+    } catch {
+      /* noop */
+    }
   }
 
   const chooseFont = (k: FontKey) => {
@@ -595,7 +626,7 @@ export default function Wed100Player(p: PlayerProps) {
               {LANGS.map((l) => (
                 <button
                   key={l.key}
-                  onClick={() => setLang(l.key)}
+                  onClick={() => chooseLang(l.key)}
                   aria-pressed={lang === l.key}
                   className={`rounded-md border px-2.5 py-1 text-[12px] font-semibold transition ${
                     lang === l.key
