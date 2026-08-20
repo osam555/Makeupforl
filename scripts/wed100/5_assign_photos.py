@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""107문에 대표 사진을 자동 배정한다.
+"""문항마다 대표 사진을 배정한다.
+
+배정 우선순위
+  1. 어드민에서 손으로 지정한 문항 (photoAuto == false) — 절대 건드리지 않는다
+  2. scripts/wed100/photo_map.json — 질문 내용을 보고 골라 둔 표
+  3. 파트별 자동 순환 배정 (표에 없는 새 문항용)
 
 파트 주제에 맞는 사진 분류를 풀로 잡고, 파트 안에서 순서대로 돌려가며 배정한다.
 사진이 늘어나면 다시 돌리기만 하면 되고, 어드민에서 손으로 지정한 문항
@@ -23,6 +28,7 @@ from collections import defaultdict
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 DATA = os.path.join(ROOT, "src", "data", "wed100.json")
 CATALOG = os.path.join(ROOT, "src", "data", "wed100-photos.json")
+PHOTO_MAP = os.path.join(os.path.dirname(os.path.abspath(__file__)), "photo_map.json")
 
 # 파트별로 어울리는 사진 분류 (앞에 적힌 것이 우선)
 PART_CATS = {
@@ -55,6 +61,7 @@ def main():
     ap.add_argument("--firestore", action="store_true", help="운영 DB 에도 반영")
     ap.add_argument("--reset", action="store_true", help="수동 지정도 자동 배정으로 되돌림")
     ap.add_argument("--dry", action="store_true", help="바꾸지 않고 결과만 출력")
+    ap.add_argument("--no-map", action="store_true", help="photo_map.json 을 무시하고 순환 배정만")
     a = ap.parse_args()
 
     if not os.path.exists(CATALOG):
@@ -68,11 +75,15 @@ def main():
         by_cat[p["cat"]].append(p)
     by_name = {p["name"]: p for p in photos}
 
+    curated = {}
+    if not a.no_map and os.path.exists(PHOTO_MAP):
+        curated = load(PHOTO_MAP).get("map", {})
+
     data = load(DATA)
     items = data["items"]
 
     per_part = defaultdict(int)
-    n_auto = n_kept = n_missing = 0
+    n_auto = n_curated = n_kept = n_missing = 0
     changes = []
 
     for it in sorted(items, key=lambda x: (x["part"], x["n"])):
@@ -88,12 +99,20 @@ def main():
                 n_kept += 1
             continue
 
-        pool = pool_for(part, by_cat)
-        if not pool:
-            continue
-        # 파트마다 시작점을 달리해 같은 사진이 파트 경계에서 붙는 걸 줄인다
-        photo = pool[(per_part[part] + part) % len(pool)]
-        per_part[part] += 1
+        # 내용에 맞춰 골라 둔 표가 먼저다
+        picked = curated.get(it["slug"], {}).get("photo")
+        if picked and picked in by_name:
+            photo = by_name[picked]
+            n_curated += 1
+        else:
+            if picked:
+                print(f"  ! {it['slug']}: 표의 사진 '{picked}' 이 카탈로그에 없습니다")
+            pool = pool_for(part, by_cat)
+            if not pool:
+                continue
+            # 파트마다 시작점을 달리해 같은 사진이 파트 경계에서 붙는 걸 줄인다
+            photo = pool[(per_part[part] + part) % len(pool)]
+            per_part[part] += 1
 
         before = it.get("heroImage")
         if before != photo["hero"]:
@@ -104,7 +123,7 @@ def main():
         it["thumbImage"] = photo["thumb"]
         n_auto += 1
 
-    print(f"자동 배정 {n_auto}문 · 수동 유지 {n_kept}문"
+    print(f"배정 {n_auto}문 (표 {n_curated}문 · 순환 {n_auto - n_curated}문) · 수동 유지 {n_kept}문"
           + (f" · 누락 {n_missing}문" if n_missing else ""))
     for part in sorted(per_part):
         pool = pool_for(part, by_cat)

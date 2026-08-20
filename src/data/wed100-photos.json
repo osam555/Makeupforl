@@ -120,6 +120,396 @@
    "catLocked": true
   },
   {
+   "name": "portrait-08",
+   "src": "n03.jpg",
+   "cat": "portrait",
+   "focus": [
+    0.552,
+    0.283
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1087,
+   "h": 1363,
+   "hero": "/wed100/photo/hero/portrait-08.webp",
+   "thumb": "/wed100/photo/thumb/portrait-08.webp"
+  },
+  {
+   "name": "portrait-09",
+   "src": "n05.jpg",
+   "cat": "portrait",
+   "focus": [
+    0.462,
+    0.331
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 2062,
+   "h": 1374,
+   "hero": "/wed100/photo/hero/portrait-09.webp",
+   "thumb": "/wed100/photo/thumb/portrait-09.webp"
+  },
+  {
+   "name": "portrait-10",
+   "src": "n08.jpg",
+   "cat": "portrait",
+   "focus": [
+    0.488,
+    0.317
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1366,
+   "h": 1111,
+   "hero": "/wed100/photo/hero/portrait-10.webp",
+   "thumb": "/wed100/photo/thumb/portrait-10.webp"
+  },
+  {
+   "name": "portrait-11",
+   "src": "n09.jpg",
+   "cat": "portrait",
+   "focus": [
+    0.471,
+    0.279
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1788,
+   "h": 1372,
+   "hero": "/wed100/photo/hero/portrait-11.webp",
+   "thumb": "/wed100/photo/thumb/portrait-11.webp"
+  },
+  {
+   "name": "portrait-12",
+   "src": "n10.jpg",
+   "cat": "portrait",
+   "focus": [
+    0.542,
+    0.364
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1254,
+   "h": 1573,
+   "hero": "/wed100/photo/hero/portrait-12.webp",
+   "thumb": "/wed100/photo/thumb/portrait-12.webp"
+  },
+  {
+   "name": "portrait-13",
+   "src": "n11.jpg",
+   "cat": "portrait",
+   "focus": [
+    0.532,
+    0.308
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1516,
+   "h": 1603,
+   "hero": "/wed100/photo/hero/portrait-13.webp",
+   "thumb": "/wed100/photo/thumb/portrait-13.webp"
+  },
+  {
+   "name": "portrait-14",
+   "src": "n12.jpg",
+   "cat": "portrait",
+   "focus": [
+    0.499,
+    0.294
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1524,
+   "h": 1602,
+   "hero": "/wed100/photo/hero/portrait-14.webp",
+   "thumb": "/wed100/photo/thumb/portrait-14.webp"
+  },
+  {
+   "name": "portrait-15",
+   "src": "n13.jpg",
+   "cat": "portrait",
+   "focus": [
+    0.422,
+    0.412
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1515,
+   "h": 1587,
+   "hero": "/wed100/photo/hero/portrait-15.webp",
+   "thumb": "/wed100/photo/thumb/portrait-15.webp"
+  },
+  {
+   "name": "portrait-16",
+   "src": "n16.jpg",
+   "cat": "portrait",
+   "focus": [
+    0.403,
+    0.278
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1252,
+   "h": 1182,
+   "hero": "/wed100/photo/hero/portrait-16.webp",
+   "thumb": "/wed100/photo/thumb/portrait-16.webp"
+  },
+  {
+   "name": "portrait-17",
+   "src": "n17.jpg",
+   "cat": "portrait",
+   "focus": [
+    0.458,
+    0.321
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1978,
+   "h": 1372,
+   "hero": "/wed100/photo/hero/portrait-17.webp",
+   "thumb": "/wed100/photo/thumb/portrait-17.webp"
+  },
+  {
+   "name": "portrait-18",
+   "src": "n18.jpg",
+   "cat": "portrait",
+   "focus": [
+    0.544,
+    0.351
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1755,
+   "h": 1339,
+   "hero": "/wed100/photo/hero/portrait-18.webp",
+   "thumb": "/wed100/photo/thumb/portrait-18.webp"
+  },
+  {
+   "name": "portrait-19",
+   "src": "n19.jpg",
+   "cat": "portrait",
+   "focus": [
+    0.464,
+    0.357
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 2049,
+   "h": 1381,
+   "hero": "/wed100/photo/hero/portrait-19.webp",
+   "thumb": "/wed100/photo/thumb/portrait-19.webp"
+  },
+  {
+   "name": "portrait-20",
+   "src": "n22.jpg",
+   "cat": "portrait",
+   "focus": [
+    0.513,
+    0.427
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1582,
+   "h": 1378,
+   "hero": "/wed100/photo/hero/portrait-20.webp",
+   "thumb": "/wed100/photo/thumb/portrait-20.webp"
+  },
+  {
+   "name": "portrait-21",
+   "src": "n23.jpg",
+   "cat": "portrait",
+   "focus": [
+    0.494,
+    0.356
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1164,
+   "h": 1200,
+   "hero": "/wed100/photo/hero/portrait-21.webp",
+   "thumb": "/wed100/photo/thumb/portrait-21.webp"
+  },
+  {
+   "name": "portrait-22",
+   "src": "n24.jpg",
+   "cat": "portrait",
+   "focus": [
+    0.427,
+    0.343
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1819,
+   "h": 1195,
+   "hero": "/wed100/photo/hero/portrait-22.webp",
+   "thumb": "/wed100/photo/thumb/portrait-22.webp"
+  },
+  {
+   "name": "portrait-23",
+   "src": "n25.jpg",
+   "cat": "portrait",
+   "focus": [
+    0.498,
+    0.328
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1915,
+   "h": 1398,
+   "hero": "/wed100/photo/hero/portrait-23.webp",
+   "thumb": "/wed100/photo/thumb/portrait-23.webp"
+  },
+  {
+   "name": "portrait-24",
+   "src": "n28.jpg",
+   "cat": "portrait",
+   "focus": [
+    0.532,
+    0.297
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1186,
+   "h": 1192,
+   "hero": "/wed100/photo/hero/portrait-24.webp",
+   "thumb": "/wed100/photo/thumb/portrait-24.webp"
+  },
+  {
+   "name": "portrait-25",
+   "src": "n29.jpg",
+   "cat": "portrait",
+   "focus": [
+    0.259,
+    0.948
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1221,
+   "h": 1605,
+   "hero": "/wed100/photo/hero/portrait-25.webp",
+   "thumb": "/wed100/photo/thumb/portrait-25.webp"
+  },
+  {
+   "name": "portrait-26",
+   "src": "n30.jpg",
+   "cat": "portrait",
+   "focus": [
+    0.499,
+    0.301
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1393,
+   "h": 1618,
+   "hero": "/wed100/photo/hero/portrait-26.webp",
+   "thumb": "/wed100/photo/thumb/portrait-26.webp"
+  },
+  {
+   "name": "portrait-27",
+   "src": "n44.jpg",
+   "cat": "portrait",
+   "focus": [
+    0.362,
+    0.434
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 615,
+   "h": 850,
+   "hero": "/wed100/photo/hero/portrait-27.webp",
+   "thumb": "/wed100/photo/thumb/portrait-27.webp"
+  },
+  {
+   "name": "portrait-28",
+   "src": "n49.jpg",
+   "cat": "portrait",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 951,
+   "h": 925,
+   "hero": "/wed100/photo/hero/portrait-28.webp",
+   "thumb": "/wed100/photo/thumb/portrait-28.webp"
+  },
+  {
+   "name": "portrait-29",
+   "src": "n56.jpg",
+   "cat": "portrait",
+   "focus": [
+    0.522,
+    0.254
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1177,
+   "h": 1570,
+   "hero": "/wed100/photo/hero/portrait-29.webp",
+   "thumb": "/wed100/photo/thumb/portrait-29.webp"
+  },
+  {
+   "name": "portrait-30",
+   "src": "n74.jpg",
+   "cat": "portrait",
+   "focus": [
+    0.561,
+    0.338
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1138,
+   "h": 1600,
+   "hero": "/wed100/photo/hero/portrait-30.webp",
+   "thumb": "/wed100/photo/thumb/portrait-30.webp"
+  },
+  {
+   "name": "portrait-31",
+   "src": "n77.jpg",
+   "cat": "portrait",
+   "focus": [
+    0.556,
+    0.95
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 910,
+   "h": 802,
+   "hero": "/wed100/photo/hero/portrait-31.webp",
+   "thumb": "/wed100/photo/thumb/portrait-31.webp"
+  },
+  {
+   "name": "portrait-32",
+   "src": "n78.jpg",
+   "cat": "portrait",
+   "focus": [
+    0.667,
+    0.868
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1024,
+   "h": 1372,
+   "hero": "/wed100/photo/hero/portrait-32.webp",
+   "thumb": "/wed100/photo/thumb/portrait-32.webp"
+  },
+  {
+   "name": "portrait-33",
+   "src": "n84.jpg",
+   "cat": "portrait",
+   "focus": [
+    0.358,
+    0.494
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 912,
+   "h": 1366,
+   "hero": "/wed100/photo/hero/portrait-33.webp",
+   "thumb": "/wed100/photo/thumb/portrait-33.webp"
+  },
+  {
    "name": "hair-01",
    "src": "IMG_0069 복사.jpg",
    "cat": "hair",
@@ -222,6 +612,400 @@
    "catLocked": true
   },
   {
+   "name": "hair-07",
+   "src": "n02.jpg",
+   "cat": "hair",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1264,
+   "h": 1191,
+   "hero": "/wed100/photo/hero/hair-07.webp",
+   "thumb": "/wed100/photo/thumb/hair-07.webp"
+  },
+  {
+   "name": "hair-08",
+   "src": "n06.jpg",
+   "cat": "hair",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 2130,
+   "h": 1375,
+   "hero": "/wed100/photo/hero/hair-08.webp",
+   "thumb": "/wed100/photo/thumb/hair-08.webp"
+  },
+  {
+   "name": "hair-09",
+   "src": "n07.jpg",
+   "cat": "hair",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1854,
+   "h": 1309,
+   "hero": "/wed100/photo/hero/hair-09.webp",
+   "thumb": "/wed100/photo/thumb/hair-09.webp"
+  },
+  {
+   "name": "hair-10",
+   "src": "n14.jpg",
+   "cat": "hair",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 2350,
+   "h": 1363,
+   "hero": "/wed100/photo/hero/hair-10.webp",
+   "thumb": "/wed100/photo/thumb/hair-10.webp"
+  },
+  {
+   "name": "hair-11",
+   "src": "n15.jpg",
+   "cat": "hair",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1875,
+   "h": 1372,
+   "hero": "/wed100/photo/hero/hair-11.webp",
+   "thumb": "/wed100/photo/thumb/hair-11.webp"
+  },
+  {
+   "name": "hair-12",
+   "src": "n27.jpg",
+   "cat": "hair",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1096,
+   "h": 1612,
+   "hero": "/wed100/photo/hero/hair-12.webp",
+   "thumb": "/wed100/photo/thumb/hair-12.webp"
+  },
+  {
+   "name": "hair-13",
+   "src": "n31.jpg",
+   "cat": "hair",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1242,
+   "h": 1591,
+   "hero": "/wed100/photo/hero/hair-13.webp",
+   "thumb": "/wed100/photo/thumb/hair-13.webp"
+  },
+  {
+   "name": "hair-14",
+   "src": "n33.jpg",
+   "cat": "hair",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 2277,
+   "h": 1603,
+   "hero": "/wed100/photo/hero/hair-14.webp",
+   "thumb": "/wed100/photo/thumb/hair-14.webp"
+  },
+  {
+   "name": "hair-15",
+   "src": "n34.jpg",
+   "cat": "hair",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 2875,
+   "h": 1372,
+   "hero": "/wed100/photo/hero/hair-15.webp",
+   "thumb": "/wed100/photo/thumb/hair-15.webp"
+  },
+  {
+   "name": "hair-16",
+   "src": "n35.jpg",
+   "cat": "hair",
+   "focus": [
+    0.76,
+    0.42
+   ],
+   "enabled": true,
+   "note": "단발 before → 올림머리 after 비교컷",
+   "w": 1111,
+   "h": 741,
+   "hero": "/wed100/photo/hero/hair-16.webp",
+   "thumb": "/wed100/photo/thumb/hair-16.webp",
+   "focusLocked": true,
+   "catLocked": true
+  },
+  {
+   "name": "hair-17",
+   "src": "n36.jpg",
+   "cat": "hair",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1194,
+   "h": 1312,
+   "hero": "/wed100/photo/hero/hair-17.webp",
+   "thumb": "/wed100/photo/thumb/hair-17.webp"
+  },
+  {
+   "name": "hair-18",
+   "src": "n37.jpg",
+   "cat": "hair",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 889,
+   "h": 1302,
+   "hero": "/wed100/photo/hero/hair-18.webp",
+   "thumb": "/wed100/photo/thumb/hair-18.webp"
+  },
+  {
+   "name": "hair-19",
+   "src": "n38.jpg",
+   "cat": "hair",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1081,
+   "h": 1345,
+   "hero": "/wed100/photo/hero/hair-19.webp",
+   "thumb": "/wed100/photo/thumb/hair-19.webp"
+  },
+  {
+   "name": "hair-20",
+   "src": "n45.jpg",
+   "cat": "hair",
+   "focus": [
+    0.55,
+    0.55
+   ],
+   "enabled": true,
+   "note": "짧은 머리 측면 업스타일 + 진주 장식",
+   "w": 426,
+   "h": 254,
+   "hero": "/wed100/photo/hero/hair-20.webp",
+   "thumb": "/wed100/photo/thumb/hair-20.webp",
+   "focusLocked": true,
+   "catLocked": true
+  },
+  {
+   "name": "hair-21",
+   "src": "n50.jpg",
+   "cat": "hair",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 763,
+   "h": 904,
+   "hero": "/wed100/photo/hero/hair-21.webp",
+   "thumb": "/wed100/photo/thumb/hair-21.webp"
+  },
+  {
+   "name": "hair-22",
+   "src": "n53.jpg",
+   "cat": "hair",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1198,
+   "h": 1425,
+   "hero": "/wed100/photo/hero/hair-22.webp",
+   "thumb": "/wed100/photo/thumb/hair-22.webp"
+  },
+  {
+   "name": "hair-23",
+   "src": "n54.jpg",
+   "cat": "hair",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1447,
+   "h": 1605,
+   "hero": "/wed100/photo/hero/hair-23.webp",
+   "thumb": "/wed100/photo/thumb/hair-23.webp"
+  },
+  {
+   "name": "hair-24",
+   "src": "n55.jpg",
+   "cat": "hair",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 892,
+   "h": 1461,
+   "hero": "/wed100/photo/hero/hair-24.webp",
+   "thumb": "/wed100/photo/thumb/hair-24.webp"
+  },
+  {
+   "name": "hair-25",
+   "src": "n64.jpg",
+   "cat": "hair",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 2824,
+   "h": 1594,
+   "hero": "/wed100/photo/hero/hair-25.webp",
+   "thumb": "/wed100/photo/thumb/hair-25.webp"
+  },
+  {
+   "name": "hair-26",
+   "src": "n65.jpg",
+   "cat": "hair",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 2629,
+   "h": 1609,
+   "hero": "/wed100/photo/hero/hair-26.webp",
+   "thumb": "/wed100/photo/thumb/hair-26.webp"
+  },
+  {
+   "name": "hair-27",
+   "src": "n67.jpg",
+   "cat": "hair",
+   "focus": [
+    0.75,
+    0.482
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 910,
+   "h": 1404,
+   "hero": "/wed100/photo/hero/hair-27.webp",
+   "thumb": "/wed100/photo/thumb/hair-27.webp"
+  },
+  {
+   "name": "hair-28",
+   "src": "n71.jpg",
+   "cat": "hair",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1221,
+   "h": 1396,
+   "hero": "/wed100/photo/hero/hair-28.webp",
+   "thumb": "/wed100/photo/thumb/hair-28.webp"
+  },
+  {
+   "name": "hair-29",
+   "src": "n73.jpg",
+   "cat": "hair",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1059,
+   "h": 1507,
+   "hero": "/wed100/photo/hero/hair-29.webp",
+   "thumb": "/wed100/photo/thumb/hair-29.webp"
+  },
+  {
+   "name": "hair-30",
+   "src": "n80.jpg",
+   "cat": "hair",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1222,
+   "h": 1000,
+   "hero": "/wed100/photo/hero/hair-30.webp",
+   "thumb": "/wed100/photo/thumb/hair-30.webp"
+  },
+  {
+   "name": "hair-31",
+   "src": "n82.jpg",
+   "cat": "hair",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1018,
+   "h": 1060,
+   "hero": "/wed100/photo/hero/hair-31.webp",
+   "thumb": "/wed100/photo/thumb/hair-31.webp"
+  },
+  {
+   "name": "hair-32",
+   "src": "n85.jpg",
+   "cat": "hair",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1156,
+   "h": 1278,
+   "hero": "/wed100/photo/hero/hair-32.webp",
+   "thumb": "/wed100/photo/thumb/hair-32.webp"
+  },
+  {
    "name": "hanbok-01",
    "src": "화면 캡처 2026-08-17 222337.jpg",
    "cat": "hanbok",
@@ -303,6 +1087,494 @@
    "h": 1386,
    "hero": "/wed100/photo/hero/hanbok-05.webp",
    "thumb": "/wed100/photo/thumb/hanbok-05.webp",
+   "focusLocked": true,
+   "catLocked": true
+  },
+  {
+   "name": "hanbok-06",
+   "src": "n01.jpg",
+   "cat": "hanbok",
+   "focus": [
+    0.608,
+    0.341
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1846,
+   "h": 1384,
+   "hero": "/wed100/photo/hero/hanbok-06.webp",
+   "thumb": "/wed100/photo/thumb/hanbok-06.webp"
+  },
+  {
+   "name": "hanbok-07",
+   "src": "n04.jpg",
+   "cat": "hanbok",
+   "focus": [
+    0.477,
+    0.289
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1236,
+   "h": 1384,
+   "hero": "/wed100/photo/hero/hanbok-07.webp",
+   "thumb": "/wed100/photo/thumb/hanbok-07.webp"
+  },
+  {
+   "name": "hanbok-08",
+   "src": "n42.jpg",
+   "cat": "hanbok",
+   "focus": [
+    0.47,
+    0.3
+   ],
+   "enabled": true,
+   "note": "청록 저고리 정면 완성컷",
+   "w": 641,
+   "h": 715,
+   "hero": "/wed100/photo/hero/hanbok-08.webp",
+   "thumb": "/wed100/photo/thumb/hanbok-08.webp",
+   "focusLocked": true,
+   "catLocked": true
+  },
+  {
+   "name": "hanbok-09",
+   "src": "n43.jpg",
+   "cat": "hanbok",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 655,
+   "h": 730,
+   "hero": "/wed100/photo/hero/hanbok-09.webp",
+   "thumb": "/wed100/photo/thumb/hanbok-09.webp"
+  },
+  {
+   "name": "hanbok-10",
+   "src": "n52.jpg",
+   "cat": "hanbok",
+   "focus": [
+    0.343,
+    0.137
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1012,
+   "h": 708,
+   "hero": "/wed100/photo/hero/hanbok-10.webp",
+   "thumb": "/wed100/photo/thumb/hanbok-10.webp"
+  },
+  {
+   "name": "hanbok-11",
+   "src": "n68.jpg",
+   "cat": "hanbok",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 901,
+   "h": 1324,
+   "hero": "/wed100/photo/hero/hanbok-11.webp",
+   "thumb": "/wed100/photo/thumb/hanbok-11.webp"
+  },
+  {
+   "name": "hanbok-12",
+   "src": "n69.jpg",
+   "cat": "hanbok",
+   "focus": [
+    0.6,
+    0.806
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1054,
+   "h": 1416,
+   "hero": "/wed100/photo/hero/hanbok-12.webp",
+   "thumb": "/wed100/photo/thumb/hanbok-12.webp"
+  },
+  {
+   "name": "hanbok-13",
+   "src": "n70.jpg",
+   "cat": "hanbok",
+   "focus": [
+    0.532,
+    0.408
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1053,
+   "h": 1285,
+   "hero": "/wed100/photo/hero/hanbok-13.webp",
+   "thumb": "/wed100/photo/thumb/hanbok-13.webp"
+  },
+  {
+   "name": "hanbok-14",
+   "src": "n75.jpg",
+   "cat": "hanbok",
+   "focus": [
+    0.595,
+    0.426
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 931,
+   "h": 1354,
+   "hero": "/wed100/photo/hero/hanbok-14.webp",
+   "thumb": "/wed100/photo/thumb/hanbok-14.webp"
+  },
+  {
+   "name": "hanbok-15",
+   "src": "n83.jpg",
+   "cat": "hanbok",
+   "focus": [
+    0.161,
+    0.724
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1062,
+   "h": 1324,
+   "hero": "/wed100/photo/hero/hanbok-15.webp",
+   "thumb": "/wed100/photo/thumb/hanbok-15.webp"
+  },
+  {
+   "name": "salon-01",
+   "src": "n20.jpg",
+   "cat": "salon",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1692,
+   "h": 1314,
+   "hero": "/wed100/photo/hero/salon-01.webp",
+   "thumb": "/wed100/photo/thumb/salon-01.webp"
+  },
+  {
+   "name": "salon-02",
+   "src": "n21.jpg",
+   "cat": "salon",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 2062,
+   "h": 1372,
+   "hero": "/wed100/photo/hero/salon-02.webp",
+   "thumb": "/wed100/photo/thumb/salon-02.webp"
+  },
+  {
+   "name": "salon-03",
+   "src": "n26.jpg",
+   "cat": "salon",
+   "focus": [
+    0.521,
+    0.168
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 2035,
+   "h": 1336,
+   "hero": "/wed100/photo/hero/salon-03.webp",
+   "thumb": "/wed100/photo/thumb/salon-03.webp"
+  },
+  {
+   "name": "salon-04",
+   "src": "n32.jpg",
+   "cat": "salon",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1779,
+   "h": 1296,
+   "hero": "/wed100/photo/hero/salon-04.webp",
+   "thumb": "/wed100/photo/thumb/salon-04.webp"
+  },
+  {
+   "name": "salon-05",
+   "src": "n39.jpg",
+   "cat": "salon",
+   "focus": [
+    0.508,
+    0.331
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1012,
+   "h": 1285,
+   "hero": "/wed100/photo/hero/salon-05.webp",
+   "thumb": "/wed100/photo/thumb/salon-05.webp"
+  },
+  {
+   "name": "salon-06",
+   "src": "n40.jpg",
+   "cat": "salon",
+   "focus": [
+    0.293,
+    0.817
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 904,
+   "h": 1279,
+   "hero": "/wed100/photo/hero/salon-06.webp",
+   "thumb": "/wed100/photo/thumb/salon-06.webp"
+  },
+  {
+   "name": "salon-07",
+   "src": "n41.jpg",
+   "cat": "salon",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 907,
+   "h": 1377,
+   "hero": "/wed100/photo/hero/salon-07.webp",
+   "thumb": "/wed100/photo/thumb/salon-07.webp"
+  },
+  {
+   "name": "salon-08",
+   "src": "n48.jpg",
+   "cat": "salon",
+   "focus": [
+    0.352,
+    0.482
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 868,
+   "h": 667,
+   "hero": "/wed100/photo/hero/salon-08.webp",
+   "thumb": "/wed100/photo/thumb/salon-08.webp"
+  },
+  {
+   "name": "salon-09",
+   "src": "n58.jpg",
+   "cat": "salon",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 2419,
+   "h": 1252,
+   "hero": "/wed100/photo/hero/salon-09.webp",
+   "thumb": "/wed100/photo/thumb/salon-09.webp"
+  },
+  {
+   "name": "salon-10",
+   "src": "n59.jpg",
+   "cat": "salon",
+   "focus": [
+    0.502,
+    0.348
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 2581,
+   "h": 1591,
+   "hero": "/wed100/photo/hero/salon-10.webp",
+   "thumb": "/wed100/photo/thumb/salon-10.webp"
+  },
+  {
+   "name": "salon-11",
+   "src": "n60.jpg",
+   "cat": "salon",
+   "focus": [
+    0.127,
+    0.189
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 2809,
+   "h": 1585,
+   "hero": "/wed100/photo/hero/salon-11.webp",
+   "thumb": "/wed100/photo/thumb/salon-11.webp"
+  },
+  {
+   "name": "salon-12",
+   "src": "n63.jpg",
+   "cat": "salon",
+   "focus": [
+    0.863,
+    0.178
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 2515,
+   "h": 1609,
+   "hero": "/wed100/photo/hero/salon-12.webp",
+   "thumb": "/wed100/photo/thumb/salon-12.webp"
+  },
+  {
+   "name": "salon-13",
+   "src": "n66.jpg",
+   "cat": "salon",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 2272,
+   "h": 1612,
+   "hero": "/wed100/photo/hero/salon-13.webp",
+   "thumb": "/wed100/photo/thumb/salon-13.webp"
+  },
+  {
+   "name": "salon-14",
+   "src": "n72.jpg",
+   "cat": "salon",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1431,
+   "h": 940,
+   "hero": "/wed100/photo/hero/salon-14.webp",
+   "thumb": "/wed100/photo/thumb/salon-14.webp"
+  },
+  {
+   "name": "salon-15",
+   "src": "n79.jpg",
+   "cat": "salon",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 894,
+   "h": 1290,
+   "hero": "/wed100/photo/hero/salon-15.webp",
+   "thumb": "/wed100/photo/thumb/salon-15.webp"
+  },
+  {
+   "name": "salon-16",
+   "src": "n81.jpg",
+   "cat": "salon",
+   "focus": [
+    0.531,
+    0.232
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 1030,
+   "h": 1303,
+   "hero": "/wed100/photo/hero/salon-16.webp",
+   "thumb": "/wed100/photo/thumb/salon-16.webp"
+  },
+  {
+   "name": "accessory-01",
+   "src": "n46.jpg",
+   "cat": "accessory",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 2193,
+   "h": 1341,
+   "hero": "/wed100/photo/hero/accessory-01.webp",
+   "thumb": "/wed100/photo/thumb/accessory-01.webp"
+  },
+  {
+   "name": "accessory-02",
+   "src": "n47.jpg",
+   "cat": "accessory",
+   "focus": [
+    0.5,
+    0.5
+   ],
+   "enabled": true,
+   "note": "진주 귀걸이 한 쌍 — 한복 액세서리",
+   "w": 910,
+   "h": 568,
+   "hero": "/wed100/photo/hero/accessory-02.webp",
+   "thumb": "/wed100/photo/thumb/accessory-02.webp",
+   "focusLocked": true,
+   "catLocked": true
+  },
+  {
+   "name": "accessory-03",
+   "src": "n61.jpg",
+   "cat": "accessory",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 2815,
+   "h": 1585,
+   "hero": "/wed100/photo/hero/accessory-03.webp",
+   "thumb": "/wed100/photo/thumb/accessory-03.webp"
+  },
+  {
+   "name": "accessory-04",
+   "src": "n62.jpg",
+   "cat": "accessory",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "",
+   "w": 2299,
+   "h": 1344,
+   "hero": "/wed100/photo/hero/accessory-04.webp",
+   "thumb": "/wed100/photo/thumb/accessory-04.webp"
+  },
+  {
+   "name": "banner-01",
+   "src": "n51.jpg",
+   "cat": "banner",
+   "focus": [
+    0.42,
+    0.5
+   ],
+   "enabled": true,
+   "note": "「혼주에 진심인 메이크업포엘」 안내 배너",
+   "w": 1918,
+   "h": 1095,
+   "hero": "/wed100/photo/hero/banner-01.webp",
+   "thumb": "/wed100/photo/thumb/banner-01.webp",
+   "focusLocked": true,
+   "catLocked": true
+  },
+  {
+   "name": "banner-02",
+   "src": "n57.jpg",
+   "cat": "banner",
+   "focus": [
+    0.5,
+    0.38
+   ],
+   "enabled": true,
+   "note": "「혼주메이크업 어디서 하세요?」 1:1 컨설팅 안내 배너",
+   "w": 1608,
+   "h": 1612,
+   "hero": "/wed100/photo/hero/banner-02.webp",
+   "thumb": "/wed100/photo/thumb/banner-02.webp",
    "focusLocked": true,
    "catLocked": true
   }

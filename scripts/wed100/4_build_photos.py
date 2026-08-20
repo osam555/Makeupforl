@@ -47,8 +47,11 @@ CAT_DIRS = {
     "인물": "portrait", "portrait": "portrait", "완성컷": "portrait",
     "헤어": "hair", "hair": "hair", "머리": "hair",
     "한복": "hanbok", "hanbok": "hanbok", "의상": "hanbok",
+    "시술": "salon", "salon": "salon", "샵": "salon",
+    "소품": "accessory", "accessory": "accessory", "장식": "accessory",
+    "배너": "banner", "banner": "banner",
 }
-CATS = ["portrait", "hair", "hanbok"]
+CATS = ["portrait", "hair", "hanbok", "salon", "accessory", "banner"]
 
 
 # ---------------------------------------------------------------- 얼굴 검출
@@ -128,6 +131,19 @@ def make_hero(im: Image.Image, fx: float, fy: float) -> Image.Image:
 
 
 def make_thumb(im: Image.Image, fx: float, fy: float) -> Image.Image:
+    w, h = im.size
+    ratio = w / h
+    if ratio > 1.7 or ratio < 0.59:
+        # 아주 납작하거나 아주 긴 사진 — 정사각으로 자르면 내용이 반 넘게 날아간다.
+        # 히어로와 같은 방식으로 흐린 배경 위에 원본을 통째로 얹는다.
+        bg = crop_to(im, 1.0, fx, fy).resize((THUMB, THUMB), Image.LANCZOS)
+        bg = bg.filter(ImageFilter.GaussianBlur(28))
+        bg = ImageEnhance.Brightness(bg).enhance(1.12)
+        bg = ImageEnhance.Color(bg).enhance(0.55)
+        fg = im.copy()
+        fg.thumbnail((THUMB, THUMB), Image.LANCZOS)
+        bg.paste(fg, ((THUMB - fg.width) // 2, (THUMB - fg.height) // 2))
+        return bg
     # 썸네일은 정사각이라 얼굴이 중앙에 오도록 살짝 위를 본다
     return crop_to(im, 1.0, fx, max(0.0, fy - 0.03)).resize((THUMB, THUMB), Image.LANCZOS)
 
