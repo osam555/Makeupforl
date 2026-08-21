@@ -76,17 +76,10 @@ export async function verifyAdmin(auth: AuthPayload): Promise<string | null> {
   if (auth.password && auth.password === expected) return '비밀번호 로그인'
 
   if (auth.idToken) {
-    // 앱 초기화와 모듈 로딩까지 전부 감싼다.
-    // 예전에는 getAdminApp() 과 import 가 try 밖에 있어서, 여기서 터지면
-    // 라우트가 본문 없이 500 으로 죽고 화면에는
-    // 'Unexpected end of JSON input' 만 보였다.
     try {
-      const app = await getAdminApp()
-      if (!app) return null
-      const { getAuth } = await import('firebase-admin/auth')
-      const decoded = await getAuth(app).verifyIdToken(auth.idToken)
-      const email = (decoded.email ?? '').toLowerCase()
-      if (ADMIN_EMAILS.includes(email)) return email
+      const email = await emailFromIdToken(auth.idToken)
+      if (email && ADMIN_EMAILS.includes(email)) return email
+      if (email) lastAuthError = `${email} 은 관리자 목록에 없습니다.`
       return null
     } catch (e) {
       lastAuthError = e instanceof Error ? e.message : String(e)
@@ -94,6 +87,47 @@ export async function verifyAdmin(auth: AuthPayload): Promise<string | null> {
     }
   }
   return null
+}
+
+/**
+ * 구글 로그인 토큰에서 이메일을 꺼낸다 — Identity Toolkit REST 로 검증한다.
+ *
+ * firebase-admin/auth 를 쓰지 않는 이유:
+ * 이 모듈이 ESM 전용인 jose 를 끌어오는데, 서버 번들에서는 require() 로 불려
+ * ERR_REQUIRE_ESM 으로 통째로 터진다. 그러면 저장 API 가 본문 없는 500 을 뱉고
+ * 화면에서는 원인을 알 수 없다. accounts:lookup 은 같은 검증을 해 주면서
+ * 의존성이 전혀 없다 — 웹 API 키에 묶여 있어 다른 프로젝트 토큰은 통과하지 못한다.
+ */
+async function emailFromIdToken(idToken: string): Promise<string | null> {
+  const key = process.env.NEXT_PUBLIC_FIREBASE_API_KEY
+  if (!key) {
+    lastAuthError = 'NEXT_PUBLIC_FIREBASE_API_KEY 가 없어 구글 로그인을 확인할 수 없습니다.'
+    return null
+  }
+  const res = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${key}`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ idToken }),
+    cache: 'no-store',
+  })
+  const body = (await res.json().catch(() => null)) as {
+    users?: { email?: string; emailVerified?: boolean }[]
+    error?: { message?: string }
+  } | null
+  if (!res.ok) {
+    lastAuthError = body?.error?.message ?? `토큰 확인 실패 (HTTP ${res.status})`
+    return null
+  }
+  const user = body?.users?.[0]
+  if (!user?.email) {
+    lastAuthError = '토큰에서 이메일을 찾지 못했습니다.'
+    return null
+  }
+  if (user.emailVerified !== true) {
+    lastAuthError = '이메일이 확인되지 않은 계정입니다.'
+    return null
+  }
+  return user.email.toLowerCase()
 }
 
 /** 마지막 구글 로그인 검증 실패 사유 — 호출부가 화면에 보여 줄 수 있게 */
