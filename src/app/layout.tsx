@@ -4,6 +4,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import SiteShell from "@/components/layout/SiteShell";
 import { getSiteImages } from "@/lib/siteImages";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
   title: "메이크업포엘 | 강남 메이크업샵",
@@ -38,6 +39,8 @@ export default async function RootLayout({
           <main>{children}</main>
           <Footer />
         </SiteShell>
+        {/* Vercel 웹 통계 — 쿠키를 쓰지 않고 방문 수만 집계한다 */}
+        <Analytics />
       </body>
     </html>
   );
