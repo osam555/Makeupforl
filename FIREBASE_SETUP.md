@@ -75,6 +75,18 @@
 ### 사진으로 이미지 교체
 Storage에 업로드 → 다운로드 URL 복사 → `/admin/wed100` 편집 화면의 이미지 URL 칸에 붙여넣기
 
+## 규칙 배포 — 세 가지 방법
+콘솔에 붙여넣는 것 말고도 CLI 로 한 번에 올릴 수 있다.
+
+```bash
+npm i -g firebase-tools
+firebase login                                    # 프로젝트 권한이 있는 구글 계정
+firebase deploy --only firestore:rules,storage    # 두 규칙을 한 번에
+```
+
+`firebase.json` 과 `.firebaserc` 가 저장소에 있어서 추가 설정은 필요 없다.
+서비스 계정 키가 있다면 `python3 scripts/deploy-rules.py` 도 같은 일을 한다.
+
 ## 관리자 계정 추가/변경
 **네 곳을 함께** 고쳐야 한다. 하나라도 빠지면 화면은 열리는데 저장이 막히는 식으로 어긋난다.
 
