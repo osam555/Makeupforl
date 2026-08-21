@@ -76,16 +76,30 @@ export async function verifyAdmin(auth: AuthPayload): Promise<string | null> {
   if (auth.password && auth.password === expected) return '비밀번호 로그인'
 
   if (auth.idToken) {
-    const app = await getAdminApp()
-    if (!app) return null
-    const { getAuth } = await import('firebase-admin/auth')
+    // 앱 초기화와 모듈 로딩까지 전부 감싼다.
+    // 예전에는 getAdminApp() 과 import 가 try 밖에 있어서, 여기서 터지면
+    // 라우트가 본문 없이 500 으로 죽고 화면에는
+    // 'Unexpected end of JSON input' 만 보였다.
     try {
+      const app = await getAdminApp()
+      if (!app) return null
+      const { getAuth } = await import('firebase-admin/auth')
       const decoded = await getAuth(app).verifyIdToken(auth.idToken)
       const email = (decoded.email ?? '').toLowerCase()
       if (ADMIN_EMAILS.includes(email)) return email
-    } catch {
+      return null
+    } catch (e) {
+      lastAuthError = e instanceof Error ? e.message : String(e)
       return null
     }
   }
   return null
+}
+
+/** 마지막 구글 로그인 검증 실패 사유 — 호출부가 화면에 보여 줄 수 있게 */
+let lastAuthError = ''
+export function takeAuthError(): string {
+  const v = lastAuthError
+  lastAuthError = ''
+  return v
 }

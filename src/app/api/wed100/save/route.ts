@@ -2,7 +2,7 @@ import { revalidatePath } from 'next/cache'
 import { NextResponse } from 'next/server'
 
 import raw from '@/data/wed100.json'
-import { adminConfigured, getAdminDb, verifyAdmin } from '@/lib/firebase/admin'
+import { adminConfigured, getAdminDb, takeAuthError, verifyAdmin } from '@/lib/firebase/admin'
 import { syncCuesWithAnswer } from '@/lib/wed100-text'
 import type { Wed100Data, Wed100Item } from '@/types/wed100'
 
@@ -53,15 +53,34 @@ function toRow(item: Wed100Item, editor: string) {
  */
 export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}))
-  const editor = await verifyAdmin({ password: body?.password, idToken: body?.idToken })
-  if (!editor) {
+
+  // 인증과 DB 준비도 감싼다 — 여기서 터지면 본문 없는 500 이 나가서
+  // 화면에서는 원인을 전혀 알 수 없다
+  let editor: string | null = null
+  let db: Awaited<ReturnType<typeof getAdminDb>> = null
+  try {
+    editor = await verifyAdmin({ password: body?.password, idToken: body?.idToken })
+    if (editor) db = await getAdminDb()
+  } catch (e) {
     return NextResponse.json(
-      { ok: false, error: '인증 실패 — 비밀번호가 틀렸거나 관리자 계정이 아닙니다.' },
+      { ok: false, error: `인증 처리 중 오류 — ${e instanceof Error ? e.message : String(e)}` },
+      { status: 500 },
+    )
+  }
+
+  if (!editor) {
+    const why = takeAuthError()
+    return NextResponse.json(
+      {
+        ok: false,
+        error: why
+          ? `구글 로그인 확인 실패 — ${why}`
+          : '인증 실패 — 비밀번호가 틀렸거나 관리자 계정이 아닙니다.',
+      },
       { status: 401 },
     )
   }
 
-  const db = await getAdminDb()
   if (!db) {
     return NextResponse.json(
       { ok: false, error: adminConfigured ? '서비스 계정 키를 읽을 수 없습니다.' : NOT_CONFIGURED },
