@@ -151,6 +151,21 @@
   --w-p4: #3F6B57;
   --w-p5: #9A7B33;
   --w-p6: #3C5A86;
+  /* 플레이어 — 예전엔 검정 고정이라 크림색 페이지 위에 검은 덩어리처럼 얹혔다.
+     혼주 메이크업 톤(따뜻한 베이지·자주)에 맞추고 라이트/다크를 따라가게 한다. */
+  --wp-bg: #FFFFFF;          /* 플레이어 몸통 */
+  --wp-bg2: #FAF5F1;         /* 아래 이전/다음 바 */
+  --wp-line: #EFE6DE;        /* 구획선 */
+  --wp-ink: #2E2724;         /* 주 글자 */
+  --wp-ink2: #6B5D57;        /* 보조 글자 */
+  --wp-btn-line: #E0D4C9;    /* 버튼 테두리 */
+  --wp-btn-on-bg: #F6E9ED;   /* 선택된 버튼 */
+  --wp-btn-on-line: #D9A9B8;
+  --wp-btn-on-ink: #8A2E48;
+  --wp-accent: #A63D5A;      /* 켜진 토글 */
+  --wp-scrim: 74, 44, 52;    /* 영상 자막 그라데이션 — 따뜻한 자주 */
+  --wp-cue-q: #7FC4E8;       /* 진행자 표시 */
+  --wp-cue-a: #C99A4E;       /* 원장님 표시 */
   --w-p0: #7A6A5F;   /* 프롤로그 */
   --w-p7: #7A6A5F;   /* 에필로그 */
   background: var(--w-bg);
@@ -176,6 +191,19 @@
   --w-rose-d: #A63D5A;
   --w-rose-l: #3D2830;
   --w-rose-t: #E8A9BA;
+  --wp-bg: #231D1A;
+  --wp-bg2: #1B1614;
+  --wp-line: #362E29;
+  --wp-ink: #F0E8E3;
+  --wp-ink2: #BDAEA6;
+  --wp-btn-line: #4A413B;
+  --wp-btn-on-bg: #3D2C31;
+  --wp-btn-on-line: #7A5A64;
+  --wp-btn-on-ink: #F5E7EB;
+  --wp-accent: #E8B98A;
+  --wp-scrim: 28, 20, 22;
+  --wp-cue-q: #8FD6FF;
+  --wp-cue-a: #FFD08A;
   --w-gold: #CBAD79;
   --w-cta-bg: #231D1A;
   --w-p1: #D9768F;

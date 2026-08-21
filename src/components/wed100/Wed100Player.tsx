@@ -377,7 +377,7 @@ export default function Wed100Player(p: PlayerProps) {
   return (
     <div className="grid items-start gap-5 lg:grid-cols-[1.55fr_1fr]">
       {/* 무대 */}
-      <div className="overflow-hidden rounded-2xl bg-[#1E1917] shadow-xl">
+      <div className="overflow-hidden rounded-2xl bg-[var(--wp-bg)] shadow-xl">
         <div className="relative aspect-video bg-black">
           <Image
             src={p.heroImage}
@@ -391,13 +391,20 @@ export default function Wed100Player(p: PlayerProps) {
           <div className="absolute left-4 top-4 flex items-center gap-2 rounded-full bg-black/60 px-3 py-1.5 text-xs text-white backdrop-blur">
             <span
               className="h-1.5 w-1.5 rounded-full"
-              style={{ background: isQuestion ? '#8FD6FF' : '#FFD08A' }}
+              style={{ background: isQuestion ? 'var(--wp-cue-q)' : 'var(--wp-cue-a)' }}
             />
             {isQuestion ? '진행자 질문' : '원장님 답변'}
           </div>
 
           {/* 영상 하단 자막 */}
-          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#14100F]/95 via-[#14100F]/80 to-transparent px-6 pb-6 pt-10 sm:px-8">
+          <div className="absolute inset-x-0 bottom-0 px-6 pb-6 pt-12 sm:px-8"
+            style={{
+              backgroundImage:
+                'linear-gradient(to top,' +
+                ' rgba(var(--wp-scrim),.88) 0%,' +
+                ' rgba(var(--wp-scrim),.62) 45%,' +
+                ' rgba(var(--wp-scrim),0) 100%)',
+            }}>
             <p
               className="font-bold leading-snug text-white drop-shadow-lg"
               style={{ fontSize: `${lang === 'en' ? cfs.cap - 2 : cfs.cap}px` }}
@@ -416,8 +423,8 @@ export default function Wed100Player(p: PlayerProps) {
 
           {/* 재생 완료 → 다음 화 */}
           {ended && p.next && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-[#14100F]/92 px-6 text-center backdrop-blur-sm">
-              <p className="text-[11px] font-extrabold tracking-[0.2em] text-[#FFD08A]">
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-[rgba(var(--wp-scrim),.94)] px-6 text-center backdrop-blur-sm">
+              <p className="text-[11px] font-extrabold tracking-[0.2em] text-[var(--wp-accent)]">
                 다음 질문
               </p>
               <p className="max-w-md text-base font-bold leading-snug text-white sm:text-lg">
@@ -448,7 +455,7 @@ export default function Wed100Player(p: PlayerProps) {
         </div>
 
         {/* 컨트롤 */}
-        <div className="bg-[#17130F] px-4 pb-4 pt-3.5 text-[#EDE3DC]">
+        <div className="bg-[var(--wp-bg2)] px-4 pb-4 pt-3.5 text-[var(--wp-ink)]">
           {/* 진행 바 — 키보드로도 조작할 수 있게 slider 역할을 준다 */}
           <div
             role="slider"
@@ -471,14 +478,14 @@ export default function Wed100Player(p: PlayerProps) {
               seek(((e.clientX - r.left) / r.width) * dur)
             }}
           >
-            <div className="h-1.5 rounded-full bg-[#3A322D]">
+            <div className="h-1.5 rounded-full bg-[var(--wp-btn-on-bg)]">
               <div
                 className="h-full rounded-full bg-gradient-to-r from-[var(--w-rose)] to-[var(--w-gold)]"
                 style={{ width: `${pct}%` }}
               />
             </div>
             <span
-              className="pointer-events-none absolute top-1/2 -ml-1.5 h-3 w-3 -translate-y-1/2 rounded-full bg-white shadow"
+              className="pointer-events-none absolute top-1/2 -ml-2 h-4 w-4 -translate-y-1/2 rounded-full border-2 border-[var(--w-rose)] bg-[var(--wp-bg)] shadow"
               style={{ left: `${pct}%` }}
             />
           </div>
@@ -488,7 +495,7 @@ export default function Wed100Player(p: PlayerProps) {
             <button
               onClick={() => seek(t - 10)}
               aria-label="10초 뒤로"
-              className="relative grid h-11 w-11 shrink-0 place-items-center rounded-full text-[#CDBFB7] hover:bg-white/10"
+              className="relative grid h-11 w-11 shrink-0 place-items-center rounded-full text-[var(--wp-ink2)] hover:bg-[var(--wp-btn-on-bg)]"
             >
               <RotateCcw className="h-5 w-5" />
               <span className="absolute text-[8px] font-bold">10</span>
@@ -507,13 +514,13 @@ export default function Wed100Player(p: PlayerProps) {
             <button
               onClick={() => seek(t + 10)}
               aria-label="10초 앞으로"
-              className="relative grid h-11 w-11 shrink-0 place-items-center rounded-full text-[#CDBFB7] hover:bg-white/10"
+              className="relative grid h-11 w-11 shrink-0 place-items-center rounded-full text-[var(--wp-ink2)] hover:bg-[var(--wp-btn-on-bg)]"
             >
               <RotateCw className="h-5 w-5" />
               <span className="absolute text-[8px] font-bold">10</span>
             </button>
 
-            <span className="ml-1 font-mono text-xs text-[#BDAEA6]">
+            <span className="ml-1 font-mono text-xs text-[var(--wp-ink2)]">
               {fmt(t)} / {fmt(dur)}
             </span>
 
@@ -521,7 +528,7 @@ export default function Wed100Player(p: PlayerProps) {
             <button
               onClick={() => chooseRate(RATES[(RATES.indexOf(rate) + 1) % RATES.length])}
               aria-label={`재생 속도 ${rate}배, 눌러서 변경`}
-              className="ml-auto grid h-11 min-w-[52px] place-items-center rounded-lg border border-[#4A413B] text-[13px] font-bold text-[#EDE3DC] sm:hidden"
+              className="ml-auto grid h-11 min-w-[52px] place-items-center rounded-lg border border-[var(--wp-btn-line)] text-[13px] font-bold text-[var(--wp-ink)] sm:hidden"
             >
               {rate}×
             </button>
@@ -533,8 +540,8 @@ export default function Wed100Player(p: PlayerProps) {
                   aria-pressed={rate === r}
                   className={`rounded-md border px-2.5 py-1.5 text-[12px] font-semibold ${
                     rate === r
-                      ? 'border-[#6B5D55] bg-[#3A322D] text-white'
-                      : 'border-[#4A413B] text-[#CDBFB7] hover:text-white'
+                      ? 'border-[var(--wp-btn-on-line)] bg-[var(--wp-btn-on-bg)] text-[var(--wp-btn-on-ink)]'
+                      : 'border-[var(--wp-btn-line)] text-[var(--wp-ink2)] hover:text-[var(--wp-ink)]'
                   }`}
                 >
                   {r}×
@@ -544,12 +551,12 @@ export default function Wed100Player(p: PlayerProps) {
           </div>
 
           {/* 보조 컨트롤 — 반복 · 연속 재생 · 영상 자막 크기 */}
-          <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-[#2A231F] pt-3">
+          <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-[var(--wp-line)] pt-3">
             <button
               onClick={() => setLoop((v) => !v)}
               aria-pressed={loop}
               className={`flex items-center gap-1.5 py-1.5 text-[12px] font-semibold ${
-                loop ? 'text-[#FFD08A]' : 'text-[#BDAEA6] hover:text-white'
+                loop ? 'text-[var(--wp-accent)]' : 'text-[var(--wp-ink2)] hover:text-[var(--wp-ink)]'
               }`}
             >
               <Repeat className="h-4 w-4" /> 한 편 반복
@@ -558,7 +565,7 @@ export default function Wed100Player(p: PlayerProps) {
               onClick={toggleAutoNext}
               aria-pressed={autoNext}
               className={`flex items-center gap-1.5 py-1.5 text-[12px] font-semibold ${
-                autoNext ? 'text-[#FFD08A]' : 'text-[#BDAEA6] hover:text-white'
+                autoNext ? 'text-[var(--wp-accent)]' : 'text-[var(--wp-ink2)] hover:text-[var(--wp-ink)]'
               }`}
             >
               <ListVideo className="h-4 w-4" /> 연속 재생
@@ -566,7 +573,7 @@ export default function Wed100Player(p: PlayerProps) {
 
             {/* 영상 자막 크기 — 오른쪽 빈 자리에 붙인다 */}
             <span className="ml-auto flex items-center gap-1" role="group" aria-label="영상 자막 크기">
-              <Type className="mr-0.5 h-3.5 w-3.5 text-[#BDAEA6]" aria-hidden />
+              <Type className="mr-0.5 h-3.5 w-3.5 text-[var(--wp-ink2)]" aria-hidden />
               {FONTS.map((f) => (
                 <button
                   key={f.key}
@@ -574,8 +581,8 @@ export default function Wed100Player(p: PlayerProps) {
                   aria-pressed={capFont === f.key}
                   className={`rounded-md border px-2.5 py-1.5 text-[12px] font-semibold transition ${
                     capFont === f.key
-                      ? 'border-[#6B5D55] bg-[#3A322D] text-white'
-                      : 'border-[#4A413B] text-[#CDBFB7] hover:text-white'
+                      ? 'border-[var(--wp-btn-on-line)] bg-[var(--wp-btn-on-bg)] text-[var(--wp-btn-on-ink)]'
+                      : 'border-[var(--wp-btn-line)] text-[var(--wp-ink2)] hover:text-[var(--wp-ink)]'
                   }`}
                 >
                   {f.label}
@@ -585,22 +592,22 @@ export default function Wed100Player(p: PlayerProps) {
           </div>
 
           {!p.audio && (
-            <p className="mt-3 text-[12px] text-[#BDAEA6]">
+            <p className="mt-3 text-[12px] text-[var(--wp-ink2)]">
               음성 준비 중입니다 — 지금은 자막 읽기 모드로 재생됩니다.
             </p>
           )}
         </div>
 
         {/* 이전 / 진도 / 다음 — 스크롤하지 않고 이동할 수 있게 플레이어에 붙인다 */}
-        <div className="flex items-stretch border-t border-[#2A231F] bg-[#14100F] text-[#EDE3DC]">
+        <div className="flex items-stretch border-t border-[var(--wp-line)] bg-[var(--wp-bg2)] text-[var(--wp-ink)]">
           {p.prev ? (
             <Link
               href={p.prev.href}
-              className="flex min-w-0 flex-1 items-center gap-1.5 px-3 py-3 text-left transition hover:bg-white/5"
+              className="flex min-w-0 flex-1 items-center gap-1.5 px-3 py-3 text-left transition hover:bg-[var(--wp-btn-on-bg)]"
             >
-              <ChevronLeft className="h-4 w-4 shrink-0 text-[#BDAEA6]" />
+              <ChevronLeft className="h-4 w-4 shrink-0 text-[var(--wp-ink2)]" />
               <span className="min-w-0">
-                <span className="block text-[10px] font-bold text-[#BDAEA6]">이전</span>
+                <span className="block text-[10px] font-bold text-[var(--wp-ink2)]">이전</span>
                 <span className="line-clamp-1 text-[12px] font-semibold">{p.prev.question}</span>
               </span>
             </Link>
@@ -608,11 +615,11 @@ export default function Wed100Player(p: PlayerProps) {
             <span className="flex-1" />
           )}
 
-          <span className="grid shrink-0 place-items-center border-x border-[#2A231F] px-3 py-2 text-center">
+          <span className="grid shrink-0 place-items-center border-x border-[var(--wp-line)] px-3 py-2 text-center">
             <span className="text-[9px] font-extrabold tracking-[0.12em] text-[var(--w-gold)]">
               {p.part === 0 || p.part === 7 ? p.partTitle : `PART ${p.part}`}
             </span>
-            <span className="font-mono text-[12px] font-bold text-white">
+            <span className="font-mono text-[12px] font-bold text-[var(--wp-ink)]">
               {p.partIndex}/{p.partTotal}
             </span>
           </span>
@@ -620,13 +627,13 @@ export default function Wed100Player(p: PlayerProps) {
           {p.next ? (
             <Link
               href={p.next.href}
-              className="flex min-w-0 flex-1 items-center justify-end gap-1.5 px-3 py-3 text-right transition hover:bg-white/5"
+              className="flex min-w-0 flex-1 items-center justify-end gap-1.5 px-3 py-3 text-right transition hover:bg-[var(--wp-btn-on-bg)]"
             >
               <span className="min-w-0">
-                <span className="block text-[10px] font-bold text-[#BDAEA6]">다음</span>
+                <span className="block text-[10px] font-bold text-[var(--wp-ink2)]">다음</span>
                 <span className="line-clamp-1 text-[12px] font-semibold">{p.next.question}</span>
               </span>
-              <ChevronRight className="h-4 w-4 shrink-0 text-[#BDAEA6]" />
+              <ChevronRight className="h-4 w-4 shrink-0 text-[var(--wp-ink2)]" />
             </Link>
           ) : (
             <span className="flex-1" />
