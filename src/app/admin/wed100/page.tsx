@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input'
 import { splitSentences } from '@/lib/wed100-text'
 import { photosByCat, type Wed100Photo } from '@/lib/wed100-photos'
 import Wed100PhotoUpload from '@/components/admin/Wed100PhotoUpload'
+import Wed100McLevel from '@/components/admin/Wed100McLevel'
 import type { Wed100Data, Wed100Item } from '@/types/wed100'
 import { PART_THEME } from '@/types/wed100'
 
@@ -132,6 +133,7 @@ function AdminWed100Editor({
   )
 
   /** 어드민에서 올린 사진 — 저장소 카탈로그와 합쳐서 고르게 한다 */
+  const [toolsOpen, setToolsOpen] = useState(false)
   const [uploadedPhotos, setUploadedPhotos] = useState<Wed100Photo[]>([])
   const loadPhotos = useCallback(async () => {
     const db = getDb()
@@ -461,6 +463,14 @@ function AdminWed100Editor({
               size="sm"
               variant="secondary"
               className="h-8 text-xs"
+              onClick={() => setToolsOpen((v) => !v)}
+            >
+              <Volume2 className="mr-1 h-3.5 w-3.5" /> 음성 도구
+            </Button>
+            <Button
+              size="sm"
+              variant="secondary"
+              className="h-8 text-xs"
               onClick={() => seedDb(false)}
             >
               <Database className="mr-1 h-3.5 w-3.5" /> DB에 시드 넣기
@@ -471,6 +481,17 @@ function AdminWed100Editor({
             </Link>
           </div>
         </div>
+
+        {toolsOpen && (
+          <div className="border-x border-[#E0D6CC] bg-white px-5 py-4">
+            <Wed100McLevel
+              items={items}
+              googleEmail={email}
+              password={password}
+              onDone={() => void load()}
+            />
+          </div>
+        )}
 
         {trashOpen && (
           <div

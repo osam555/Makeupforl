@@ -95,6 +95,24 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: true, upserted, skipped: skip.size, editor })
     }
 
+    // 음성 주소만 갈아끼우기 — 어드민에서 음성 파일을 손보고 다시 올렸을 때 쓴다.
+    // 본문은 건드리지 않으므로 baseUpdatedAt 충돌 검사도 하지 않는다.
+    if (body?.action === 'audioUrl') {
+      const slug = typeof body?.slug === 'string' ? body.slug : ''
+      const audio = typeof body?.audio === 'string' ? body.audio : ''
+      if (!slug || !audio.startsWith('https://firebasestorage.googleapis.com/')) {
+        return NextResponse.json({ ok: false, error: '잘못된 요청입니다.' }, { status: 400 })
+      }
+      const ref = db.collection('wed100_questions').doc(slug)
+      if (!(await ref.get()).exists) {
+        return NextResponse.json({ ok: false, error: '없는 문항입니다.' }, { status: 404 })
+      }
+      await ref.update({ audio, updatedAt: new Date().toISOString(), updatedBy: editor })
+      revalidatePath('/wed100')
+      revalidatePath(`/wed100/${slug}`)
+      return NextResponse.json({ ok: true, slug, audio, editor })
+    }
+
     // 삭제 보관함 조회
     if (body?.action === 'trash') {
       const snap = await db.collection('wed100_deleted').get()

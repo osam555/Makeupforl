@@ -24,6 +24,7 @@ TYPECAST_API_KEY 가 없으면 진행자도 edge-tts SunHi 로 자동 폴백합�
 """
 import asyncio
 import json
+import math
 import os
 import subprocess
 import sys
@@ -80,6 +81,54 @@ async def synth(text: str, voice: str, rate: str, pitch: str, path: str):
     await c.save(path)
 
 
+# 원장님(edge-tts SunHi) 답변 구간의 유성 RMS — 23개 문항 실측 평균
+HOST_TARGET_DBFS = -16.74
+PEAK_LIMIT_DBFS = -1.5
+MAX_GAIN_DB = 18.0
+
+
+def host_gain_db(wav_path: str) -> float:
+    """이 파일을 원장님 음성 음량에 맞추려면 몇 dB 올려야 하는지 돌려준다.
+
+    잣대는 LUFS 대신 유성 구간 RMS 다 — 23개 문항에서 두 방식을 대조했을 때
+    차이가 평균 0.22dB, 최대 0.86dB 로 사실상 같았고, 이쪽이 훨씬 단순하다.
+    말 사이의 무음이 값을 끌어내리지 않도록 조용한 프레임은 빼고 잰다.
+    """
+    import array
+    import wave
+
+    with wave.open(wav_path, "rb") as w:
+        if w.getsampwidth() != 2:
+            return 0.0
+        sr, ch = w.getframerate(), w.getnchannels()
+        pcm = array.array("h", w.readframes(w.getnframes()))
+    if ch > 1:
+        pcm = array.array("h", [sum(pcm[i:i + ch]) // ch for i in range(0, len(pcm) - ch + 1, ch)])
+    if not pcm:
+        return 0.0
+
+    frame = max(1, int(sr * 0.05))
+    n = len(pcm) // frame
+    if n < 2:
+        return 0.0
+    rms = []
+    for i in range(n):
+        block = pcm[i * frame:(i + 1) * frame]
+        rms.append(math.sqrt(sum(v * v for v in block) / frame) / 32768.0)
+    floor = max(rms) * 0.15
+    voiced = [r for r in rms if r > floor]
+    if not voiced:
+        return 0.0
+
+    cur = 20 * math.log10(sum(voiced) / len(voiced) + 1e-12)
+    gain = min(HOST_TARGET_DBFS - cur, MAX_GAIN_DB)
+    peak = max(abs(v) for v in pcm) / 32768.0
+    if peak > 0:
+        headroom = PEAK_LIMIT_DBFS - 20 * math.log10(peak)
+        gain = min(gain, headroom)
+    return gain
+
+
 def synth_typecast(text: str, path: str):
     """Typecast 로 진행자(MC) 음성 합성 후 edge-tts 와 같은 규격으로 맞춘다.
 
@@ -103,8 +152,12 @@ def synth_typecast(text: str, path: str):
 
     src = path + ".src.wav"
     open(src, "wb").write(raw)
+    # Typecast 원본은 답변 구간보다 평균 9dB 조용하고 문장마다 들쭉날쭉하다.
+    # 유성 구간 RMS 를 재서 원장님 음성과 같은 음량으로 올린다.
+    gain = host_gain_db(src)
+    filt = ["-af", f"volume={gain:.2f}dB"] if abs(gain) > 0.1 else []
     subprocess.run(
-        ["ffmpeg", "-y", "-i", src, "-ar", str(SAMPLE_RATE), "-ac", "1",
+        ["ffmpeg", "-y", "-i", src, *filt, "-ar", str(SAMPLE_RATE), "-ac", "1",
          "-b:a", BITRATE, path],
         capture_output=True, check=True)
     os.remove(src)

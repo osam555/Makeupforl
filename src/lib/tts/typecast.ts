@@ -1,5 +1,7 @@
 import lamejs from '@breezystack/lamejs'
 
+import { normalizeInt16 } from './level'
+
 /**
  * 진행자(MC) 음성 — Typecast.
  *
@@ -9,6 +11,8 @@ import lamejs from '@breezystack/lamejs'
  * Typecast 는 44.1kHz WAV 로 주는데, 답변 구간(edge-tts)은 24kHz/48kbps mp3 라
  * 그대로 이어붙이면 재생 길이와 자막 타임코드가 어긋난다. 여기서 24kHz/48kbps
  * 모노 mp3 로 다시 인코딩해 규격을 맞춘다 (1초 = 6000바이트, CBR).
+ *
+ * 음량도 여기서 맞춘다 — Typecast 원본은 답변 구간보다 평균 9dB 조용하다.
  *
  * 환경변수
  *   TYPECAST_API_KEY   필수. 없으면 null 을 돌려주고 호출부가 edge-tts 로 폴백한다
@@ -126,5 +130,7 @@ export async function synthHost(text: string): Promise<Buffer | null> {
 
   const wav = Buffer.from(await res.arrayBuffer())
   const { rate, channels, pcm } = parseWav(wav)
-  return encodeMp3(resample(toMono(pcm, channels), rate, TARGET_RATE))
+  const mono = resample(toMono(pcm, channels), rate, TARGET_RATE)
+  // Typecast 는 edge-tts 보다 9dB 쯤 조용하다. 답변 구간과 음량을 맞춘다.
+  return encodeMp3(normalizeInt16(mono, TARGET_RATE))
 }
