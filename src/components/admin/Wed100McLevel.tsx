@@ -63,18 +63,31 @@ export default function Wed100McLevel({
         }
 
         const url = await uploadAudio(item.slug, fixed.blob)
-        const save = await fetch('/api/wed100/save', {
-          method: 'POST',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({
-            ...(await auth()),
-            action: 'audioUrl',
-            slug: item.slug,
-            audio: url,
-          }),
-        })
-        const j = await save.json()
-        if (!j.ok) throw new Error(j.error ?? '주소를 저장하지 못했습니다')
+
+        // 같은 경로에 덮어써도 Storage 가 내려받기 토큰을 그대로 유지해서
+        // 주소가 바뀌지 않는다. 그럴 땐 DB 에 쓸 것도 없다.
+        if (url !== item.audio) {
+          const save = await fetch('/api/wed100/save', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({
+              ...(await auth()),
+              action: 'audioUrl',
+              slug: item.slug,
+              audio: url,
+            }),
+          })
+          // 서버가 본문 없이 죽는 경우가 있어 text 로 먼저 받는다 —
+          // 그래야 'Unexpected end of JSON input' 대신 실제 상태를 볼 수 있다
+          const text = await save.text()
+          let j: { ok?: boolean; error?: string } = {}
+          try {
+            j = text ? JSON.parse(text) : {}
+          } catch {
+            throw new Error(`주소 저장 응답이 이상합니다 (HTTP ${save.status}) ${text.slice(0, 80)}`)
+          }
+          if (!j.ok) throw new Error(j.error ?? `주소를 저장하지 못했습니다 (HTTP ${save.status})`)
+        }
 
         setRows((v) => [
           ...v,
