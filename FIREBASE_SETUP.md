@@ -21,7 +21,7 @@
 | `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` | storageBucket |
 | `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | messagingSenderId |
 | `NEXT_PUBLIC_FIREBASE_APP_ID` | appId |
-| `NEXT_PUBLIC_ADMIN_EMAILS` | `makeupforl77@gmail.com` (관리자 계정, 쉼표로 여러 명 가능) |
+| `NEXT_PUBLIC_ADMIN_EMAILS` | `makeupforl77@gmail.com,john.wu571@gmail.com` (쉼표로 여러 명) |
 | `WED100_ADMIN_PASSWORD` | 관리자 비밀번호 (미설정 시 `8888`) |
 | `FIREBASE_SERVICE_ACCOUNT` | 서비스 계정 키 JSON (7단계 참고) |
 
@@ -31,7 +31,7 @@
 1. 빌드 → **Authentication** → 시작하기
 2. Sign-in method 탭 → **Google** 사용 설정 → 프로젝트 지원 이메일 선택 → 저장
 3. Settings → 승인된 도메인에 `makeupforl.vercel.app` 추가 (없으면)
-4. 관리자 계정: **makeupforl77@gmail.com** — 이 계정으로만 `/admin`, `/admin/wed100`, `/admin/dashboard` 접근 및 저장이 가능합니다
+4. 관리자 계정: **makeupforl77@gmail.com**, **john.wu571@gmail.com** — 이 계정으로만 `/admin`, `/admin/wed100`, `/admin/dashboard` 접근 및 저장이 가능합니다
 
 ## 4단계: Firestore 데이터베이스 생성
 1. 빌드 → **Firestore Database** → 데이터베이스 만들기
@@ -40,7 +40,7 @@
    - 또는 CLI 로 한 번에: `python3 scripts/deploy-rules.py` (아래 참고)
 
 ## 5단계: 100문100답 데이터 넣기
-1. 배포된 사이트에서 `/admin/wed100` 접속 → **makeupforl77@gmail.com 구글 계정으로 로그인**
+1. 배포된 사이트에서 `/admin/wed100` 접속 → **관리자 구글 계정으로 로그인**
 2. 상단 **[DB에 시드 넣기]** 클릭 → 105문이 Firestore에 입력됨
 3. 이후 어드민에서 수정하면 Firestore에 저장되고, 사이트에 최대 1시간 내 반영
 
@@ -76,10 +76,15 @@
 Storage에 업로드 → 다운로드 URL 복사 → `/admin/wed100` 편집 화면의 이미지 URL 칸에 붙여넣기
 
 ## 관리자 계정 추가/변경
-1. `firebase/firestore.rules` 의 `isAdmin()` 안 이메일 목록 수정 → 콘솔 규칙 탭에 다시 붙여넣기
-2. Vercel 환경변수 `NEXT_PUBLIC_ADMIN_EMAILS` 에 같은 이메일을 쉼표로 추가 → 재배포
+**네 곳을 함께** 고쳐야 한다. 하나라도 빠지면 화면은 열리는데 저장이 막히는 식으로 어긋난다.
 
-두 곳을 함께 고쳐야 화면 접근(1)과 DB 쓰기 권한(2)이 모두 열립니다.
+1. `firebase/firestore.rules` 의 `isAdmin()` 이메일 목록 → 콘솔 **Firestore > 규칙** 에 다시 붙여넣기
+2. `firebase/storage.rules` 의 `isAdmin()` 이메일 목록 → 콘솔 **Storage > Rules** 에 다시 붙여넣기
+3. `src/lib/firebase/auth.ts` 와 `src/lib/firebase/admin.ts` 의 기본값 (환경변수가 없을 때 쓰인다)
+4. Vercel 환경변수 `NEXT_PUBLIC_ADMIN_EMAILS` — **설정되어 있으면 3번 기본값을 덮어쓴다.**
+   등록돼 있다면 여기에도 쉼표로 추가하고 재배포할 것
+
+1·2 는 DB/파일 쓰기 권한, 3·4 는 어드민 화면 접근과 서버 저장 API 인증이다.
 
 ## 7단계: 서비스 계정 키 (비밀번호 로그인으로도 저장하려면 필수)
 

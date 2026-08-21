@@ -2,7 +2,7 @@ import { getFirebaseApp } from './client'
 
 /** 어드민 허용 계정 (쉼표로 여러 명 지정 가능) */
 export const ADMIN_EMAILS = (
-  process.env.NEXT_PUBLIC_ADMIN_EMAILS ?? 'makeupforl77@gmail.com'
+  process.env.NEXT_PUBLIC_ADMIN_EMAILS ?? 'makeupforl77@gmail.com,john.wu571@gmail.com'
 )
   .split(',')
   .map((s) => s.trim().toLowerCase())

@@ -8,7 +8,7 @@ service firebase.storage {
     function isAdmin() {
       return request.auth != null
         && request.auth.token.email_verified == true
-        && request.auth.token.email in ['makeupforl77@gmail.com'];
+        && request.auth.token.email in ['makeupforl77@gmail.com', 'john.wu571@gmail.com'];
     }
 
     // 100문100답 오디오: 공개 재생, 업로드는 관리자만 (20MB 이하 mp3)

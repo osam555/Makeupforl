@@ -11,7 +11,7 @@ service cloud.firestore {
     function isAdmin() {
       return request.auth != null
         && request.auth.token.email_verified == true
-        && request.auth.token.email in ['makeupforl77@gmail.com'];
+        && request.auth.token.email in ['makeupforl77@gmail.com', 'john.wu571@gmail.com'];
     }
 
     // 100문100답 콘텐츠: 공개 읽기, 수정은 관리자만

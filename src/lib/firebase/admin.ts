@@ -55,7 +55,7 @@ export async function getAdminDb(): Promise<Firestore | null> {
   return getFirestore(app)
 }
 
-const ADMIN_EMAILS = (process.env.NEXT_PUBLIC_ADMIN_EMAILS ?? 'makeupforl77@gmail.com')
+const ADMIN_EMAILS = (process.env.NEXT_PUBLIC_ADMIN_EMAILS ?? 'makeupforl77@gmail.com,john.wu571@gmail.com')
   .split(',')
   .map((s) => s.trim().toLowerCase())
   .filter(Boolean)

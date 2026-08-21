@@ -23,12 +23,13 @@ interface Row {
 export default function Wed100McLevel({
   items,
   googleEmail,
-  password,
+  auth,
   onDone,
 }: {
   items: Wed100Item[]
   googleEmail: string | null
-  password: string | null
+  /** 저장 API 인증 정보 — 구글 로그인이면 ID 토큰, 아니면 비밀번호 */
+  auth: () => Promise<{ idToken: string } | { password: string | null }>
   onDone: () => void
 }) {
   const [busy, setBusy] = useState(false)
@@ -65,7 +66,12 @@ export default function Wed100McLevel({
         const save = await fetch('/api/wed100/save', {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ password, action: 'audioUrl', slug: item.slug, audio: url }),
+          body: JSON.stringify({
+            ...(await auth()),
+            action: 'audioUrl',
+            slug: item.slug,
+            audio: url,
+          }),
         })
         const j = await save.json()
         if (!j.ok) throw new Error(j.error ?? '주소를 저장하지 못했습니다')
@@ -88,7 +94,7 @@ export default function Wed100McLevel({
     void ctx.close()
     setBusy(false)
     onDone()
-  }, [targets, googleEmail, password, onDone])
+  }, [targets, googleEmail, auth, onDone])
 
   const done = rows.filter((r) => r.state === 'done').length
   const skip = rows.filter((r) => r.state === 'skip').length

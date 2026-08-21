@@ -487,7 +487,7 @@ function AdminWed100Editor({
             <Wed100McLevel
               items={items}
               googleEmail={email}
-              password={password}
+              auth={authPayload}
               onDone={() => void load()}
             />
           </div>
