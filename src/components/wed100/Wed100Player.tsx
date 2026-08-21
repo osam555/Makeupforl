@@ -46,6 +46,7 @@ const LS_AUTOPLAY = 'wed100:autoplay'
 const LS_FONT = 'wed100:font'
 const LS_LANG = 'wed100:lang'
 const LS_RATE = 'wed100:rate'
+const LS_CAPFONT = 'wed100:capfont'
 const SS_PLAY_ON_LOAD = 'wed100:playOnLoad'
 
 function saveResume(slug: string, t: number, duration: number) {
@@ -76,11 +77,15 @@ const LANGS: { key: SubtitleLang; label: string }[] = [
   { key: 'en', label: 'English' },
   { key: 'both', label: '한+영' },
 ]
-/** 자막 본문 글자 크기 — 주 사용자가 50~60대라 기본을 키웠다 */
+/**
+ * 자막 글자 크기 — 주 사용자가 50~60대라 기본을 키웠다.
+ * px 는 오른쪽 전문(스크립트), cap 은 영상 하단 자막.
+ * 영상 자막은 어두운 배경 위에 한 줄로 떠서 전문보다 조금 크게 잡는다.
+ */
 const FONTS = [
-  { key: 'sm', label: '작게', px: 15, lh: 1.75 },
-  { key: 'md', label: '보통', px: 17, lh: 1.8 },
-  { key: 'lg', label: '크게', px: 20, lh: 1.85 },
+  { key: 'sm', label: '작게', px: 15, lh: 1.75, cap: 17, capEn: 12 },
+  { key: 'md', label: '보통', px: 17, lh: 1.8, cap: 20, capEn: 14 },
+  { key: 'lg', label: '크게', px: 20, lh: 1.85, cap: 25, capEn: 17 },
 ] as const
 type FontKey = (typeof FONTS)[number]['key']
 
@@ -133,6 +138,8 @@ export default function Wed100Player(p: PlayerProps) {
   const [loop, setLoop] = useState(false)
   const [autoNext, setAutoNext] = useState(true)
   const [font, setFont] = useState<FontKey>('md')
+  // 영상 자막 크기는 전문과 따로 기억한다 — 보는 거리도 쓰임새도 다르다
+  const [capFont, setCapFont] = useState<FontKey>('md')
   const [dur, setDur] = useState(p.duration)
   const [ended, setEnded] = useState(false)
   const [countdown, setCountdown] = useState(NEXT_DELAY)
@@ -140,6 +147,7 @@ export default function Wed100Player(p: PlayerProps) {
   const doneRef = useRef(false)
 
   const fs = FONTS.find((f) => f.key === font) ?? FONTS[1]
+  const cfs = FONTS.find((f) => f.key === capFont) ?? FONTS[1]
 
   /* ── 초기 설정 읽기 ── */
   useEffect(() => {
@@ -152,6 +160,8 @@ export default function Wed100Player(p: PlayerProps) {
       if (g === 'ko' || g === 'en' || g === 'both') setLang(g)
       const r = Number(window.localStorage.getItem(LS_RATE))
       if (RATES.includes(r)) setRate(r)
+      const c = window.localStorage.getItem(LS_CAPFONT)
+      if (c === 'sm' || c === 'md' || c === 'lg') setCapFont(c)
     } catch {
       /* noop */
     }
@@ -315,6 +325,15 @@ export default function Wed100Player(p: PlayerProps) {
     }
   }
 
+  const chooseCapFont = (k: FontKey) => {
+    setCapFont(k)
+    try {
+      window.localStorage.setItem(LS_CAPFONT, k)
+    } catch {
+      /* noop */
+    }
+  }
+
   const chooseFont = (k: FontKey) => {
     setFont(k)
     try {
@@ -380,14 +399,16 @@ export default function Wed100Player(p: PlayerProps) {
           {/* 영상 하단 자막 */}
           <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#14100F]/95 via-[#14100F]/80 to-transparent px-6 pb-6 pt-10 sm:px-8">
             <p
-              className={`font-bold leading-snug text-white drop-shadow-lg ${
-                lang === 'en' ? 'text-base sm:text-lg' : 'text-lg sm:text-xl'
-              }`}
+              className="font-bold leading-snug text-white drop-shadow-lg"
+              style={{ fontSize: `${lang === 'en' ? cfs.cap - 2 : cfs.cap}px` }}
             >
               {lang === 'en' ? en : ko}
             </p>
             {lang === 'both' && en && (
-              <p className="mt-1.5 text-xs leading-snug text-[#FFE9C9] drop-shadow-lg sm:text-sm">
+              <p
+                className="mt-1.5 leading-snug text-[#FFE9C9] drop-shadow-lg"
+                style={{ fontSize: `${cfs.capEn}px` }}
+              >
                 {en}
               </p>
             )}
@@ -522,7 +543,7 @@ export default function Wed100Player(p: PlayerProps) {
             </span>
           </div>
 
-          {/* 보조 컨트롤 — 자막 언어 · 반복 · 연속 재생 */}
+          {/* 보조 컨트롤 — 반복 · 연속 재생 · 영상 자막 크기 */}
           <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-[#2A231F] pt-3">
             <button
               onClick={() => setLoop((v) => !v)}
@@ -542,6 +563,25 @@ export default function Wed100Player(p: PlayerProps) {
             >
               <ListVideo className="h-4 w-4" /> 연속 재생
             </button>
+
+            {/* 영상 자막 크기 — 오른쪽 빈 자리에 붙인다 */}
+            <span className="ml-auto flex items-center gap-1" role="group" aria-label="영상 자막 크기">
+              <Type className="mr-0.5 h-3.5 w-3.5 text-[#BDAEA6]" aria-hidden />
+              {FONTS.map((f) => (
+                <button
+                  key={f.key}
+                  onClick={() => chooseCapFont(f.key)}
+                  aria-pressed={capFont === f.key}
+                  className={`rounded-md border px-2.5 py-1.5 text-[12px] font-semibold transition ${
+                    capFont === f.key
+                      ? 'border-[#6B5D55] bg-[#3A322D] text-white'
+                      : 'border-[#4A413B] text-[#CDBFB7] hover:text-white'
+                  }`}
+                >
+                  {f.label}
+                </button>
+              ))}
+            </span>
           </div>
 
           {!p.audio && (
