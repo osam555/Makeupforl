@@ -20,6 +20,12 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // 100문100답 사진 카탈로그: 공개 읽기, 올리기·수정은 관리자만
+    match /wed100_photos/{name} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
     // 삭제 보관함: 관리자만 (복구용)
     match /wed100_deleted/{id} {
       allow read, write: if isAdmin();

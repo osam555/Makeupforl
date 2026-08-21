@@ -11,7 +11,8 @@ import AdminGate from '@/components/admin/AdminGate'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { splitSentences } from '@/lib/wed100-text'
-import { photosByCat } from '@/lib/wed100-photos'
+import { photosByCat, type Wed100Photo } from '@/lib/wed100-photos'
+import Wed100PhotoUpload from '@/components/admin/Wed100PhotoUpload'
 import type { Wed100Data, Wed100Item } from '@/types/wed100'
 import { PART_THEME } from '@/types/wed100'
 
@@ -130,7 +131,38 @@ function AdminWed100Editor({
     [items, part, kw],
   )
 
-  const photoGroups = useMemo(() => photosByCat(), [])
+  /** 어드민에서 올린 사진 — 저장소 카탈로그와 합쳐서 고르게 한다 */
+  const [uploadedPhotos, setUploadedPhotos] = useState<Wed100Photo[]>([])
+  const loadPhotos = useCallback(async () => {
+    const db = getDb()
+    if (!db) return
+    try {
+      const { collection, getDocs } = await import('firebase/firestore')
+      const snap = await getDocs(collection(db, 'wed100_photos'))
+      setUploadedPhotos(snap.docs.map((d) => d.data() as Wed100Photo))
+    } catch {
+      /* 사진을 못 읽어도 저장소 카탈로그로는 계속 쓸 수 있다 */
+    }
+  }, [])
+  useEffect(() => {
+    void loadPhotos()
+  }, [loadPhotos])
+
+  const photoGroups = useMemo(() => photosByCat(uploadedPhotos), [uploadedPhotos])
+  const uploadedNames = useMemo(
+    () => new Set(uploadedPhotos.map((p) => p.name)),
+    [uploadedPhotos],
+  )
+
+  /** 어드민에서 올린 사진 지우기 — 저장소 카탈로그 사진은 코드에 있어서 못 지운다 */
+  const removeUploaded = async (name: string) => {
+    if (!window.confirm(`${name} 사진을 목록에서 지울까요?`)) return
+    const db = getDb()
+    if (!db) return
+    const { doc, deleteDoc } = await import('firebase/firestore')
+    await deleteDoc(doc(db, 'wed100_photos', name))
+    await loadPhotos()
+  }
 
   const patch = (fn: (d: Wed100Item) => void) => {
     setDraft((d) => {
@@ -766,6 +798,14 @@ function AdminWed100Editor({
                   </p>
                 </div>
 
+                <div className="mt-3">
+                  <Wed100PhotoUpload
+                    uploaded={uploadedPhotos}
+                    googleEmail={email}
+                    onChange={() => void loadPhotos()}
+                  />
+                </div>
+
                 {/* 사진 고르기 */}
                 <div className="mt-3 space-y-2.5">
                   {photoGroups.map((g) => (
@@ -776,24 +816,36 @@ function AdminWed100Editor({
                       <div className="mt-1.5 flex flex-wrap gap-1.5">
                         {g.photos.map((ph) => {
                           const on = draft.photo === ph.name
+                          const mine = uploadedNames.has(ph.name)
                           return (
-                            <button
-                              key={ph.name}
-                              title={`${ph.name}${ph.note ? ` — ${ph.note}` : ''}`}
-                              onClick={() =>
-                                patch((d) => {
-                                  d.photo = ph.name
-                                  d.photoAuto = false
-                                  d.heroImage = ph.hero
-                                  d.thumbImage = ph.thumb
-                                })
-                              }
-                              className={`relative h-14 w-14 overflow-hidden rounded-lg border-2 transition ${
-                                on ? 'border-[#A63D5A]' : 'border-transparent hover:border-[#DFD2C7]'
-                              }`}
-                            >
-                              <Image src={ph.thumb} alt={ph.name} fill sizes="56px" className="object-cover" />
-                            </button>
+                            <span key={ph.name} className="group relative">
+                              <button
+                                title={`${ph.name}${ph.note ? ` — ${ph.note}` : ''}`}
+                                onClick={() =>
+                                  patch((d) => {
+                                    d.photo = ph.name
+                                    d.photoAuto = false
+                                    d.heroImage = ph.hero
+                                    d.thumbImage = ph.thumb
+                                  })
+                                }
+                                className={`relative block h-14 w-14 overflow-hidden rounded-lg border-2 transition ${
+                                  on ? 'border-[#A63D5A]' : 'border-transparent hover:border-[#DFD2C7]'
+                                }`}
+                              >
+                                <Image src={ph.thumb} alt={ph.name} fill sizes="56px" className="object-cover" unoptimized={mine} />
+                              </button>
+                              {mine && (
+                                <button
+                                  onClick={() => void removeUploaded(ph.name)}
+                                  title={`${ph.name} 지우기`}
+                                  aria-label={`${ph.name} 지우기`}
+                                  className="absolute -right-1 -top-1 hidden h-5 w-5 place-items-center rounded-full bg-[#C0392B] text-white shadow group-hover:grid"
+                                >
+                                  <XCircle className="h-3.5 w-3.5" />
+                                </button>
+                              )}
+                            </span>
                           )
                         })}
                       </div>

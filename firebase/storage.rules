@@ -19,6 +19,14 @@ service firebase.storage {
                    && request.resource.contentType == 'audio/mpeg';
     }
 
+    // 100문100답 사진 — 어드민에서 올린 히어로/썸네일 (WebP, 10MB 이하)
+    match /wed100/photo/{kind}/{file} {
+      allow read: if true;
+      allow write: if isAdmin()
+                   && request.resource.size < 10 * 1024 * 1024
+                   && request.resource.contentType.matches('image/.*');
+    }
+
     // 100문100답 대표 이미지(사진 교체용)
     match /wed100/img/{file} {
       allow read: if true;
