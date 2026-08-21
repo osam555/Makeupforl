@@ -603,23 +603,25 @@ export default function Wed100Player(p: PlayerProps) {
           {p.prev ? (
             <Link
               href={p.prev.href}
-              className="flex min-w-0 flex-1 items-center gap-1.5 px-3 py-3 text-left transition hover:bg-[var(--wp-btn-on-bg)]"
+              className="flex min-w-0 flex-1 items-center gap-2 px-2.5 py-3.5 text-left sm:px-3.5 transition hover:bg-[var(--wp-btn-on-bg)]"
             >
               <ChevronLeft className="h-4 w-4 shrink-0 text-[var(--wp-ink2)]" />
               <span className="min-w-0">
-                <span className="block text-[10px] font-bold text-[var(--wp-ink2)]">이전</span>
-                <span className="line-clamp-1 text-[12px] font-semibold">{p.prev.question}</span>
+                <span className="block text-[11px] font-bold text-[var(--wp-ink2)]">이전</span>
+                <span className="line-clamp-3 text-[14px] font-bold leading-snug sm:line-clamp-2 sm:text-[15px]">
+                  {p.prev.question}
+                </span>
               </span>
             </Link>
           ) : (
             <span className="flex-1" />
           )}
 
-          <span className="grid shrink-0 place-items-center border-x border-[var(--wp-line)] px-3 py-2 text-center">
-            <span className="text-[9px] font-extrabold tracking-[0.12em] text-[var(--w-gold)]">
+          <span className="grid shrink-0 place-items-center border-x border-[var(--wp-line)] px-2 py-2 text-center sm:px-3">
+            <span className="text-[10px] font-extrabold tracking-[0.12em] text-[var(--w-gold)]">
               {p.part === 0 || p.part === 7 ? p.partTitle : `PART ${p.part}`}
             </span>
-            <span className="font-mono text-[12px] font-bold text-[var(--wp-ink)]">
+            <span className="font-mono text-[13px] font-bold text-[var(--wp-ink)]">
               {p.partIndex}/{p.partTotal}
             </span>
           </span>
@@ -627,11 +629,13 @@ export default function Wed100Player(p: PlayerProps) {
           {p.next ? (
             <Link
               href={p.next.href}
-              className="flex min-w-0 flex-1 items-center justify-end gap-1.5 px-3 py-3 text-right transition hover:bg-[var(--wp-btn-on-bg)]"
+              className="flex min-w-0 flex-1 items-center justify-end gap-2 px-2.5 py-3.5 text-right sm:px-3.5 transition hover:bg-[var(--wp-btn-on-bg)]"
             >
               <span className="min-w-0">
-                <span className="block text-[10px] font-bold text-[var(--wp-ink2)]">다음</span>
-                <span className="line-clamp-1 text-[12px] font-semibold">{p.next.question}</span>
+                <span className="block text-[11px] font-bold text-[var(--wp-ink2)]">다음</span>
+                <span className="line-clamp-3 text-[14px] font-bold leading-snug sm:line-clamp-2 sm:text-[15px]">
+                  {p.next.question}
+                </span>
               </span>
               <ChevronRight className="h-4 w-4 shrink-0 text-[var(--wp-ink2)]" />
             </Link>
