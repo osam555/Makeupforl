@@ -34,9 +34,26 @@ export async function GET(req: Request) {
     return NextResponse.json({ ok: false, error: '중계할 수 없는 주소입니다.' }, { status: 400 })
   }
 
-  const res = await fetch(audio, { cache: 'no-store' })
-  if (!res.ok) {
-    return NextResponse.json({ ok: false, error: `원본을 받지 못했습니다 (${res.status})` }, { status: 502 })
+  // Storage 가 가끔 한 번씩 실패해서 몇 번 다시 시도한다
+  let res: Response | null = null
+  for (let i = 0; i < 3; i++) {
+    if (i) await new Promise((r) => setTimeout(r, 500 * i))
+    try {
+      const r = await fetch(audio, { cache: 'no-store' })
+      if (r.ok) {
+        res = r
+        break
+      }
+      res = r
+    } catch {
+      res = null
+    }
+  }
+  if (!res?.ok) {
+    return NextResponse.json(
+      { ok: false, error: `원본을 받지 못했습니다 (${res?.status ?? '연결 실패'})` },
+      { status: 502 },
+    )
   }
   return new NextResponse(res.body, {
     headers: { 'content-type': 'audio/mpeg', 'cache-control': 'no-store' },

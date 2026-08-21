@@ -117,7 +117,11 @@ export async function raiseMcLevel(
 
   const gain = gainToTarget(src, decoded.sampleRate, HOST_TARGET_DBFS)
   const before = 20 * Math.log10(rms(src) + 1e-12)
-  if (Math.abs(gain - 1) < 0.05) return null // 이미 맞으면 건드리지 않는다
+
+  // 1dB 안쪽이면 그냥 둔다.
+  // 한 번 손본 파일을 다시 재면 디코딩·인코딩을 거치며 0.5dB 쯤 어긋나는데,
+  // 그걸 맞추겠다고 또 인코딩하면 들리지도 않는 차이 때문에 음질만 깎인다.
+  if (Math.abs(20 * Math.log10(gain)) < 1) return null
 
   const pcm = new Int16Array(src.length)
   for (let i = 0; i < src.length; i++) {

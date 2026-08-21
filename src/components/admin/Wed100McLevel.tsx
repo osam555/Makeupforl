@@ -52,9 +52,16 @@ export default function Wed100McLevel({
       const item = targets[i]
       setAt(i + 1)
       try {
-        const res = await fetch(`/api/wed100/audio?slug=${encodeURIComponent(item.slug)}`)
-        if (!res.ok) throw new Error(`음성을 받지 못했습니다 (${res.status})`)
-        const buf = await res.arrayBuffer()
+        // Storage 중계가 간헐적으로 502 를 내서 몇 번 다시 시도한다
+        let buf: ArrayBuffer | null = null
+        let lastStatus = 0
+        for (let tryN = 0; tryN < 3 && !buf; tryN++) {
+          if (tryN) await new Promise((r) => setTimeout(r, 1200 * tryN))
+          const res = await fetch(`/api/wed100/audio?slug=${encodeURIComponent(item.slug)}`)
+          lastStatus = res.status
+          if (res.ok) buf = await res.arrayBuffer()
+        }
+        if (!buf) throw new Error(`음성을 받지 못했습니다 (${lastStatus}, 3번 시도)`)
 
         const fixed = await raiseMcLevel(buf, item.questionAudio!.end, ctx)
         if (!fixed) {
