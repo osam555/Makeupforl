@@ -11,7 +11,7 @@ import AdminGate from '@/components/admin/AdminGate'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { splitSentences } from '@/lib/wed100-text'
-import { photosByCat, type Wed100Photo } from '@/lib/wed100-photos'
+import { photosByCat, allPhotos, type Wed100Photo } from '@/lib/wed100-photos'
 import Wed100PhotoUpload from '@/components/admin/Wed100PhotoUpload'
 import Wed100McLevel from '@/components/admin/Wed100McLevel'
 import type { Wed100Data, Wed100Item } from '@/types/wed100'
@@ -24,6 +24,11 @@ function itemLabel(x: { part: number; n: number }): string {
   if (x.part === 0) return '프롤로그'
   if (x.part === 7) return '에필로그'
   return `P${x.part}·${String(x.n).padStart(2, '0')}`
+}
+
+/** 외부(스토리지) 주소인지 — next/image 최적화를 건너뛰어 방금 올린 사진도 바로 보이게 한다 */
+function isRemote(src?: string | null): boolean {
+  return !!src && /^https?:\/\//.test(src)
 }
 
 type Status = { kind: 'ok' | 'err'; msg: string } | null
@@ -156,14 +161,62 @@ function AdminWed100Editor({
     [uploadedPhotos],
   )
 
+  /** 사진 고르기 — 분류 탭 · 검색 · 올린 사진만 보기 */
+  const [photoCat, setPhotoCat] = useState<string>('all')
+  const [photoKw, setPhotoKw] = useState('')
+  const [onlyMine, setOnlyMine] = useState(false)
+  const visiblePhotos = useMemo(() => {
+    const q = photoKw.trim().toLowerCase()
+    return allPhotos(uploadedPhotos).filter(
+      (p) =>
+        (photoCat === 'all' || p.cat === photoCat) &&
+        (!onlyMine || uploadedNames.has(p.name)) &&
+        (!q ||
+          p.name.toLowerCase().includes(q) ||
+          (p.note ?? '').toLowerCase().includes(q) ||
+          (p.src ?? '').toLowerCase().includes(q)),
+    )
+  }, [uploadedPhotos, uploadedNames, photoCat, photoKw, onlyMine])
+
+  /** 고른 사진을 지금 편집 중인 문항의 대표 이미지로 지정한다 */
+  const applyPhoto = useCallback((ph: Wed100Photo) => {
+    setDraft((d) => {
+      if (!d) return d
+      return {
+        ...d,
+        photo: ph.name,
+        photoAuto: false,
+        heroImage: ph.hero,
+        thumbImage: ph.thumb,
+      }
+    })
+    setDirty(true)
+  }, [])
+
   /** 어드민에서 올린 사진 지우기 — 저장소 카탈로그 사진은 코드에 있어서 못 지운다 */
   const removeUploaded = async (name: string) => {
-    if (!window.confirm(`${name} 사진을 목록에서 지울까요?`)) return
+    // 쓰고 있는 문항이 있으면 몇 개인지 먼저 알려 준다
+    const inUse = items.filter((x) => x.photo === name)
+    const warn = inUse.length
+      ? `\n\n지금 ${inUse.length}개 문항이 이 사진을 쓰고 있습니다:\n` +
+        inUse.slice(0, 5).map((x) => `  · ${itemLabel(x)} ${x.question}`).join('\n') +
+        (inUse.length > 5 ? `\n  · 외 ${inUse.length - 5}개` : '') +
+        '\n\n목록에서만 빠지고 이미 지정된 문항의 사진은 그대로 남습니다.'
+      : ''
+    if (!window.confirm(`${name} 사진을 목록에서 지울까요?${warn}`)) return
     const db = getDb()
     if (!db) return
-    const { doc, deleteDoc } = await import('firebase/firestore')
-    await deleteDoc(doc(db, 'wed100_photos', name))
-    await loadPhotos()
+    try {
+      const { doc, deleteDoc } = await import('firebase/firestore')
+      await deleteDoc(doc(db, 'wed100_photos', name))
+      await loadPhotos()
+      setStatus({ kind: 'ok', msg: `${name} 사진을 목록에서 지웠습니다.` })
+    } catch (e) {
+      setStatus({
+        kind: 'err',
+        msg: `사진을 지우지 못했습니다 — ${e instanceof Error ? e.message : String(e)}`,
+      })
+    }
   }
 
   const patch = (fn: (d: Wed100Item) => void) => {
@@ -792,70 +845,164 @@ function AdminWed100Editor({
                 <div className="mt-2.5 flex flex-wrap items-start gap-3.5">
                   <div className="relative aspect-video w-40 overflow-hidden rounded-lg bg-[#eee]">
                     <Image
+                      key={draft.heroImage ?? 'hero-default'}
                       src={draft.heroImage ?? `/wed100/img/${draft.slug}-hero.svg`}
                       alt=""
                       fill
                       sizes="160px"
                       className="object-cover"
+                      unoptimized={isRemote(draft.heroImage)}
                     />
                   </div>
                   <div className="relative aspect-square w-20 overflow-hidden rounded-lg bg-[#eee]">
                     <Image
+                      key={draft.thumbImage ?? 'thumb-default'}
                       src={draft.thumbImage ?? `/wed100/img/${draft.slug}-thumb.svg`}
                       alt=""
                       fill
                       sizes="80px"
                       className="object-cover"
+                      unoptimized={isRemote(draft.thumbImage)}
                     />
                   </div>
-                  <p className="flex-1 min-w-[200px] text-[11px] leading-relaxed text-[#6B5D57]">
-                    사진을 고르면 이 문항만 <b>직접 지정</b>으로 바뀌어, 다음에 자동 배정을
-                    다시 돌려도 그대로 유지됩니다.
-                    {draft.photo && (
-                      <span className="mt-1 block font-bold text-[#8A6A48]">
-                        현재: {draft.photo}
-                      </span>
+                  <div className="min-w-[200px] flex-1 text-[11px] leading-relaxed text-[#6B5D57]">
+                    <p>
+                      사진을 고르면 이 문항만 <b>직접 지정</b>으로 바뀌어, 다음에 자동 배정을
+                      다시 돌려도 그대로 유지됩니다.
+                    </p>
+                    <p className="mt-1 font-bold text-[#8A6A48]">
+                      현재: {draft.photo ?? (draft.heroImage ? '직접 입력한 주소' : '자동 생성 SVG')}
+                    </p>
+                    {dirty && (
+                      <button
+                        onClick={save}
+                        disabled={saving || !canWrite}
+                        className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-[#A63D5A] px-3 py-1.5 text-[11px] font-bold text-white transition hover:bg-[#8A2E48] disabled:opacity-40"
+                      >
+                        <Save className="h-3.5 w-3.5" />
+                        {saving ? '저장 중…' : '지금 저장'}
+                      </button>
                     )}
-                  </p>
+                  </div>
                 </div>
 
                 <div className="mt-3">
                   <Wed100PhotoUpload
                     uploaded={uploadedPhotos}
                     googleEmail={email}
-                    onChange={() => void loadPhotos()}
+                    applyLabel={itemLabel(draft)}
+                    onChange={(added) => {
+                      // 방금 올린 사진은 Firestore 왕복을 기다리지 않고 바로 목록에 붙인다
+                      if (added.length) {
+                        setUploadedPhotos((v) => [
+                          ...v.filter((p) => !added.some((a) => a.name === p.name)),
+                          ...added,
+                        ])
+                      }
+                      void loadPhotos()
+                    }}
+                    onApply={(ph) => applyPhoto(ph)}
                   />
                 </div>
 
                 {/* 사진 고르기 */}
-                <div className="mt-3 space-y-2.5">
-                  {photoGroups.map((g) => (
-                    <div key={g.cat}>
-                      <p className="text-[11px] font-extrabold text-[#8A7C74]">
-                        {g.label} {g.photos.length}장
+                <div className="mt-3 rounded-xl border border-[#E7DDD4] bg-white p-3">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <p className="text-xs font-bold text-[#6B5D57]">
+                      등록된 사진에서 고르기
+                      <span className="ml-1.5 font-normal text-[#9C8D86]">
+                        {visiblePhotos.length}장
+                      </span>
+                    </p>
+                    <div className="relative ml-auto">
+                      <Search className="pointer-events-none absolute left-2.5 top-2 h-3.5 w-3.5 text-[#B3A69F]" />
+                      <input
+                        value={photoKw}
+                        onChange={(e) => setPhotoKw(e.target.value)}
+                        placeholder="이름·설명 검색"
+                        className="w-44 rounded-lg border border-[#E7DDD4] py-1.5 pl-8 pr-2 text-[11px] outline-none focus:border-[#A63D5A]"
+                      />
+                    </div>
+                    <label className="flex cursor-pointer items-center gap-1.5 text-[11px] font-bold text-[#6B5D57]">
+                      <input
+                        type="checkbox"
+                        checked={onlyMine}
+                        onChange={(e) => setOnlyMine(e.target.checked)}
+                        className="h-3.5 w-3.5 accent-[#A63D5A]"
+                      />
+                      올린 사진만
+                    </label>
+                  </div>
+
+                  <div className="mt-2 flex flex-wrap gap-1">
+                    <button
+                      onClick={() => setPhotoCat('all')}
+                      className={`rounded-full border px-2.5 py-1 text-[11px] font-bold transition ${
+                        photoCat === 'all'
+                          ? 'border-[#A63D5A] bg-[#A63D5A] text-white'
+                          : 'border-[#E7DDD4] bg-white text-[#5B4F49] hover:border-[#DFD2C7]'
+                      }`}
+                    >
+                      전체
+                    </button>
+                    {photoGroups.map((g) => (
+                      <button
+                        key={g.cat}
+                        onClick={() => setPhotoCat(g.cat)}
+                        className={`rounded-full border px-2.5 py-1 text-[11px] font-bold transition ${
+                          photoCat === g.cat
+                            ? 'border-[#A63D5A] bg-[#A63D5A] text-white'
+                            : 'border-[#E7DDD4] bg-white text-[#5B4F49] hover:border-[#DFD2C7]'
+                        }`}
+                      >
+                        {g.label} {g.photos.length}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="mt-2.5 max-h-[300px] overflow-auto rounded-lg bg-[#FCFAF8] p-2">
+                    {visiblePhotos.length === 0 ? (
+                      <p className="py-8 text-center text-[11px] text-[#9A8B84]">
+                        조건에 맞는 사진이 없습니다.
                       </p>
-                      <div className="mt-1.5 flex flex-wrap gap-1.5">
-                        {g.photos.map((ph) => {
+                    ) : (
+                      <div className="grid grid-cols-[repeat(auto-fill,minmax(78px,1fr))] gap-2">
+                        {visiblePhotos.map((ph) => {
                           const on = draft.photo === ph.name
                           const mine = uploadedNames.has(ph.name)
                           return (
-                            <span key={ph.name} className="group relative">
+                            <div key={ph.name} className="group relative">
                               <button
                                 title={`${ph.name}${ph.note ? ` — ${ph.note}` : ''}`}
-                                onClick={() =>
-                                  patch((d) => {
-                                    d.photo = ph.name
-                                    d.photoAuto = false
-                                    d.heroImage = ph.hero
-                                    d.thumbImage = ph.thumb
-                                  })
-                                }
-                                className={`relative block h-14 w-14 overflow-hidden rounded-lg border-2 transition ${
-                                  on ? 'border-[#A63D5A]' : 'border-transparent hover:border-[#DFD2C7]'
+                                onClick={() => applyPhoto(ph)}
+                                className={`relative block aspect-square w-full overflow-hidden rounded-lg border-2 transition ${
+                                  on
+                                    ? 'border-[#A63D5A] ring-2 ring-[#A63D5A]/30'
+                                    : 'border-transparent hover:border-[#DFD2C7]'
                                 }`}
                               >
-                                <Image src={ph.thumb} alt={ph.name} fill sizes="56px" className="object-cover" unoptimized={mine} />
+                                <Image
+                                  src={ph.thumb}
+                                  alt={ph.name}
+                                  fill
+                                  sizes="96px"
+                                  className="object-cover"
+                                  unoptimized={mine}
+                                />
+                                {on && (
+                                  <span className="absolute inset-x-0 bottom-0 bg-[#A63D5A] py-0.5 text-center text-[9px] font-extrabold text-white">
+                                    선택됨
+                                  </span>
+                                )}
+                                {!on && mine && (
+                                  <span className="absolute left-1 top-1 rounded bg-emerald-600 px-1 py-px text-[9px] font-extrabold text-white">
+                                    NEW
+                                  </span>
+                                )}
                               </button>
+                              <p className="mt-0.5 truncate text-center text-[9px] text-[#9C8D86]">
+                                {ph.name}
+                              </p>
                               {mine && (
                                 <button
                                   onClick={() => void removeUploaded(ph.name)}
@@ -866,18 +1013,18 @@ function AdminWed100Editor({
                                   <XCircle className="h-3.5 w-3.5" />
                                 </button>
                               )}
-                            </span>
+                            </div>
                           )
                         })}
                       </div>
-                    </div>
-                  ))}
+                    )}
+                  </div>
                 </div>
 
                 {/* 직접 URL 입력 (외부 이미지·Storage 업로드본) */}
                 <details className="mt-3">
                   <summary className="cursor-pointer text-[11px] font-bold text-[#8A7C74]">
-                    이미지 URL 직접 입력
+                    이미지 주소 직접 입력 · 기본 이미지로 되돌리기
                   </summary>
                   <div className="mt-2 grid gap-2 sm:grid-cols-2">
                     <input
@@ -905,8 +1052,21 @@ function AdminWed100Editor({
                       className="w-full rounded-lg border border-[#E7DDD4] bg-white px-3 py-2 text-xs outline-none focus:border-[#A63D5A]"
                     />
                   </div>
+                  <button
+                    onClick={() =>
+                      patch((d) => {
+                        d.heroImage = undefined
+                        d.thumbImage = undefined
+                        d.photo = undefined
+                        d.photoAuto = true
+                      })
+                    }
+                    className="mt-2 inline-flex items-center gap-1.5 rounded-lg border border-[#E7DDD4] bg-white px-3 py-1.5 text-[11px] font-bold text-[#6B5D57] hover:border-[#DFD2C7]"
+                  >
+                    <Undo2 className="h-3.5 w-3.5" /> 기본 SVG 이미지로 되돌리기
+                  </button>
                   <p className="mt-1.5 text-[11px] text-[#8A7C74]">
-                    비우면 자동 생성 SVG로 돌아갑니다. 새 사진을 늘리려면 photos 폴더에 넣고
+                    비우면 자동 생성 SVG로 돌아갑니다. 스크립트로 사진을 늘리려면 photos 폴더에 넣고
                     <code className="mx-1 rounded bg-[#F2EAE3] px-1">4_build_photos.py</code>
                     →
                     <code className="mx-1 rounded bg-[#F2EAE3] px-1">5_assign_photos.py</code>
@@ -914,7 +1074,6 @@ function AdminWed100Editor({
                   </p>
                 </details>
               </div>
-
               {/* 자막 큐 */}
               <div className="mt-4">
                 <div className="flex items-center justify-between">
