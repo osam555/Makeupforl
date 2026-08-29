@@ -759,7 +759,7 @@ function AdminWed100Editor({
                     <Volume2 className="mr-1.5 h-4 w-4" />
                     {tts ? '음성 만드는 중…' : '음성 재생성'}
                   </Button>
-                  <Link href={`/wed100/${draft.slug}`} target="_blank">
+                  <Link href={`/honjoo100/${draft.slug}`} target="_blank">
                     <Button size="sm" variant="outline">
                       <Eye className="mr-1.5 h-4 w-4" /> 미리보기
                     </Button>

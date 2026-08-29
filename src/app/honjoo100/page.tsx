@@ -59,7 +59,7 @@ export default async function Wed100Page() {
           <div className="mt-8 flex flex-wrap gap-3">
             {items[0] && (
               <Link
-                href={`/wed100/${items[0].slug}`}
+                href={`/honjoo100/${items[0].slug}`}
                 className="rounded-xl bg-[var(--w-rose)] px-6 py-3.5 text-sm font-bold text-white shadow-lg transition hover:bg-[var(--w-rose-d)]"
               >
                 ▶ 처음부터 듣기
@@ -110,7 +110,7 @@ export default async function Wed100Page() {
             />
             {items[0] && (
               <Link
-                href={`/wed100/${items[0].slug}`}
+                href={`/honjoo100/${items[0].slug}`}
                 className="group absolute bottom-2 -left-8 w-[290px] rounded-2xl border border-[var(--w-line)] bg-[var(--w-card)]/95 p-4 shadow-xl backdrop-blur transition hover:-translate-y-0.5 hover:shadow-2xl"
               >
                 <p className="text-[10px] font-extrabold tracking-[0.22em] text-[var(--w-rose)]">

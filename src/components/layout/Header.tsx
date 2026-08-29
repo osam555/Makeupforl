@@ -17,7 +17,7 @@ const navigation: NavItem[] = [
       { name: '오시는길', href: '/brand#location' },
     ],
   },
-  { name: '혼주메이크업 100문100답', href: '/wed100' },
+  { name: '혼주메이크업 100문100답', href: '/honjoo100' },
   { name: '샵 / 출장메이크업', href: '/services' },
   { name: '1:1 사전컨설팅', href: '/consultation' },
   {

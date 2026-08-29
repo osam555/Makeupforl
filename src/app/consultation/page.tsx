@@ -103,7 +103,7 @@ export default async function ConsultationPage() {
               사전컨설팅 예약하기
             </Link>
             <Link
-              href="/wed100"
+              href="/honjoo100"
               className="rounded-xl border border-[#F8C3BF] bg-white px-6 py-3.5 text-sm font-bold text-gray-900 transition hover:border-[#F46E65]"
             >
               혼주메이크업 100문100답 보기

@@ -106,7 +106,7 @@ function toNav(x: Wed100Item | null | undefined): PlayerNav | null {
     slug: x.slug,
     question: x.question,
     thumb: x.thumbImage ?? `/wed100/img/${x.slug}-thumb.svg`,
-    href: `/wed100/${x.slug}`,
+    href: `/honjoo100/${x.slug}`,
   }
 }
 
@@ -150,7 +150,7 @@ export default async function Wed100DetailPage({
 
       <div className="mx-auto max-w-7xl px-6 pt-6 lg:px-8">
         <nav className="pr-12 text-xs text-[var(--w-ink2)] lg:pr-14">
-          <Link href="/wed100" className="hover:text-[var(--w-rose)]">
+          <Link href="/honjoo100" className="hover:text-[var(--w-rose)]">
             혼주메이크업 100문100답
           </Link>
           <span className="mx-1.5 text-[var(--w-mut)]">›</span>
@@ -199,7 +199,7 @@ export default async function Wed100DetailPage({
               {related.map((x) => (
                 <Link
                   key={x.slug}
-                  href={`/wed100/${x.slug}`}
+                  href={`/honjoo100/${x.slug}`}
                   className="overflow-hidden rounded-2xl border border-[var(--w-line)] bg-[var(--w-card)] transition hover:-translate-y-1 hover:shadow-lg"
                 >
                   <div className="relative aspect-square bg-[var(--w-thumb-bg)]">

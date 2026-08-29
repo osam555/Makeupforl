@@ -92,7 +92,7 @@ export default async function VideosPage() {
             혼주님이 가장 많이 묻는 질문에 대표원장이 하나씩 답했습니다. 한국어·영어 자막 제공.
           </p>
           <Link
-            href="/wed100"
+            href="/honjoo100"
             className="mt-6 inline-flex h-[50px] items-center justify-center rounded-[25px] border border-[#F46E65] bg-white px-8 text-[17px] font-medium text-[#F46E65] transition hover:bg-[#F46E65] hover:text-white"
           >
             혼주메이크업 100문100답 보기
