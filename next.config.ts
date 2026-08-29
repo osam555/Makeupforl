@@ -26,7 +26,12 @@ const nextConfig: NextConfig = {
     ],
   },
   async redirects() {
-    return [{ source: '/education', destination: '/videos', permanent: true }]
+    return [
+      { source: '/education', destination: '/videos', permanent: true },
+      // 100문100답 주소 변경 (/wed100 → /honjoo100) — 기존 링크·검색 유입 보존
+      { source: '/wed100', destination: '/honjoo100', permanent: true },
+      { source: '/wed100/:slug', destination: '/honjoo100/:slug', permanent: true },
+    ]
   },
 };
 

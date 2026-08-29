@@ -31,6 +31,16 @@ function isRemote(src?: string | null): boolean {
   return !!src && /^https?:\/\//.test(src)
 }
 
+/** 답변 본문 글자수 (문단 사이 빈 줄은 제외한 순수 본문 글자 수) */
+function answerChars(answer: string[]): number {
+  return answer.reduce((a, p) => a + p.length, 0)
+}
+
+/** 공백을 뺀 글자수 */
+function answerCharsNoSpace(answer: string[]): number {
+  return answer.reduce((a, p) => a + p.replace(/\s/g, '').length, 0)
+}
+
 type Status = { kind: 'ok' | 'err'; msg: string } | null
 
 /** 편집 글자 크기 (원장님 가독성용) */
@@ -493,6 +503,12 @@ function AdminWed100Editor({
             질문 {items.filter((x) => x.part >= 1 && x.part <= 6).length}문
             {items.some((x) => x.part === 0 || x.part === 7) &&
               ` · 프롤로그/에필로그 ${items.filter((x) => x.part === 0 || x.part === 7).length}`}
+            {items.length > 0 &&
+              ` · 본문 총 ${items
+                .reduce((a, x) => a + answerChars(x.answer), 0)
+                .toLocaleString()}자 (평균 ${Math.round(
+                items.reduce((a, x) => a + answerChars(x.answer), 0) / items.length,
+              ).toLocaleString()}자)`}
           </span>
           <div className="ml-auto flex gap-2">
             <Button
@@ -673,7 +689,17 @@ function AdminWed100Editor({
                   >
                     {itemLabel(x)}
                   </span>
-                  <span className="flex-1 text-[#2E2724]">{x.question}</span>
+                  <span className="flex-1">
+                    <span className="block text-[#2E2724]">{x.question}</span>
+                    <span
+                      className="mt-0.5 inline-block rounded bg-[#F2EAE3] px-1.5 py-px text-[10px] font-bold tabular-nums text-[#8A7B73]"
+                      title={`답변 본문 ${answerChars(x.answer).toLocaleString()}자 (공백 제외 ${answerCharsNoSpace(
+                        x.answer,
+                      ).toLocaleString()}자)`}
+                    >
+                      {answerChars(x.answer).toLocaleString()}자
+                    </span>
+                  </span>
                   <span className="mt-1 flex gap-1">
                     <i
                       className={`h-1.5 w-1.5 rounded-full ${x.audio ? 'bg-emerald-600' : 'bg-[#DCD2CB]'}`}
@@ -733,7 +759,7 @@ function AdminWed100Editor({
                     <Volume2 className="mr-1.5 h-4 w-4" />
                     {tts ? '음성 만드는 중…' : '음성 재생성'}
                   </Button>
-                  <Link href={`/wed100/${draft.slug}`} target="_blank">
+                  <Link href={`/honjoo100/${draft.slug}`} target="_blank">
                     <Button size="sm" variant="outline">
                       <Eye className="mr-1.5 h-4 w-4" /> 미리보기
                     </Button>
@@ -781,7 +807,13 @@ function AdminWed100Editor({
               <label className="mt-4 block">
                 <span className="flex flex-wrap items-center gap-2 text-xs font-bold text-[#6B5D57]">
                   답변 본문 (문단은 빈 줄로 구분 · 본문 수정 후 [큐 재생성]으로 자막 갱신)
-                  <span className="ml-auto flex items-center gap-1.5 font-normal">
+                  <span className="ml-auto flex items-center gap-2.5 font-normal">
+                    <span className="rounded-full bg-[#F6E9ED] px-2.5 py-0.5 text-[11px] font-extrabold tabular-nums text-[#A63D5A]">
+                      {answerChars(draft.answer).toLocaleString()}자
+                      <span className="ml-1 font-medium text-[#B98498]">
+                        (공백 제외 {answerCharsNoSpace(draft.answer).toLocaleString()}자)
+                      </span>
+                    </span>
                     <span className="text-[11px] text-[#9C8D86]">글자 크기</span>
                     <span className="flex gap-0.5 rounded-full border border-[#E7DDD4] bg-white p-0.5">
                       {FONT_SIZES.map((f) => (

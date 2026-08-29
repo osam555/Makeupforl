@@ -109,8 +109,8 @@ export async function POST(req: Request) {
         }
         await batch.commit()
       }
-      revalidatePath('/wed100')
-      revalidatePath('/wed100/[slug]', 'page')
+      revalidatePath('/honjoo100')
+      revalidatePath('/honjoo100/[slug]', 'page')
       return NextResponse.json({ ok: true, upserted, skipped: skip.size, editor })
     }
 
@@ -127,8 +127,8 @@ export async function POST(req: Request) {
         return NextResponse.json({ ok: false, error: '없는 문항입니다.' }, { status: 404 })
       }
       await ref.update({ audio, updatedAt: new Date().toISOString(), updatedBy: editor })
-      revalidatePath('/wed100')
-      revalidatePath(`/wed100/${slug}`)
+      revalidatePath('/honjoo100')
+      revalidatePath(`/honjoo100/${slug}`)
       return NextResponse.json({ ok: true, slug, audio, editor })
     }
 
@@ -181,8 +181,8 @@ export async function POST(req: Request) {
 
       await db.collection('wed100_questions').doc(slug).set(row)
       await db.collection('wed100_deleted').doc(id).delete()
-      revalidatePath('/wed100')
-      revalidatePath(`/wed100/${slug}`)
+      revalidatePath('/honjoo100')
+      revalidatePath(`/honjoo100/${slug}`)
       return NextResponse.json({ ok: true, slug, part: data.part, n: maxN + 1, editor })
     }
 
@@ -213,8 +213,8 @@ export async function POST(req: Request) {
         }
       }
       if (changed) await batch.commit()
-      revalidatePath('/wed100')
-      revalidatePath('/wed100/[slug]', 'page')
+      revalidatePath('/honjoo100')
+      revalidatePath('/honjoo100/[slug]', 'page')
       return NextResponse.json({ ok: true, changed, total: rows.length, editor })
     }
 
@@ -235,8 +235,8 @@ export async function POST(req: Request) {
         .doc(`${slug}__${Date.now()}`)
         .set({ ...snap.data(), deletedAt: new Date().toISOString(), deletedBy: editor })
       await ref.delete()
-      revalidatePath('/wed100')
-      revalidatePath(`/wed100/${slug}`)
+      revalidatePath('/honjoo100')
+      revalidatePath(`/honjoo100/${slug}`)
       return NextResponse.json({ ok: true, slug, editor, deleted: true })
     }
 
@@ -281,8 +281,8 @@ export async function POST(req: Request) {
     const row = toRow(item, editor)
     await db.collection('wed100_questions').doc(item.slug).set(row)
     // 저장 즉시 공개 페이지 캐시를 새로 굽는다 (배포 없이 바로 반영)
-    revalidatePath('/wed100')
-    revalidatePath(`/wed100/${item.slug}`)
+    revalidatePath('/honjoo100')
+    revalidatePath(`/honjoo100/${item.slug}`)
     return NextResponse.json({ ok: true, slug: item.slug, editor, cueSync, updatedAt: row.updatedAt })
   } catch (e) {
     return NextResponse.json(

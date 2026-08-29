@@ -89,7 +89,7 @@ export default function Wed100Browser({
     <div>
       {resumeItem && resume && (
         <Link
-          href={`/wed100/${resumeItem.slug}`}
+          href={`/honjoo100/${resumeItem.slug}`}
           className="mt-5 flex items-center gap-3.5 rounded-2xl border border-[var(--w-rose)] bg-[var(--w-rose-l)] px-4 py-3.5 transition hover:shadow-md"
         >
           <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[var(--w-rose)] text-white">
@@ -166,7 +166,7 @@ export default function Wed100Browser({
             return (
               <Link
                 key={x.slug}
-                href={`/wed100/${x.slug}`}
+                href={`/honjoo100/${x.slug}`}
                 id={`part-${x.part}`}
                 className="group overflow-hidden rounded-2xl border border-[var(--w-line)] bg-[var(--w-card)] transition hover:-translate-y-1 hover:shadow-xl"
               >
@@ -223,7 +223,7 @@ export default function Wed100Browser({
           {rows.map((x) => (
             <Link
               key={x.slug}
-              href={`/wed100/${x.slug}`}
+              href={`/honjoo100/${x.slug}`}
               className="flex items-center gap-4 border-b border-[var(--w-line2)] px-5 py-3.5 text-sm last:border-0 hover:bg-[var(--w-hover)]"
             >
               <span

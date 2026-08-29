@@ -178,7 +178,7 @@ export default async function BrandPage() {
           </div>
           <div className="mt-9 flex flex-wrap gap-3">
             <Link
-              href="/wed100"
+              href="/honjoo100"
               className="rounded-xl bg-[#F46E65] px-6 py-3.5 text-sm font-bold text-white transition hover:bg-[#E2564C]"
             >
               혼주메이크업 100문100답 보기
