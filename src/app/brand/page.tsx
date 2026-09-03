@@ -10,7 +10,7 @@ import { BRAND_POINTS, BRAND_STATS } from '@/lib/brandPoints'
 export const metadata: Metadata = {
   title: '브랜드소개 | 메이크업포엘',
   description:
-    '20년, 1만 명의 고객. 메이크업&헤어 아티스트와 컬러 컨설턴트 55명이 함께하는 혼주 메이크업 전문 메이크업포엘입니다.',
+    '25년, 1만 명의 고객. 메이크업&헤어 아티스트와 컬러 컨설턴트 55명이 함께하는 혼주 메이크업 전문 메이크업포엘입니다.',
   keywords: '메이크업포엘, 김성희, 혼주메이크업 전문, 강남 메이크업',
 }
 
@@ -61,8 +61,8 @@ export default async function BrandPage() {
               </p>
               <div className="space-y-[25px] text-[16px] leading-[1.647] text-[#242424]">
                 <p>
-                  메이크업디자이너로 지낸 20년동안 1만명이 넘는 고객을 만났습니다.
-                  <br className="hidden sm:block" /> 20년의 시간은 한사람의 아름다운 얼굴의 완성을
+                  메이크업디자이너로 지낸 25년동안 1만명이 넘는 고객을 만났습니다.
+                  <br className="hidden sm:block" /> 25년의 시간은 한사람의 아름다운 얼굴의 완성을
                   위해 필요한 시간이었습니다.
                 </p>
                 <p>저희 메이크업포엘은 여러분의 선택과 믿음으로 여기까지 왔습니다.</p>

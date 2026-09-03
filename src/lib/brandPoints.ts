@@ -42,7 +42,7 @@ export const HOME_QNA_SLUGS = ['p1-08', 'p1-09', 'p1-06', 'p2-06']
  * 분야를 나열하는 대신 이 숫자로 회사 전체의 크기를 보여준다.
  */
 export const BRAND_STATS: { value: string; label: string }[] = [
-  { value: '20년', label: '메이크업 경력' },
+  { value: '25년', label: '메이크업 경력' },
   { value: '1만 명+', label: '누적 고객' },
   { value: '55명', label: '아티스트·컬러 컨설턴트' },
 ]

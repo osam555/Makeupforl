@@ -39,7 +39,7 @@ export default async function Home() {
     <>
       <p className="text-[11px] font-bold tracking-[0.28em] text-[#F46E65]">MAKEUP FOR L</p>
       <h2 className="mt-3 text-[27px] font-bold leading-[1.3] text-gray-900 sm:text-[33px]">
-        20년, 1만 명의 얼굴
+        25년, 1만 명의 얼굴
       </h2>
       <p className="mt-3 text-[15px] leading-[1.75] text-gray-600">
         혼주 메이크업을 중심으로 웨딩·가족·기업행사·화보까지.

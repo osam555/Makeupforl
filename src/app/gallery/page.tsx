@@ -20,7 +20,7 @@ export default async function GalleryPage() {
       <section className="bg-white pt-14 pb-2 text-center">
         <div className="mfl-contain max-w-[900px]">
           <p className="text-[22px] font-bold leading-[1.5] text-gray-900 sm:text-[26px]">
-            20년, 1만 명의 얼굴
+            25년, 1만 명의 얼굴
           </p>
           <p className="mx-auto mt-4 max-w-2xl text-[15px] leading-[1.9] text-gray-600">
             혼주부터 가족·하객, 신부, 기업행사까지 — 분야별로 나눠 보실 수 있습니다.
