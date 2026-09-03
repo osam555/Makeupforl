@@ -153,10 +153,10 @@ export default async function Home() {
         */}
         <div className="absolute inset-0 hidden items-center xl:flex">
           <div className="hero-contain flex w-full items-center justify-between gap-8">
-            <div className="w-[26%] min-w-[330px] max-w-[460px] rounded-3xl bg-white/92 p-7 shadow-[0_24px_60px_-24px_rgba(0,0,0,.4)] ring-1 ring-black/5 backdrop-blur-md">
+            <div className="hero-rise w-[26%] min-w-[330px] max-w-[460px] rounded-3xl bg-white/92 p-7 shadow-[0_24px_60px_-24px_rgba(0,0,0,.4)] ring-1 ring-black/5 backdrop-blur-md">
               {heroCopy}
             </div>
-            <div className="w-[26%] min-w-[300px] max-w-[380px] rounded-3xl bg-white/92 p-6 shadow-[0_24px_60px_-24px_rgba(0,0,0,.4)] ring-1 ring-black/5 backdrop-blur-md">
+            <div className="hero-rise hero-rise-2 w-[26%] min-w-[300px] max-w-[380px] rounded-3xl bg-white/92 p-6 shadow-[0_24px_60px_-24px_rgba(0,0,0,.4)] ring-1 ring-black/5 backdrop-blur-md">
               {fieldPanel}
             </div>
           </div>
@@ -165,8 +165,8 @@ export default async function Home() {
 
       {/* 좁은 화면 — 히어로 위에 얹을 자리가 없어 사진 아래로 내린다 */}
       <div className="border-b border-gray-100 bg-white xl:hidden">
-        <div className="mfl-contain py-9">{heroCopy}</div>
-        <div className="mfl-contain border-t border-gray-100 py-7">{fieldPanel}</div>
+        <div className="hero-rise mfl-contain py-9">{heroCopy}</div>
+        <div className="hero-rise hero-rise-2 mfl-contain border-t border-gray-100 py-7">{fieldPanel}</div>
       </div>
 
       {/*

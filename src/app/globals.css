@@ -311,6 +311,12 @@
     object-position: center;
   }
 }
+/* 1024~1279 은 카드를 사진 위에 얹을 자리가 없어 사진 아래로 내리는데,
+   사진이 그대로 크면 카드가 첫 화면 밖으로 밀려 사라진 것처럼 보인다.
+   이 구간만 사진을 낮춰 카드가 바로 눈에 들어오게 한다. */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .mfl-site .main-visual { height: clamp(360px, 46vh, 470px); }
+}
 
 /* ── 히어로 좌우 여백 ────────────────────────────────────────
    헤더는 max-width:1780px 컨테이너에 로고를 left:30px 로 붙이는데,
@@ -346,4 +352,27 @@
 .mfl-site .mfl-lnb.mfl-lnb-compact { margin: 18px auto 30px; }
 @media (max-width: 1024px) {
   .mfl-site .mfl-lnb.mfl-lnb-compact { margin: 14px auto 24px; }
+}
+
+/* ── 브라우저 자동 다크 변환 방지 ─────────────────────────────────
+   사이트 루트에 color-scheme 선언이 없으면 크롬의 자동 다크 모드가
+   흰 배경을 임의로 어둡게 바꾼다. 히어로 배경 사진은 그대로 밝은 채로
+   남아서 카드만 검게 뜨는 어긋난 화면이 된다.
+   100문100답의 다크 테마(.w100-dark)는 자체 선언이 있어 그대로 동작한다. */
+:root { color-scheme: light; }
+
+/* ── 히어로 카드 등장 ────────────────────────────────────────────
+   아래에서 살짝 올라오며 나타난다. 좌측이 먼저, 우측이 조금 뒤에 따라와
+   시선이 왼쪽에서 오른쪽으로 흐르게 한다.
+   opacity 를 0 이 아니라 0.001 에서 시작하는 것은, 히어로가 홈에서 가장 큰
+   요소(LCP)라 완전 투명이면 로딩 속도 측정에서 늦게 그려진 것으로 잡히기 때문이다. */
+@keyframes hero-rise {
+  from { opacity: 0.001; transform: translateY(16px); }
+  to   { opacity: 1;     transform: translateY(0); }
+}
+.hero-rise   { animation: hero-rise .55s cubic-bezier(.22,.61,.36,1) both; }
+.hero-rise-2 { animation-delay: .12s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-rise { animation: none; }
 }
