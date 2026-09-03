@@ -376,3 +376,16 @@
 @media (prefers-reduced-motion: reduce) {
   .hero-rise { animation: none; }
 }
+
+/* ── 상단 메뉴 여유 ──────────────────────────────────────────────
+   원본은 글자 18px 에 항목마다 좌우 28px(사이 56px)로 넉넉했다.
+   메뉴가 7개인데 [혼주메이크업 100문100답] 이 길어서 반응형 clamp 로 줄여 놓았는데,
+   넓은 화면에서는 자리가 남으므로 원본 간격까지 벌린다.
+   좁아지면 다시 줄어들어 줄바꿈은 생기지 않는다. */
+.mfl-site .mfl-gnb > ul { column-gap: clamp(14px, 2.4vw, 56px); }
+.mfl-site .mfl-gnb > ul > li > a { font-size: clamp(15px, 1.2vw, 18px); }
+
+@media (max-width: 1230px) {
+  .mfl-site .mfl-gnb > ul { column-gap: clamp(10px, 1.6vw, 26px); }
+  .mfl-site .mfl-gnb > ul > li > a { font-size: clamp(14px, 1.25vw, 16px); }
+}
