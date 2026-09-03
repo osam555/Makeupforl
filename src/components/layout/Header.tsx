@@ -3,10 +3,24 @@
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
+import { GALLERY_CATEGORIES } from '@/lib/galleryCategories'
 
-type NavItem = { name: string; href: string; sub?: { name: string; href: string }[] }
+type NavItem = {
+  name: string
+  href: string
+  sub?: { name: string; href: string }[]
+  /** 활성 판정 경로. 없으면 href 로 판단한다 ('/gallery' 와 '/gallery/혼주' 를 갈라야 해서 둔다) */
+  match?: { prefix?: string; exact?: string }
+}
 
-/** 원본 gnb 구성 + [혼주메이크업 100문100답] 을 브랜드소개 우측에 추가 */
+/**
+ * 최상위 항목마다 축을 하나씩만 둔다.
+ *   업무분야   = 누구를 위한 것인가 (예전엔 갤러리 서브메뉴에만 있었다)
+ *   서비스·예약 = 어디서 어떻게 받나 (샵/출장 + 컨설팅 + 예약을 한 흐름으로 묶었다)
+ *   갤러리     = 분야 구분 없이 사진을 몰아 보는 곳
+ * 사진이 한 장도 없던 [패션쇼] 는 뺐다. 사진이 생기면 galleryCategories 에 추가하면
+ * 이 메뉴와 갤러리 탭에 함께 들어온다.
+ */
 const navigation: NavItem[] = [
   {
     name: '브랜드소개',
@@ -18,24 +32,23 @@ const navigation: NavItem[] = [
     ],
   },
   { name: '혼주메이크업 100문100답', href: '/honjoo100' },
-  { name: '샵 / 출장메이크업', href: '/services' },
-  { name: '1:1 사전컨설팅', href: '/consultation' },
   {
-    name: '갤러리',
-    href: '/gallery',
-    // cat 은 갤러리 탭 슬러그로 넘긴다 (한글 이름은 & 가 쿼리를 끊어 필터가 깨졌다)
+    name: '업무분야',
+    href: `/gallery/${GALLERY_CATEGORIES[0].slug}`,
+    match: { prefix: '/gallery/' },
+    sub: GALLERY_CATEGORIES.map((c) => ({ name: c.menuName, href: `/gallery/${c.slug}` })),
+  },
+  {
+    name: '서비스 · 예약',
+    href: '/services',
     sub: [
-      { name: '혼주', href: '/gallery?cat=honju' },
-      { name: '가족 및 하객', href: '/gallery?cat=family-guest' },
-      { name: '웨딩', href: '/gallery?cat=wedding' },
-      { name: '헤어변형', href: '/gallery?cat=hair-styling' },
-      { name: '남자메이크업', href: '/gallery?cat=men-makeup' },
-      { name: '기업행사 & 영상메이크업', href: '/gallery?cat=corporate-video' },
-      { name: '화보&프로필', href: '/gallery?cat=photoshoot-profile' },
-      { name: '패션쇼', href: '/gallery?cat=패션쇼' },
+      { name: '샵 메이크업', href: '/services#shop' },
+      { name: '출장 메이크업', href: '/services#visit' },
+      { name: '1:1 사전컨설팅', href: '/consultation' },
+      { name: '예약안내', href: '/reservation' },
     ],
   },
-  { name: '예약안내', href: '/reservation' },
+  { name: '갤러리', href: '/gallery', match: { exact: '/gallery' } },
   { name: '고객후기', href: '/reviews' },
   { name: '유튜브 채널', href: '/videos' },
 ]
@@ -58,8 +71,11 @@ export default function Header({ logo, logoWhite }: { logo?: string; logoWhite?:
   /** 로고를 빠르게 두 번 누르면 관리자 화면으로 이동 */
   const tapRef = useRef<{ n: number; t: number }>({ n: 0, t: 0 })
 
-  const isActive = (item: NavItem) =>
-    item.href === '/' ? pathname === '/' : pathname.startsWith(item.href.split('#')[0])
+  const isActive = (item: NavItem) => {
+    if (item.match?.exact) return pathname === item.match.exact
+    if (item.match?.prefix) return pathname.startsWith(item.match.prefix)
+    return item.href === '/' ? pathname === '/' : pathname.startsWith(item.href.split('#')[0])
+  }
 
   return (
     <>
