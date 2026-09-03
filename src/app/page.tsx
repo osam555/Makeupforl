@@ -139,14 +139,20 @@ export default async function Home() {
         */}
         {/* 상단 — 밝은 배경 위의 흰 메뉴가 묻히지 않게 살짝 눌러준다 */}
         <div className="pointer-events-none absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-black/30 to-transparent" />
-        <div className="pointer-events-none absolute inset-0 hidden bg-gradient-to-r from-black/10 via-transparent to-black/10 lg:block" />
+        <div className="pointer-events-none absolute inset-0 hidden bg-gradient-to-r from-black/10 via-transparent to-black/10 xl:block" />
 
-        <div className="absolute inset-0 hidden items-center lg:flex">
-          <div className="hero-contain flex w-full items-center justify-between gap-10">
-            <div className="w-[460px] shrink-0 rounded-3xl bg-white/92 p-8 shadow-[0_24px_60px_-24px_rgba(0,0,0,.4)] ring-1 ring-black/5 backdrop-blur-md">
+        {/*
+          카드 폭을 화면 비율로 잡는다. 고정 px 로 두면 좁은 화면에서 가운데
+          makeupforl 워드마크를 덮는다. 워드마크는 화면 폭의 35~40% 를 차지하므로
+          양쪽 카드를 각각 26% 로 두어 가운데를 비워준다.
+          1280 미만은 아무리 줄여도 가운데가 안 남아 사진 아래 배치를 쓴다.
+        */}
+        <div className="absolute inset-0 hidden items-center xl:flex">
+          <div className="hero-contain flex w-full items-center justify-between gap-8">
+            <div className="w-[26%] min-w-[330px] max-w-[460px] rounded-3xl bg-white/92 p-7 shadow-[0_24px_60px_-24px_rgba(0,0,0,.4)] ring-1 ring-black/5 backdrop-blur-md">
               {heroCopy}
             </div>
-            <div className="w-[360px] shrink-0 rounded-3xl bg-white/92 p-7 shadow-[0_24px_60px_-24px_rgba(0,0,0,.4)] ring-1 ring-black/5 backdrop-blur-md">
+            <div className="w-[26%] min-w-[300px] max-w-[380px] rounded-3xl bg-white/92 p-6 shadow-[0_24px_60px_-24px_rgba(0,0,0,.4)] ring-1 ring-black/5 backdrop-blur-md">
               {fieldPanel}
             </div>
           </div>
@@ -154,7 +160,7 @@ export default async function Home() {
       </div>
 
       {/* 좁은 화면 — 히어로 위에 얹을 자리가 없어 사진 아래로 내린다 */}
-      <div className="border-b border-gray-100 bg-white lg:hidden">
+      <div className="border-b border-gray-100 bg-white xl:hidden">
         <div className="mfl-contain py-9">{heroCopy}</div>
         <div className="mfl-contain border-t border-gray-100 py-7">{fieldPanel}</div>
       </div>
