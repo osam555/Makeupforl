@@ -4,10 +4,11 @@ import Image from 'next/image'
 import { getSiteImages } from '@/lib/siteImages'
 import MainGallery from '@/components/home/MainGallery'
 import ReviewSlide from '@/components/home/ReviewSlide'
+import QnaRotator from '@/components/home/QnaRotator'
 import reviewsSeed from '@/data/reviews.json'
 import gallerySeed from '@/data/gallery.json'
 import { GALLERY_CATEGORIES } from '@/lib/galleryCategories'
-import { BRAND_POINTS, HOME_QNA_SLUGS } from '@/lib/brandPoints'
+import { BRAND_POINTS, HOME_QNA_SLUGS, HOME_HERO_QNA_SLUGS } from '@/lib/brandPoints'
 import wed100 from '@/data/wed100.json'
 
 export const revalidate = 3600
@@ -26,9 +27,72 @@ export default async function Home() {
 
   // 홈에 펼쳐 보일 100문100답 문항 — 원고(wed100.json)에서 slug 로 찾아 쓴다
   const wedItems = (wed100 as { items: { slug: string; question?: string; published?: boolean }[] }).items
-  const qna = HOME_QNA_SLUGS.map((slug) => wedItems.find((i) => i.slug === slug))
-    .filter((i): i is { slug: string; question: string; published?: boolean } =>
-      Boolean(i?.question && i?.published))
+  const pickQna = (slugs: string[]) =>
+    slugs
+      .map((slug) => wedItems.find((i) => i.slug === slug))
+      .filter((i): i is { slug: string; question: string; published?: boolean } =>
+        Boolean(i?.question && i?.published),
+      )
+      .map((i) => ({ slug: i.slug, question: i.question }))
+
+  const qna = pickQna(HOME_QNA_SLUGS)
+  const heroQna = pickQna(HOME_HERO_QNA_SLUGS)
+
+  /* 히어로 왼쪽 — 넓은 화면은 사진 위 카드로, 좁은 화면은 사진 아래로 같은 내용을 쓴다 */
+  const heroCopy = (
+    <>
+      <p className="text-[11px] font-bold tracking-[0.28em] text-[#F46E65]">MAKEUP FOR L</p>
+      <h2 className="mt-3 text-[27px] font-bold leading-[1.3] text-gray-900 sm:text-[33px]">
+        혼주 메이크업 전문
+      </h2>
+      <p className="mt-3 text-[15px] leading-[1.8] text-gray-600">
+        20년, 1만 명의 얼굴을 만났습니다.
+        <br />
+        신부 곁의 혼주가 아니라 혼주 한 분께 집중합니다.
+      </p>
+
+      <QnaRotator items={heroQna} />
+
+      <Link
+        href="/honjoo100"
+        className="mt-6 inline-flex items-center gap-1.5 rounded-full bg-[#F46E65] px-7 py-3.5 text-[15px] font-bold text-white transition-colors hover:bg-[#e15a51]"
+      >
+        100문100답 전체 보기
+        <span aria-hidden>›</span>
+      </Link>
+    </>
+  )
+
+  /* 히어로 오른쪽 — 방문자가 자기를 규정하는 축(나는 혼주다)을 첫 화면에 둔다 */
+  const fieldPanel = (
+    <>
+      <div className="flex items-baseline justify-between px-1">
+        <h2 className="text-[20px] font-bold tracking-tight text-gray-900">업무분야</h2>
+        <span className="text-[12px] font-medium text-gray-400">
+          {GALLERY_CATEGORIES.length}개 분야
+        </span>
+      </div>
+      <div className="mt-2.5 h-[2px] w-full bg-gradient-to-r from-[#F46E65] via-[#F46E65]/30 to-transparent" />
+      <ul className="mt-1.5">
+        {GALLERY_CATEGORIES.map((c) => (
+          <li key={c.slug} className="border-b border-gray-100 last:border-0">
+            <Link
+              href={`/gallery/${c.slug}`}
+              className="group flex items-center justify-between rounded-lg px-1 py-2.5 text-[15px] font-medium text-gray-800 transition-colors hover:text-[#F46E65]"
+            >
+              <span>{c.menuName}</span>
+              <span
+                aria-hidden
+                className="text-gray-300 transition-transform group-hover:translate-x-1 group-hover:text-[#F46E65]"
+              >
+                ›
+              </span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </>
+  )
 
   return (
     <div className="mfl-container">
@@ -54,79 +118,29 @@ export default async function Home() {
           </div>
         </div>
 
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/55 via-black/25 to-black/10" />
-        <div className="absolute inset-0 flex items-center">
-          <div className="mfl-contain flex w-full items-center justify-between gap-10">
-            {/* 왼쪽 — 무엇을 하는 곳인지 */}
-            <div className="max-w-[560px] text-white">
-              <p className="text-[13px] font-semibold tracking-[0.2em] text-white/85 sm:text-[15px]">
-                MAKEUP FOR L
-              </p>
-              <h2 className="mt-3 text-[26px] font-bold leading-[1.35] drop-shadow-sm sm:text-[40px]">
-                혼주 메이크업 전문
-              </h2>
-              <p className="mt-3 text-[14px] leading-[1.7] text-white/90 sm:mt-4 sm:text-[18px]">
-                20년, 1만 명의 얼굴을 만났습니다.
-                <br className="hidden sm:block" /> 신부 곁의 혼주가 아니라 혼주 한 분께
-                집중합니다.
-              </p>
-              <div className="mt-5 sm:mt-8">
-                <Link
-                  href="/honjoo100"
-                  className="inline-block rounded-full bg-[#F46E65] px-5 py-2.5 text-[13px] font-bold text-white transition-colors hover:bg-[#e15a51] sm:px-7 sm:py-3.5 sm:text-[15px]"
-                >
-                  혼주메이크업 100문100답
-                </Link>
-              </div>
-            </div>
+        {/*
+          배경이 수상 그래픽이라 어둡게 덮으면 브랜드 이미지가 탁해진다.
+          전면 그라데이션 대신 카드가 스스로 배경을 갖게 하고, 가장자리만 아주 옅게 눌러
+          가운데 그래픽이 그대로 보이게 둔다.
+        */}
+        <div className="pointer-events-none absolute inset-0 hidden bg-gradient-to-r from-black/10 via-transparent to-black/10 lg:block" />
 
-            {/*
-              오른쪽 — 방문자가 자기를 규정하는 축(나는 혼주다)을 첫 화면에 둔다.
-              좁은 화면에서는 히어로 위에 얹을 자리가 없어 아래 띠로 대신한다.
-            */}
-            <div className="hidden w-[330px] shrink-0 rounded-2xl bg-white/92 p-5 shadow-xl backdrop-blur-sm lg:block">
-              <p className="px-2 pb-1 text-[13px] font-bold tracking-[0.14em] text-gray-500">
-                업무분야
-              </p>
-              <ul>
-                {GALLERY_CATEGORIES.map((c) => (
-                  <li key={c.slug}>
-                    <Link
-                      href={`/gallery/${c.slug}`}
-                      className="group flex items-center justify-between rounded-lg px-2 py-2.5 text-[15px] font-medium text-gray-800 transition-colors hover:bg-[#FDECEA] hover:text-[#F46E65]"
-                    >
-                      <span>{c.menuName}</span>
-                      <span
-                        aria-hidden
-                        className="text-gray-300 transition-transform group-hover:translate-x-0.5 group-hover:text-[#F46E65]"
-                      >
-                        ›
-                      </span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+        <div className="absolute inset-0 hidden items-center lg:flex">
+          <div className="mfl-contain flex w-full items-center justify-between gap-8">
+            <div className="w-[440px] shrink-0 rounded-3xl bg-white/90 p-8 shadow-[0_18px_50px_-20px_rgba(0,0,0,.35)] ring-1 ring-black/5 backdrop-blur-md">
+              {heroCopy}
+            </div>
+            <div className="w-[340px] shrink-0 rounded-3xl bg-white/90 p-6 shadow-[0_18px_50px_-20px_rgba(0,0,0,.35)] ring-1 ring-black/5 backdrop-blur-md">
+              {fieldPanel}
             </div>
           </div>
         </div>
       </div>
 
-      {/* 좁은 화면용 업무분야 띠 — 히어로 오른쪽 패널을 대신한다 */}
-      <div className="border-b border-gray-100 bg-white py-7 lg:hidden">
-        <div className="mfl-contain">
-          <ul className="flex flex-wrap justify-center gap-2 sm:gap-3">
-            {GALLERY_CATEGORIES.map((c) => (
-              <li key={c.slug}>
-                <Link
-                  href={`/gallery/${c.slug}`}
-                  className="inline-flex items-center rounded-full border border-gray-200 px-4 py-2 text-[13px] font-medium text-gray-700 transition-colors hover:border-[#F46E65] hover:text-[#F46E65] sm:px-5 sm:text-[15px]"
-                >
-                  {c.menuName}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+      {/* 좁은 화면 — 히어로 위에 얹을 자리가 없어 사진 아래로 내린다 */}
+      <div className="border-b border-gray-100 bg-white lg:hidden">
+        <div className="mfl-contain py-9">{heroCopy}</div>
+        <div className="mfl-contain border-t border-gray-100 py-7">{fieldPanel}</div>
       </div>
 
       {/*

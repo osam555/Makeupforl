@@ -29,5 +29,9 @@ export const BRAND_POINTS: BrandPoint[] = [
 /**
  * 홈에 펼쳐 보일 100문100답 문항. 혼주가 바로 자기 걱정으로 알아보는 것들을 골랐다.
  * 문구는 wed100.json 에서 slug 로 찾아 쓰므로 원고를 고치면 홈도 같이 바뀐다.
+ *
+ * 히어로는 한 개씩 돌아가며 보여주고, 아래 섹션은 네 개를 한 번에 편다.
+ * 같은 문항이 한 화면에 두 번 나오지 않도록 서로 겹치지 않게 나눴다.
  */
-export const HOME_QNA_SLUGS = ['p4-01', 'p3-06', 'p1-08', 'p1-09']
+export const HOME_HERO_QNA_SLUGS = ['p4-01', 'p3-06', 'p4-02']
+export const HOME_QNA_SLUGS = ['p1-08', 'p1-09', 'p1-06', 'p2-06']

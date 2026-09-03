@@ -285,3 +285,13 @@
   position: absolute; top: 0; right: 0; width: 56px; height: 46px;
   background: none; border: 0; padding: 0; cursor: pointer; z-index: 2;
 }
+
+/* 히어로 100문100답 문항이 한 개씩 슬라이드로 들어온다 */
+@keyframes qna-slide-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.qna-slide { animation: qna-slide-in .5s cubic-bezier(.22,.61,.36,1) both; }
+@media (prefers-reduced-motion: reduce) {
+  .qna-slide { animation: none; }
+}
