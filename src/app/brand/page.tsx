@@ -53,9 +53,13 @@ export default async function BrandPage() {
           .tt-wrap { padding-right:615px; padding-bottom:72px } + ceo.png 389×476 우측 하단 */}
       <div className="mfl-contain">
         {/* 사진을 뺐으므로 원본의 pt-[53px] 만큼 띄울 이유가 없다 */}
-        <div className="mfl-real">
-          <div className="relative mb-[55px] overflow-hidden bg-[#F4F4F4] px-6 pt-10 sm:px-12 sm:pt-16 lg:px-[100px] lg:pt-[68px]">
-            <div className="relative pb-10 lg:pb-[72px] lg:pr-[615px]">
+        {/* 아래 여백은 바로 뒤 회사소개 섹션의 py-20 이 담당한다.
+            원본 .mfl-real(pb 100px)+mb-[55px] 까지 더하면 235px 이 비었다 */}
+        <div>
+          <div className="relative overflow-hidden bg-[#F4F4F4] px-6 pt-10 sm:px-12 sm:pt-16 lg:px-[100px] lg:pt-[68px]">
+            {/* 오른쪽 여백은 원장 사진 폭(389px) + 사이 간격 정도면 된다.
+                원본 615px 은 사진보다 226px 이나 넓어 글이 좁게 눌리고 가운데가 비었다 */}
+            <div className="relative pb-10 lg:pb-[72px] lg:pr-[440px]">
               <p className="mb-[10px] text-[20px] font-medium leading-[1.6] text-[#F46E65]">
                 안녕하세요.
                 <br className="sm:hidden" /> 메이크업포엘 대표 김성희입니다.
@@ -97,7 +101,8 @@ export default async function BrandPage() {
       </div>
 
       {/* 회사 소개 */}
-      <section id="company" className="scroll-mt-20 bg-gray-50 py-20">
+      {/* 위 여백은 절반으로 — 인사말 박스와 붙여 읽히게 한다 */}
+      <section id="company" className="scroll-mt-20 bg-gray-50 pb-20 pt-10">
         <div className="mfl-contain max-w-[1200px]">
           <h2 className="text-2xl font-bold text-gray-900">회사 소개</h2>
 
