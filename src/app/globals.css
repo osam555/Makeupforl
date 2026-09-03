@@ -339,3 +339,11 @@
 @media (min-width: 1025px) {
   .mfl-site .mfl-gnb > ul { justify-content: flex-end; }
 }
+
+/* 상단 사진이 없는 페이지(브랜드소개)의 탭 여백.
+   원본 값 margin:50px auto 60px 은 350px 짜리 사진 아래에 놓일 때를 기준으로
+   잡은 것이라, 사진을 뺀 페이지에서는 위아래가 휑하게 남는다. */
+.mfl-site .mfl-lnb.mfl-lnb-compact { margin: 26px auto 30px; }
+@media (max-width: 1024px) {
+  .mfl-site .mfl-lnb.mfl-lnb-compact { margin: 20px auto 24px; }
+}

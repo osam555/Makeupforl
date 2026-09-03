@@ -52,7 +52,8 @@ export default async function BrandPage() {
       {/* 대표 인사말 — 원본: .greeting .top-con (bg #F4F4F4, padding 68px 100px 0, mb 55px)
           .tt-wrap { padding-right:615px; padding-bottom:72px } + ceo.png 389×476 우측 하단 */}
       <div className="mfl-contain">
-        <div className="mfl-real pt-[53px]">
+        {/* 사진을 뺐으므로 원본의 pt-[53px] 만큼 띄울 이유가 없다 */}
+        <div className="mfl-real">
           <div className="relative mb-[55px] overflow-hidden bg-[#F4F4F4] px-6 pt-10 sm:px-12 sm:pt-16 lg:px-[100px] lg:pt-[68px]">
             <div className="relative pb-10 lg:pb-[72px] lg:pr-[615px]">
               <p className="mb-[10px] text-[20px] font-medium leading-[1.6] text-[#F46E65]">

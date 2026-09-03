@@ -25,7 +25,8 @@ export default function SubHero({ title, image }: { title: string; image?: strin
           <p className="tit">{title}</p>
         </div>
       )}
-      <SubTabs />
+      {/* 사진이 없으면 그 자리를 비워둘 이유가 없어 탭 여백을 줄인다 */}
+      <SubTabs compact={!image} />
     </>
   )
 }

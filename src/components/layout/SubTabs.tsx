@@ -14,7 +14,7 @@ import { findNavGroup, navHash, subsOnCurrentPage } from '@/lib/navigation'
  *   지금 경로에 걸린 항목이 하나면  → 그 항목
  *   둘 이상이면(같은 페이지의 앵커) → 화면에 보이는 섹션을 따라 움직인다
  */
-export default function SubTabs() {
+export default function SubTabs({ compact = false }: { compact?: boolean }) {
   const pathname = usePathname() || '/'
   const group = findNavGroup(pathname)
   const here = group ? subsOnCurrentPage(group, pathname) : []
@@ -62,7 +62,7 @@ export default function SubTabs() {
   const scroll = group.sub.length >= 5
 
   return (
-    <div className="mfl-lnb">
+    <div className={compact ? 'mfl-lnb mfl-lnb-compact' : 'mfl-lnb'}>
       <div className={scroll ? 'lnb lnb-scroll' : 'lnb'}>
         <ul>
           {group.sub.map((s) => {
