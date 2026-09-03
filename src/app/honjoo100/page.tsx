@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 import Wed100Browser from '@/components/wed100/Wed100Browser'
+import NowPlayingRotator from '@/components/wed100/NowPlayingRotator'
+import { HOME_HERO_QNA_SLUGS } from '@/lib/brandPoints'
 import { getPublishedWed100Items, wed100Meta, wed100Parts } from '@/lib/wed100'
 import { getSiteImages } from '@/lib/siteImages'
 
@@ -21,6 +23,15 @@ export const metadata: Metadata = {
 export default async function Wed100Page() {
   const items = await getPublishedWed100Items()
   const img = await getSiteImages()
+  // 히어로 카드에 돌려 보여줄 대표 문항. 지정한 것 우선, 모자라면 앞에서부터 채운다
+  const heroPicks = [
+    ...HOME_HERO_QNA_SLUGS.map((sl) => items.find((x) => x.slug === sl)),
+    ...items.filter((x) => x.part >= 1 && x.part <= 6),
+  ]
+    .filter((x): x is (typeof items)[number] => Boolean(x))
+    .filter((x, n, a) => a.findIndex((y) => y.slug === x.slug) === n)
+    .slice(0, 5)
+
   const counts = new Map<number, number>()
   items.forEach((x) => counts.set(x.part, (counts.get(x.part) ?? 0) + 1))
   const totalSec = items.reduce(
@@ -108,43 +119,11 @@ export default async function Wed100Page() {
               height={400}
               className="absolute bottom-0 right-0 h-[400px] w-[327px] object-contain object-bottom"
             />
-            {items[0] && (
-              <Link
-                href={`/honjoo100/${items[0].slug}`}
-                className="group absolute bottom-2 -left-8 w-[290px] rounded-2xl border border-[var(--w-line)] bg-[var(--w-card)]/95 p-4 shadow-xl backdrop-blur transition hover:-translate-y-0.5 hover:shadow-2xl"
-              >
-                <p className="text-[10px] font-extrabold tracking-[0.22em] text-[var(--w-rose)]">
-                  NOW PLAYING ·{' '}
-                  {items[0].part === 0
-                    ? 'PROLOGUE'
-                    : items[0].part === 7
-                      ? 'EPILOGUE'
-                      : `PART ${items[0].part}`}
-                </p>
-                <p className="mt-2 line-clamp-2 text-sm font-bold leading-snug text-[var(--w-ink)]">
-                  {items[0].question}
-                </p>
-                <div className="mt-3 flex items-center gap-3">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--w-rose)] text-[11px] text-white transition group-hover:bg-[var(--w-rose-d)]">
-                    ▶
-                  </span>
-                  <span className="flex h-8 flex-1 items-end gap-[3px]" aria-hidden>
-                    {[6, 13, 9, 20, 14, 26, 18, 30, 22, 15, 24, 11, 19, 8, 14, 21, 10, 16, 7, 12].map(
-                      (h, i) => (
-                        <i
-                          key={i}
-                          className="block w-[3px] rounded-full bg-[var(--w-rose)] opacity-45"
-                          style={{ height: `${h}px` }}
-                        />
-                      ),
-                    )}
-                  </span>
-                </div>
-                <p className="mt-2 text-[11px] text-[var(--w-mut)]">
-                  전체 약 {Math.round(totalSec / 60)}분 · 한/EN 자막
-                </p>
-              </Link>
-            )}
+            {/* 홈 히어로에 있던 문항 회전을 여기로 옮겼다 — 혼주 질문은 이 페이지의 것이다 */}
+            <NowPlayingRotator
+              items={heroPicks.map((x) => ({ slug: x.slug, question: x.question, part: x.part }))}
+              totalMinutes={Math.round(totalSec / 60)}
+            />
           </div>
         </div>
       </section>

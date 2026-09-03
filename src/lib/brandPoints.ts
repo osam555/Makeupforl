@@ -35,3 +35,14 @@ export const BRAND_POINTS: BrandPoint[] = [
  */
 export const HOME_HERO_QNA_SLUGS = ['p4-01', 'p3-06', 'p4-02', 'p3-14', 'p6-06']
 export const HOME_QNA_SLUGS = ['p1-08', 'p1-09', 'p1-06', 'p2-06']
+
+/**
+ * 회사 규모. 브랜드소개의 회사 소개 섹션과 홈 히어로가 같은 값을 쓴다.
+ * 혼주 메이크업이 주력이지만 대표 사업 하나로만 보이지 않도록, 홈에서는
+ * 분야를 나열하는 대신 이 숫자로 회사 전체의 크기를 보여준다.
+ */
+export const BRAND_STATS: { value: string; label: string }[] = [
+  { value: '20년', label: '메이크업 경력' },
+  { value: '1만 명+', label: '누적 고객' },
+  { value: '55명', label: '아티스트·컬러 컨설턴트' },
+]

@@ -5,7 +5,7 @@ import { MapPin, Phone, Clock, Award } from 'lucide-react'
 
 import SubHero from '@/components/layout/SubHero'
 import { getSiteImages } from '@/lib/siteImages'
-import { BRAND_POINTS } from '@/lib/brandPoints'
+import { BRAND_POINTS, BRAND_STATS } from '@/lib/brandPoints'
 
 export const metadata: Metadata = {
   title: '브랜드소개 | 메이크업포엘',
@@ -101,11 +101,7 @@ export default async function BrandPage() {
           <h2 className="text-2xl font-bold text-gray-900">회사 소개</h2>
 
           <div className="mt-8 grid gap-4 sm:grid-cols-3">
-            {[
-              ['20년', '메이크업 경력'],
-              ['1만 명+', '누적 고객'],
-              ['55명', '아티스트·컬러 컨설턴트'],
-            ].map(([v, l]) => (
+            {BRAND_STATS.map(({ value: v, label: l }) => (
               <div key={l} className="rounded-2xl border border-gray-200 bg-white p-6 text-center">
                 <p className="text-3xl font-bold text-[#F46E65]">{v}</p>
                 <p className="mt-1 text-sm text-gray-600">{l}</p>

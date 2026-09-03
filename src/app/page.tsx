@@ -6,9 +6,8 @@ import { getGalleryImages } from '@/lib/galleryImages'
 import { getReviews } from '@/lib/reviewImages'
 import MainGallery from '@/components/home/MainGallery'
 import ReviewSlide from '@/components/home/ReviewSlide'
-import QnaRotator from '@/components/home/QnaRotator'
 import { GALLERY_CATEGORIES } from '@/lib/galleryCategories'
-import { BRAND_POINTS, HOME_QNA_SLUGS, HOME_HERO_QNA_SLUGS } from '@/lib/brandPoints'
+import { BRAND_POINTS, BRAND_STATS, HOME_QNA_SLUGS } from '@/lib/brandPoints'
 import wed100 from '@/data/wed100.json'
 
 export const revalidate = 3600
@@ -34,32 +33,47 @@ export default async function Home() {
       .map((i) => ({ slug: i.slug, question: i.question }))
 
   const qna = pickQna(HOME_QNA_SLUGS)
-  const heroQna = pickQna(HOME_HERO_QNA_SLUGS)
 
   /* 히어로 왼쪽 — 넓은 화면은 사진 위 카드로, 좁은 화면은 사진 아래로 같은 내용을 쓴다 */
   const heroCopy = (
     <>
       <p className="text-[11px] font-bold tracking-[0.28em] text-[#F46E65]">MAKEUP FOR L</p>
       <h2 className="mt-3 text-[27px] font-bold leading-[1.3] text-gray-900 sm:text-[33px]">
-        혼주 메이크업 전문
+        20년, 1만 명의 얼굴
       </h2>
       <p className="mt-3 text-[15px] leading-[1.75] text-gray-600">
-        20년, 1만 명의 얼굴을 만났습니다.
+        혼주 메이크업을 중심으로 웨딩·가족·기업행사·화보까지.
         <br />
-        신부 곁의 혼주가 아니라 혼주 한 분께 집중합니다.
+        메이크업 전 1:1 사전 컨설팅으로 시작합니다.
       </p>
 
-      <QnaRotator items={heroQna} />
+      {/* 분야를 늘어놓는 대신 회사 규모로 보여준다 — 혼주는 주력이지만 전부는 아니다 */}
+      <dl className="mt-6 flex flex-wrap gap-x-8 gap-y-3 border-y border-gray-100 py-4">
+        {BRAND_STATS.map((s) => (
+          <div key={s.label}>
+            <dt className="text-[20px] font-bold leading-none text-[#F46E65]">{s.value}</dt>
+            <dd className="mt-1.5 text-[12px] text-gray-500">{s.label}</dd>
+          </div>
+        ))}
+      </dl>
 
-      <Link
-        href="/honjoo100"
-        className="group mt-5 inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-[#F46E65] px-7 py-3.5 text-[15px] font-bold text-white shadow-lg shadow-[#F46E65]/25 transition-colors hover:bg-[#e15a51]"
-      >
-        100문100답 전체 보기
-        <span aria-hidden className="transition-transform group-hover:translate-x-0.5">
-          ›
-        </span>
-      </Link>
+      <div className="mt-6 flex flex-wrap gap-2">
+        <Link
+          href="/consultation"
+          className="group inline-flex items-center gap-1.5 rounded-full bg-[#F46E65] px-6 py-3.5 text-[15px] font-bold text-white shadow-lg shadow-[#F46E65]/25 transition-colors hover:bg-[#e15a51]"
+        >
+          1:1 사전컨설팅
+          <span aria-hidden className="transition-transform group-hover:translate-x-0.5">
+            ›
+          </span>
+        </Link>
+        <Link
+          href="/honjoo100"
+          className="inline-flex items-center rounded-full border border-gray-200 px-6 py-3.5 text-[15px] font-bold text-gray-700 transition-colors hover:border-[#F46E65] hover:text-[#F46E65]"
+        >
+          혼주 100문100답
+        </Link>
+      </div>
     </>
   )
 
