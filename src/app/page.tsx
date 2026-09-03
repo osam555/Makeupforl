@@ -46,9 +46,10 @@ export default async function Home() {
           </div>
         </div>
 
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/45 via-black/15 to-transparent" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/55 via-black/25 to-black/10" />
         <div className="absolute inset-0 flex items-center">
-          <div className="mfl-contain">
+          <div className="mfl-contain flex w-full items-center justify-between gap-10">
+            {/* 왼쪽 — 무엇을 하는 곳인지 */}
             <div className="max-w-[560px] text-white">
               <p className="text-[13px] font-semibold tracking-[0.2em] text-white/85 sm:text-[15px]">
                 MAKEUP FOR L
@@ -61,27 +62,49 @@ export default async function Home() {
                 <br className="hidden sm:block" /> 신부 곁의 혼주가 아니라 혼주 한 분께
                 집중합니다.
               </p>
-              <div className="mt-5 flex flex-wrap gap-2 sm:mt-8 sm:gap-3">
+              <div className="mt-5 sm:mt-8">
                 <Link
                   href="/honjoo100"
-                  className="rounded-full bg-[#F46E65] px-5 py-2.5 text-[13px] font-bold text-white transition-colors hover:bg-[#e15a51] sm:px-7 sm:py-3.5 sm:text-[15px]"
+                  className="inline-block rounded-full bg-[#F46E65] px-5 py-2.5 text-[13px] font-bold text-white transition-colors hover:bg-[#e15a51] sm:px-7 sm:py-3.5 sm:text-[15px]"
                 >
                   혼주메이크업 100문100답
                 </Link>
-                <Link
-                  href="/consultation"
-                  className="rounded-full border border-white/70 px-5 py-2.5 text-[13px] font-bold text-white backdrop-blur-sm transition-colors hover:bg-white/15 sm:px-7 sm:py-3.5 sm:text-[15px]"
-                >
-                  1:1 사전컨설팅
-                </Link>
               </div>
+            </div>
+
+            {/*
+              오른쪽 — 방문자가 자기를 규정하는 축(나는 혼주다)을 첫 화면에 둔다.
+              좁은 화면에서는 히어로 위에 얹을 자리가 없어 아래 띠로 대신한다.
+            */}
+            <div className="hidden w-[330px] shrink-0 rounded-2xl bg-white/92 p-5 shadow-xl backdrop-blur-sm lg:block">
+              <p className="px-2 pb-1 text-[13px] font-bold tracking-[0.14em] text-gray-500">
+                업무분야
+              </p>
+              <ul>
+                {GALLERY_CATEGORIES.map((c) => (
+                  <li key={c.slug}>
+                    <Link
+                      href={`/gallery/${c.slug}`}
+                      className="group flex items-center justify-between rounded-lg px-2 py-2.5 text-[15px] font-medium text-gray-800 transition-colors hover:bg-[#FDECEA] hover:text-[#F46E65]"
+                    >
+                      <span>{c.menuName}</span>
+                      <span
+                        aria-hidden
+                        className="text-gray-300 transition-transform group-hover:translate-x-0.5 group-hover:text-[#F46E65]"
+                      >
+                        ›
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
       </div>
 
-      {/* 업무분야 바로가기 — 방문자가 자기를 규정하는 축(나는 혼주다)을 첫 화면에 둔다 */}
-      <div className="border-b border-gray-100 bg-white py-7">
+      {/* 좁은 화면용 업무분야 띠 — 히어로 오른쪽 패널을 대신한다 */}
+      <div className="border-b border-gray-100 bg-white py-7 lg:hidden">
         <div className="mfl-contain">
           <ul className="flex flex-wrap justify-center gap-2 sm:gap-3">
             {GALLERY_CATEGORIES.map((c) => (

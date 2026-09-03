@@ -42,8 +42,12 @@ export default async function BrandPage() {
   const img = await getSiteImages()
   return (
     <div className="min-h-screen bg-white">
-      {/* 탭은 SubTabs 가 헤더 메뉴에서 자동으로 만들고, 스크롤에 따라 활성이 움직인다 */}
-      <SubHero title="브랜드 소개" image={img['sub-hero']} />
+      {/*
+        브랜드소개는 사진 없이 제목만 둔다. 공용 sub-hero 가 신부 인물 사진이라
+        바로 아래 대표원장 인사말과 인물이 겹쳐 보였다.
+        탭은 SubTabs 가 헤더 메뉴에서 자동으로 만들고, 스크롤에 따라 활성이 움직인다.
+      */}
+      <SubHero title="브랜드 소개" />
       {/* 대표 인사말 — 원본: .greeting .top-con (bg #F4F4F4, padding 68px 100px 0, mb 55px)
           .tt-wrap { padding-right:615px; padding-bottom:72px } + ceo.png 389×476 우측 하단 */}
       <div className="mfl-contain">

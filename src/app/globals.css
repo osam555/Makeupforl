@@ -267,3 +267,21 @@
   .mfl-site .lnb.lnb-scroll ul { justify-content: flex-start; }
   .mfl-site .lnb.lnb-scroll ul li a { font-size: 15px; padding: 0 16px; }
 }
+
+/* ── 메뉴 표시 보정 ────────────────────────────────────────────────
+   원본 CSS 는 hover 밑줄과 모바일 화살표를 nth-child 번호로 켜고 껐다.
+   메뉴 순서가 바뀌면 엉뚱한 항목에 걸리므로 항목 성격(.no-sub)으로 판단하게 바꾼다. */
+
+/* 상위 메뉴는 전부 클릭해서 이동할 수 있다. hover 밑줄을 모두 살려 그 신호를 준다 */
+.mfl-site .mfl-gnb > ul > li:nth-child(n):hover > a:after { display: block; }
+
+/* 모바일 드로어: 화살표는 하위 메뉴가 있는 항목에만 */
+.mfl-site .mobile-navigation .nav-menu > ul > li:nth-child(n) > a:after { display: block; }
+.mfl-site .mobile-navigation .nav-menu > ul > li.no-sub > a:after { display: none; }
+
+/* 드로어에서 이름은 이동, 오른쪽 화살표 영역은 펼치기 */
+.mfl-site .mobile-navigation .nav-menu > ul > li { position: relative; }
+.mfl-site .mobile-navigation .nav-menu > ul > li > .m-sub-toggle {
+  position: absolute; top: 0; right: 0; width: 56px; height: 46px;
+  background: none; border: 0; padding: 0; cursor: pointer; z-index: 2;
+}

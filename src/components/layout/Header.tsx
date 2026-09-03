@@ -95,21 +95,31 @@ export default function Header({ logo, logoWhite }: { logo?: string; logoWhite?:
         <nav className="nav-menu">
           <ul>
             {navigation.map((item) => (
-              <li key={item.name} className={openSub === item.name ? 'active' : undefined}>
-                {item.sub ? (
-                  <a
-                    href={item.href}
-                    onClick={(e) => {
-                      e.preventDefault()
-                      setOpenSub(openSub === item.name ? null : item.name)
-                    }}
-                  >
-                    {item.name}
-                  </a>
-                ) : (
-                  <Link href={item.href} onClick={() => setMenuOpen(false)}>
-                    {item.name}
-                  </Link>
+              <li
+                key={item.name}
+                className={[
+                  openSub === item.name ? 'active' : '',
+                  item.sub ? '' : 'no-sub',
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
+              >
+                {/*
+                  이름을 누르면 곧장 그 페이지로 간다. 예전에는 하위 메뉴가 있으면
+                  preventDefault 로 펼치기만 해서 [브랜드소개] 를 눌러도 이동이 안 됐다.
+                  펼치기는 오른쪽 화살표 버튼으로 분리한다.
+                */}
+                <Link href={item.href} onClick={() => setMenuOpen(false)}>
+                  {item.name}
+                </Link>
+                {item.sub && (
+                  <button
+                    type="button"
+                    className="m-sub-toggle"
+                    aria-label={`${item.name} 하위 메뉴 ${openSub === item.name ? '접기' : '펼치기'}`}
+                    aria-expanded={openSub === item.name}
+                    onClick={() => setOpenSub(openSub === item.name ? null : item.name)}
+                  />
                 )}
                 {item.sub && (
                   <div className="submenu" style={{ display: openSub === item.name ? 'block' : 'none' }}>
