@@ -1,19 +1,14 @@
 'use client'
 
 import { useState } from 'react'
+import { GALLERY_CATEGORIES } from '@/lib/galleryCategories'
 
 type Item = { id: string; url: string; alt_text: string; category: string }
 
 /** 원본 sec2 갤러리: 카테고리 탭 + 좌측 큰 이미지 / 우측 썸네일 2열 */
-const CATEGORIES: { key: string; name: string }[] = [
-  { key: 'honju', name: '혼주' },
-  { key: 'family-guest', name: '가족 및 하객' },
-  { key: 'wedding', name: '웨딩' },
-  { key: 'men-makeup', name: '남자 메이크업' },
-  { key: 'corporate-video', name: '기업행사&영상메이크업' },
-  { key: 'photoshoot-profile', name: '화보 & 프로필' },
-  { key: 'fashion-show', name: '패션쇼' },
-]
+/* 사이트 업무분야와 같은 목록을 쓴다. 예전에는 여기만 따로 적혀 있어 헤어변형이 빠지고
+   사진이 한 장도 없는 패션쇼가 남아 있었다 */
+const CATEGORIES = GALLERY_CATEGORIES.map((c) => ({ key: c.slug, name: c.name }))
 
 export default function MainGallery({ items }: { items: Item[] }) {
   const [cat, setCat] = useState('honju')

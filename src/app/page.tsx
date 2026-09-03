@@ -2,18 +2,16 @@ import Link from 'next/link'
 import Image from 'next/image'
 
 import { getSiteImages } from '@/lib/siteImages'
+import { getGalleryImages } from '@/lib/galleryImages'
 import MainGallery from '@/components/home/MainGallery'
 import ReviewSlide from '@/components/home/ReviewSlide'
 import QnaRotator from '@/components/home/QnaRotator'
 import reviewsSeed from '@/data/reviews.json'
-import gallerySeed from '@/data/gallery.json'
 import { GALLERY_CATEGORIES } from '@/lib/galleryCategories'
 import { BRAND_POINTS, HOME_QNA_SLUGS, HOME_HERO_QNA_SLUGS } from '@/lib/brandPoints'
 import wed100 from '@/data/wed100.json'
 
 export const revalidate = 3600
-
-type GalleryItem = { id: string; url: string; alt_text: string; category: string }
 
 /** 원본 메인(index.php) 구조 그대로: main-visual / sec1 / sec2 / sec3 / sec4 */
 export default async function Home() {
@@ -23,7 +21,8 @@ export default async function Home() {
     .items.slice(0, 10)
     .map((r) => ({ ...r, url: img[r.id] || r.url }))
 
-  const gallery = (gallerySeed as GalleryItem[]).map((g) => ({ ...g, url: img[g.id] || g.url }))
+  // Firestore 에 옮겨진 Storage 사본을 쓴다. 시드를 그대로 넘기면 옛 서버 주소로 불러온다
+  const gallery = await getGalleryImages()
 
   // 홈에 펼쳐 보일 100문100답 문항 — 원고(wed100.json)에서 slug 로 찾아 쓴다
   const wedItems = (wed100 as { items: { slug: string; question?: string; published?: boolean }[] }).items
