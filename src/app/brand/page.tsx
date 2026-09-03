@@ -44,8 +44,8 @@ export default async function BrandPage() {
   return (
     <div className="min-h-screen bg-white">
       {/*
-        브랜드소개는 사진 없이 제목만 둔다. 공용 sub-hero 가 신부 인물 사진이라
-        바로 아래 대표원장 인사말과 인물이 겹쳐 보였다.
+        브랜드소개는 상단 비주얼을 두지 않는다. 공용 sub-hero 가 신부 인물 사진이라
+        바로 아래 대표원장 인사말·사진과 인물이 겹쳐 보였다.
         탭은 SubTabs 가 헤더 메뉴에서 자동으로 만들고, 스크롤에 따라 활성이 움직인다.
       */}
       <SubHero title="브랜드 소개" />
