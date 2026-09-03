@@ -7,6 +7,8 @@ import ReviewSlide from '@/components/home/ReviewSlide'
 import reviewsSeed from '@/data/reviews.json'
 import gallerySeed from '@/data/gallery.json'
 import { GALLERY_CATEGORIES } from '@/lib/galleryCategories'
+import { BRAND_POINTS, HOME_QNA_SLUGS } from '@/lib/brandPoints'
+import wed100 from '@/data/wed100.json'
 
 export const revalidate = 3600
 
@@ -21,6 +23,12 @@ export default async function Home() {
     .map((r) => ({ ...r, url: img[r.id] || r.url }))
 
   const gallery = (gallerySeed as GalleryItem[]).map((g) => ({ ...g, url: img[g.id] || g.url }))
+
+  // 홈에 펼쳐 보일 100문100답 문항 — 원고(wed100.json)에서 slug 로 찾아 쓴다
+  const wedItems = (wed100 as { items: { slug: string; question?: string; published?: boolean }[] }).items
+  const qna = HOME_QNA_SLUGS.map((slug) => wedItems.find((i) => i.slug === slug))
+    .filter((i): i is { slug: string; question: string; published?: boolean } =>
+      Boolean(i?.question && i?.published))
 
   return (
     <div className="mfl-container">
@@ -121,6 +129,36 @@ export default async function Home() {
         </div>
       </div>
 
+      {/*
+        왜 메이크업포엘인가 — 브랜드소개 안에만 있던 차별점 네 가지를 홈으로 올린다.
+        특히 '합법적인 정식 업체' 는 경쟁 업체 대비 결정적인 근거인데
+        예전에는 브랜드소개까지 들어가 스크롤해야 볼 수 있었다.
+      */}
+      <div className="bg-white py-16 sm:py-20">
+        <div className="mfl-contain max-w-[1100px]">
+          <div className="text-center">
+            <p className="text-[12px] font-semibold tracking-[0.28em] text-[#F46E65]">WHY</p>
+            <h2 className="mt-3 text-[24px] font-bold text-gray-900 sm:text-[30px]">
+              왜 메이크업포엘인가?
+            </h2>
+          </div>
+          <div className="mt-10 grid gap-4 sm:grid-cols-2">
+            {BRAND_POINTS.map((p, i) => (
+              <div
+                key={p.title}
+                className="rounded-2xl border border-gray-100 bg-white p-7 shadow-sm transition-shadow hover:shadow-md"
+              >
+                <span className="text-[13px] font-bold text-[#F46E65]">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <h3 className="mt-2 text-[17px] font-bold text-gray-900">{p.title}</h3>
+                <p className="mt-2 text-[15px] leading-[1.8] text-gray-600">{p.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* sec1 — 서비스 소개 */}
       <div className="sec1">
         <div className="mfl-contain">
@@ -165,6 +203,54 @@ export default async function Home() {
           </div>
         </div>
       </div>
+
+      {/*
+        100문100답 맛보기 — 예전에는 버튼만 있어 안에 뭐가 있는지 알 수 없었다.
+        실제 문항을 펼쳐 두면 자기 걱정과 같은 질문을 발견하고 들어간다.
+        문구는 wed100.json 에서 slug 로 찾아 쓰므로 원고를 고치면 여기도 같이 바뀐다.
+      */}
+      {qna.length > 0 && (
+        <div className="bg-[#FDF4F3] py-16 sm:py-20">
+          <div className="mfl-contain max-w-[1000px]">
+            <div className="text-center">
+              <p className="text-[12px] font-semibold tracking-[0.28em] text-[#F46E65]">
+                100 Q &amp; A
+              </p>
+              <h2 className="mt-3 text-[24px] font-bold text-gray-900 sm:text-[30px]">
+                혼주님이 가장 많이 물으신 것들
+              </h2>
+              <p className="mt-3 text-[15px] leading-[1.8] text-gray-600">
+                102개 문항에 원장이 직접 답했습니다.
+              </p>
+            </div>
+
+            <ul className="mt-9 grid gap-3 sm:grid-cols-2">
+              {qna.map((q) => (
+                <li key={q.slug}>
+                  <Link
+                    href={`/honjoo100/${q.slug}`}
+                    className="group flex h-full items-start gap-3 rounded-2xl bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
+                  >
+                    <span className="mt-0.5 shrink-0 text-[17px] font-bold text-[#F46E65]">Q</span>
+                    <span className="text-[16px] font-medium leading-[1.6] text-gray-800 transition-colors group-hover:text-[#F46E65]">
+                      {q.question}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-9 text-center">
+              <Link
+                href="/honjoo100"
+                className="inline-block rounded-full bg-[#F46E65] px-8 py-3.5 text-[15px] font-bold text-white transition-colors hover:bg-[#e15a51]"
+              >
+                100문100답 전체 보기
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* sec2 — GALLERY */}
       <div className="sec2">

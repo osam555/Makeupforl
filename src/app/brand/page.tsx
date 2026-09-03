@@ -5,6 +5,7 @@ import { MapPin, Phone, Clock, Award } from 'lucide-react'
 
 import SubHero from '@/components/layout/SubHero'
 import { getSiteImages } from '@/lib/siteImages'
+import { BRAND_POINTS } from '@/lib/brandPoints'
 
 export const metadata: Metadata = {
   title: '브랜드소개 | 메이크업포엘',
@@ -148,24 +149,7 @@ export default async function BrandPage() {
         <div className="mfl-contain max-w-[1000px]">
           <h2 className="text-2xl font-bold text-gray-900">왜 메이크업포엘인가?</h2>
           <div className="mt-8 space-y-4">
-            {[
-              [
-                '혼주만을 위한 전문점',
-                '신부 전문 샵에서 부수적으로 다뤄지는 혼주가 아니라, 혼주 한 분께 온전히 집중합니다.',
-              ],
-              [
-                '메이크업 전 1:1 사전 컨설팅',
-                '퍼스널컬러 진단, 어울리는 헤어스타일 점검을 먼저 하고 당일에 임합니다.',
-              ],
-              [
-                '중년의 얼굴을 아는 기술',
-                '쳐진 눈꺼풀, 패인 주름, 정수리 탈모, 적은 숱까지 이해하고 다룹니다.',
-              ],
-              [
-                '합법적인 정식 업체',
-                '국가자격증과 면허를 갖춘 아티스트가 정식 허가 업체를 통해 서비스합니다.',
-              ],
-            ].map(([t, d]) => (
+            {BRAND_POINTS.map(({ title: t, desc: d }) => (
               <div key={t} className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm">
                 <h3 className="font-bold text-gray-900">{t}</h3>
                 <p className="mt-1.5 text-[15px] leading-relaxed text-gray-600">{d}</p>
