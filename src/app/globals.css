@@ -295,3 +295,19 @@
 @media (prefers-reduced-motion: reduce) {
   .qna-slide { animation: none; }
 }
+
+/* ── 메인 비주얼 ──────────────────────────────────────────────
+   원본 1920x980 을 그대로 흘리면 화면이 넓을수록 세로가 같이 늘어나
+   카드 아래에 빈 공간이 크게 남았다. 넓은 화면에서만 높이를 잡고 잘라 채운다.
+   좁은 화면은 가로로 잘리면 가운데 수상 그래픽이 날아가므로 원본 비율을 둔다. */
+@media (min-width: 1024px) {
+  .mfl-site .main-visual { height: clamp(600px, 78vh, 780px); }
+  .mfl-site .main-visual .items,
+  .mfl-site .main-visual .item,
+  .mfl-site .main-visual .item .img { height: 100%; }
+  .mfl-site .main-visual .item .img img {
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+}

@@ -43,7 +43,7 @@ export default async function Home() {
       <h2 className="mt-3 text-[27px] font-bold leading-[1.3] text-gray-900 sm:text-[33px]">
         혼주 메이크업 전문
       </h2>
-      <p className="mt-3 text-[15px] leading-[1.8] text-gray-600">
+      <p className="mt-3 text-[15px] leading-[1.75] text-gray-600">
         20년, 1만 명의 얼굴을 만났습니다.
         <br />
         신부 곁의 혼주가 아니라 혼주 한 분께 집중합니다.
@@ -53,10 +53,12 @@ export default async function Home() {
 
       <Link
         href="/honjoo100"
-        className="mt-6 inline-flex items-center gap-1.5 rounded-full bg-[#F46E65] px-7 py-3.5 text-[15px] font-bold text-white transition-colors hover:bg-[#e15a51]"
+        className="group mt-5 inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-[#F46E65] px-7 py-3.5 text-[15px] font-bold text-white shadow-lg shadow-[#F46E65]/25 transition-colors hover:bg-[#e15a51]"
       >
         100문100답 전체 보기
-        <span aria-hidden>›</span>
+        <span aria-hidden className="transition-transform group-hover:translate-x-0.5">
+          ›
+        </span>
       </Link>
     </>
   )
@@ -121,14 +123,16 @@ export default async function Home() {
           전면 그라데이션 대신 카드가 스스로 배경을 갖게 하고, 가장자리만 아주 옅게 눌러
           가운데 그래픽이 그대로 보이게 둔다.
         */}
+        {/* 상단 — 밝은 배경 위의 흰 메뉴가 묻히지 않게 살짝 눌러준다 */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-black/30 to-transparent" />
         <div className="pointer-events-none absolute inset-0 hidden bg-gradient-to-r from-black/10 via-transparent to-black/10 lg:block" />
 
         <div className="absolute inset-0 hidden items-center lg:flex">
           <div className="mfl-contain flex w-full items-center justify-between gap-8">
-            <div className="w-[440px] shrink-0 rounded-3xl bg-white/90 p-8 shadow-[0_18px_50px_-20px_rgba(0,0,0,.35)] ring-1 ring-black/5 backdrop-blur-md">
+            <div className="w-[430px] shrink-0 rounded-3xl bg-white/92 p-7 shadow-[0_24px_60px_-24px_rgba(0,0,0,.4)] ring-1 ring-black/5 backdrop-blur-md">
               {heroCopy}
             </div>
-            <div className="w-[340px] shrink-0 rounded-3xl bg-white/90 p-6 shadow-[0_18px_50px_-20px_rgba(0,0,0,.35)] ring-1 ring-black/5 backdrop-blur-md">
+            <div className="w-[340px] shrink-0 rounded-3xl bg-white/92 p-6 shadow-[0_24px_60px_-24px_rgba(0,0,0,.4)] ring-1 ring-black/5 backdrop-blur-md">
               {fieldPanel}
             </div>
           </div>
