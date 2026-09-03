@@ -23,9 +23,12 @@ function partLabel(part: number) {
 export default function NowPlayingRotator({
   items,
   totalMinutes,
+  className = 'absolute bottom-2 -left-8 w-[290px]',
 }: {
   items: NowPlayingItem[]
   totalMinutes: number
+  /** 넓은 화면은 원장 사진 옆에 겹쳐 놓고, 좁은 화면은 본문 흐름에 그대로 놓는다 */
+  className?: string
 }) {
   const [i, setI] = useState(0)
   const [paused, setPaused] = useState(false)
@@ -45,7 +48,7 @@ export default function NowPlayingRotator({
 
   return (
     <div
-      className="absolute bottom-2 -left-8 w-[290px]"
+      className={className}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >

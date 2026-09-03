@@ -333,3 +333,9 @@
 @media (min-width: 1025px) {
   .mfl-site .mfl-gnb { margin-right: 0; }
 }
+
+/* 메뉴가 로고 오른쪽 남는 공간의 가운데에 놓여 있어, 히어로 카드 오른쪽 끝과
+   한참 어긋나 보였다. 오른쪽으로 붙여 카드와 끝을 맞춘다. */
+@media (min-width: 1025px) {
+  .mfl-site .mfl-gnb > ul { justify-content: flex-end; }
+}

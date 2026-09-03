@@ -90,6 +90,16 @@ export default async function Wed100Page() {
             </Link>
           </div>
 
+          {/* 좁은 화면 — 오른쪽 비주얼(원장 사진 + 카드)이 lg 이상에서만 보여서
+              아이패드·모바일에서는 문항 회전이 아예 안 보였다. 본문 흐름에 넣어준다 */}
+          <div className="mt-8 lg:hidden">
+            <NowPlayingRotator
+              items={heroPicks.map((x) => ({ slug: x.slug, question: x.question, part: x.part }))}
+              totalMinutes={Math.round(totalSec / 60)}
+              className="w-full max-w-[360px]"
+            />
+          </div>
+
           <dl className="mt-8 flex flex-wrap gap-x-10 gap-y-4">
             {[
               [String(items.filter((x) => x.part >= 1 && x.part <= 6).length), '질문'],
