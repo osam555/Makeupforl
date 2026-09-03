@@ -665,6 +665,104 @@
   "order_position": 30
  },
  {
+  "id": "hair-001",
+  "url": "/mfl/hair/hair-01.jpg",
+  "alt_text": "메이크업포엘 웨딩 헤어변형 로우 웨이브 포니테일 시술 과정",
+  "category": "hair-styling",
+  "order_position": 1
+ },
+ {
+  "id": "hair-002",
+  "url": "/mfl/hair/hair-02.jpg",
+  "alt_text": "메이크업포엘 웨딩 헤어변형 로우 웨이브 포니테일 완성 컷",
+  "category": "hair-styling",
+  "order_position": 2
+ },
+ {
+  "id": "hair-003",
+  "url": "/mfl/hair/hair-03.jpg",
+  "alt_text": "메이크업포엘 웨딩 헤어변형 로우 웨이브 포니테일 완성 컷",
+  "category": "hair-styling",
+  "order_position": 3
+ },
+ {
+  "id": "hair-004",
+  "url": "/mfl/hair/hair-04.jpg",
+  "alt_text": "메이크업포엘 웨딩 헤어변형 로우 번 시뇽 시술 과정",
+  "category": "hair-styling",
+  "order_position": 4
+ },
+ {
+  "id": "hair-005",
+  "url": "/mfl/hair/hair-05.jpg",
+  "alt_text": "메이크업포엘 웨딩 헤어변형 로우 번 시뇽 완성 컷",
+  "category": "hair-styling",
+  "order_position": 5
+ },
+ {
+  "id": "hair-006",
+  "url": "/mfl/hair/hair-06.jpg",
+  "alt_text": "메이크업포엘 웨딩 헤어변형 브레이드 업스타일 시술 과정",
+  "category": "hair-styling",
+  "order_position": 6
+ },
+ {
+  "id": "hair-007",
+  "url": "/mfl/hair/hair-07.jpg",
+  "alt_text": "메이크업포엘 웨딩 헤어변형 브레이드 업스타일 완성 컷",
+  "category": "hair-styling",
+  "order_position": 7
+ },
+ {
+  "id": "hair-008",
+  "url": "/mfl/hair/hair-08.jpg",
+  "alt_text": "메이크업포엘 웨딩 헤어변형 브레이드 업스타일 완성 컷",
+  "category": "hair-styling",
+  "order_position": 8
+ },
+ {
+  "id": "hair-009",
+  "url": "/mfl/hair/hair-09.jpg",
+  "alt_text": "메이크업포엘 웨딩 헤어변형 하이 번 업스타일 시술 과정",
+  "category": "hair-styling",
+  "order_position": 9
+ },
+ {
+  "id": "hair-010",
+  "url": "/mfl/hair/hair-10.jpg",
+  "alt_text": "메이크업포엘 웨딩 헤어변형 하이 번 업스타일 완성 컷",
+  "category": "hair-styling",
+  "order_position": 10
+ },
+ {
+  "id": "hair-011",
+  "url": "/mfl/hair/hair-11.jpg",
+  "alt_text": "메이크업포엘 웨딩 헤어변형 하이 번 업스타일 완성 컷",
+  "category": "hair-styling",
+  "order_position": 11
+ },
+ {
+  "id": "hair-012",
+  "url": "/mfl/hair/hair-12.jpg",
+  "alt_text": "메이크업포엘 웨딩 헤어변형 반묶음 웨이브 시술 과정",
+  "category": "hair-styling",
+  "order_position": 12
+ },
+ {
+  "id": "hair-013",
+  "url": "/mfl/hair/hair-13.jpg",
+  "alt_text": "메이크업포엘 웨딩 헤어변형 반묶음 웨이브 완성 컷",
+  "category": "hair-styling",
+  "order_position": 13
+ },
+ {
+  "id": "hair-014",
+  "url": "/mfl/hair/hair-14.jpg",
+  "alt_text": "메이크업포엘 웨딩 헤어변형 반묶음 웨이브 완성 컷",
+  "category": "hair-styling",
+  "order_position": 14
+ },
+ {
   "id": "men-makeup-001",
   "url": "https://makeupforl.co.kr/uploaded/banner/9b3bed043a802650f43193a481e29729.jpg",
   "alt_text": "메이크업포엘 남자 메이크업 메이크업 포트폴리오 1",

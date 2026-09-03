@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import GalleryGrid from './GalleryGrid'
 
@@ -9,13 +10,28 @@ const categories = [
   { slug: 'honju', name: '혼주' },
   { slug: 'family-guest', name: '가족 및 하객' },
   { slug: 'wedding', name: '웨딩' },
+  { slug: 'hair-styling', name: '헤어변형' },
   { slug: 'men-makeup', name: '남자 메이크업' },
   { slug: 'corporate-video', name: '기업행사&영상메이크업' },
   { slug: 'photoshoot-profile', name: '화보 & 프로필' },
 ]
 
+/** ?cat= 값을 탭 슬러그로 — 슬러그와 한글 이름(옛 링크) 둘 다 받는다 */
+function toSlug(cat: string | null) {
+  if (!cat) return 'all'
+  const hit = categories.find((c) => c.slug === cat || c.name === cat)
+  return hit ? hit.slug : 'all'
+}
+
 export default function GalleryClient() {
-  const [activeCategory, setActiveCategory] = useState('all')
+  const searchParams = useSearchParams()
+  const catParam = searchParams.get('cat')
+  const [activeCategory, setActiveCategory] = useState(() => toSlug(catParam))
+
+  // 헤더 서브메뉴로 이동하면 같은 페이지라 리마운트되지 않으므로 쿼리 변화를 따라간다
+  useEffect(() => {
+    setActiveCategory(toSlug(catParam))
+  }, [catParam])
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">

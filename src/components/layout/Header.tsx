@@ -23,13 +23,15 @@ const navigation: NavItem[] = [
   {
     name: '갤러리',
     href: '/gallery',
+    // cat 은 갤러리 탭 슬러그로 넘긴다 (한글 이름은 & 가 쿼리를 끊어 필터가 깨졌다)
     sub: [
-      { name: '혼주', href: '/gallery?cat=혼주' },
-      { name: '가족 및 하객', href: '/gallery?cat=가족 및 하객' },
-      { name: '웨딩', href: '/gallery?cat=웨딩' },
-      { name: '남자메이크업', href: '/gallery?cat=남자 메이크업' },
-      { name: '기업행사 & 영상메이크업', href: '/gallery?cat=기업행사&영상메이크업' },
-      { name: '화보&프로필', href: '/gallery?cat=화보 & 프로필' },
+      { name: '혼주', href: '/gallery?cat=honju' },
+      { name: '가족 및 하객', href: '/gallery?cat=family-guest' },
+      { name: '웨딩', href: '/gallery?cat=wedding' },
+      { name: '헤어변형', href: '/gallery?cat=hair-styling' },
+      { name: '남자메이크업', href: '/gallery?cat=men-makeup' },
+      { name: '기업행사 & 영상메이크업', href: '/gallery?cat=corporate-video' },
+      { name: '화보&프로필', href: '/gallery?cat=photoshoot-profile' },
       { name: '패션쇼', href: '/gallery?cat=패션쇼' },
     ],
   },
