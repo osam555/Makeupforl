@@ -40,3 +40,11 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 __pycache__/
+
+# 홍보영상 작업물 — 영상·오디오·중간산출물은 저장소에 두지 않는다 (약 129MB)
+# 제작 규칙 문서만 남긴다
+book/promo/*
+!book/promo/영상제작-규칙.md
+
+# 코드 인덱싱 툴 로컬 상태
+.serena/
