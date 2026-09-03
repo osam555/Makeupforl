@@ -154,7 +154,7 @@ export default async function Wed100Page() {
                   className="rounded-2xl border border-[var(--w-line)] bg-[var(--w-card)] p-5 transition hover:-translate-y-0.5 hover:shadow-lg"
                   style={{ borderTopColor: `var(--w-p${p.part})`, borderTopWidth: 3 }}
                 >
-                  <p className="text-[11px] font-extrabold tracking-[0.22em]" style={{ color: `var(--w-p${p.part})` }}>
+                  <p className="text-[13px] font-extrabold tracking-[0.22em]" style={{ color: `var(--w-p${p.part})` }}>
                     PART {p.part}
                   </p>
                   <h3 className="mt-2 text-base font-bold text-[var(--w-ink)]">{p.title}</h3>

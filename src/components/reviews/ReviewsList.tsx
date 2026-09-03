@@ -91,7 +91,7 @@ export default function ReviewsList() {
             </div>
             <div className="flex items-center justify-between px-3.5 py-3">
               <span className="text-sm font-semibold text-gray-900">{r.title}</span>
-              <span className="text-[11px] text-gray-400">{r.created_at}</span>
+              <span className="text-[13px] text-gray-600">{r.created_at}</span>
             </div>
           </button>
         ))}

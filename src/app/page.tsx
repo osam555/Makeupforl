@@ -23,7 +23,7 @@ export default async function Home() {
   const gallery = await getGalleryImages()
 
   // 홈에 펼쳐 보일 100문100답 문항 — 원고(wed100.json)에서 slug 로 찾아 쓴다
-  const wedItems = (wed100 as { items: { slug: string; question?: string; published?: boolean }[] }).items
+  const wedItems = (wed100 as { items: { slug: string; question?: string; published?: boolean; audio?: string }[] }).items
   const pickQna = (slugs: string[]) =>
     slugs
       .map((slug) => wedItems.find((i) => i.slug === slug))
@@ -33,11 +33,15 @@ export default async function Home() {
       .map((i) => ({ slug: i.slug, question: i.question }))
 
   const qna = pickQna(HOME_QNA_SLUGS)
+  // 하드코딩된 '102개' 대신 원고에서 센다. 음성 보유 수도 함께 본다
+  const published = wedItems.filter((i) => i.published && i.question)
+  const qnaCount = published.length
+  const audioCount = published.filter((i) => (i as { audio?: string }).audio).length
 
   /* 히어로 왼쪽 — 넓은 화면은 사진 위 카드로, 좁은 화면은 사진 아래로 같은 내용을 쓴다 */
   const heroCopy = (
     <>
-      <p className="text-[11px] font-bold tracking-[0.28em] text-[#F46E65]">MAKEUP FOR L</p>
+      <p className="text-[13px] font-bold tracking-[0.28em] text-[#F46E65]">MAKEUP FOR L</p>
       <h2 className="mt-3 text-[27px] font-bold leading-[1.3] text-gray-900 sm:text-[33px]">
         25년, 1만 명의 얼굴
       </h2>
@@ -52,7 +56,7 @@ export default async function Home() {
         {BRAND_STATS.map((s) => (
           <div key={s.label}>
             <dt className="text-[20px] font-bold leading-none text-[#F46E65]">{s.value}</dt>
-            <dd className="mt-1.5 text-[12px] text-gray-500">{s.label}</dd>
+            <dd className="mt-1.5 text-[13px] text-gray-500">{s.label}</dd>
           </div>
         ))}
       </dl>
@@ -82,7 +86,7 @@ export default async function Home() {
     <>
       <div className="flex items-baseline justify-between px-1">
         <h2 className="text-[20px] font-bold tracking-tight text-gray-900">업무분야</h2>
-        <span className="text-[12px] font-medium text-gray-400">
+        <span className="text-[13px] font-medium text-gray-600">
           {GALLERY_CATEGORIES.length}개 분야
         </span>
       </div>
@@ -173,7 +177,7 @@ export default async function Home() {
       <div className="bg-white py-16 sm:py-20">
         <div className="mfl-contain max-w-[1100px]">
           <div className="text-center">
-            <p className="text-[12px] font-semibold tracking-[0.28em] text-[#F46E65]">WHY</p>
+            <p className="text-[13px] font-semibold tracking-[0.28em] text-[#F46E65]">WHY</p>
             <h2 className="mt-3 text-[24px] font-bold text-gray-900 sm:text-[30px]">
               왜 메이크업포엘인가?
             </h2>
@@ -249,15 +253,27 @@ export default async function Home() {
         <div className="bg-[#FDF4F3] py-16 sm:py-20">
           <div className="mfl-contain max-w-[1000px]">
             <div className="text-center">
-              <p className="text-[12px] font-semibold tracking-[0.28em] text-[#F46E65]">
+              <p className="text-[13px] font-semibold tracking-[0.28em] text-[#F46E65]">
                 100 Q &amp; A
               </p>
               <h2 className="mt-3 text-[24px] font-bold text-gray-900 sm:text-[30px]">
                 혼주님이 가장 많이 물으신 것들
               </h2>
-              <p className="mt-3 text-[15px] leading-[1.8] text-gray-600">
-                102개 문항에 원장이 직접 답했습니다.
+              <p className="mt-3 text-[16px] leading-[1.8] text-gray-600">
+                {qnaCount}개 문항에 원장이 직접 답했습니다.
               </p>
+              {/*
+                전 문항에 음성이 있는데 100문100답 안에 들어가야만 알 수 있었다.
+                글 읽기가 부담스러운 분께 이게 가장 큰 장점이라 밖으로 드러낸다.
+              */}
+              {audioCount > 0 && (
+                <p className="mt-4 inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-[15px] font-semibold text-gray-700 shadow-sm">
+                  <span aria-hidden className="text-[17px]">
+                    🎧
+                  </span>
+                  글이 불편하시면 <b className="text-[#F46E65]">원장 음성</b>으로 들으실 수 있습니다
+                </p>
+              )}
             </div>
 
             <ul className="mt-9 grid gap-3 sm:grid-cols-2">

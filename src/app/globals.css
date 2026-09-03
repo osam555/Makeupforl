@@ -133,8 +133,8 @@
   --w-ink: #2E2724;
   --w-ink2: #6B5D57;
   --w-body: #4A403B;
-  --w-mut: #8A7B73;
-  --w-mut2: #9C8D86;
+  --w-mut: #6F615A;   /* 흰 배경 5.94:1 — 옛 #8A7B73 은 4.07:1 로 AA 미달 */
+  --w-mut2: #7A6C65;  /* 흰 배경 5.05:1 — 옛 #9C8D86 은 3.20:1 로 AA 미달 */
   --w-line: #E7DDD4;
   --w-line2: #F2EAE3;
   --w-hover: #FAF5F1;

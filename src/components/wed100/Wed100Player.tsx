@@ -424,7 +424,7 @@ export default function Wed100Player(p: PlayerProps) {
           {/* 재생 완료 → 다음 화 */}
           {ended && p.next && (
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-[rgba(var(--wp-scrim),.94)] px-6 text-center backdrop-blur-sm">
-              <p className="text-[11px] font-extrabold tracking-[0.2em] text-[var(--wp-accent)]">
+              <p className="text-[13px] font-extrabold tracking-[0.2em] text-[var(--wp-accent)]">
                 다음 질문
               </p>
               <p className="max-w-md text-base font-bold leading-snug text-white sm:text-lg">
@@ -538,7 +538,7 @@ export default function Wed100Player(p: PlayerProps) {
                   key={r}
                   onClick={() => chooseRate(r)}
                   aria-pressed={rate === r}
-                  className={`rounded-md border px-2.5 py-1.5 text-[12px] font-semibold ${
+                  className={`rounded-md border px-2.5 py-1.5 text-[13px] font-semibold ${
                     rate === r
                       ? 'border-[var(--wp-btn-on-line)] bg-[var(--wp-btn-on-bg)] text-[var(--wp-btn-on-ink)]'
                       : 'border-[var(--wp-btn-line)] text-[var(--wp-ink2)] hover:text-[var(--wp-ink)]'
@@ -555,7 +555,7 @@ export default function Wed100Player(p: PlayerProps) {
             <button
               onClick={() => setLoop((v) => !v)}
               aria-pressed={loop}
-              className={`flex items-center gap-1.5 py-1.5 text-[12px] font-semibold ${
+              className={`flex items-center gap-1.5 py-1.5 text-[13px] font-semibold ${
                 loop ? 'text-[var(--wp-accent)]' : 'text-[var(--wp-ink2)] hover:text-[var(--wp-ink)]'
               }`}
             >
@@ -564,7 +564,7 @@ export default function Wed100Player(p: PlayerProps) {
             <button
               onClick={toggleAutoNext}
               aria-pressed={autoNext}
-              className={`flex items-center gap-1.5 py-1.5 text-[12px] font-semibold ${
+              className={`flex items-center gap-1.5 py-1.5 text-[13px] font-semibold ${
                 autoNext ? 'text-[var(--wp-accent)]' : 'text-[var(--wp-ink2)] hover:text-[var(--wp-ink)]'
               }`}
             >
@@ -579,7 +579,7 @@ export default function Wed100Player(p: PlayerProps) {
                   key={f.key}
                   onClick={() => chooseCapFont(f.key)}
                   aria-pressed={capFont === f.key}
-                  className={`rounded-md border px-2.5 py-1.5 text-[12px] font-semibold transition ${
+                  className={`rounded-md border px-2.5 py-1.5 text-[13px] font-semibold transition ${
                     capFont === f.key
                       ? 'border-[var(--wp-btn-on-line)] bg-[var(--wp-btn-on-bg)] text-[var(--wp-btn-on-ink)]'
                       : 'border-[var(--wp-btn-line)] text-[var(--wp-ink2)] hover:text-[var(--wp-ink)]'
@@ -592,7 +592,7 @@ export default function Wed100Player(p: PlayerProps) {
           </div>
 
           {!p.audio && (
-            <p className="mt-3 text-[12px] text-[var(--wp-ink2)]">
+            <p className="mt-3 text-[13px] text-[var(--wp-ink2)]">
               음성 준비 중입니다 — 지금은 자막 읽기 모드로 재생됩니다.
             </p>
           )}
@@ -607,7 +607,7 @@ export default function Wed100Player(p: PlayerProps) {
             >
               <ChevronLeft className="h-4 w-4 shrink-0 text-[var(--wp-ink2)]" />
               <span className="min-w-0">
-                <span className="block text-[11px] font-bold text-[var(--wp-ink2)]">이전</span>
+                <span className="block text-[13px] font-bold text-[var(--wp-ink2)]">이전</span>
                 <span className="line-clamp-3 text-[14px] font-bold leading-snug sm:line-clamp-2 sm:text-[15px]">
                   {p.prev.question}
                 </span>
@@ -618,7 +618,7 @@ export default function Wed100Player(p: PlayerProps) {
           )}
 
           <span className="grid shrink-0 place-items-center border-x border-[var(--wp-line)] px-2 py-2 text-center sm:px-3">
-            <span className="text-[10px] font-extrabold tracking-[0.12em] text-[var(--w-gold)]">
+            <span className="text-[12px] font-extrabold tracking-[0.12em] text-[var(--w-gold)]">
               {p.part === 0 || p.part === 7 ? p.partTitle : `PART ${p.part}`}
             </span>
             <span className="font-mono text-[13px] font-bold text-[var(--wp-ink)]">
@@ -632,7 +632,7 @@ export default function Wed100Player(p: PlayerProps) {
               className="flex min-w-0 flex-1 items-center justify-end gap-2 px-2.5 py-3.5 text-right sm:px-3.5 transition hover:bg-[var(--wp-btn-on-bg)]"
             >
               <span className="min-w-0">
-                <span className="block text-[11px] font-bold text-[var(--wp-ink2)]">다음</span>
+                <span className="block text-[13px] font-bold text-[var(--wp-ink2)]">다음</span>
                 <span className="line-clamp-3 text-[14px] font-bold leading-snug sm:line-clamp-2 sm:text-[15px]">
                   {p.next.question}
                 </span>
@@ -665,7 +665,7 @@ export default function Wed100Player(p: PlayerProps) {
       {/* 답변 전문 — 재생 중에는 따라 읽는 자막, 멈추면 그냥 읽는 글 */}
       <div className="flex flex-col overflow-hidden rounded-2xl border border-[var(--w-line)] bg-[var(--w-card)]">
         <div className="border-b border-[var(--w-line)] px-5 py-4">
-          <p className="text-[10px] font-extrabold tracking-[0.18em] text-[var(--w-gold)]">
+          <p className="text-[12px] font-extrabold tracking-[0.18em] text-[var(--w-gold)]">
             {partLabel}
           </p>
           <h1 className="mt-2 text-lg font-bold leading-snug text-[var(--w-ink)]">{p.question}</h1>
@@ -679,7 +679,7 @@ export default function Wed100Player(p: PlayerProps) {
                   key={l.key}
                   onClick={() => chooseLang(l.key)}
                   aria-pressed={lang === l.key}
-                  className={`rounded-md border px-2.5 py-1 text-[12px] font-semibold transition ${
+                  className={`rounded-md border px-2.5 py-1 text-[13px] font-semibold transition ${
                     lang === l.key
                       ? 'border-[var(--w-rose)] bg-[var(--w-rose-l)] text-[var(--w-rose-t)]'
                       : 'border-[var(--w-line)] text-[var(--w-ink2)] hover:bg-[var(--w-hover)]'
@@ -696,7 +696,7 @@ export default function Wed100Player(p: PlayerProps) {
                   key={f.key}
                   onClick={() => chooseFont(f.key)}
                   aria-pressed={font === f.key}
-                  className={`rounded-md border px-2.5 py-1 text-[12px] font-semibold transition ${
+                  className={`rounded-md border px-2.5 py-1 text-[13px] font-semibold transition ${
                     font === f.key
                       ? 'border-[var(--w-rose)] bg-[var(--w-rose-l)] text-[var(--w-rose-t)]'
                       : 'border-[var(--w-line)] text-[var(--w-ink2)] hover:bg-[var(--w-hover)]'
@@ -726,7 +726,7 @@ export default function Wed100Player(p: PlayerProps) {
               }`}
             >
               <span
-                className="mr-2 select-none font-mono text-[11px] text-[var(--w-ink2)]"
+                className="mr-2 select-none font-mono text-[13px] text-[var(--w-ink2)]"
                 aria-hidden
               >
                 {fmt(timeline[i].start)}

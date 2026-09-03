@@ -213,7 +213,7 @@ export default async function Wed100DetailPage({
                   </div>
                   <div className="p-4">
                     <p
-                      className="text-[10px] font-extrabold tracking-[0.13em]"
+                      className="text-[12px] font-extrabold tracking-[0.13em]"
                       style={{ color: `var(--w-p${x.part})` }}
                     >
                       {x.part === 0
@@ -225,7 +225,7 @@ export default async function Wed100DetailPage({
                     <h3 className="mt-1.5 line-clamp-3 text-sm font-bold leading-snug text-[var(--w-ink)]">
                       {x.question}
                     </h3>
-                    <p className="mt-2 text-[11px] text-[var(--w-ink2)]">
+                    <p className="mt-2 text-[13px] text-[var(--w-ink2)]">
                       🎧 {formatDuration(estimateDuration(x))}
                     </p>
                   </div>

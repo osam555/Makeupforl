@@ -57,10 +57,10 @@ export default function NowPlayingRotator({
         className="group block rounded-2xl border border-[var(--w-line)] bg-[var(--w-card)]/95 p-4 shadow-xl backdrop-blur transition hover:-translate-y-0.5 hover:shadow-2xl"
       >
         <div className="flex items-center justify-between">
-          <p className="text-[10px] font-extrabold tracking-[0.22em] text-[var(--w-rose)]">
+          <p className="text-[12px] font-extrabold tracking-[0.22em] text-[var(--w-rose)]">
             NOW PLAYING · {partLabel(cur.part)}
           </p>
-          <p className="text-[10px] font-semibold tabular-nums text-[var(--w-mut)]">
+          <p className="text-[12px] font-semibold tabular-nums text-[var(--w-mut)]">
             {i + 1} / {items.length}
           </p>
         </div>
@@ -76,7 +76,7 @@ export default function NowPlayingRotator({
         </div>
 
         <div className="mt-3 flex items-center gap-3">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--w-rose)] text-[11px] text-white transition group-hover:bg-[var(--w-rose-d)]">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--w-rose)] text-[13px] text-white transition group-hover:bg-[var(--w-rose-d)]">
             ▶
           </span>
           <span className="flex h-8 flex-1 items-end gap-[3px]" aria-hidden>
@@ -90,7 +90,7 @@ export default function NowPlayingRotator({
           </span>
         </div>
 
-        <p className="mt-2 text-[11px] text-[var(--w-mut)]">
+        <p className="mt-2 text-[13px] text-[var(--w-mut)]">
           전체 약 {totalMinutes}분 · 한/EN 자막
         </p>
       </Link>

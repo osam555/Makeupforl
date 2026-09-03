@@ -96,7 +96,7 @@ export default function Wed100Browser({
             <History className="h-4 w-4" />
           </span>
           <span className="min-w-0 flex-1">
-            <span className="block text-[11px] font-extrabold tracking-[0.1em] text-[var(--w-rose-t)]">
+            <span className="block text-[13px] font-extrabold tracking-[0.1em] text-[var(--w-rose-t)]">
               이어듣기
             </span>
             <span className="mt-0.5 line-clamp-1 block text-sm font-bold text-[var(--w-ink)]">
@@ -184,7 +184,7 @@ export default function Wed100Browser({
                   {done.has(x.slug) && (
                     <span
                       title="들은 질문"
-                      className="absolute left-3 top-3 flex items-center gap-1 rounded-full bg-[var(--w-card)]/95 px-2 py-1 text-[10px] font-bold text-[var(--w-p4)] shadow"
+                      className="absolute left-3 top-3 flex items-center gap-1 rounded-full bg-[var(--w-card)]/95 px-2 py-1 text-[12px] font-bold text-[var(--w-p4)] shadow"
                     >
                       <Check className="h-3 w-3" /> 들음
                     </span>
@@ -192,7 +192,7 @@ export default function Wed100Browser({
                 </div>
                 <div className="p-4">
                   <p
-                    className="text-[10px] font-extrabold tracking-[0.13em]"
+                    className="text-[12px] font-extrabold tracking-[0.13em]"
                     style={{ color: `var(--w-p${x.part})` }}
                   >
                     {partLabel(x)}
@@ -204,13 +204,13 @@ export default function Wed100Browser({
                     {x.keywords.slice(0, 3).map((k) => (
                       <span
                         key={k}
-                        className="rounded bg-[var(--w-rose-l)] px-1.5 py-0.5 text-[10px] text-[var(--w-rose-t)]"
+                        className="rounded bg-[var(--w-rose-l)] px-1.5 py-0.5 text-[12px] text-[var(--w-rose-t)]"
                       >
                         {k}
                       </span>
                     ))}
                   </div>
-                  <p className="mt-2.5 text-[11px] text-[var(--w-ink2)]">
+                  <p className="mt-2.5 text-[13px] text-[var(--w-ink2)]">
                     🎧 {fmt(x.duration)} · 자막 한/영{!x.hasAudio && ' · 음성 준비중'}
                   </p>
                 </div>
@@ -227,16 +227,16 @@ export default function Wed100Browser({
               className="flex items-center gap-4 border-b border-[var(--w-line2)] px-5 py-3.5 text-sm last:border-0 hover:bg-[var(--w-hover)]"
             >
               <span
-                className="w-14 shrink-0 text-[11px] font-extrabold tracking-wider"
+                className="w-14 shrink-0 text-[13px] font-extrabold tracking-wider"
                 style={{ color: `var(--w-p${x.part})` }}
               >
                 {x.part === 0 ? '프롤로그' : x.part === 7 ? '에필로그' : `P${x.part}·${String(x.n).padStart(2, '0')}`}
               </span>
               <span className="flex-1">
                 <span className="block font-medium text-[var(--w-ink)]">{x.question}</span>
-                <span className="mt-0.5 block text-[11px] text-[var(--w-ink2)]">{x.question_en}</span>
+                <span className="mt-0.5 block text-[13px] text-[var(--w-ink2)]">{x.question_en}</span>
               </span>
-              <span className="shrink-0 text-[11px] text-[var(--w-ink2)]">🎧 {fmt(x.duration)}</span>
+              <span className="shrink-0 text-[13px] text-[var(--w-ink2)]">🎧 {fmt(x.duration)}</span>
             </Link>
           ))}
         </div>
