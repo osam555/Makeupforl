@@ -1,10 +1,12 @@
 import Link from 'next/link'
+import Image from 'next/image'
 
 import { getSiteImages } from '@/lib/siteImages'
 import MainGallery from '@/components/home/MainGallery'
 import ReviewSlide from '@/components/home/ReviewSlide'
 import reviewsSeed from '@/data/reviews.json'
 import gallerySeed from '@/data/gallery.json'
+import { GALLERY_CATEGORIES } from '@/lib/galleryCategories'
 
 export const revalidate = 3600
 
@@ -22,15 +24,77 @@ export default async function Home() {
 
   return (
     <div className="mfl-container">
-      {/* 메인 비주얼 */}
-      <div className="main-visual">
+      {/*
+        메인 비주얼 — 홈에서 가장 큰 요소(LCP)라 next/image 로 우선 로드한다.
+        예전엔 크기 없는 <img> 라 화면이 한 번 튀고(CLS) 늦게 떴다.
+        사진만 있고 글이 한 줄도 없어서 무엇을 하는 곳인지 스크롤해야 알 수 있었다.
+      */}
+      <div className="main-visual relative">
         <div className="items">
           <div className="item">
             <div className="img">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={img['main-vis'] || '/mfl/images/main/main_vis1.jpg'} alt="메이크업포엘" />
+              <Image
+                src={img['main-vis'] || '/mfl/images/main/main_vis1.jpg'}
+                alt="메이크업포엘 혼주 메이크업"
+                width={1920}
+                height={980}
+                priority
+                sizes="100vw"
+                className="h-auto w-full"
+              />
             </div>
           </div>
+        </div>
+
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/45 via-black/15 to-transparent" />
+        <div className="absolute inset-0 flex items-center">
+          <div className="mfl-contain">
+            <div className="max-w-[560px] text-white">
+              <p className="text-[13px] font-semibold tracking-[0.2em] text-white/85 sm:text-[15px]">
+                MAKEUP FOR L
+              </p>
+              <h2 className="mt-3 text-[26px] font-bold leading-[1.35] drop-shadow-sm sm:text-[40px]">
+                혼주 메이크업 전문
+              </h2>
+              <p className="mt-3 text-[14px] leading-[1.7] text-white/90 sm:mt-4 sm:text-[18px]">
+                20년, 1만 명의 얼굴을 만났습니다.
+                <br className="hidden sm:block" /> 신부 곁의 혼주가 아니라 혼주 한 분께
+                집중합니다.
+              </p>
+              <div className="mt-5 flex flex-wrap gap-2 sm:mt-8 sm:gap-3">
+                <Link
+                  href="/honjoo100"
+                  className="rounded-full bg-[#F46E65] px-5 py-2.5 text-[13px] font-bold text-white transition-colors hover:bg-[#e15a51] sm:px-7 sm:py-3.5 sm:text-[15px]"
+                >
+                  혼주메이크업 100문100답
+                </Link>
+                <Link
+                  href="/consultation"
+                  className="rounded-full border border-white/70 px-5 py-2.5 text-[13px] font-bold text-white backdrop-blur-sm transition-colors hover:bg-white/15 sm:px-7 sm:py-3.5 sm:text-[15px]"
+                >
+                  1:1 사전컨설팅
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 업무분야 바로가기 — 방문자가 자기를 규정하는 축(나는 혼주다)을 첫 화면에 둔다 */}
+      <div className="border-b border-gray-100 bg-white py-7">
+        <div className="mfl-contain">
+          <ul className="flex flex-wrap justify-center gap-2 sm:gap-3">
+            {GALLERY_CATEGORIES.map((c) => (
+              <li key={c.slug}>
+                <Link
+                  href={`/gallery/${c.slug}`}
+                  className="inline-flex items-center rounded-full border border-gray-200 px-4 py-2 text-[13px] font-medium text-gray-700 transition-colors hover:border-[#F46E65] hover:text-[#F46E65] sm:px-5 sm:text-[15px]"
+                >
+                  {c.menuName}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
 
@@ -47,7 +111,7 @@ export default async function Home() {
           <div className="con-box">
             <div className="wrap">
               <Link
-                href="/services"
+                href="/services#shop"
                 className="box"
                 style={{ backgroundImage: `url(${img['sec1-bg1'] || '/mfl/images/main/sec1_bg1.jpg'})` }}
               >
@@ -62,7 +126,7 @@ export default async function Home() {
             </div>
             <div className="wrap">
               <Link
-                href="/services"
+                href="/services#visit"
                 className="box type2"
                 style={{ backgroundImage: `url(${img['sec1-bg2'] || '/mfl/images/main/sec1_bg2.jpg'})` }}
               >

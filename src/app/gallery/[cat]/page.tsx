@@ -34,8 +34,13 @@ export default async function GalleryCategoryPage({ params }: Params) {
   const img = await getSiteImages()
   return (
     <>
-      {/* 제목은 히어로에만 둔다 — 아래에 또 쓰면 같은 말이 두 번 나온다 */}
-      <SubHero title={c.menuName} image={img['sub-hero']} />
+      {/*
+        제목은 히어로에만 둔다 — 아래에 또 쓰면 같은 말이 두 번 나온다.
+        히어로 이미지는 분야마다 따로 둔다. 예전엔 전 분야가 sub-hero 한 장을 써서
+        혼주·남자·기업행사 페이지에 모두 신부 사진이 떴다.
+        아직 등록 전인 분야는 공용 이미지로 떨어진다. /admin 에서 교체할 수 있다.
+      */}
+      <SubHero title={c.menuName} image={img[`hero-${c.slug}`] || img['sub-hero']} />
 
       {/* 분야 소개 */}
       <section className="bg-gradient-to-br from-[#FDF4F3] to-white py-16">

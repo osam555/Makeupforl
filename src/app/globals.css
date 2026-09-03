@@ -251,3 +251,19 @@
 /* 서브 페이지 하단 여백 유틸 (원본 .real-cont) */
 .mfl-real { padding: 0 0 100px; }
 .mfl-real-t2 { padding: 60px 0 100px; }
+
+/* 서브 탭이 많은 그룹(업무분야 7개)은 좁은 화면에서 줄바꿈 대신 가로 스크롤로 넘긴다.
+   원본 .lnb 는 항목 3개 기준이라 flex 로 꽉 채우면 7개에서 글자가 뭉갠다. */
+.mfl-site .lnb.lnb-scroll ul {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.mfl-site .lnb.lnb-scroll ul::-webkit-scrollbar { display: none; }
+.mfl-site .lnb.lnb-scroll ul li { flex: 0 0 auto; width: auto; max-width: none; }
+.mfl-site .lnb.lnb-scroll ul li a { padding: 0 22px; white-space: nowrap; font-size: 17px; }
+@media (max-width: 1024px) {
+  .mfl-site .lnb.lnb-scroll ul { justify-content: flex-start; }
+  .mfl-site .lnb.lnb-scroll ul li a { font-size: 15px; padding: 0 16px; }
+}
