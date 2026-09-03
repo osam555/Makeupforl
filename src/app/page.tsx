@@ -128,11 +128,11 @@ export default async function Home() {
         <div className="pointer-events-none absolute inset-0 hidden bg-gradient-to-r from-black/10 via-transparent to-black/10 lg:block" />
 
         <div className="absolute inset-0 hidden items-center lg:flex">
-          <div className="mfl-contain flex w-full items-center justify-between gap-8">
-            <div className="w-[430px] shrink-0 rounded-3xl bg-white/92 p-7 shadow-[0_24px_60px_-24px_rgba(0,0,0,.4)] ring-1 ring-black/5 backdrop-blur-md">
+          <div className="hero-contain flex w-full items-center justify-between gap-10">
+            <div className="w-[460px] shrink-0 rounded-3xl bg-white/92 p-8 shadow-[0_24px_60px_-24px_rgba(0,0,0,.4)] ring-1 ring-black/5 backdrop-blur-md">
               {heroCopy}
             </div>
-            <div className="w-[340px] shrink-0 rounded-3xl bg-white/92 p-6 shadow-[0_24px_60px_-24px_rgba(0,0,0,.4)] ring-1 ring-black/5 backdrop-blur-md">
+            <div className="w-[360px] shrink-0 rounded-3xl bg-white/92 p-7 shadow-[0_24px_60px_-24px_rgba(0,0,0,.4)] ring-1 ring-black/5 backdrop-blur-md">
               {fieldPanel}
             </div>
           </div>

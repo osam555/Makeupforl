@@ -311,3 +311,25 @@
     object-position: center;
   }
 }
+
+/* ── 히어로 좌우 여백 ────────────────────────────────────────
+   헤더는 max-width:1780px 컨테이너에 로고를 left:30px 로 붙이는데,
+   본문 .mfl-contain 은 1460px 이라 히어로 카드가 로고보다 안쪽으로 들어가 있었다.
+   히어로만 헤더와 같은 폭을 써서 로고·메뉴와 좌우 끝을 맞춘다. */
+.mfl-site .hero-contain {
+  position: relative;
+  width: 100%;
+  max-width: 1780px;
+  margin: 0 auto;
+  padding-left: 30px;
+  padding-right: 30px;
+}
+@media (max-width: 640px) {
+  .mfl-site .hero-contain { max-width: 1230px; padding-left: 15px; padding-right: 15px; }
+}
+
+/* 메뉴 오른쪽에 150px 여백이 있어 히어로 카드 오른쪽 끝과 어긋났다.
+   1024 이상에서는 모바일 메뉴 버튼도 숨겨져 그 자리를 쓰는 것이 없다. */
+@media (min-width: 1025px) {
+  .mfl-site .mfl-gnb { margin-right: 0; }
+}
