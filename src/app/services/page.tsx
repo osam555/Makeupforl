@@ -41,8 +41,11 @@ export default async function ServicesPage() {
       <section className="py-16">
         <div className="mfl-contain max-w-[1200px]">
           <div className="grid gap-6 md:grid-cols-2">
-            {/* 샵 */}
-            <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
+            {/* 샵 — 헤더 [서비스 · 예약 > 샵 메이크업] 이 여기로 온다 */}
+            <div
+              id="shop"
+              className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm scroll-mt-28"
+            >
               <div className="relative aspect-[16/10] bg-gray-100">
                 <Image src={img['shop-bg']} alt="메이크업포엘 샵 전경" fill sizes="(max-width:768px) 100vw, 50vw" className="object-cover" />
               </div>
@@ -68,8 +71,11 @@ export default async function ServicesPage() {
               </div>
             </div>
 
-            {/* 출장 */}
-            <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
+            {/* 출장 — 헤더 [서비스 · 예약 > 출장 메이크업] 이 여기로 온다 */}
+            <div
+              id="visit"
+              className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm scroll-mt-28"
+            >
               <div className="relative aspect-[16/10] bg-gray-100">
                 <Image src={img['makeup-img']} alt="출장 메이크업 서비스" fill sizes="(max-width:768px) 100vw, 50vw" className="object-cover" />
               </div>

@@ -150,6 +150,41 @@
       "id": "home-10",
       "url": "/mfl/uploaded/webedit/2303/56e14059bcc1f802ba8416cafbe12e1d66977f03.jpg",
       "alt": "메이크업포엘 작업 사진"
+    },
+    {
+      "id": "hero-honju",
+      "url": "https://makeupforl.co.kr/uploaded/banner/5f572984937676a836488c1708c63cd7.jpg",
+      "alt": "메이크업포엘 혼주 메이크업 페이지 비주얼"
+    },
+    {
+      "id": "hero-family-guest",
+      "url": "https://makeupforl.co.kr/uploaded/banner/84690af4173190d5bbfde1ff01f315b4.jpg",
+      "alt": "메이크업포엘 가족 · 하객 페이지 비주얼"
+    },
+    {
+      "id": "hero-wedding",
+      "url": "https://makeupforl.co.kr/uploaded/banner/09ecc4daeb10fece01cf7c4bde1fb76a.jpg",
+      "alt": "메이크업포엘 웨딩 (신부) 페이지 비주얼"
+    },
+    {
+      "id": "hero-hair-styling",
+      "url": "/mfl/hair/hair-01.jpg",
+      "alt": "메이크업포엘 헤어 스타일링 페이지 비주얼"
+    },
+    {
+      "id": "hero-men-makeup",
+      "url": "https://makeupforl.co.kr/uploaded/banner/9b3bed043a802650f43193a481e29729.jpg",
+      "alt": "메이크업포엘 남자 메이크업 페이지 비주얼"
+    },
+    {
+      "id": "hero-corporate-video",
+      "url": "https://makeupforl.co.kr/uploaded/banner/731479332654b1fb48b309f5ac581126.jpg",
+      "alt": "메이크업포엘 기업행사 · 영상 페이지 비주얼"
+    },
+    {
+      "id": "hero-photoshoot-profile",
+      "url": "https://makeupforl.co.kr/uploaded/banner/da6cade76be1081044ebaa44c31b86da.jpg",
+      "alt": "메이크업포엘 화보 · 프로필 페이지 비주얼"
     }
   ]
 }

@@ -5,6 +5,7 @@ import { MapPin, Phone, Clock, Award } from 'lucide-react'
 
 import SubHero from '@/components/layout/SubHero'
 import { getSiteImages } from '@/lib/siteImages'
+import { BRAND_POINTS } from '@/lib/brandPoints'
 
 export const metadata: Metadata = {
   title: '브랜드소개 | 메이크업포엘',
@@ -42,16 +43,12 @@ export default async function BrandPage() {
   const img = await getSiteImages()
   return (
     <div className="min-h-screen bg-white">
-      <SubHero
-        title="브랜드 소개"
-        image={img['sub-hero']}
-        tabs={[
-          { name: '대표인사말', href: '/brand' },
-          { name: '회사소개', href: '/brand#company' },
-          { name: '오시는 길', href: '/brand#location' },
-        ]}
-        active="대표인사말"
-      />
+      {/*
+        브랜드소개는 상단 비주얼을 두지 않는다. 공용 sub-hero 가 신부 인물 사진이라
+        바로 아래 대표원장 인사말·사진과 인물이 겹쳐 보였다.
+        탭은 SubTabs 가 헤더 메뉴에서 자동으로 만들고, 스크롤에 따라 활성이 움직인다.
+      */}
+      <SubHero title="브랜드 소개" />
       {/* 대표 인사말 — 원본: .greeting .top-con (bg #F4F4F4, padding 68px 100px 0, mb 55px)
           .tt-wrap { padding-right:615px; padding-bottom:72px } + ceo.png 389×476 우측 하단 */}
       <div className="mfl-contain">
@@ -152,24 +149,7 @@ export default async function BrandPage() {
         <div className="mfl-contain max-w-[1000px]">
           <h2 className="text-2xl font-bold text-gray-900">왜 메이크업포엘인가?</h2>
           <div className="mt-8 space-y-4">
-            {[
-              [
-                '혼주만을 위한 전문점',
-                '신부 전문 샵에서 부수적으로 다뤄지는 혼주가 아니라, 혼주 한 분께 온전히 집중합니다.',
-              ],
-              [
-                '메이크업 전 1:1 사전 컨설팅',
-                '퍼스널컬러 진단, 어울리는 헤어스타일 점검을 먼저 하고 당일에 임합니다.',
-              ],
-              [
-                '중년의 얼굴을 아는 기술',
-                '쳐진 눈꺼풀, 패인 주름, 정수리 탈모, 적은 숱까지 이해하고 다룹니다.',
-              ],
-              [
-                '합법적인 정식 업체',
-                '국가자격증과 면허를 갖춘 아티스트가 정식 허가 업체를 통해 서비스합니다.',
-              ],
-            ].map(([t, d]) => (
+            {BRAND_POINTS.map(({ title: t, desc: d }) => (
               <div key={t} className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm">
                 <h3 className="font-bold text-gray-900">{t}</h3>
                 <p className="mt-1.5 text-[15px] leading-relaxed text-gray-600">{d}</p>

@@ -251,3 +251,47 @@
 /* 서브 페이지 하단 여백 유틸 (원본 .real-cont) */
 .mfl-real { padding: 0 0 100px; }
 .mfl-real-t2 { padding: 60px 0 100px; }
+
+/* 서브 탭이 많은 그룹(업무분야 7개)은 좁은 화면에서 줄바꿈 대신 가로 스크롤로 넘긴다.
+   원본 .lnb 는 항목 3개 기준이라 flex 로 꽉 채우면 7개에서 글자가 뭉갠다. */
+.mfl-site .lnb.lnb-scroll ul {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.mfl-site .lnb.lnb-scroll ul::-webkit-scrollbar { display: none; }
+.mfl-site .lnb.lnb-scroll ul li { flex: 0 0 auto; width: auto; max-width: none; }
+.mfl-site .lnb.lnb-scroll ul li a { padding: 0 22px; white-space: nowrap; font-size: 17px; }
+@media (max-width: 1024px) {
+  .mfl-site .lnb.lnb-scroll ul { justify-content: flex-start; }
+  .mfl-site .lnb.lnb-scroll ul li a { font-size: 15px; padding: 0 16px; }
+}
+
+/* ── 메뉴 표시 보정 ────────────────────────────────────────────────
+   원본 CSS 는 hover 밑줄과 모바일 화살표를 nth-child 번호로 켜고 껐다.
+   메뉴 순서가 바뀌면 엉뚱한 항목에 걸리므로 항목 성격(.no-sub)으로 판단하게 바꾼다. */
+
+/* 상위 메뉴는 전부 클릭해서 이동할 수 있다. hover 밑줄을 모두 살려 그 신호를 준다 */
+.mfl-site .mfl-gnb > ul > li:nth-child(n):hover > a:after { display: block; }
+
+/* 모바일 드로어: 화살표는 하위 메뉴가 있는 항목에만 */
+.mfl-site .mobile-navigation .nav-menu > ul > li:nth-child(n) > a:after { display: block; }
+.mfl-site .mobile-navigation .nav-menu > ul > li.no-sub > a:after { display: none; }
+
+/* 드로어에서 이름은 이동, 오른쪽 화살표 영역은 펼치기 */
+.mfl-site .mobile-navigation .nav-menu > ul > li { position: relative; }
+.mfl-site .mobile-navigation .nav-menu > ul > li > .m-sub-toggle {
+  position: absolute; top: 0; right: 0; width: 56px; height: 46px;
+  background: none; border: 0; padding: 0; cursor: pointer; z-index: 2;
+}
+
+/* 히어로 100문100답 문항이 한 개씩 슬라이드로 들어온다 */
+@keyframes qna-slide-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.qna-slide { animation: qna-slide-in .5s cubic-bezier(.22,.61,.36,1) both; }
+@media (prefers-reduced-motion: reduce) {
+  .qna-slide { animation: none; }
+}

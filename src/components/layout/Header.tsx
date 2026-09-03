@@ -3,42 +3,8 @@
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
+import { navigation, isNavActive, type NavItem } from '@/lib/navigation'
 
-type NavItem = { name: string; href: string; sub?: { name: string; href: string }[] }
-
-/** 원본 gnb 구성 + [혼주메이크업 100문100답] 을 브랜드소개 우측에 추가 */
-const navigation: NavItem[] = [
-  {
-    name: '브랜드소개',
-    href: '/brand',
-    sub: [
-      { name: '대표인사말', href: '/brand' },
-      { name: '회사소개', href: '/brand#company' },
-      { name: '오시는길', href: '/brand#location' },
-    ],
-  },
-  { name: '혼주메이크업 100문100답', href: '/honjoo100' },
-  { name: '샵 / 출장메이크업', href: '/services' },
-  { name: '1:1 사전컨설팅', href: '/consultation' },
-  {
-    name: '갤러리',
-    href: '/gallery',
-    // cat 은 갤러리 탭 슬러그로 넘긴다 (한글 이름은 & 가 쿼리를 끊어 필터가 깨졌다)
-    sub: [
-      { name: '혼주', href: '/gallery?cat=honju' },
-      { name: '가족 및 하객', href: '/gallery?cat=family-guest' },
-      { name: '웨딩', href: '/gallery?cat=wedding' },
-      { name: '헤어변형', href: '/gallery?cat=hair-styling' },
-      { name: '남자메이크업', href: '/gallery?cat=men-makeup' },
-      { name: '기업행사 & 영상메이크업', href: '/gallery?cat=corporate-video' },
-      { name: '화보&프로필', href: '/gallery?cat=photoshoot-profile' },
-      { name: '패션쇼', href: '/gallery?cat=패션쇼' },
-    ],
-  },
-  { name: '예약안내', href: '/reservation' },
-  { name: '고객후기', href: '/reviews' },
-  { name: '유튜브 채널', href: '/videos' },
-]
 
 export default function Header({ logo, logoWhite }: { logo?: string; logoWhite?: string }) {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -58,8 +24,7 @@ export default function Header({ logo, logoWhite }: { logo?: string; logoWhite?:
   /** 로고를 빠르게 두 번 누르면 관리자 화면으로 이동 */
   const tapRef = useRef<{ n: number; t: number }>({ n: 0, t: 0 })
 
-  const isActive = (item: NavItem) =>
-    item.href === '/' ? pathname === '/' : pathname.startsWith(item.href.split('#')[0])
+  const isActive = (item: NavItem) => isNavActive(item, pathname)
 
   return (
     <>
@@ -130,21 +95,31 @@ export default function Header({ logo, logoWhite }: { logo?: string; logoWhite?:
         <nav className="nav-menu">
           <ul>
             {navigation.map((item) => (
-              <li key={item.name} className={openSub === item.name ? 'active' : undefined}>
-                {item.sub ? (
-                  <a
-                    href={item.href}
-                    onClick={(e) => {
-                      e.preventDefault()
-                      setOpenSub(openSub === item.name ? null : item.name)
-                    }}
-                  >
-                    {item.name}
-                  </a>
-                ) : (
-                  <Link href={item.href} onClick={() => setMenuOpen(false)}>
-                    {item.name}
-                  </Link>
+              <li
+                key={item.name}
+                className={[
+                  openSub === item.name ? 'active' : '',
+                  item.sub ? '' : 'no-sub',
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
+              >
+                {/*
+                  이름을 누르면 곧장 그 페이지로 간다. 예전에는 하위 메뉴가 있으면
+                  preventDefault 로 펼치기만 해서 [브랜드소개] 를 눌러도 이동이 안 됐다.
+                  펼치기는 오른쪽 화살표 버튼으로 분리한다.
+                */}
+                <Link href={item.href} onClick={() => setMenuOpen(false)}>
+                  {item.name}
+                </Link>
+                {item.sub && (
+                  <button
+                    type="button"
+                    className="m-sub-toggle"
+                    aria-label={`${item.name} 하위 메뉴 ${openSub === item.name ? '접기' : '펼치기'}`}
+                    aria-expanded={openSub === item.name}
+                    onClick={() => setOpenSub(openSub === item.name ? null : item.name)}
+                  />
                 )}
                 {item.sub && (
                   <div className="submenu" style={{ display: openSub === item.name ? 'block' : 'none' }}>
