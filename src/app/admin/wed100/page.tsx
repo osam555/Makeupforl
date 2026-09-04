@@ -67,6 +67,14 @@ function AdminWed100Editor({
   const [source, setSource] = useState<'db' | 'seed'>('seed')
   const [sel, setSel] = useState<string>('p1-01')
   const [draft, setDraft] = useState<Wed100Item | null>(null)
+  /*
+    답변 입력창에 보여줄 원문. draft.answer 는 문단 배열이라 화면에 뿌리려면
+    join 해야 하는데, 입력할 때마다 split→trim→filter→join 을 왕복하면
+    사용자가 친 글자와 다시 그려지는 값이 달라진다(끝의 공백이 지워지는 등).
+    그때마다 React 가 textarea 값을 덮어써서 커서가 맨 끝으로 튀었다.
+    화면에는 친 그대로 보여주고, 문단 쪼개기는 draft 쪽에만 반영한다.
+  */
+  const [answerText, setAnswerText] = useState('')
   const [dirty, setDirty] = useState(false)
   const [saving, setSaving] = useState(false)
   const [tts, setTts] = useState(false)
@@ -131,7 +139,9 @@ function AdminWed100Editor({
   useEffect(() => {
     const it = items.find((x) => x.slug === sel)
     if (it) {
-      setDraft(JSON.parse(JSON.stringify(it)) as Wed100Item)
+      const copy = JSON.parse(JSON.stringify(it)) as Wed100Item
+      setDraft(copy)
+      setAnswerText((copy.answer ?? []).join('\n\n'))
       setDirty(false)
       setStatus(null)
     }
@@ -835,10 +845,12 @@ function AdminWed100Editor({
                   </span>
                 </span>
                 <textarea
-                  value={draft.answer.join('\n\n')}
-                  onChange={(e) =>
-                    patch((d) => (d.answer = e.target.value.split(/\n\s*\n/).map((s) => s.trim()).filter(Boolean)))
-                  }
+                  value={answerText}
+                  onChange={(e) => {
+                    const raw = e.target.value
+                    setAnswerText(raw)
+                    patch((d) => (d.answer = raw.split(/\n\s*\n/).map((s) => s.trim()).filter(Boolean)))
+                  }}
                   rows={7}
                   style={editStyle}
                   className="mt-1.5 w-full rounded-lg border border-[#E7DDD4] px-3 py-2.5 outline-none focus:border-[#A63D5A]"
