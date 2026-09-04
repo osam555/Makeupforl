@@ -23,6 +23,26 @@ export const metadata: Metadata = {
 
 type Block = { h: string; body: (string | string[])[] }
 
+/**
+ * 국외 이전 현황. 웹사이트를 여는 것만으로 접속 기록이 해외 서버에 남는다.
+ * 별도 동의 대신 개인정보처리방침에 공개하는 방식으로 알린다
+ * (개인정보 보호법 제28조의8 — 계약 이행에 필요한 처리위탁·보관을 공개한 경우).
+ */
+const TRANSFERS = [
+  {
+    to: 'Vercel Inc.',
+    country: '미국',
+    items: '접속 기록 (IP 주소, 접속 일시, 브라우저 정보)',
+    purpose: '웹사이트 호스팅 및 페이지 전송',
+  },
+  {
+    to: 'Google LLC',
+    country: '미국',
+    items: '접속 기록 (IP 주소, 접속 일시, 브라우저 정보)',
+    purpose: '사진·콘텐츠 저장과 전송(Firebase), 유튜브 영상 재생',
+  },
+]
+
 const SECTIONS: Block[] = [
   {
     h: '1. 수집하는 개인정보 항목',
@@ -78,13 +98,6 @@ const SECTIONS: Block[] = [
     ],
   },
   {
-    h: '6. 호스팅 및 유지보수',
-    body: [
-      '회사는 서비스 이행을 위해 아래와 같이 외부 전문업체에 위탁하여 운영하고 있습니다.',
-      ['위탁 대상자 : (주)쓰리애니아이앤시', '위탁업무 내용 : 웹사이트 및 시스템 관리(호스팅 / 유지보수)'],
-    ],
-  },
-  {
     h: '7. 이용자 및 법정대리인의 권리와 그 행사방법',
     body: [
       '이용자는 언제든지 등록되어 있는 자신의 개인정보를 조회하거나 수정할 수 있으며 삭제를 요청할 수도 있습니다.',
@@ -113,6 +126,36 @@ const SECTIONS: Block[] = [
   },
 ]
 
+/** 번호 조항 하나를 그린다. 6·9항은 표·연락처가 있어 본문에서 따로 짠다 */
+function Article({ s }: { s: Block }) {
+  return (
+    <section className="mt-12">
+      <h2 className="text-[19px] font-bold text-gray-900 sm:text-[21px]">{s.h}</h2>
+      <div className="mt-4 space-y-4">
+        {s.body.map((b, i) =>
+          Array.isArray(b) ? (
+            <div key={i} className="rounded-xl border border-gray-100 bg-gray-50 p-5">
+              <p className="font-bold text-gray-900">{b[0]}</p>
+              <ul className="mt-2.5 space-y-2">
+                {b.slice(1).map((t) => (
+                  <li key={t} className="flex gap-2 text-[15px] leading-[1.85] text-gray-700">
+                    <span className="text-[#F46E65]">·</span>
+                    <span>{t}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : (
+            <p key={i} className="text-[16px] leading-[1.9] text-gray-700">
+              {b}
+            </p>
+          ),
+        )}
+      </div>
+    </section>
+  )
+}
+
 export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-white">
@@ -137,34 +180,57 @@ export default function PrivacyPage() {
           </p>
         </section>
 
-        {SECTIONS.map((s) => (
-          <section key={s.h} className="mt-12">
-            <h2 className="text-[19px] font-bold text-gray-900 sm:text-[21px]">{s.h}</h2>
-            <div className="mt-4 space-y-4">
-              {s.body.map((b, i) =>
-                Array.isArray(b) ? (
-                  <div key={i} className="rounded-xl border border-gray-100 bg-gray-50 p-5">
-                    <p className="font-bold text-gray-900">{b[0]}</p>
-                    <ul className="mt-2.5 space-y-2">
-                      {b.slice(1).map((t) => (
-                        <li
-                          key={t}
-                          className="flex gap-2 text-[15px] leading-[1.85] text-gray-700"
-                        >
-                          <span className="text-[#F46E65]">·</span>
-                          <span>{t}</span>
-                        </li>
-                      ))}
-                    </ul>
+        {SECTIONS.filter((x) => x.h < '6').map((x) => (
+          <Article key={x.h} s={x} />
+        ))}
+
+        {/* 6. 위탁 및 국외 이전 — 표 형태라 따로 짠다 */}
+        <section className="mt-12">
+          <h2 className="text-[19px] font-bold text-gray-900 sm:text-[21px]">
+            6. 개인정보 처리업무의 위탁 및 국외 이전
+          </h2>
+          <p className="mt-4 text-[16px] leading-[1.9] text-gray-700">
+            회사는 웹사이트 운영을 위해 아래와 같이 업무를 위탁하고 있으며, 이 과정에서 이용자의 접속
+            기록이 국외로 이전됩니다. 상담 과정에서 알려주신 이름·연락처 등은 국외로 보내지 않습니다.
+          </p>
+
+          <div className="mt-5 space-y-4">
+            {TRANSFERS.map((t) => (
+              <div key={t.to} className="rounded-xl border border-gray-100 bg-gray-50 p-5">
+                <p className="font-bold text-gray-900">
+                  {t.to} <span className="font-medium text-gray-500">· {t.country}</span>
+                </p>
+                <dl className="mt-3 space-y-2 text-[15px] leading-[1.8] text-gray-700">
+                  <div className="flex flex-col gap-0.5 sm:flex-row sm:gap-3">
+                    <dt className="w-24 shrink-0 text-gray-500">이전 항목</dt>
+                    <dd>{t.items}</dd>
                   </div>
-                ) : (
-                  <p key={i} className="text-[16px] leading-[1.9] text-gray-700">
-                    {b}
-                  </p>
-                ),
-              )}
-            </div>
-          </section>
+                  <div className="flex flex-col gap-0.5 sm:flex-row sm:gap-3">
+                    <dt className="w-24 shrink-0 text-gray-500">이전 목적</dt>
+                    <dd>{t.purpose}</dd>
+                  </div>
+                  <div className="flex flex-col gap-0.5 sm:flex-row sm:gap-3">
+                    <dt className="w-24 shrink-0 text-gray-500">보유 기간</dt>
+                    <dd>위탁 계약 종료 시 또는 위탁 목적 달성 시까지</dd>
+                  </div>
+                </dl>
+              </div>
+            ))}
+          </div>
+
+          <p className="mt-4 text-[15px] leading-[1.85] text-gray-600">
+            이 밖에 글꼴 파일을 해외 콘텐츠 전송망(CDN)에서 내려받는 과정에서도 접속 기록이 전달될 수
+            있습니다.
+          </p>
+          <p className="mt-3 text-[16px] leading-[1.9] text-gray-700">
+            이용자는 개인정보의 국외 이전을 거부할 수 있습니다. 다만 위 이전은 웹사이트를 열어 보이기
+            위해 반드시 필요하므로, 거부하시는 경우 웹사이트 이용이 제한됩니다. 이 경우 전화(02-323-3321)
+            또는 카카오톡 채널로 상담하실 수 있습니다.
+          </p>
+        </section>
+
+        {SECTIONS.filter((x) => x.h > '6').map((x) => (
+          <Article key={x.h} s={x} />
         ))}
 
         {/* 9. 민원 — 연락처가 있어 따로 짠다 */}
