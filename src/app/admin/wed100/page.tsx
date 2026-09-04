@@ -7,6 +7,7 @@ import { Search, Save, Eye, RefreshCw, Database, CheckCircle2, XCircle, Volume2,
 
 import seedRaw from '@/data/wed100.json'
 import Wed100BatchAudio from '@/components/admin/Wed100BatchAudio'
+import { whenExact, whenText } from '@/lib/when'
 import { getDb, uploadAudio } from '@/lib/firebase/client'
 import AdminGate from '@/components/admin/AdminGate'
 import { Button } from '@/components/ui/button'
@@ -77,6 +78,16 @@ function AdminWed100Editor({
   */
   const [answerText, setAnswerText] = useState('')
   const [dirty, setDirty] = useState(false)
+
+  /**
+   * 본문을 고친 뒤 음성을 다시 만들지 않은 상태인지.
+   *
+   * 저장 직후에도 두 시각이 몇 초 어긋나므로 10분 여유를 둔다 (진단 API 와 같은 기준).
+   */
+  const isStale = (it?: { updatedAt?: string; audioAt?: string; audio?: string } | null) => {
+    if (!it?.audio || !it.updatedAt || !it.audioAt) return false
+    return Date.parse(it.updatedAt) - Date.parse(it.audioAt) > 10 * 60 * 1000
+  }
   const [saving, setSaving] = useState(false)
   const [tts, setTts] = useState(false)
   const [status, setStatus] = useState<Status>(null)
@@ -716,8 +727,16 @@ function AdminWed100Editor({
                   </span>
                   <span className="mt-1 flex gap-1">
                     <i
-                      className={`h-1.5 w-1.5 rounded-full ${x.audio ? 'bg-emerald-600' : 'bg-[#DCD2CB]'}`}
-                      title={x.audio ? '음성 있음' : '음성 없음'}
+                      className={`h-1.5 w-1.5 rounded-full ${
+                        !x.audio ? 'bg-[#DCD2CB]' : isStale(x) ? 'bg-amber-500' : 'bg-emerald-600'
+                      }`}
+                      title={
+                        !x.audio
+                          ? '음성 없음'
+                          : isStale(x)
+                            ? `음성이 본문보다 오래됨 — 본문 ${whenText(x.updatedAt)}, 음성 ${whenText(x.audioAt)}`
+                            : `음성 ${whenText(x.audioAt)}`
+                      }
                     />
                     <i
                       className={`h-1.5 w-1.5 rounded-full ${
@@ -760,6 +779,19 @@ function AdminWed100Editor({
                     수정됨 · 저장 필요
                   </span>
                 )}
+                {isStale(draft) && (
+                  <span
+                    className="rounded bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-800"
+                    title="본문을 고친 뒤 음성을 다시 만들지 않았습니다"
+                  >
+                    음성이 본문보다 오래됨
+                  </span>
+                )}
+                <span className="text-[11px] text-[#8A7A72]">
+                  <span title={whenExact(draft.updatedAt)}>본문 {whenText(draft.updatedAt)}</span>
+                  <span className="px-1.5 text-[#D4C7BE]">|</span>
+                  <span title={whenExact(draft.audioAt)}>음성 {whenText(draft.audioAt)}</span>
+                </span>
                 <div className="ml-auto flex flex-wrap items-center gap-2">
                   <Button
                     size="sm"

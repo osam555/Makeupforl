@@ -79,9 +79,13 @@ export async function POST(req: Request) {
       if (!it.audio) {
         reasons.push('음성 없음')
       } else {
-        const made = stamps.get(it.slug)
+        // audioAt 이 정확하지만, 그 값을 쓰기 전에 만든 음성에는 없다.
+        // 없으면 Storage 파일 기록 시각으로 대신한다.
+        const made = it.audioAt ? Date.parse(it.audioAt) : (stamps.get(it.slug) ?? NaN)
         const edited = it.updatedAt ? Date.parse(it.updatedAt) : NaN
-        if (made && Number.isFinite(edited) && edited - made > SLACK_MS) reasons.push('음성이 본문보다 오래됨')
+        if (Number.isFinite(made) && Number.isFinite(edited) && edited - made > SLACK_MS) {
+          reasons.push('음성이 본문보다 오래됨')
+        }
       }
 
       return {
@@ -90,11 +94,31 @@ export async function POST(req: Request) {
         question: it.question ?? '',
         cues: (it.cues ?? []).length,
         sentences: sentences.length,
+        updatedAt: it.updatedAt ?? null,
+        audioAt: it.audioAt ?? (stamps.has(it.slug) ? new Date(stamps.get(it.slug)!).toISOString() : null),
         reasons,
       }
     })
     .filter((r) => r.reasons.length > 0)
     .sort((a, b) => a.slug.localeCompare(b.slug))
 
-  return NextResponse.json({ ok: true, total: items.length, rows, editor })
+  /*
+    audioAt 을 쓰기 전에 만든 음성에는 이 값이 없다. 시각 비교를 매번 Storage 목록
+    조회에 기대지 않도록, 찾기를 돌릴 때 비어 있는 문항만 파일 기록 시각으로 채운다.
+    한 번 채워지면 이후로는 음성을 만들 때마다 스스로 갱신된다.
+  */
+  let filled = 0
+  const missing = items.filter((it) => it.audio && !it.audioAt && stamps.has(it.slug))
+  for (let i = 0; i < missing.length; i += 400) {
+    const batch = db.batch()
+    for (const it of missing.slice(i, i + 400)) {
+      batch.update(db.collection('wed100_questions').doc(it.slug), {
+        audioAt: new Date(stamps.get(it.slug)!).toISOString(),
+      })
+      filled++
+    }
+    await batch.commit()
+  }
+
+  return NextResponse.json({ ok: true, total: items.length, rows, filled, editor })
 }

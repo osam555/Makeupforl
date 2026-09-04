@@ -128,7 +128,8 @@ export async function POST(req: Request) {
       if (!(await ref.get()).exists) {
         return NextResponse.json({ ok: false, error: '없는 문항입니다.' }, { status: 404 })
       }
-      await ref.update({ audio, updatedAt: new Date().toISOString(), updatedBy: editor })
+      // 본문은 그대로이므로 updatedAt 은 건드리지 않는다 — 음성 시각만 남긴다
+      await ref.update({ audio, audioAt: new Date().toISOString(), audioBy: editor })
       revalidatePath('/honjoo100')
       revalidatePath(`/honjoo100/${slug}`)
       return NextResponse.json({ ok: true, slug, audio, editor })
@@ -172,10 +173,12 @@ export async function POST(req: Request) {
         `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o/` +
         `${encodeURIComponent(objectPath)}?alt=media&token=${token}`
 
+      // 본문이 아니라 음성만 바꾼 것이므로 updatedAt 이 아니라 audioAt 을 남긴다.
+      // 이래야 '본문을 고친 뒤 음성을 안 만든 문항'을 시각 비교만으로 가려낼 수 있다.
       const patch: Record<string, unknown> = {
         audio,
-        updatedAt: new Date().toISOString(),
-        updatedBy: editor,
+        audioAt: new Date().toISOString(),
+        audioBy: editor,
       }
       if (Array.isArray(body?.cues)) patch.cues = body.cues
       if (typeof body?.duration === 'number') patch.duration = body.duration

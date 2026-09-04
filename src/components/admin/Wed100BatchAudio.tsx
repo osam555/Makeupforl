@@ -3,12 +3,16 @@
 import { useCallback, useRef, useState } from 'react'
 import { CheckCircle2, Loader2, RefreshCw, Search, XCircle } from 'lucide-react'
 
+import { whenExact, whenText } from '@/lib/when'
+
 interface Row {
   slug: string
   part: number
   question: string
   cues: number
   sentences: number
+  updatedAt: string | null
+  audioAt: string | null
   reasons: string[]
 }
 
@@ -186,6 +190,10 @@ export default function Wed100BatchAudio({
                       <span className="text-[#8A7A72]">{r.slug}</span> · {r.question}
                     </div>
                     <div className="mt-0.5 text-[11px] text-[#8A7A72]">
+                      <span title={whenExact(r.updatedAt)}>본문 {whenText(r.updatedAt)}</span>
+                      <span className="px-1.5 text-[#D4C7BE]">|</span>
+                      <span title={whenExact(r.audioAt)}>음성 {whenText(r.audioAt)}</span>
+                      <span className="px-1.5 text-[#D4C7BE]">|</span>
                       {r.reasons.join(' · ')}
                       {r.cues !== r.sentences && ` · 자막 ${r.cues}줄 → ${r.sentences}줄로 다시 나눔`}
                       {note[r.slug] && ` · ${note[r.slug]}`}

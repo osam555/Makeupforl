@@ -36,7 +36,17 @@ export interface Wed100Item {
    */
   photoAuto?: boolean
   published?: boolean
+  /** 본문·자막을 마지막으로 고친 시각 */
   updatedAt?: string
+  updatedBy?: string
+  /**
+   * 음성을 마지막으로 만든 시각.
+   *
+   * updatedAt 과 따로 두는 이유: 음성 작업까지 updatedAt 을 건드리면 재생성 직후
+   * 본문을 언제 고쳤는지 알 수 없게 되고, 음성이 본문보다 오래됐는지도 판별할 수 없다.
+   */
+  audioAt?: string
+  audioBy?: string
 }
 
 export interface Wed100Part {

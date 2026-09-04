@@ -225,8 +225,9 @@ export async function POST(req: Request) {
             const en = prev[i]?.ko === ko ? prev[i]?.en : undefined
             return { i, ko, ...timings[i], ...(en ? { en } : {}) }
           }),
-          updatedAt: new Date().toISOString(),
-          updatedBy: editor,
+          // 본문이 아니라 음성을 바꾼 것이므로 updatedAt 이 아니라 audioAt 을 남긴다
+          audioAt: new Date().toISOString(),
+          audioBy: editor,
         })
         revalidatePath('/honjoo100')
         revalidatePath(`/honjoo100/${slug}`)
