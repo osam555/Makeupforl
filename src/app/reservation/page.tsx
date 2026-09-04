@@ -1,5 +1,4 @@
 import { Metadata } from 'next'
-import BookingForm from '@/components/booking/BookingForm'
 import SubHero from '@/components/layout/SubHero'
 import { getSiteImages } from '@/lib/siteImages'
 
@@ -67,8 +66,8 @@ export default async function ReservationPage() {
           </a>
         </div>
 
-        {/* Booking Form */}
-        <BookingForm />
+        {/* 예약 문의 폼은 뺐다. 들어와도 알림이 가지 않고 확인할 화면도 없어
+           손님이 답을 못 받는 상태였다. 전화·카카오톡으로만 받는다 */}
 
         {/* 진행 절차 */}
         <div className="mt-12 rounded-lg bg-white p-6 shadow-sm">
