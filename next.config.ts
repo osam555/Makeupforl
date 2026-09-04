@@ -73,6 +73,10 @@ const nextConfig: NextConfig = {
       { source: '/gal1.php', has: [{ type: 'query', key: 'b_type', value: '7' }], destination: '/gallery/men-makeup', permanent: true },
       { source: '/gal1.php', destination: '/gallery', permanent: true },
 
+      // 개인정보처리방침·이메일무단수집거부 팝업
+      { source: '/sub/pop_privacy.html', destination: '/privacy', permanent: true },
+      { source: '/sub/pop_email.html', destination: '/privacy#email', permanent: true },
+
       // 남은 .php 는 홈으로 (게시판 상세 등 개별 주소가 많다)
       { source: '/sub/:path*', destination: '/', permanent: true },
     ]

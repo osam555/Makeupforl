@@ -48,3 +48,7 @@ book/promo/*
 
 # 코드 인덱싱 툴 로컬 상태
 .serena/
+
+# 옛 홈페이지 보관본 — 74MB 스냅샷이라 저장소에 넣지 않는다.
+# 로컬 archive/makeupforl-old/ 에 있고, 별도 백업이 필요하다.
+archive/
