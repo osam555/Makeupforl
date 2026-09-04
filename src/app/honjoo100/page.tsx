@@ -6,6 +6,7 @@ import NowPlayingRotator from '@/components/wed100/NowPlayingRotator'
 import { HOME_HERO_QNA_SLUGS } from '@/lib/brandPoints'
 import { getPublishedWed100Items, wed100Meta, wed100Parts } from '@/lib/wed100'
 import { getSiteImages } from '@/lib/siteImages'
+import { getWed100Access, isOpen } from '@/lib/wed100Access'
 
 export const metadata: Metadata = {
   title: '혼주메이크업 100문 100답 | 메이크업포엘',
@@ -23,6 +24,7 @@ export const metadata: Metadata = {
 export default async function Wed100Page() {
   const items = await getPublishedWed100Items()
   const img = await getSiteImages()
+  const access = await getWed100Access()
   // 히어로 카드에 돌려 보여줄 대표 문항. 지정한 것 우선, 모자라면 앞에서부터 채운다
   const heroPicks = [
     ...HOME_HERO_QNA_SLUGS.map((sl) => items.find((x) => x.slug === sl)),
@@ -186,6 +188,7 @@ export default async function Wed100Page() {
             thumbImage: x.thumbImage!,
             duration: x.duration ?? Math.round(x.cues.reduce((a, c) => a + c.ko.length, 0) / 5.2 + 6),
             hasAudio: !!x.audio,
+            locked: !isOpen(access, x.slug),
           }))}
           parts={wed100Parts
             .filter((p) => (p.part >= 1 && p.part <= 6) || (counts.get(p.part) ?? 0) > 0)

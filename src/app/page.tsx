@@ -7,7 +7,10 @@ import { getReviews } from '@/lib/reviewImages'
 import MainGallery from '@/components/home/MainGallery'
 import ReviewSlide from '@/components/home/ReviewSlide'
 import { GALLERY_CATEGORIES } from '@/lib/galleryCategories'
-import { BRAND_POINTS, BRAND_STATS, HOME_QNA_SLUGS } from '@/lib/brandPoints'
+import { BRAND_POINTS, BRAND_STATS } from '@/lib/brandPoints'
+import HeroQnaSlide from '@/components/home/HeroQnaSlide'
+import QnaCard from '@/components/home/QnaCard'
+import { getHomeConfig } from '@/lib/homeConfig'
 import wed100 from '@/data/wed100.json'
 
 export const revalidate = 3600
@@ -32,7 +35,10 @@ export default async function Home() {
       )
       .map((i) => ({ slug: i.slug, question: i.question }))
 
-  const qna = pickQna(HOME_QNA_SLUGS)
+  // 어느 문항을 앞에 세울지는 어드민에서 고른다 (설정이 없으면 코드의 기본값)
+  const homeConfig = await getHomeConfig()
+  const qna = pickQna(homeConfig.sectionQna)
+  const heroQna = pickQna(homeConfig.heroQna)
   // 하드코딩된 '102개' 대신 원고에서 센다. 음성 보유 수도 함께 본다
   const published = wedItems.filter((i) => i.published && i.question)
   const qnaCount = published.length
@@ -78,6 +84,8 @@ export default async function Home() {
           혼주 100문100답
         </Link>
       </div>
+
+      <HeroQnaSlide items={heroQna} />
     </>
   )
 
@@ -279,15 +287,7 @@ export default async function Home() {
             <ul className="mt-9 grid gap-3 sm:grid-cols-2">
               {qna.map((q) => (
                 <li key={q.slug}>
-                  <Link
-                    href={`/honjoo100/${q.slug}`}
-                    className="group flex h-full items-start gap-3 rounded-2xl bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
-                  >
-                    <span className="mt-0.5 shrink-0 text-[17px] font-bold text-[#F46E65]">Q</span>
-                    <span className="text-[16px] font-medium leading-[1.6] text-gray-800 transition-colors group-hover:text-[#F46E65]">
-                      {q.question}
-                    </span>
-                  </Link>
+                  <QnaCard slug={q.slug} question={q.question} />
                 </li>
               ))}
             </ul>

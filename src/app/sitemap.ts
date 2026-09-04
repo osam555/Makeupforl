@@ -1,15 +1,17 @@
 import type { MetadataRoute } from 'next'
 import { GALLERY_CATEGORIES } from '@/lib/galleryCategories'
 import { SITE_URL } from '@/lib/site'
+import { getPublishedWed100Items } from '@/lib/wed100'
+import { getWed100Access, isOpen } from '@/lib/wed100Access'
 
 /**
  * 검색엔진에 알릴 주소 목록.
  *
- * 100문100답 개별 문항(102개)은 아직 넣지 않는다. 유료 판매를 준비 중이라
- * 무료로 열 범위가 정해지지 않았는데, 한 번 색인되면 나중에 잠가도 검색 결과와
- * 캐시에 본문이 남는다. 범위가 정해지면 무료 문항만 여기 추가하면 된다.
+ * 100문100답 개별 문항도 넣는다. 잠긴 문항은 본문을 내보내지 않고 유료 콘텐츠로
+ * 표기하므로, 색인되는 것은 제목뿐이다. 제목이 검색에 걸려야 사람이 찾아온다.
+ * 무료로 연 문항은 본문까지 색인되도록 우선순위를 조금 높인다.
  */
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date()
 
   const main: { path: string; priority: number; freq: MetadataRoute.Sitemap[number]['changeFrequency'] }[] = [
@@ -24,6 +26,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/videos', priority: 0.6, freq: 'weekly' },
   ]
 
+  const items = await getPublishedWed100Items()
+  const access = await getWed100Access()
+
   return [
     ...main.map((m) => ({
       url: `${SITE_URL}${m.path}`,
@@ -37,6 +42,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: 'weekly' as const,
       priority: 0.8,
+    })),
+    ...items.map((x) => ({
+      url: `${SITE_URL}/honjoo100/${x.slug}`,
+      lastModified: x.updatedAt ? new Date(x.updatedAt) : now,
+      changeFrequency: 'monthly' as const,
+      priority: isOpen(access, x.slug) ? 0.7 : 0.5,
     })),
   ]
 }

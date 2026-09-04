@@ -7,6 +7,8 @@ import { Search, Save, Eye, RefreshCw, Database, CheckCircle2, XCircle, Volume2,
 
 import seedRaw from '@/data/wed100.json'
 import Wed100BatchAudio from '@/components/admin/Wed100BatchAudio'
+import Wed100HomeQna from '@/components/admin/Wed100HomeQna'
+import Wed100Paywall from '@/components/admin/Wed100Paywall'
 import { whenExact, whenText } from '@/lib/when'
 import { getDb, uploadAudio } from '@/lib/firebase/client'
 import AdminGate from '@/components/admin/AdminGate'
@@ -556,7 +558,7 @@ function AdminWed100Editor({
               className="h-8 text-xs"
               onClick={() => setToolsOpen((v) => !v)}
             >
-              <Volume2 className="mr-1 h-3.5 w-3.5" /> 음성 도구
+              <Volume2 className="mr-1 h-3.5 w-3.5" /> 노출·음성 설정
             </Button>
             <Button
               size="sm"
@@ -575,7 +577,13 @@ function AdminWed100Editor({
 
         {toolsOpen && (
           <div className="border-x border-[#E0D6CC] bg-white px-5 py-4">
-            <Wed100BatchAudio auth={authPayload} onDone={() => void load()} />
+            <Wed100HomeQna items={items} auth={authPayload} />
+            <div className="mt-4">
+              <Wed100Paywall items={items} auth={authPayload} />
+            </div>
+            <div className="mt-4">
+              <Wed100BatchAudio auth={authPayload} onDone={() => void load()} />
+            </div>
             <div className="mt-4">
               <Wed100McLevel
                 items={items}

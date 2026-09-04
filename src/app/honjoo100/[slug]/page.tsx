@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 
+import Wed100Locked from '@/components/wed100/Wed100Locked'
 import Wed100Player from '@/components/wed100/Wed100Player'
 import type { PlayerNav } from '@/components/wed100/Wed100Player'
 import {
@@ -12,6 +13,7 @@ import {
   getWed100Item,
   getWed100Neighbors,
 } from '@/lib/wed100'
+import { getWed100Access, isOpen } from '@/lib/wed100Access'
 import type { Wed100Item } from '@/types/wed100'
 
 export const revalidate = 3600
@@ -29,7 +31,11 @@ export async function generateMetadata({
   const { slug } = await params
   const item = await getWed100Item(slug)
   if (!item) return { title: '혼주메이크업 100문 100답 | 메이크업포엘' }
-  const desc = item.cues.slice(0, 2).map((c) => c.ko).join(' ').slice(0, 150)
+  // 잠긴 문항은 본문을 설명에 쓰지 않는다. 검색에는 제목만 걸리면 된다.
+  const access = await getWed100Access()
+  const desc = isOpen(access, slug)
+    ? item.cues.slice(0, 2).map((c) => c.ko).join(' ').slice(0, 150)
+    : `혼주메이크업 100문100답 · ${item.partTitle}. 원장이 직접 답한 본문과 음성을 준비하고 있습니다.`
   return {
     title: `${item.question} | 혼주메이크업 100문 100답`,
     description: desc,
@@ -122,6 +128,9 @@ export default async function Wed100DetailPage({
   const { prev, next, index, total } = await getWed100Neighbors(slug)
   const all = await getPublishedWed100Items()
 
+  const access = await getWed100Access()
+  const open = isOpen(access, slug)
+
   const exclude = new Set([prev?.slug, next?.slug].filter(Boolean) as string[])
   const related = relatedItems(item, all, exclude)
 
@@ -129,23 +138,43 @@ export default async function Wed100DetailPage({
   const samePart = all.filter((x) => x.part === item.part)
   const partIndex = samePart.findIndex((x) => x.slug === item.slug) + 1
 
-  const faqJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: [
-      {
-        '@type': 'Question',
-        name: item.question,
-        acceptedAnswer: { '@type': 'Answer', text: item.answer.join('\n\n') },
-      },
-    ],
-  }
+  /*
+    열린 문항은 FAQ 로 알려 검색 결과에 답변이 함께 뜨게 한다.
+
+    잠긴 문항은 답변을 넘기지 않는다. 대신 구글이 정한 유료 콘텐츠 표기
+    (isAccessibleForFree:false + 잠긴 영역의 선택자)를 쓴다. 이 표기가 있어야
+    "본문이 없는데 색인만 된 페이지"가 아니라 유료 문서로 이해되고,
+    사람과 크롤러에게 다른 것을 보여 주는 행위(클로킹)로도 걸리지 않는다.
+  */
+  const jsonLd = open
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: [
+          {
+            '@type': 'Question',
+            name: item.question,
+            acceptedAnswer: { '@type': 'Answer', text: item.answer.join('\n\n') },
+          },
+        ],
+      }
+    : {
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        headline: item.question,
+        isAccessibleForFree: false,
+        hasPart: {
+          '@type': 'WebPageElement',
+          isAccessibleForFree: false,
+          cssSelector: '.paywall',
+        },
+      }
 
   return (
     <div className="bg-[var(--w-bg)]">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
       <div className="mx-auto max-w-7xl px-6 pt-6 lg:px-8">
@@ -166,6 +195,23 @@ export default async function Wed100DetailPage({
       </div>
 
       <div className="mx-auto max-w-7xl px-6 py-6 lg:px-8">
+        {!open ? (
+          <Wed100Locked
+            question={item.question}
+            questionEn={item.question_en}
+            part={item.part}
+            partTitle={item.partTitle}
+            n={item.n}
+            keywords={item.keywords}
+            heroImage={item.heroImage ?? `/wed100/img/${item.slug}-hero.svg`}
+            storeUrl={access.storeUrl}
+            notice={access.notice}
+            freeSample={all
+              .filter((x) => access.freeQna.includes(x.slug))
+              .slice(0, 5)
+              .map((x) => ({ slug: x.slug, question: x.question }))}
+          />
+        ) : (
         <Wed100Player
           slug={item.slug}
           part={item.part}
@@ -185,6 +231,7 @@ export default async function Wed100DetailPage({
           partIndex={partIndex}
           partTotal={samePart.length}
         />
+        )}
       </div>
 
       {/* 관련 질문 */}

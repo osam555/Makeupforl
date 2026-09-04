@@ -16,6 +16,8 @@ export interface BrowserItem {
   thumbImage: string
   duration: number
   hasAudio: boolean
+  /** 잠긴 문항 — 제목만 열려 있다 */
+  locked?: boolean
 }
 
 const LS_RESUME = 'wed100:resume'
@@ -211,7 +213,9 @@ export default function Wed100Browser({
                     ))}
                   </div>
                   <p className="mt-2.5 text-[13px] text-[var(--w-ink2)]">
-                    🎧 {fmt(x.duration)} · 자막 한/영{!x.hasAudio && ' · 음성 준비중'}
+                    {x.locked
+                      ? '🔒 준비중 — 제목만 공개'
+                      : `🎧 ${fmt(x.duration)} · 자막 한/영${x.hasAudio ? '' : ' · 음성 준비중'}`}
                   </p>
                 </div>
               </Link>
