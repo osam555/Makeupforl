@@ -2,7 +2,9 @@ import { revalidatePath } from 'next/cache'
 import { NextResponse } from 'next/server'
 
 import raw from '@/data/wed100.json'
-import { adminConfigured, getAdminDb, takeAuthError, verifyAdmin } from '@/lib/firebase/admin'
+import { randomUUID } from 'crypto'
+
+import { adminConfigured, getAdminApp, getAdminDb, takeAuthError, verifyAdmin } from '@/lib/firebase/admin'
 import { syncCuesWithAnswer } from '@/lib/wed100-text'
 import type { Wed100Data, Wed100Item } from '@/types/wed100'
 
@@ -130,6 +132,59 @@ export async function POST(req: Request) {
       revalidatePath('/honjoo100')
       revalidatePath(`/honjoo100/${slug}`)
       return NextResponse.json({ ok: true, slug, audio, editor })
+    }
+
+    /*
+      음성 파일을 받아 Storage 에 올리고 문항을 갱신한다.
+      본문을 고친 뒤 음성을 다시 만들지 않아 옛 내용이 나가는 문항이 쌓여서,
+      밖에서 만든 음성을 한 번에 밀어 넣을 수 있게 열어 둔다.
+      cues·duration 을 함께 받는 것은 음성 길이가 바뀌면 자막 타임코드도
+      같이 어긋나기 때문이다.
+    */
+    if (body?.action === 'audioUpload') {
+      const slug = typeof body?.slug === 'string' ? body.slug : ''
+      const b64 = typeof body?.mp3Base64 === 'string' ? body.mp3Base64 : ''
+      if (!slug || !b64) {
+        return NextResponse.json({ ok: false, error: '잘못된 요청입니다.' }, { status: 400 })
+      }
+      const ref = db.collection('wed100_questions').doc(slug)
+      if (!(await ref.get()).exists) {
+        return NextResponse.json({ ok: false, error: '없는 문항입니다.' }, { status: 404 })
+      }
+
+      const app = await getAdminApp()
+      if (!app) {
+        return NextResponse.json({ ok: false, error: 'admin 미설정' }, { status: 500 })
+      }
+      const { getStorage } = await import('firebase-admin/storage')
+      const bucketName =
+        process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || 'makeupforl.firebasestorage.app'
+      const bucket = getStorage(app).bucket(bucketName)
+
+      // 기존 주소의 token 을 그대로 쓰면 캐시된 링크가 계속 살아 있다
+      const token = randomUUID()
+      const objectPath = `wed100/audio/${slug}.mp3`
+      await bucket.file(objectPath).save(Buffer.from(b64, 'base64'), {
+        contentType: 'audio/mpeg',
+        metadata: { metadata: { firebaseStorageDownloadTokens: token } },
+      })
+      const audio =
+        `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o/` +
+        `${encodeURIComponent(objectPath)}?alt=media&token=${token}`
+
+      const patch: Record<string, unknown> = {
+        audio,
+        updatedAt: new Date().toISOString(),
+        updatedBy: editor,
+      }
+      if (Array.isArray(body?.cues)) patch.cues = body.cues
+      if (typeof body?.duration === 'number') patch.duration = body.duration
+      if (body?.questionAudio) patch.questionAudio = body.questionAudio
+      await ref.update(patch)
+
+      revalidatePath('/honjoo100')
+      revalidatePath(`/honjoo100/${slug}`)
+      return NextResponse.json({ ok: true, slug, audio, duration: patch.duration, editor })
     }
 
     // 삭제 보관함 조회
