@@ -30,7 +30,15 @@ export default function Header({ logo, logoWhite }: { logo?: string; logoWhite?:
     <>
       <div className="mfl-header">
         <div className="mfl-contain">
-          <h1 className="sitelogo">
+          {/*
+            로고는 h1 이 아니라 div 다.
+
+            옛 PHP 마크업을 그대로 옮겨 오면서 로고가 h1 으로 남아 있었다. 그래서
+            모든 페이지에 h1 이 둘이었다 — 로고와 그 페이지의 제목. 검색엔진에는
+            "이 페이지가 무엇에 대한 것인가" 가 흐려진다. 102개 문항이 전부
+            그랬다. 보이는 모습은 .sitelogo 가 정하므로 화면은 달라지지 않는다.
+          */}
+          <div className="sitelogo">
             <Link
               href="/"
               onClick={(e) => {
@@ -52,7 +60,7 @@ export default function Header({ logo, logoWhite }: { logo?: string; logoWhite?:
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={logo || '/mfl/images/common/logo_on.png'} alt="메이크업포엘" className="on" />
             </Link>
-          </h1>
+          </div>
 
           <div className="mfl-gnb">
             <h2 className="blind">주메뉴</h2>
