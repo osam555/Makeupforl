@@ -233,8 +233,10 @@
 }
 
 .mfl-site {
-  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo',
-    'Malgun Gothic', sans-serif;
+  /* 'Pretendard Variable' 이 앞이다 — 가변 서브셋판의 패밀리 이름이 이것이다.
+     내려받지 못했거나 기기에 정적판이 깔려 있으면 'Pretendard' 로 떨어진다. */
+  font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont,
+    'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
   font-size: 16px;
   line-height: 1.75;
   color: #454545;
