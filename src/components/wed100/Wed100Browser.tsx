@@ -213,8 +213,13 @@ export default function Wed100Browser({
                     ))}
                   </div>
                   <p className="mt-2.5 text-[13px] text-[var(--w-ink2)]">
+                    {/*
+                      전에는 "준비중 — 제목만 공개" 라고 했다. 아직 안 만든 것처럼
+                      읽혀서, 파는 물건인 줄도 모르고 기다렸다 오라는 말이 됐다.
+                      다 만들어져 있다는 것이 드러나야 하므로 길이를 함께 보여 준다.
+                    */}
                     {x.locked
-                      ? '🔒 준비중 — 제목만 공개'
+                      ? `🔒 전체 보기 문항 · 🎧 ${fmt(x.duration)}`
                       : `🎧 ${fmt(x.duration)} · 자막 한/영${x.hasAudio ? '' : ' · 음성 준비중'}`}
                   </p>
                 </div>

@@ -39,7 +39,12 @@ export async function generateMetadata({
   const access = await getWed100Access()
   const desc = isOpen(access, slug)
     ? item.cues.slice(0, 2).map((c) => c.ko).join(' ').slice(0, 150)
-    : `혼주메이크업 100문100답 · ${item.partTitle}. 원장이 직접 답한 본문과 음성을 준비하고 있습니다.`
+    : /*
+         이 문장은 검색 결과에 그대로 뜬다. 전에는 "준비하고 있습니다" 라고 해서
+         95개 문항이 구글·네이버에서 아직 안 만든 것처럼 보였다. 답은 다 있고
+         전체 보기에 들어 있다는 것이 드러나야 한다.
+      */
+      `혼주메이크업 100문100답 · ${item.partTitle}. 25년 경력 대표원장 김성희가 답한 102개 문항 중 하나입니다. 본문과 음성은 전체 보기에서 보실 수 있습니다.`
   return {
     title: `${item.question} | 혼주메이크업 100문 100답`,
     description: desc,
