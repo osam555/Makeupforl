@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 
+import Wed100Account from '@/components/wed100/Wed100Account'
 import Wed100Browser from '@/components/wed100/Wed100Browser'
 import NowPlayingRotator from '@/components/wed100/NowPlayingRotator'
 import { HOME_HERO_QNA_SLUGS } from '@/lib/brandPoints'
@@ -184,8 +185,18 @@ export default async function Wed100Page() {
         </div>
       </section>
 
+      {/*
+        전체 열람 로그인.
+
+        값을 낸 분은 구매 랜딩에서 이 목록으로 넘어온다. 히어로 바로 아래,
+        파트를 고르기 전에 두어야 로그인하고 나서 둘러보게 된다.
+      */}
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <Wed100Account />
+      </div>
+
       {/* 파트 */}
-      <section className="bg-[var(--w-card)]">
+      <section className="bg-[var(--w-card)] mt-10">
         <div className="mx-auto max-w-7xl px-6 py-14 lg:px-8">
           <h2 className="text-2xl font-extrabold text-[var(--w-ink)]">어디부터 궁금하세요?</h2>
           <p className="mt-2 text-sm text-[var(--w-ink2)]">

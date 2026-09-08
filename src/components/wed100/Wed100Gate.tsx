@@ -83,12 +83,24 @@ export default function Wed100Gate({
   if (player)
     return (
       <>
-        {/* 언제까지 볼 수 있는지 알려 준다. 끝나고 나서 알면 늦다 */}
-        {until && (
-          <p className="mb-3 rounded-full bg-[var(--w-rose-l)] px-4 py-2 text-center text-[13px] text-[var(--w-rose-t)]">
-            전체 열람 중 · <b>{until}</b> 까지
-          </p>
-        )}
+        {/*
+          언제까지 볼 수 있는지 알려 준다 — 끝나고 나서 알면 늦다.
+          로그아웃도 여기 둔다. 열리고 나면 페이월을 안 그리므로, 이 자리가
+          없으면 공용 컴퓨터에서 계정을 뺄 방법이 사라진다.
+        */}
+        <div className="mb-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 rounded-full bg-[var(--w-rose-l)] px-4 py-2 text-[13px] text-[var(--w-rose-t)]">
+          <b>전체 열람 중</b>
+          {email && <span className="opacity-80">{email}</span>}
+          {until && <span className="opacity-80">· {until} 까지</span>}
+          <button
+            type="button"
+            onClick={() => void signOutUser()}
+            className="inline-flex items-center gap-1 underline-offset-2 opacity-80 hover:underline hover:opacity-100"
+          >
+            <LogOut className="h-3.5 w-3.5" />
+            로그아웃
+          </button>
+        </div>
         <Wed100Player {...player} />
       </>
     )
