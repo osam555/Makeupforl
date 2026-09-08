@@ -1,3 +1,4 @@
+import { FieldPath } from 'firebase-admin/firestore'
 import type { Firestore } from 'firebase-admin/firestore'
 
 /**
@@ -16,8 +17,25 @@ export const VERSIONS = 'wed100_versions'
 /** 문항 하나가 갖는 이력의 최대 개수. 넘치면 오래된 것부터 지운다 */
 export const KEEP = 20
 
-/** 이력 문서 id — 최신순 정렬이 문자열 정렬로 되도록 시각을 뒤에 붙인다 */
+/**
+ * 이력 문서 id.
+ *
+ * "문항__시각" 으로 지어 두면 문서 이름만으로 한 문항의 이력이 시간순으로 붙는다.
+ * 그래서 slug 로 거르고 savedAt 으로 정렬하는 대신, 문서 이름 구간으로 읽는다 —
+ * 처음에는 where + orderBy 로 짰다가 Firestore 가 복합 색인을 요구해서 막혔다.
+ * 색인을 만들게 하는 것보다 색인이 필요 없게 짜는 편이 낫다.
+ */
 const idFor = (slug: string, at: string) => `${slug}__${at}`
+
+/** 한 문항의 이력을 문서 이름 구간으로 읽는다 (오래된 것부터) */
+async function idsFor(db: Firestore, slug: string) {
+  return db
+    .collection(VERSIONS)
+    .orderBy(FieldPath.documentId())
+    .startAt(`${slug}__`)
+    .endAt(`${slug}__\uf8ff`)
+    .get()
+}
 
 export interface Wed100Version {
   id: string
@@ -72,15 +90,12 @@ export async function snapshotBefore(
 
 /** 오래된 이력을 정리한다. 문항마다 KEEP 개까지만 남긴다 */
 async function prune(db: Firestore, slug: string) {
-  const snap = await db
-    .collection(VERSIONS)
-    .where('slug', '==', slug)
-    .orderBy('savedAt', 'desc')
-    .offset(KEEP)
-    .get()
-  if (snap.empty) return
+  const snap = await idsFor(db, slug)
+  // 이름순 = 오래된 것부터. 앞에서부터 넘치는 만큼 지운다
+  const extra = snap.docs.slice(0, Math.max(0, snap.docs.length - KEEP))
+  if (extra.length === 0) return
   const batch = db.batch()
-  snap.docs.forEach((d) => batch.delete(d.ref))
+  extra.forEach((d) => batch.delete(d.ref))
   await batch.commit()
 }
 
@@ -90,11 +105,9 @@ export async function listVersions(
   slug: string,
   limit = KEEP,
 ): Promise<Wed100Version[]> {
-  const snap = await db
-    .collection(VERSIONS)
-    .where('slug', '==', slug)
-    .orderBy('savedAt', 'desc')
-    .limit(limit)
-    .get()
-  return snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<Wed100Version, 'id'>) }))
+  const snap = await idsFor(db, slug)
+  return snap.docs
+    .map((d) => ({ id: d.id, ...(d.data() as Omit<Wed100Version, 'id'>) }))
+    .reverse()
+    .slice(0, limit)
 }
