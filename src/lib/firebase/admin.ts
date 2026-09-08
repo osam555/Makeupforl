@@ -98,7 +98,7 @@ export async function verifyAdmin(auth: AuthPayload): Promise<string | null> {
  * 화면에서는 원인을 알 수 없다. accounts:lookup 은 같은 검증을 해 주면서
  * 의존성이 전혀 없다 — 웹 API 키에 묶여 있어 다른 프로젝트 토큰은 통과하지 못한다.
  */
-async function emailFromIdToken(idToken: string): Promise<string | null> {
+export async function emailFromIdToken(idToken: string): Promise<string | null> {
   const key = process.env.NEXT_PUBLIC_FIREBASE_API_KEY
   if (!key) {
     lastAuthError = 'NEXT_PUBLIC_FIREBASE_API_KEY 가 없어 구글 로그인을 확인할 수 없습니다.'

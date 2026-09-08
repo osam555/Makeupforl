@@ -3,7 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 
-import Wed100Locked from '@/components/wed100/Wed100Locked'
+import Wed100Gate from '@/components/wed100/Wed100Gate'
 import Wed100Player from '@/components/wed100/Wed100Player'
 import type { PlayerNav } from '@/components/wed100/Wed100Player'
 import {
@@ -12,6 +12,7 @@ import {
   getPublishedWed100Items,
   getWed100Item,
   getWed100Neighbors,
+  paragraphStarts,
 } from '@/lib/wed100'
 import { getWed100Access, isOpen } from '@/lib/wed100Access'
 import { BUSINESS, breadcrumbJsonLd, jsonLdScript } from '@/lib/seo'
@@ -52,36 +53,6 @@ export async function generateMetadata({
       type: 'article',
     },
   }
-}
-
-const norm = (s: string) => s.replace(/\s+/g, '')
-
-/**
- * 자막 큐를 답변 문단에 다시 매핑해 문단이 시작하는 지점을 찾는다.
- * 자막은 문장 단위로 쪼개져 있어서 이대로 이어 붙이면 문단 구분이 사라진다.
- */
-function paragraphStarts(answer: string[], cues: { ko: string }[]): number[] {
-  const starts: number[] = []
-  let para = 0
-  let rest = norm(answer[0] ?? '')
-
-  for (let i = 0; i < cues.length; i++) {
-    const c = norm(cues[i].ko)
-    if (!c) continue
-    if (!rest.includes(c) && para + 1 < answer.length) {
-      // 현재 문단에서 더 못 찾으면 다음 문단으로 넘어간 것으로 본다
-      for (let j = para + 1; j < answer.length; j++) {
-        if (norm(answer[j]).includes(c)) {
-          para = j
-          rest = norm(answer[j])
-          starts.push(i)
-          break
-        }
-      }
-    }
-    rest = rest.replace(c, '')
-  }
-  return starts
 }
 
 /** 키워드가 겹치는 문항을 추천한다. 바로 앞뒤 문항은 이미 플레이어에 있으니 뺀다. */
@@ -225,26 +196,29 @@ export default async function Wed100DetailPage({
 
       <div className="mx-auto max-w-7xl px-6 py-6 lg:px-8">
         {!open ? (
-          <Wed100Locked
-            question={item.question}
-            questionEn={item.question_en}
-            part={item.part}
-            partTitle={item.partTitle}
-            n={item.n}
-            keywords={item.keywords}
-            heroImage={item.heroImage ?? `/wed100/img/${item.slug}-hero.svg`}
-            storeUrl={access.storeUrl}
-            notice={access.notice}
-            freeSample={all
-              .filter((x) => access.freeQna.includes(x.slug))
-              .slice(0, 5)
-              .map((x) => ({ slug: x.slug, question: x.question }))}
-            totals={{
-              count: all.length,
-              minutes: Math.round(
-                all.reduce((a, x) => a + (x.duration ?? estimateDuration(x)), 0) / 60,
-              ),
-              chars: all.reduce((a, x) => a + x.answer.join('').length, 0),
+          <Wed100Gate
+            slug={item.slug}
+            locked={{
+              question: item.question,
+              questionEn: item.question_en,
+              part: item.part,
+              partTitle: item.partTitle,
+              n: item.n,
+              keywords: item.keywords,
+              heroImage: item.heroImage ?? `/wed100/img/${item.slug}-hero.svg`,
+              storeUrl: access.storeUrl,
+              notice: access.notice,
+              freeSample: all
+                .filter((x) => access.freeQna.includes(x.slug))
+                .slice(0, 5)
+                .map((x) => ({ slug: x.slug, question: x.question })),
+              totals: {
+                count: all.length,
+                minutes: Math.round(
+                  all.reduce((a, x) => a + (x.duration ?? estimateDuration(x)), 0) / 60,
+                ),
+                chars: all.reduce((a, x) => a + x.answer.join('').length, 0),
+              },
             }}
           />
         ) : (

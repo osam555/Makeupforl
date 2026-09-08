@@ -46,6 +46,28 @@ export async function POST(req: Request) {
 
   if ('notice' in body) patch.notice = String(body.notice ?? '').slice(0, 400)
 
+  /*
+    전체 열람 허용 계정.
+
+    소문자로 맞춰 저장한다 — 구글은 대소문자를 가리지 않는데 목록만 가리면
+    값을 낸 사람이 억울하게 막힌다. 형식이 아닌 것은 조용히 버리지 말고
+    어느 줄이 잘못됐는지 알려 준다.
+  */
+  if ('members' in body) {
+    if (!Array.isArray(body.members)) {
+      return NextResponse.json({ ok: false, error: '계정 목록이 올바르지 않습니다.' }, { status: 400 })
+    }
+    const list = body.members.map((x: unknown) => String(x ?? '').trim().toLowerCase()).filter(Boolean)
+    const bad = list.find((x: string) => !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(x))
+    if (bad) {
+      return NextResponse.json(
+        { ok: false, error: `이메일 형식이 아닙니다: ${bad}` },
+        { status: 400 },
+      )
+    }
+    patch.members = [...new Set(list)]
+  }
+
   if (Object.keys(patch).length === 0) {
     return NextResponse.json({ ok: false, error: '저장할 내용이 없습니다.' }, { status: 400 })
   }

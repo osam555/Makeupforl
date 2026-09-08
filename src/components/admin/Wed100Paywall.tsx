@@ -25,6 +25,8 @@ export default function Wed100Paywall({
   const [free, setFree] = useState<string[]>([])
   const [storeUrl, setStoreUrl] = useState('')
   const [notice, setNotice] = useState('')
+  // 한 줄에 하나씩 적는다 — 붙여넣기가 제일 편한 형태다
+  const [members, setMembers] = useState('')
   const [loaded, setLoaded] = useState(false)
   const [busy, setBusy] = useState(false)
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null)
@@ -37,13 +39,20 @@ export default function Wed100Paywall({
           const { doc, getDoc } = await import('firebase/firestore')
           const snap = await getDoc(doc(db, 'site_config', 'wed100'))
           const d = snap.data() as
-            | { paywall?: boolean; freeQna?: string[]; storeUrl?: string; notice?: string }
+            | {
+                paywall?: boolean
+                freeQna?: string[]
+                storeUrl?: string
+                notice?: string
+                members?: string[]
+              }
             | undefined
           if (d) {
             setPaywall(d.paywall === true)
             setFree(d.freeQna ?? [])
             setStoreUrl(d.storeUrl ?? '')
             setNotice(d.notice ?? '')
+            setMembers((d.members ?? []).join('\n'))
           }
         }
       } catch {
@@ -63,7 +72,17 @@ export default function Wed100Paywall({
       const res = await fetch('/api/site/wed100', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...(await auth()), paywall, freeQna: free, storeUrl, notice }),
+        body: JSON.stringify({
+          ...(await auth()),
+          paywall,
+          freeQna: free,
+          storeUrl,
+          notice,
+          members: members
+            .split(/[\n,;]+/)
+            .map((x) => x.trim())
+            .filter(Boolean),
+        }),
       })
       const j = await res.json()
       if (!j.ok) throw new Error(j.error)
@@ -158,6 +177,44 @@ export default function Wed100Paywall({
               />
             </label>
           </div>
+
+          {/*
+            전체 열람 계정.
+
+            값을 낸 분의 구글 계정을 여기에 적으면, 그분이 로그인했을 때 잠긴
+            문항이 전부 열린다. 페이지 자체는 잠긴 채로 미리 구워 두고 본문만
+            따로 내려주므로, 명단이 늘어도 사이트 속도는 그대로다.
+          */}
+          <label className="mt-3 block">
+            <span className="text-xs font-bold text-[#3A322E]">
+              전체 열람 계정{' '}
+              <span className="font-normal text-[#8A7A72]">
+                — 한 줄에 하나씩. 구글 계정 이메일이라야 합니다
+              </span>
+            </span>
+            <textarea
+              value={members}
+              onChange={(e) => setMembers(e.target.value)}
+              rows={4}
+              spellCheck={false}
+              placeholder={'hong@gmail.com\nkim@naver.com  ← 구글 계정으로 가입된 주소만 됩니다'}
+              className="mt-1 w-full rounded-md border border-[#D4C7BE] bg-white px-2.5 py-1.5 font-mono text-xs outline-none focus:border-[#A63D5A]"
+            />
+            <span className="mt-1 block text-[11px] text-[#8A7A72]">
+              지금{' '}
+              <b>
+                {
+                  members
+                    .split(/[\n,;]+/)
+                    .map((x) => x.trim())
+                    .filter(Boolean).length
+                }
+                명
+              </b>
+              . 이 계정으로 로그인하면 잠긴 문항이 전부 열립니다. 명단에서 빼면 다음 접속부터
+              막힙니다.
+            </span>
+          </label>
         </>
       )}
     </div>

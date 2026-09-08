@@ -20,6 +20,7 @@ export default function Wed100Locked({
   notice,
   freeSample,
   totals,
+  unlock,
 }: {
   question: string
   questionEn?: string
@@ -33,6 +34,8 @@ export default function Wed100Locked({
   freeSample: { slug: string; question: string }[]
   /** 무엇을 사는 것인지 숫자로 보여 준다 */
   totals: { count: number; minutes: number; chars: number }
+  /** 로그인해서 여는 자리. 문지기(Wed100Gate)가 넣어 준다 */
+  unlock?: React.ReactNode
 }) {
   return (
     <article className="overflow-hidden rounded-3xl border border-[var(--w-line)] bg-[var(--w-card)]">
@@ -144,6 +147,8 @@ export default function Wed100Locked({
               전체 목록 보기
             </Link>
           </div>
+
+          {unlock}
         </div>
 
         {freeSample.length > 0 && (

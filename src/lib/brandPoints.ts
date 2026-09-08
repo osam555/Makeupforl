@@ -39,8 +39,8 @@ export const BRAND_POINTS: BrandPoint[] = [
  * 서로 겹치지 않게 다섯을 셋과 둘로 나눴다 — 셋을 아래로 내리면 격자에
  * 한 칸이 혼자 남는다.
  */
-export const HOME_HERO_QNA_SLUGS = ['p4-01', 'p5-09', 'p3-01']
-export const HOME_QNA_SLUGS = ['p1-09', 'p6-01']
+export const HOME_HERO_QNA_SLUGS = ['p3-14', 'p4-07', 'p5-11']
+export const HOME_QNA_SLUGS = ['p1-06', 'p2-05']
 
 /**
  * 회사 규모. 브랜드소개의 회사 소개 섹션과 홈 히어로가 같은 값을 쓴다.
