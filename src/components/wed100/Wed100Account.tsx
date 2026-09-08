@@ -21,7 +21,6 @@ export default function Wed100Account() {
   const [me, setMe] = useState<Me | null>(null)
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
-  const [ready, setReady] = useState(false)
 
   const check = async (idToken: string) => {
     try {
@@ -40,7 +39,6 @@ export default function Wed100Account() {
   useEffect(() => {
     let off = () => {}
     void watchUser((u) => {
-      setReady(true)
       if (!u) return setMe(null)
       void check(u.idToken)
     }).then((fn) => (off = fn))
@@ -61,9 +59,14 @@ export default function Wed100Account() {
     }
   }
 
-  // 로그인 상태를 확인하기 전에는 아무것도 그리지 않는다.
-  // 잠깐 "로그인하세요"가 떴다가 사라지면 값을 낸 분이 놀란다.
-  if (!ready) return null
+  /*
+    확인이 끝나기 전에는 로그인 안내를 먼저 보여 준다.
+
+    처음에는 상태를 알기 전까지 아무것도 안 그렸다. 그러면 서버가 보내는
+    HTML 에 이 자리가 통째로 비어, 구매 랜딩에서 막 넘어온 분이 도착했을 때
+    화면에 열쇠 구멍이 없다. 이미 로그인한 분이 잠깐 안내를 보는 쪽이,
+    값을 낸 분이 로그인할 데를 못 찾는 쪽보다 낫다.
+  */
 
   if (me?.allowed) {
     return (
