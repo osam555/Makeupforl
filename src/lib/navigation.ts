@@ -1,4 +1,5 @@
 import { GALLERY_CATEGORIES } from './galleryCategories'
+import { HUBS } from './hubs'
 
 export type NavSub = { name: string; href: string }
 export type NavItem = {
@@ -29,7 +30,22 @@ export const navigation: NavItem[] = [
       { name: '오시는 길', href: '/brand#location' },
     ],
   },
-  { name: '혼주메이크업 100문100답', href: '/honjoo100' },
+  /*
+    검색어 허브를 100문100답 아래에 단다.
+
+    허브는 값을 내지 않아도 다 읽히는 글이고, 지금 사이트에서 검색으로 사람을
+    데려올 수 있는 거의 유일한 자산이다. 그런데 메뉴에 없으면 아무 데서도
+    링크가 걸리지 않는다 — 사람도 못 찾고, 검색엔진도 중요하지 않은 페이지로 본다.
+  */
+  {
+    name: '혼주메이크업 100문100답',
+    href: '/honjoo100',
+    match: { prefix: '/honjoo100' },
+    sub: [
+      { name: '전체 문항 보기', href: '/honjoo100' },
+      ...HUBS.map((h) => ({ name: h.slug, href: `/${h.slug}` })),
+    ],
+  },
   {
     name: '업무분야',
     href: `/gallery/${GALLERY_CATEGORIES[0].slug}`,

@@ -6,6 +6,7 @@ import Wed100Account from '@/components/wed100/Wed100Account'
 import Wed100Browser from '@/components/wed100/Wed100Browser'
 import NowPlayingRotator from '@/components/wed100/NowPlayingRotator'
 import { HOME_HERO_QNA_SLUGS } from '@/lib/brandPoints'
+import { HUBS } from '@/lib/hubs'
 import { getPublishedWed100Items, teaser, wed100Meta, wed100Parts } from '@/lib/wed100'
 import { getSiteImages } from '@/lib/siteImages'
 import { isOpen } from '@/lib/wed100Access'
@@ -225,6 +226,39 @@ export default async function Wed100Page() {
               )
             })}
           </div>
+
+          {/*
+            주제별 글로 가는 길.
+
+            허브는 값을 내지 않아도 다 읽히는 글이라, 처음 온 사람에게 먼저
+            보여 줄 것이 여기다. 그런데 만들어 놓고 어디서도 링크를 걸지
+            않아 주소를 아는 사람만 갈 수 있었다.
+          */}
+          {HUBS.length > 0 && (
+            <div className="mt-10 border-t border-[var(--w-line2)] pt-8">
+              <h3 className="text-base font-extrabold text-[var(--w-ink)]">
+                주제별로 묶어 읽기{' '}
+                <span className="ml-1 text-sm font-bold text-[var(--w-p4)]">무료</span>
+              </h3>
+              <p className="mt-1.5 text-sm text-[var(--w-ink2)]">
+                문항을 하나씩 보기 전에, 한 주제를 통째로 짚은 글부터 읽어 보세요.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-3">
+                {HUBS.map((h) => (
+                  <Link
+                    key={h.slug}
+                    href={`/${h.slug}`}
+                    className="group rounded-xl border border-[var(--w-line)] bg-[var(--w-bg)] px-5 py-4 transition-colors hover:border-[var(--w-rose)]"
+                  >
+                    <p className="text-[15px] font-extrabold text-[var(--w-ink)] group-hover:text-[var(--w-rose)]">
+                      {h.slug} →
+                    </p>
+                    <p className="mt-1 text-[13px] text-[var(--w-ink2)]">{h.lead}</p>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
