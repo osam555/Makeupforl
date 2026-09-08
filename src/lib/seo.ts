@@ -19,8 +19,13 @@ export const BUSINESS = {
   postalCode: '06035',
   country: 'KR',
   // 위도·경도는 지도 등록 좌표가 확정되면 채운다. 틀린 좌표는 없는 것만 못하다.
+  /*
+    영업시간은 네 군데에 흩어져 있었다 — 푸터·브랜드소개·예약안내, 그리고 여기.
+    앞의 셋은 사람이 읽고 이것은 검색엔진이 읽는다. 한 곳만 고치면 채널마다
+    다른 말을 하게 되고, 지역 검색은 그 어긋남을 본다.
+  */
   hours: [
-    { days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], open: '09:00', close: '22:00' },
+    { days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], open: '09:00', close: '18:00' },
     { days: ['Saturday'], open: '09:00', close: '18:00' },
     { days: ['Sunday'], open: '10:00', close: '17:00' },
   ],

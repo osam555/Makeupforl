@@ -212,7 +212,7 @@ export default async function BrandPage() {
               <Clock className="h-5 w-5 text-[#F46E65]" />
               <h3 className="mt-3 font-bold text-gray-900">영업시간</h3>
               <p className="mt-1.5 text-sm leading-relaxed text-gray-600">
-                평일 09:00~22:00
+                평일 09:00~18:00
                 <br />
                 토요일 09:00~18:00
                 <br />
