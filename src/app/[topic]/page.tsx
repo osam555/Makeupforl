@@ -6,7 +6,8 @@ import { HUBS, findHub } from '@/lib/hubs'
 import { breadcrumbJsonLd, jsonLdScript } from '@/lib/seo'
 import { SITE_URL } from '@/lib/site'
 import { getPublishedWed100Items } from '@/lib/wed100'
-import { getWed100Access, isOpen } from '@/lib/wed100Access'
+import { isOpen } from '@/lib/wed100Access'
+import { getWed100Access } from '@/lib/wed100Access.server'
 
 type Params = { params: Promise<{ topic: string }> }
 

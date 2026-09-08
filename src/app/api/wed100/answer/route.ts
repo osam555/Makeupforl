@@ -8,7 +8,8 @@ import {
   getWed100Neighbors,
   paragraphStarts,
 } from '@/lib/wed100'
-import { getWed100Access, isMember, isOpen } from '@/lib/wed100Access'
+import { findMember, isMember, isOpen, todayKST } from '@/lib/wed100Access'
+import { getWed100Access } from '@/lib/wed100Access.server'
 
 export const runtime = 'nodejs'
 /* 사람마다 답이 다르므로 절대 캐시하지 않는다 */
@@ -59,13 +60,20 @@ export async function POST(req: Request) {
   }
 
   // 관리자는 명단에 없어도 본다 — 원고를 확인해야 하기 때문
+  const member = findMember(access, email)
   const allowed = isMember(access, email) || (await verifyAdmin({ idToken })) !== null
   if (!allowed) {
+    // 기한이 지난 것과 애초에 없는 것은 다른 일이다. 문구가 같으면
+    // 값을 낸 분이 "왜 안 되지" 하고 헤매게 된다.
+    const expired = member?.until && member.until < todayKST()
     return NextResponse.json(
       {
         ok: false,
-        error: `${email} 계정은 아직 전체 열람 권한이 없습니다.`,
         email,
+        until: member?.until ?? null,
+        error: expired
+          ? `열람 기간이 ${member!.until} 로 끝났습니다.`
+          : `${email} 계정은 아직 전체 열람 권한이 없습니다.`,
       },
       { status: 403 },
     )
@@ -93,6 +101,7 @@ export async function POST(req: Request) {
   return NextResponse.json({
     ok: true,
     email,
+    until: member?.until ?? null,
     player: {
       slug: item.slug,
       part: item.part,

@@ -2,7 +2,7 @@ import { revalidatePath } from 'next/cache'
 import { NextResponse } from 'next/server'
 
 import { getAdminDb, verifyAdmin } from '@/lib/firebase/admin'
-import { WED100_CONFIG_DOC } from '@/lib/wed100Access'
+import { WED100_CONFIG_DOC, defaultUntil } from '@/lib/wed100Access'
 
 export const runtime = 'nodejs'
 
@@ -53,19 +53,38 @@ export async function POST(req: Request) {
     값을 낸 사람이 억울하게 막힌다. 형식이 아닌 것은 조용히 버리지 말고
     어느 줄이 잘못됐는지 알려 준다.
   */
+  /*
+    전체 열람 계정과 기한.
+
+    소문자로 맞춰 저장한다 — 구글은 대소문자를 가리지 않는데 목록만 가리면
+    값을 낸 사람이 억울하게 막힌다. 기한을 안 적어 보내면 오늘부터 3개월을
+    붙인다. 형식이 아닌 것은 조용히 버리지 말고 어느 줄이 잘못됐는지 알려 준다.
+  */
   if ('members' in body) {
     if (!Array.isArray(body.members)) {
       return NextResponse.json({ ok: false, error: '계정 목록이 올바르지 않습니다.' }, { status: 400 })
     }
-    const list = body.members.map((x: unknown) => String(x ?? '').trim().toLowerCase()).filter(Boolean)
-    const bad = list.find((x: string) => !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(x))
-    if (bad) {
-      return NextResponse.json(
-        { ok: false, error: `이메일 형식이 아닙니다: ${bad}` },
-        { status: 400 },
-      )
+    const seen = new Set<string>()
+    const list: { email: string; until: string | null }[] = []
+    for (const raw of body.members) {
+      const o = typeof raw === 'string' ? { email: raw } : (raw ?? {})
+      const email = String(o.email ?? '').trim().toLowerCase()
+      if (!email) continue
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return NextResponse.json({ ok: false, error: `이메일 형식이 아닙니다: ${email}` }, { status: 400 })
+      }
+      const u = String(o.until ?? '').trim()
+      if (u && !/^\d{4}-\d{2}-\d{2}$/.test(u)) {
+        return NextResponse.json(
+          { ok: false, error: `날짜는 2026-12-08 형식으로 적어 주세요: ${email} ${u}` },
+          { status: 400 },
+        )
+      }
+      if (seen.has(email)) continue
+      seen.add(email)
+      list.push({ email, until: u || defaultUntil() })
     }
-    patch.members = [...new Set(list)]
+    patch.members = list
   }
 
   if (Object.keys(patch).length === 0) {

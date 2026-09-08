@@ -3,7 +3,8 @@ import { GALLERY_CATEGORIES } from '@/lib/galleryCategories'
 import { HUBS } from '@/lib/hubs'
 import { SITE_URL } from '@/lib/site'
 import { getPublishedWed100Items } from '@/lib/wed100'
-import { getWed100Access, isOpen } from '@/lib/wed100Access'
+import { isOpen } from '@/lib/wed100Access'
+import { getWed100Access } from '@/lib/wed100Access.server'
 
 /**
  * 검색엔진에 알릴 주소 목록.

@@ -14,7 +14,8 @@ import {
   getWed100Neighbors,
   paragraphStarts,
 } from '@/lib/wed100'
-import { getWed100Access, isOpen } from '@/lib/wed100Access'
+import { isOpen } from '@/lib/wed100Access'
+import { getWed100Access } from '@/lib/wed100Access.server'
 import { BUSINESS, breadcrumbJsonLd, jsonLdScript } from '@/lib/seo'
 import { SITE_URL } from '@/lib/site'
 import type { Wed100Item } from '@/types/wed100'

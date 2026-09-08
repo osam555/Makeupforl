@@ -28,6 +28,7 @@ export default function Wed100Gate({
 }) {
   const [player, setPlayer] = useState<PlayerProps | null>(null)
   const [email, setEmail] = useState<string | null>(null)
+  const [until, setUntil] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
   const [msg, setMsg] = useState<string | null>(null)
   // 로그인 상태 구독이 뜰 때마다 같은 요청을 두 번 보내지 않도록
@@ -46,6 +47,7 @@ export default function Wed100Gate({
         const d = await r.json().catch(() => ({}))
         if (r.ok && d?.ok) {
           setPlayer(d.player as PlayerProps)
+          setUntil(typeof d.until === 'string' ? d.until : null)
           setMsg(null)
         } else if (loud || r.status === 403) {
           // 조용히 확인한 경우에도 "권한 없음"은 알려 줘야 한다.
@@ -67,6 +69,7 @@ export default function Wed100Gate({
       setEmail(u?.email ?? null)
       if (!u) {
         setPlayer(null)
+        setUntil(null)
         tried.current = null
         return
       }
@@ -77,7 +80,18 @@ export default function Wed100Gate({
     return () => off()
   }, [load])
 
-  if (player) return <Wed100Player {...player} />
+  if (player)
+    return (
+      <>
+        {/* 언제까지 볼 수 있는지 알려 준다. 끝나고 나서 알면 늦다 */}
+        {until && (
+          <p className="mb-3 rounded-full bg-[var(--w-rose-l)] px-4 py-2 text-center text-[13px] text-[var(--w-rose-t)]">
+            전체 열람 중 · <b>{until}</b> 까지
+          </p>
+        )}
+        <Wed100Player {...player} />
+      </>
+    )
 
   const signIn = async () => {
     setBusy(true)

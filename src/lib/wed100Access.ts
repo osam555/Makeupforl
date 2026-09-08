@@ -10,12 +10,40 @@ export interface Wed100Access {
   /** 잠긴 문항에 보여 줄 안내 문구 */
   notice: string
   /**
-   * 전체 열람이 허용된 구글 계정.
+   * 전체 열람이 허용된 구글 계정과 각자의 기한.
    *
    * 값을 산 사람의 이메일을 원장이 관리자 화면에서 넣는다. 소문자로 맞춰
    * 저장한다 — 구글은 대소문자를 가리지 않는데 목록만 가리면 억울한 차단이 난다.
+   * until 은 YYYY-MM-DD, 그날까지 열린다. 비어 있으면 기한 없음(관리자용).
    */
-  members: string[]
+  members: Wed100Member[]
+}
+
+export interface Wed100Member {
+  email: string
+  /** 이 날짜까지 열린다 (포함). null 이면 기한 없음 */
+  until: string | null
+}
+
+/** 구매 후 열람 기간 */
+export const MEMBER_MONTHS = 3
+
+/** 오늘 (한국 시각). 서버가 어디서 돌든 기준이 흔들리면 안 된다 */
+export function todayKST(): string {
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Seoul',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date())
+}
+
+/** 오늘부터 MEMBER_MONTHS 개월 뒤 (YYYY-MM-DD) */
+export function defaultUntil(from = todayKST()): string {
+  const [y, m, d] = from.split('-').map(Number)
+  // Date 는 달을 넘길 때 자동으로 넘겨 준다 — 11/30 + 3개월 = 다음 해 2/28 같은 경우도 알아서 맞는다
+  const t = new Date(Date.UTC(y, m - 1 + MEMBER_MONTHS, d))
+  return t.toISOString().slice(0, 10)
 }
 
 /**
@@ -47,44 +75,38 @@ export const FREE_QNA_DEFAULT = [
   'p5-11', // 한복에 어울리는 안경테 선택법
 ]
 
-const DEFAULTS: Wed100Access = {
+/**
+ * 저장된 명단을 읽어 들인다.
+ *
+ * 기한을 붙이기 전에는 이메일 문자열만 담겨 있었다. 그때 넣어 둔 사람이
+ * 갑자기 막히면 안 되므로, 문자열은 기한 없음으로 받아 준다.
+ */
+export function normalizeMembers(v: unknown): Wed100Member[] {
+  if (!Array.isArray(v)) return []
+  const out: Wed100Member[] = []
+  for (const raw of v) {
+    if (typeof raw === 'string') {
+      const email = raw.trim().toLowerCase()
+      if (email) out.push({ email, until: null })
+      continue
+    }
+    if (raw && typeof raw === 'object') {
+      const o = raw as { email?: unknown; until?: unknown }
+      const email = String(o.email ?? '').trim().toLowerCase()
+      if (!email) continue
+      const until = typeof o.until === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(o.until) ? o.until : null
+      out.push({ email, until })
+    }
+  }
+  return out
+}
+
+export const DEFAULT_ACCESS: Wed100Access = {
   paywall: false,
   freeQna: FREE_QNA_DEFAULT,
   storeUrl: '',
   notice: '',
   members: [],
-}
-
-/**
- * 100문100답 공개 범위.
- *
- * 유료 전환은 되돌릴 여지를 두고 켜고 끌 수 있어야 해서 Firestore 에 둔다.
- * 설정을 읽지 못하면 잠그지 않는다 — 장애 때 멀쩡한 문항까지 막히는 쪽이
- * 잠깐 더 열려 있는 쪽보다 손해가 크다.
- */
-export async function getWed100Access(): Promise<Wed100Access> {
-  try {
-    const { getAdminDb } = await import('@/lib/firebase/admin')
-    const adb = await getAdminDb()
-    if (adb) {
-      const snap = await adb.collection(WED100_CONFIG_DOC.collection).doc(WED100_CONFIG_DOC.doc).get()
-      if (snap.exists) {
-        const d = snap.data() as Partial<Wed100Access>
-        return {
-          paywall: d.paywall === true,
-          freeQna: Array.isArray(d.freeQna) ? d.freeQna.map(String) : [],
-          storeUrl: typeof d.storeUrl === 'string' ? d.storeUrl : '',
-          notice: typeof d.notice === 'string' ? d.notice : '',
-          members: Array.isArray(d.members)
-            ? d.members.map((x) => String(x).trim().toLowerCase()).filter(Boolean)
-            : [],
-        }
-      }
-    }
-  } catch {
-    /* 설정을 못 읽어도 문항은 떠야 한다 */
-  }
-  return DEFAULTS
 }
 
 /**
@@ -98,8 +120,20 @@ export function isOpen(access: Wed100Access, slug: string): boolean {
   return !access.paywall || access.freeQna.includes(slug)
 }
 
-/** 전체 열람 권한이 있는 계정인가 */
+/**
+ * 전체 열람 권한이 있는 계정인가.
+ *
+ * 기한이 지났으면 명단에 있어도 아니다. 지운 것과 지난 것은 다르게 다뤄야
+ * 하므로(안내 문구가 달라진다) 목록에서 빼지는 않는다.
+ */
+export function findMember(access: Wed100Access, email?: string | null): Wed100Member | null {
+  if (!email) return null
+  const e = email.trim().toLowerCase()
+  return access.members.find((m) => m.email === e) ?? null
+}
+
 export function isMember(access: Wed100Access, email?: string | null): boolean {
-  if (!email) return false
-  return access.members.includes(email.trim().toLowerCase())
+  const m = findMember(access, email)
+  if (!m) return false
+  return !m.until || m.until >= todayKST()
 }
