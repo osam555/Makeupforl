@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 
@@ -35,8 +36,16 @@ export default function ReviewSlide({ items }: { items: Item[] }) {
             <div className="item" key={r.id} style={{ width: `${100 / per}%` }}>
               <Link href="/reviews" className="doc-review">
                 <div className="img">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={r.url} alt={r.title} />
+                  {/*
+                    후기 이미지도 원본 직결이었다. 한 화면에 넉 장이 보이므로
+                    실제로 필요한 너비는 화면의 1/4 정도다.
+                  */}
+                  <Image
+                    src={r.url}
+                    alt={r.title}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 900px) 50vw, (max-width: 1230px) 33vw, 25vw"
+                  />
                 </div>
                 <div className="tt-wrap">
                   <div className="tit">{r.title}</div>

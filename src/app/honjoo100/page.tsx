@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 
 import Wed100Browser from '@/components/wed100/Wed100Browser'
@@ -159,12 +160,18 @@ export default async function Wed100Page() {
               className="pointer-events-none absolute bottom-0 right-0 h-[440px] w-[440px] rounded-full opacity-70 blur-3xl"
               style={{ background: 'radial-gradient(circle, var(--w-rose-l) 0%, transparent 70%)' }}
             />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            {/*
+              첫 화면에 뜨는 사진이라 이 페이지의 LCP 다. 원본 PNG 가 200KB 인데
+              실제로는 327px 폭으로 그려진다. next/image 로 태워 WebP 로 줄이고,
+              priority 로 먼저 받게 한다.
+            */}
+            <Image
               src={img['ceo'] || '/mfl/images/sub/ceo.png'}
               alt="메이크업포엘 대표원장 김성희"
               width={327}
               height={400}
+              sizes="327px"
+              priority
               className="absolute bottom-0 right-0 h-[400px] w-[327px] object-contain object-bottom"
             />
             {/* 홈 히어로에 있던 문항 회전을 여기로 옮겼다 — 혼주 질문은 이 페이지의 것이다 */}

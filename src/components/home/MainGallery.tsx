@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { useState } from 'react'
 import { GALLERY_CATEGORIES } from '@/lib/galleryCategories'
 
@@ -47,8 +48,21 @@ export default function MainGallery({ items }: { items: Item[] }) {
               <div className="img-box">
                 <div className="pic">
                   {current && (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={current.url} alt={current.alt_text} />
+                    /*
+                      원본을 그대로 부르면 안 된다. Storage 에 올라간 갤러리 사진은
+                      한 장이 3MB 를 넘는다. 홈에서만 이 자리와 아래 썸네일로 8MB 가
+                      넘게 나가고 있었다. next/image 를 태우면 화면 크기에 맞춰
+                      줄이고 WebP 로 바꿔 내려준다.
+
+                      .pic 이 position:relative + padding-bottom 으로 비율을 잡고 있어
+                      fill 이 그대로 들어맞는다 (mfl-original.css 82~83행).
+                    */
+                    <Image
+                      src={current.url}
+                      alt={current.alt_text}
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 60vw"
+                    />
                   )}
                 </div>
               </div>
@@ -61,8 +75,13 @@ export default function MainGallery({ items }: { items: Item[] }) {
                   <li key={it.id} className={i === idx ? 'active' : undefined}>
                     <button type="button" onClick={() => setIdx(i)} className="block w-full">
                       <span className="pic">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={it.url} alt={it.alt_text} />
+                        {/* 썸네일은 실제로 185px 남짓으로 그려진다. 원본을 받을 이유가 없다 */}
+                        <Image
+                          src={it.url}
+                          alt={it.alt_text}
+                          fill
+                          sizes="(max-width: 1024px) 50vw, 190px"
+                        />
                       </span>
                     </button>
                   </li>
