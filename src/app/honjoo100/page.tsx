@@ -244,8 +244,14 @@ export default async function Wed100Page() {
             duration: x.duration ?? Math.round(x.cues.reduce((a, c) => a + c.ko.length, 0) / 5.2 + 6),
             hasAudio: !!x.audio,
             locked: !isOpen(access, x.slug),
-            // 잠긴 문항에만 붙인다. 열린 문항은 눌러 들어가면 다 보인다
-            teaser: isOpen(access, x.slug) ? undefined : teaser(x.answer),
+            /*
+              잠긴 문항에만 붙인다. 열린 문항은 눌러 들어가면 다 보인다.
+
+              카드는 두 줄까지만 보여 준다. 문항 페이지와 같은 길이(95자)를
+              넣었더니 넘치는 만큼이 잘려 나가 문장이 도막났다. 한 문장이면
+              대개 두 줄에 맞으므로 40자에서 끊는다.
+            */
+            teaser: isOpen(access, x.slug) ? undefined : teaser(x.answer, 40),
           }))}
           parts={wed100Parts
             .filter((p) => (p.part >= 1 && p.part <= 6) || (counts.get(p.part) ?? 0) > 0)
