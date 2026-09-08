@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import SubHero from '@/components/layout/SubHero'
 
 export const metadata: Metadata = {
+  // 자기 주소를 정본으로 못 박는다. 쿼리스트링이 붙은 유입도 한 주소로 모인다.
+  alternates: { canonical: '/privacy' },
   title: '개인정보처리방침 | 메이크업포엘',
   description: '메이크업포엘 개인정보처리방침 및 이메일무단수집거부 안내입니다.',
   robots: { index: false, follow: true },

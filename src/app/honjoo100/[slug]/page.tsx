@@ -14,6 +14,8 @@ import {
   getWed100Neighbors,
 } from '@/lib/wed100'
 import { getWed100Access, isOpen } from '@/lib/wed100Access'
+import { BUSINESS, breadcrumbJsonLd, jsonLdScript } from '@/lib/seo'
+import { SITE_URL } from '@/lib/site'
 import type { Wed100Item } from '@/types/wed100'
 
 export const revalidate = 3600
@@ -40,10 +42,13 @@ export async function generateMetadata({
     title: `${item.question} | 혼주메이크업 100문 100답`,
     description: desc,
     keywords: ['혼주메이크업', ...item.keywords].join(', '),
+    // 문항 주소를 정본으로 못 박는다. 플레이어에서 넘어올 때 붙는 쿼리가 별개 주소로 세지 않게.
+    alternates: { canonical: `/honjoo100/${slug}` },
     openGraph: {
       title: item.question,
       description: desc,
       images: [item.heroImage ?? `/wed100/img/${item.slug}-hero.svg`],
+      url: `/honjoo100/${slug}`,
       type: 'article',
     },
   }
@@ -139,14 +144,39 @@ export default async function Wed100DetailPage({
   const partIndex = samePart.findIndex((x) => x.slug === item.slug) + 1
 
   /*
-    열린 문항은 FAQ 로 알려 검색 결과에 답변이 함께 뜨게 한다.
+    저자와 갱신 시각.
 
-    잠긴 문항은 답변을 넘기지 않는다. 대신 구글이 정한 유료 콘텐츠 표기
-    (isAccessibleForFree:false + 잠긴 영역의 선택자)를 쓴다. 이 표기가 있어야
-    "본문이 없는데 색인만 된 페이지"가 아니라 유료 문서로 이해되고,
-    사람과 크롤러에게 다른 것을 보여 주는 행위(클로킹)로도 걸리지 않는다.
+    이 답변의 값어치는 "25년 동안 1만 명을 만난 사람이 직접 답했다"는 데 있다.
+    화면에는 그렇게 쓰여 있지만 마크업이 없으면 검색엔진에는 익명 글과 다를 바 없다.
   */
-  const jsonLd = open
+  const modified = item.updatedAt ?? undefined
+  const article = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    '@id': `${SITE_URL}/honjoo100/${item.slug}#article`,
+    headline: item.question,
+    inLanguage: 'ko',
+    author: { '@type': 'Person', name: BUSINESS.founder, jobTitle: '대표원장' },
+    publisher: { '@id': `${SITE_URL}/#business` },
+    isPartOf: { '@type': 'CreativeWorkSeries', name: '혼주메이크업 100문 100답' },
+    ...(modified ? { dateModified: modified } : {}),
+    ...(open
+      ? { articleBody: item.answer.join('\n\n') }
+      : {
+          // 잠긴 문항은 본문을 넘기지 않는다. 구글이 정한 유료 콘텐츠 표기를 써야
+          // "본문 없이 색인만 된 페이지"가 아니라 유료 문서로 이해되고,
+          // 사람과 크롤러에게 다른 것을 보여 주는 행위(클로킹)로도 걸리지 않는다.
+          isAccessibleForFree: false,
+          hasPart: {
+            '@type': 'WebPageElement',
+            isAccessibleForFree: false,
+            cssSelector: '.paywall',
+          },
+        }),
+  }
+
+  // 열린 문항은 FAQ 로도 알려 검색 결과에 답변이 함께 뜨게 한다.
+  const faq = open
     ? {
         '@context': 'https://schema.org',
         '@type': 'FAQPage',
@@ -158,23 +188,22 @@ export default async function Wed100DetailPage({
           },
         ],
       }
-    : {
-        '@context': 'https://schema.org',
-        '@type': 'Article',
-        headline: item.question,
-        isAccessibleForFree: false,
-        hasPart: {
-          '@type': 'WebPageElement',
-          isAccessibleForFree: false,
-          cssSelector: '.paywall',
-        },
-      }
+    : null
+
+  // 화면에는 있는데 마크업이 없던 빵부스러기
+  const crumbs = breadcrumbJsonLd([
+    { name: '혼주메이크업 100문100답', path: '/honjoo100' },
+    { name: item.partTitle, path: '/honjoo100' },
+    { name: item.question, path: `/honjoo100/${item.slug}` },
+  ])
 
   return (
     <div className="bg-[var(--w-bg)]">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{
+          __html: jsonLdScript(...[crumbs, article, faq].filter(Boolean)),
+        }}
       />
 
       <div className="mx-auto max-w-7xl px-6 pt-6 lg:px-8">

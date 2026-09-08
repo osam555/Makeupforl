@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -14,6 +15,27 @@ import { getHomeConfig } from '@/lib/homeConfig'
 import wed100 from '@/data/wed100.json'
 
 export const revalidate = 3600
+
+/*
+  홈 전용 제목·설명.
+
+  지금까지는 루트 레이아웃 값("강남 메이크업샵")을 그대로 썼는데, 이 집의 강점인
+  혼주메이크업이 제목에 한 글자도 없었다. 검색 결과에서 클릭을 받는 문장은
+  "무엇을 파는 집인지"가 앞에 와야 한다.
+*/
+export const metadata: Metadata = {
+  title: '혼주메이크업·웨딩 메이크업 전문 | 강남 메이크업포엘',
+  description:
+    '25년 경력 대표원장이 직접 담당하는 혼주메이크업 전문샵. 1:1 사전 컨설팅으로 한복 색상과 퍼스널컬러까지 맞춰 드립니다. 강남 논현동, 샵·출장 모두 가능.',
+  alternates: { canonical: '/' },
+  openGraph: {
+    title: '혼주메이크업·웨딩 메이크업 전문 | 강남 메이크업포엘',
+    description:
+      '25년 경력 대표원장이 직접 담당하는 혼주메이크업 전문샵. 1:1 사전 컨설팅으로 한복 색상과 퍼스널컬러까지 맞춰 드립니다.',
+    url: '/',
+    type: 'website',
+  },
+}
 
 /** 원본 메인(index.php) 구조 그대로: main-visual / sec1 / sec2 / sec3 / sec4 */
 export default async function Home() {

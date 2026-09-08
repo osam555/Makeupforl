@@ -6,6 +6,8 @@ import SubHero from '@/components/layout/SubHero'
 import { getSiteImages } from '@/lib/siteImages'
 
 export const metadata: Metadata = {
+  // 자기 주소를 정본으로 못 박는다. 쿼리스트링이 붙은 유입도 한 주소로 모인다.
+  alternates: { canonical: '/consultation' },
   title: '1:1 사전컨설팅 | 메이크업포엘',
   description:
     '혼주 올림머리, 정수리 탈모, 퍼스널컬러 한복 색상까지. 25년 1만 명의 노하우로 결혼식 날 가장 잘 어울리는 모습을 미리 찾아드립니다.',

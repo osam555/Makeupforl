@@ -8,6 +8,8 @@ import { getSiteImages } from '@/lib/siteImages'
 import { BRAND_POINTS, BRAND_STATS } from '@/lib/brandPoints'
 
 export const metadata: Metadata = {
+  // 자기 주소를 정본으로 못 박는다. 쿼리스트링이 붙은 유입도 한 주소로 모인다.
+  alternates: { canonical: '/brand' },
   title: '브랜드소개 | 메이크업포엘',
   description:
     '25년, 1만 명의 고객. 메이크업&헤어 아티스트와 컬러 컨설턴트 55명이 함께하는 혼주 메이크업 전문 메이크업포엘입니다.',

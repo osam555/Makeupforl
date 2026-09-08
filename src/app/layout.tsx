@@ -6,6 +6,7 @@ import SiteShell from "@/components/layout/SiteShell";
 import { getSiteImages } from "@/lib/siteImages";
 import { Analytics } from "@vercel/analytics/next";
 import { SITE_URL, SITE_NAME } from "@/lib/site";
+import { businessJsonLd, jsonLdScript } from "@/lib/seo";
 
 export const metadata: Metadata = {
   // OG 이미지 등 상대 주소를 절대 주소로 만들 기준. 없으면 localhost 로 만들어져
@@ -22,6 +23,8 @@ export const metadata: Metadata = {
     locale: "ko_KR",
     type: "website",
   },
+  // 검색결과에 뜰 사이트 이름을 고정한다. 없으면 도메인이 그대로 노출된다.
+  applicationName: SITE_NAME,
 };
 
 export default async function RootLayout({
@@ -36,6 +39,15 @@ export default async function RootLayout({
         <link
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
+        />
+        {/*
+          업체 정보. 푸터에 글자로만 있던 상호·주소·전화를 검색엔진이 읽을 수 있는
+          형태로 한 번 더 내보낸다. 지역 검색("강남 혼주메이크업")에서 이 표기가 없으면
+          같은 조건의 업체에 밀린다.
+        */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: jsonLdScript(businessJsonLd()) }}
         />
       </head>
       <body className="antialiased">

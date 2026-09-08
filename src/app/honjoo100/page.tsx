@@ -7,8 +7,12 @@ import { HOME_HERO_QNA_SLUGS } from '@/lib/brandPoints'
 import { getPublishedWed100Items, wed100Meta, wed100Parts } from '@/lib/wed100'
 import { getSiteImages } from '@/lib/siteImages'
 import { getWed100Access, isOpen } from '@/lib/wed100Access'
+import { breadcrumbJsonLd, jsonLdScript } from '@/lib/seo'
+import { SITE_URL } from '@/lib/site'
 
 export const metadata: Metadata = {
+  // 자기 주소를 정본으로 못 박는다. 쿼리스트링이 붙은 유입도 한 주소로 모인다.
+  alternates: { canonical: '/honjoo100' },
   title: '혼주메이크업 100문 100답 | 메이크업포엘',
   description:
     '결혼식 날, 후회하면 늦습니다. 25년간 1만 명의 혼주님을 만난 대표원장 김성희가 가장 많이 받은 질문에 답합니다. 예약·사전컨설팅·메이크업·헤어·한복·예식 당일까지.',
@@ -41,8 +45,40 @@ export default async function Wed100Page() {
     0,
   )
 
+  /*
+    목록을 검색엔진에 통째로 알린다.
+
+    102개 문항이 이 페이지 한 장에 매달려 있다. 링크만 두면 크롤러는 순서도
+    총량도 모른다. ItemList 로 넘기면 "무엇을 다루는 묶음인지"가 전달되고,
+    문항 페이지로 내려가는 크롤이 빨라진다.
+  */
+  const listJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    '@id': `${SITE_URL}/honjoo100#collection`,
+    name: '혼주메이크업 100문 100답',
+    inLanguage: 'ko',
+    about: ['혼주메이크업', '혼주화장', '혼주헤어', '한복 메이크업'],
+    publisher: { '@id': `${SITE_URL}/#business` },
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: items.length,
+      itemListElement: items.map((x, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: x.question,
+        url: `${SITE_URL}/honjoo100/${x.slug}`,
+      })),
+    },
+  }
+  const crumbs = breadcrumbJsonLd([{ name: '혼주메이크업 100문100답', path: '/honjoo100' }])
+
   return (
     <div className="bg-[var(--w-bg)]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(crumbs, listJsonLd) }}
+      />
       {/* 히어로 */}
       <section className="relative overflow-hidden bg-gradient-to-b from-[var(--w-bg1)] to-[var(--w-bg2)]">
         <div

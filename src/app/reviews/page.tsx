@@ -4,6 +4,8 @@ import SubHero from '@/components/layout/SubHero'
 import { getSiteImages } from '@/lib/siteImages'
 
 export const metadata: Metadata = {
+  // 자기 주소를 정본으로 못 박는다. 쿼리스트링이 붙은 유입도 한 주소로 모인다.
+  alternates: { canonical: '/reviews' },
   title: '고객후기 | 메이크업포엘',
   description: '메이크업포엘 고객님들의 생생한 후기와 평가를 확인하세요.',
 }

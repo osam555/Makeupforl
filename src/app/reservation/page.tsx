@@ -3,6 +3,8 @@ import SubHero from '@/components/layout/SubHero'
 import { getSiteImages } from '@/lib/siteImages'
 
 export const metadata: Metadata = {
+  // 자기 주소를 정본으로 못 박는다. 쿼리스트링이 붙은 유입도 한 주소로 모인다.
+  alternates: { canonical: '/reservation' },
   title: '예약안내 | 메이크업포엘',
   description:
     '메이크업포엘 예약 안내. 문의 → 예약 → 1:1 사전컨설팅 → 당일 서비스까지 8단계로 진행됩니다. 예약금·환불 규정 안내.',

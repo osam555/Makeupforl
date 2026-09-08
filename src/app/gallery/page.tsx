@@ -6,6 +6,8 @@ import { getSiteImages } from '@/lib/siteImages'
 import { GALLERY_CATEGORIES } from '@/lib/galleryCategories'
 
 export const metadata: Metadata = {
+  // 자기 주소를 정본으로 못 박는다. 쿼리스트링이 붙은 유입도 한 주소로 모인다.
+  alternates: { canonical: '/gallery' },
   title: '갤러리 | 메이크업포엘',
   description:
     '메이크업포엘의 메이크업 포트폴리오 — ' +

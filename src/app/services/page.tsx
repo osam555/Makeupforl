@@ -7,6 +7,8 @@ import { getSiteImages } from '@/lib/siteImages'
 import { Home, Car, ShieldCheck, AlertTriangle } from 'lucide-react'
 
 export const metadata: Metadata = {
+  // 자기 주소를 정본으로 못 박는다. 쿼리스트링이 붙은 유입도 한 주소로 모인다.
+  alternates: { canonical: '/services' },
   title: '샵 / 출장메이크업 | 메이크업포엘',
   description:
     '압구정역 3번출구 프라이빗 1인실 샵과, 원하는 시간·장소로 찾아가는 출장 메이크업 O2O 서비스. 국가자격증을 보유한 정식 허가 업체입니다.',

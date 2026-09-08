@@ -7,6 +7,8 @@ import { getVideos } from '@/lib/videos'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
+  // 자기 주소를 정본으로 못 박는다. 쿼리스트링이 붙은 유입도 한 주소로 모인다.
+  alternates: { canonical: '/videos' },
   title: '유튜브 채널 | 메이크업포엘',
   description:
     '혼주메이크업 전문 메이크업포엘 유튜브 채널. 혼주 올림머리, 한복 메이크업, 사전컨설팅 등 최신 영상과 많이 보신 영상을 모았습니다.',
