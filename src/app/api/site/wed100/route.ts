@@ -58,5 +58,7 @@ export async function POST(req: Request) {
   revalidatePath('/honjoo100', 'layout')
   revalidatePath('/')
   revalidatePath('/sitemap.xml')
+  // 검색어 허브도 문항이 무료인지에 따라 표시가 달라진다
+  revalidatePath('/[topic]', 'page')
   return NextResponse.json({ ok: true, ...patch, editor })
 }
