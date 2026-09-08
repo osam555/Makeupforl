@@ -6,6 +6,7 @@ import { randomUUID } from 'crypto'
 
 import { adminConfigured, getAdminApp, getAdminDb, takeAuthError, verifyAdmin } from '@/lib/firebase/admin'
 import { syncCuesWithAnswer } from '@/lib/wed100-text'
+import { listVersions, snapshotBefore } from '@/lib/wed100Versions'
 import type { Wed100Data, Wed100Item } from '@/types/wed100'
 
 export const runtime = 'nodejs'
@@ -157,6 +158,8 @@ export async function POST(req: Request) {
         if (!snap.exists) {
           return NextResponse.json({ ok: false, error: `${slug} 문항이 없습니다.` }, { status: 404 })
         }
+        // 고치기 전 상태를 남긴다. 되돌릴 수 없는 수정은 만들지 않는다
+        await snapshotBefore(db, slug, editor, keys)
         const patch: Record<string, unknown> = { updatedBy: editor }
         for (const k of keys) patch[k] = fields[k]
         if (keys.some((k) => TOUCHES_BODY.has(k))) patch.updatedAt = new Date().toISOString()
@@ -170,6 +173,56 @@ export async function POST(req: Request) {
       revalidatePath('/sitemap.xml')
       revalidatePath('/[topic]', 'page')
       return NextResponse.json({ ok: true, patched: done.length, done, editor })
+    }
+
+    /* 한 문항의 수정 이력 (최신순) */
+    if (body?.action === 'history') {
+      const slug = String(body?.slug ?? '')
+      if (!/^[a-z0-9-]{2,40}$/.test(slug)) {
+        return NextResponse.json({ ok: false, error: '문항 주소가 올바르지 않습니다.' }, { status: 400 })
+      }
+      const versions = await listVersions(db, slug)
+      return NextResponse.json({
+        ok: true,
+        slug,
+        versions: versions.map((v) => ({
+          id: v.id,
+          savedAt: v.savedAt,
+          editor: v.editor,
+          fields: v.fields,
+          question: v.question,
+        })),
+      })
+    }
+
+    /*
+      되돌리기.
+
+      되돌리는 것도 수정이므로, 되돌리기 직전 상태를 먼저 한 벌 떠 둔다.
+      그래야 "되돌렸는데 그게 더 나빴다" 는 경우에도 다시 앞으로 갈 수 있다.
+    */
+    if (body?.action === 'revert') {
+      const id = String(body?.id ?? '')
+      if (!id.includes('__')) {
+        return NextResponse.json({ ok: false, error: '되돌릴 판을 찾을 수 없습니다.' }, { status: 400 })
+      }
+      const vs = await db.collection('wed100_versions').doc(id).get()
+      if (!vs.exists) {
+        return NextResponse.json({ ok: false, error: '되돌릴 판을 찾을 수 없습니다.' }, { status: 404 })
+      }
+      const v = vs.data() as { slug: string; savedAt: string; snapshot: Record<string, unknown> }
+
+      await snapshotBefore(db, v.slug, editor, [`${v.savedAt} 판으로 되돌리기 전`])
+
+      await db
+        .collection('wed100_questions')
+        .doc(v.slug)
+        .set({ ...v.snapshot, updatedAt: new Date().toISOString(), updatedBy: editor })
+
+      revalidatePath('/honjoo100', 'layout')
+      revalidatePath('/')
+      revalidatePath('/sitemap.xml')
+      return NextResponse.json({ ok: true, slug: v.slug, revertedTo: v.savedAt, editor })
     }
 
     if (body?.action === 'audioUrl') {
@@ -389,6 +442,9 @@ export async function POST(req: Request) {
     } catch {
       /* 동기화 실패해도 저장은 진행 */
     }
+
+    // 고치기 전 상태를 남긴다. 되돌릴 수 없는 수정은 만들지 않는다
+    await snapshotBefore(db, item.slug, editor, ['전체 저장'])
 
     const row = toRow(item, editor)
     await db.collection('wed100_questions').doc(item.slug).set(row)

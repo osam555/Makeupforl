@@ -142,3 +142,33 @@ export function teaser(answer: string[], max = 95): string {
   if (dot > max * 0.5) return cut.slice(0, dot + 1)
   return cut.trimEnd() + '…'
 }
+
+/**
+ * 이 묶음이 언제 기준인지.
+ *
+ * 파는 물건이므로 "언제 쓴 내용인지" 가 보여야 값어치가 선다. 손으로 적어 두면
+ * 고쳐 놓고 날짜만 안 바꾸는 일이 생기니, 문항들의 실제 수정 시각에서 뽑는다.
+ * 아무 문항에도 수정 시각이 없으면 아무것도 보여 주지 않는다 — 지어낸 날짜보다
+ * 없는 편이 낫다.
+ */
+export function editionOf(items: { updatedAt?: string }[]): string | null {
+  const latest = items
+    .map((x) => x.updatedAt)
+    .filter((d): d is string => Boolean(d))
+    .sort()
+    .at(-1)
+  return latest ?? null
+}
+
+/** "2026년 9월" — 날짜까지 적으면 매번 바뀌어 오히려 손댄 티만 난다 */
+export function editionLabel(iso: string | null): string {
+  if (!iso) return ''
+  const d = new Date(iso)
+  if (Number.isNaN(d.getTime())) return ''
+  const kst = new Intl.DateTimeFormat('ko-KR', {
+    timeZone: 'Asia/Seoul',
+    year: 'numeric',
+    month: 'long',
+  }).format(d)
+  return kst
+}

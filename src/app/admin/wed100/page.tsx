@@ -8,6 +8,7 @@ import { Search, Save, Eye, RefreshCw, Database, CheckCircle2, XCircle, Volume2,
 import seedRaw from '@/data/wed100.json'
 import Wed100BatchAudio from '@/components/admin/Wed100BatchAudio'
 import Wed100HomeQna from '@/components/admin/Wed100HomeQna'
+import Wed100History from '@/components/admin/Wed100History'
 import Wed100Paywall from '@/components/admin/Wed100Paywall'
 import { whenExact, whenText } from '@/lib/when'
 import { getDb, uploadAudio } from '@/lib/firebase/client'
@@ -761,6 +762,13 @@ function AdminWed100Editor({
           {/* 우측 편집 */}
           {draft && (
             <div className="max-h-[720px] overflow-auto p-5 lg:p-6">
+              {/* 수정 이력 — 잘못 고쳤을 때 돌아갈 자리 */}
+              <Wed100History
+                slug={draft.slug}
+                question={draft.question}
+                auth={authPayload}
+                onReverted={() => void load()}
+              />
               <div className="sticky -top-5 z-10 -mx-5 flex flex-wrap items-center gap-2.5 border-b border-[#E7DDD4] bg-white/95 px-5 pb-3 pt-1 backdrop-blur lg:-mx-6 lg:-top-6 lg:px-6">
                 <h2 className="text-lg font-extrabold text-[#2E2724]">{itemLabel(draft)} 편집</h2>
                 <span className="rounded bg-[#EFE7E1] px-2 py-0.5 text-[10px] font-bold text-[#6B5D57]">

@@ -7,7 +7,14 @@ import Wed100Browser from '@/components/wed100/Wed100Browser'
 import NowPlayingRotator from '@/components/wed100/NowPlayingRotator'
 import { HOME_HERO_QNA_SLUGS } from '@/lib/brandPoints'
 import { HUBS } from '@/lib/hubs'
-import { getPublishedWed100Items, teaser, wed100Meta, wed100Parts } from '@/lib/wed100'
+import {
+  editionLabel,
+  editionOf,
+  getPublishedWed100Items,
+  teaser,
+  wed100Meta,
+  wed100Parts,
+} from '@/lib/wed100'
 import { getSiteImages } from '@/lib/siteImages'
 import { isOpen } from '@/lib/wed100Access'
 import { getWed100Access } from '@/lib/wed100Access.server'
@@ -56,6 +63,8 @@ export default async function Wed100Page() {
     총량도 모른다. ItemList 로 넘기면 "무엇을 다루는 묶음인지"가 전달되고,
     문항 페이지로 내려가는 크롤이 빨라진다.
   */
+  const edition = editionOf(items)
+
   const listJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
@@ -64,6 +73,7 @@ export default async function Wed100Page() {
     inLanguage: 'ko',
     about: ['혼주메이크업', '혼주화장', '혼주헤어', '한복 메이크업'],
     publisher: { '@id': `${SITE_URL}/#business` },
+    ...(edition ? { dateModified: edition } : {}),
     mainEntity: {
       '@type': 'ItemList',
       numberOfItems: items.length,
@@ -93,6 +103,16 @@ export default async function Wed100Page() {
           <div>
           <p className="text-xs font-extrabold tracking-[0.34em] text-[var(--w-rose)]">
             HONJU MAKEUP · Q&amp;A {items.filter((x) => x.part >= 1 && x.part <= 6).length}
+            {/*
+              언제 기준인지 밝힌다. 파는 물건이라 "언제 쓴 내용인가" 가 값어치를
+              가른다. 날짜는 손으로 적지 않고 문항들의 실제 수정 시각에서 뽑는다 —
+              고쳐 놓고 날짜만 안 바꾸는 일이 생기지 않게.
+            */}
+            {edition && (
+              <span className="ml-3 font-bold tracking-normal text-[var(--w-mut)]">
+                {editionLabel(edition)} 기준
+              </span>
+            )}
           </p>
           <h1 className="mt-3 text-4xl font-black leading-tight text-[var(--w-ink)] sm:text-5xl">
             혼주메이크업

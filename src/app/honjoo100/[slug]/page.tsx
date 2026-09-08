@@ -11,6 +11,7 @@ import {
   formatDuration,
   getPublishedWed100Items,
   getWed100Item,
+  editionLabel,
   getWed100Neighbors,
   paragraphStarts,
   teaser,
@@ -203,6 +204,10 @@ export default async function Wed100DetailPage({
           <span className="ml-2 font-semibold text-[var(--w-ink2)]">
             ({index + 1}/{total})
           </span>
+          {/* 이 문항이 언제 기준인지. 목록의 판 표시와 같은 규칙을 쓴다 */}
+          {modified && (
+            <span className="ml-2 text-[var(--w-mut)]">· {editionLabel(modified)} 기준</span>
+          )}
         </nav>
       </div>
 
