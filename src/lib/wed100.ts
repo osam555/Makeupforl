@@ -120,3 +120,25 @@ export function paragraphStarts(answer: string[], cues: { ko: string }[]): numbe
   }
   return starts
 }
+
+/**
+ * 잠긴 문항에 보여 줄 맛보기.
+ *
+ * 제목만 있으면 무엇이 궁금해질지 알 수 없다. 첫머리 두 줄쯤을 열어
+ * "이 답을 읽고 싶다" 는 마음이 들게 한다.
+ *
+ * 길이를 짧게 묶어 두는 것이 중요하다. 많이 열면 파는 물건이 없어지고,
+ * 검색엔진도 유료 표기와 실제 노출이 어긋난 것으로 본다. 문장 중간에서
+ * 자르면 읽기 사나우니 문장 끝을 찾아 거기서 끊는다.
+ */
+export function teaser(answer: string[], max = 95): string {
+  const t = answer.join(' ').replace(/\s+/g, ' ').trim()
+  if (!t) return ''
+  if (t.length <= max) return t
+
+  const cut = t.slice(0, max)
+  // 마지막 문장 끝(., !, ?, 다.)에서 끊는다. 너무 앞이면 그냥 글자 수로 자른다
+  const dot = Math.max(cut.lastIndexOf('. '), cut.lastIndexOf('! '), cut.lastIndexOf('? '))
+  if (dot > max * 0.5) return cut.slice(0, dot + 1)
+  return cut.trimEnd() + '…'
+}

@@ -13,6 +13,7 @@ import {
   getWed100Item,
   getWed100Neighbors,
   paragraphStarts,
+  teaser,
 } from '@/lib/wed100'
 import { isOpen } from '@/lib/wed100Access'
 import { getWed100Access } from '@/lib/wed100Access.server'
@@ -40,11 +41,16 @@ export async function generateMetadata({
   const desc = isOpen(access, slug)
     ? item.cues.slice(0, 2).map((c) => c.ko).join(' ').slice(0, 150)
     : /*
-         이 문장은 검색 결과에 그대로 뜬다. 전에는 "준비하고 있습니다" 라고 해서
-         95개 문항이 구글·네이버에서 아직 안 만든 것처럼 보였다. 답은 다 있고
-         전체 보기에 들어 있다는 것이 드러나야 한다.
+         이 문장은 검색 결과에 그대로 뜬다.
+
+         두 번 고쳤다. 처음에는 "준비하고 있습니다" 라고 해서 95개 문항이
+         구글·네이버에서 아직 안 만든 것처럼 보였다. 고치고 나니 이번에는
+         95개가 전부 같은 문장이 됐다 — 검색 결과에서 어느 것을 눌러야 할지
+         알 수 없다.
+         지금은 화면에 보이는 맛보기 두 줄을 그대로 쓴다. 페이지마다 다르고,
+         본 것과 들어와 보는 것이 같다.
       */
-      `혼주메이크업 100문100답 · ${item.partTitle}. 25년 경력 대표원장 김성희가 답한 102개 문항 중 하나입니다. 본문과 음성은 전체 보기에서 보실 수 있습니다.`
+      `${teaser(item.answer, 110)} (유료 회원 공개)`
   return {
     title: `${item.question} | 혼주메이크업 100문 100답`,
     description: desc,
@@ -212,6 +218,7 @@ export default async function Wed100DetailPage({
               n: item.n,
               keywords: item.keywords,
               heroImage: item.heroImage ?? `/wed100/img/${item.slug}-hero.svg`,
+              teaser: teaser(item.answer),
               storeUrl: access.storeUrl,
               notice: access.notice,
               freeSample: all

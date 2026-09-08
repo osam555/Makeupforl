@@ -16,8 +16,10 @@ export interface BrowserItem {
   thumbImage: string
   duration: number
   hasAudio: boolean
-  /** 잠긴 문항 — 제목만 열려 있다 */
+  /** 잠긴 문항 — 제목과 맛보기 두 줄만 열려 있다 */
   locked?: boolean
+  /** 잠긴 문항의 맛보기. 열린 문항에는 없다 */
+  teaser?: string
 }
 
 const LS_RESUME = 'wed100:resume'
@@ -212,14 +214,21 @@ export default function Wed100Browser({
                       </span>
                     ))}
                   </div>
+                  {/* 맛보기 두 줄 — 제목만 있으면 무엇이 궁금해질지 알 수 없다 */}
+                  {x.locked && x.teaser && (
+                    <p className="mt-2 line-clamp-2 text-[13px] leading-relaxed text-[var(--w-mut)]">
+                      {x.teaser}
+                    </p>
+                  )}
                   <p className="mt-2.5 text-[13px] text-[var(--w-ink2)]">
                     {/*
-                      전에는 "준비중 — 제목만 공개" 라고 했다. 아직 안 만든 것처럼
-                      읽혀서, 파는 물건인 줄도 모르고 기다렸다 오라는 말이 됐다.
-                      다 만들어져 있다는 것이 드러나야 하므로 길이를 함께 보여 준다.
+                      "준비중" 도 "전체 보기 문항" 도 값을 내야 한다는 말이 없다.
+                      앞엣것은 안 만든 줄 알게 하고, 뒤엣것은 어딘가에 더 있나 보다
+                      하고 지나가게 한다. 파는 물건이면 파는 물건이라고 해야 한다.
+                      다 만들어져 있다는 것도 드러나야 하므로 길이를 함께 보여 준다.
                     */}
                     {x.locked
-                      ? `🔒 전체 보기 문항 · 🎧 ${fmt(x.duration)}`
+                      ? `🔒 유료 공개 · 🎧 ${fmt(x.duration)}`
                       : `🎧 ${fmt(x.duration)} · 자막 한/영${x.hasAudio ? '' : ' · 음성 준비중'}`}
                   </p>
                 </div>

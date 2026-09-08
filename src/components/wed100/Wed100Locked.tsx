@@ -21,6 +21,7 @@ export default function Wed100Locked({
   freeSample,
   totals,
   unlock,
+  teaser,
 }: {
   question: string
   questionEn?: string
@@ -36,6 +37,8 @@ export default function Wed100Locked({
   totals: { count: number; minutes: number; chars: number }
   /** 로그인해서 여는 자리. 문지기(Wed100Gate)가 넣어 준다 */
   unlock?: React.ReactNode
+  /** 답변 첫머리 두 줄. 제목만 있으면 읽고 싶어지지 않는다 */
+  teaser?: string
 }) {
   return (
     <article className="overflow-hidden rounded-3xl border border-[var(--w-line)] bg-[var(--w-card)]">
@@ -75,6 +78,22 @@ export default function Wed100Locked({
         )}
 
         {/*
+          맛보기 두 줄.
+
+          제목만 걸어 두면 무엇이 궁금해질지 알 수 없어 그냥 나간다. 첫머리를
+          조금 열어 두면 "이 답을 읽고 싶다" 는 마음이 생긴다. 길이를 짧게
+          묶어 둔 이유는 wed100.ts 의 teaser() 에 적어 두었다.
+
+          이 문단은 유료 영역(.paywall) 밖에 있다. 구조화 데이터가 가리키는
+          것은 아래 잠금 안내 상자이고, 이 두 줄은 누구에게나 보이는 미리보기다.
+        */}
+        {teaser && (
+          <p className="mt-5 border-l-2 border-[var(--w-line)] pl-4 text-[15px] leading-[1.85] text-[var(--w-ink2)]">
+            {teaser}
+          </p>
+        )}
+
+        {/*
           잠금 안내.
 
           전에는 "답변은 준비 중입니다" 라고 했다. 그러면 아직 안 만든 것처럼 읽혀
@@ -86,11 +105,11 @@ export default function Wed100Locked({
         */}
         <div className="paywall mt-7 rounded-2xl border border-[var(--w-line)] bg-[var(--w-bg)] p-6 sm:p-8">
           <p className="text-[15px] font-bold text-[var(--w-ink)]">
-            이 답변은 100문 100답 전체 보기에 들어 있습니다
+            유료 회원에게 공개되는 답변입니다
           </p>
           <p className="mt-2 text-[14px] leading-[1.8] text-[var(--w-ink2)]">
             {notice ||
-              '25년간 1만 명의 혼주님을 만난 대표원장 김성희가 가장 많이 받은 질문에 하나씩 답했습니다. 검색으로는 나오지 않는, 상담실에서만 드리던 이야기입니다.'}
+              '25년간 1만 명의 혼주님을 만난 대표원장 김성희가 가장 많이 받은 질문에 하나씩 답했습니다. 검색으로는 나오지 않는, 상담실에서만 드리던 이야기입니다. 이용권을 구매하시면 3개월 동안 전부 보실 수 있습니다.'}
           </p>
 
           {/* 무엇을 받게 되는지 — 말보다 숫자가 낫다 */}
