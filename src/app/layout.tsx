@@ -47,22 +47,10 @@ export default async function RootLayout({
     <html lang="ko">
       <head>
         {/*
-          Pretendard 를 가변 서브셋판으로 받는다.
-
-          정적판은 굵기마다 별도 파일이고 한 개가 765KB 다. 이 사이트는 300~900 을
-          모두 쓰므로 다 받으면 5.3MB 가 폰트로만 나간다 — 이미지보다 무거웠다.
-          가변 서브셋판은 굵기 45~920 을 한 파일로 담고, 그 파일을 유니코드 구간별
-          92조각으로 쪼개 둔다. 브라우저는 화면에 실제로 쓰인 글자가 든 조각만
-          받는다(조각당 약 35KB). 한글 페이지 기준 5~15조각이면 충분하다.
-
-          preconnect 를 함께 두는 이유: 이 스타일시트는 화면 그리기를 막는다.
-          연결을 미리 열어 두면 그만큼 먼저 시작된다.
+          글꼴 파일을 받을 곳에 연결을 미리 열어 둔다.
+          선언(@font-face)은 globals.css 안에 있으므로 스타일시트 요청은 없다.
         */}
         <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
-        <link
-          rel="stylesheet"
-          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
-        />
         {/*
           업체 정보. 푸터에 글자로만 있던 상호·주소·전화를 검색엔진이 읽을 수 있는
           형태로 한 번 더 내보낸다. 지역 검색("강남 혼주메이크업")에서 이 표기가 없으면
