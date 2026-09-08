@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next'
 import { GALLERY_CATEGORIES } from '@/lib/galleryCategories'
+import { HUBS } from '@/lib/hubs'
 import { SITE_URL } from '@/lib/site'
 import { getPublishedWed100Items } from '@/lib/wed100'
 import { getWed100Access, isOpen } from '@/lib/wed100Access'
@@ -49,6 +50,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       ...(m.path === '/' || m.path === '/honjoo100' ? { lastModified: listUpdated } : {}),
       changeFrequency: m.freq,
       priority: m.priority,
+    })),
+    /*
+      검색어 허브. 유료화 이후에는 100문100답 본문이 대부분 닫히므로,
+      검색에 걸리는 공개 콘텐츠는 사실상 이쪽이 된다. 우선순위를 높게 준다.
+    */
+    ...HUBS.map((h) => ({
+      url: `${SITE_URL}/${h.slug}`,
+      ...(listUpdated ? { lastModified: listUpdated } : {}),
+      changeFrequency: 'monthly' as const,
+      priority: 0.9,
     })),
     // 업무분야 — 옛 사이트의 gal1.php?b_type=N 이 여기로 온다
     ...GALLERY_CATEGORIES.map((c) => ({
