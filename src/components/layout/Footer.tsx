@@ -26,7 +26,7 @@ export default function Footer() {
           <p className="num">
             <a href="tel:02-323-3321">02-323-3321</a>
           </p>
-          <p className="tt">평&nbsp;일 09:00 ~ 18:00 / 토요일 09:00 ~ 18:00 / 일요일 10:00~17:00</p>
+          <p className="tt">평&nbsp;일 09:00 ~ 18:00 / 토·일요일 06:00 ~ 18:00</p>
         </div>
 
         <div className="foot-menu area">

@@ -26,8 +26,8 @@ export const BUSINESS = {
   */
   hours: [
     { days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], open: '09:00', close: '18:00' },
-    { days: ['Saturday'], open: '09:00', close: '18:00' },
-    { days: ['Sunday'], open: '10:00', close: '17:00' },
+    // 주말은 예식이 아침에 시작해 여섯 시부터 연다
+    { days: ['Saturday', 'Sunday'], open: '06:00', close: '18:00' },
   ],
 } as const
 

@@ -156,7 +156,7 @@ export default async function ReservationPage() {
             </p>
             <p className="flex flex-wrap items-center gap-2">
               <span className="font-semibold">영업시간:</span>
-              <span>평일 09:00~18:00, 토요일 09:00~18:00, 일요일 10:00~17:00</span>
+              <span>평일 09:00~18:00, 토·일요일 06:00~18:00</span>
             </p>
           </div>
         </div>

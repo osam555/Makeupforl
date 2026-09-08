@@ -214,9 +214,9 @@ export default async function BrandPage() {
               <p className="mt-1.5 text-sm leading-relaxed text-gray-600">
                 평일 09:00~18:00
                 <br />
-                토요일 09:00~18:00
+                토요일 06:00~18:00
                 <br />
-                일요일 10:00~17:00
+                일요일 06:00~18:00
               </p>
             </div>
           </div>
