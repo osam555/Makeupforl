@@ -19,6 +19,7 @@ export default function Wed100Locked({
   storeUrl,
   notice,
   freeSample,
+  totals,
 }: {
   question: string
   questionEn?: string
@@ -30,6 +31,8 @@ export default function Wed100Locked({
   storeUrl: string
   notice: string
   freeSample: { slug: string; question: string }[]
+  /** 무엇을 사는 것인지 숫자로 보여 준다 */
+  totals: { count: number; minutes: number; chars: number }
 }) {
   return (
     <article className="overflow-hidden rounded-3xl border border-[var(--w-line)] bg-[var(--w-card)]">
@@ -69,20 +72,48 @@ export default function Wed100Locked({
         )}
 
         {/*
-          잠금 안내. 구조화 데이터(isAccessibleForFree:false)가 이 영역을 가리키므로
+          잠금 안내.
+
+          전에는 "답변은 준비 중입니다" 라고 했다. 그러면 아직 안 만든 것처럼 읽혀
+          기다렸다 오라는 말이 된다. 실제로는 다 만들어 두고 파는 물건이므로,
+          무엇을 받게 되는지 숫자로 보여 주고 지금 할 수 있는 일을 준다.
+
+          구조화 데이터(isAccessibleForFree:false)가 이 영역(.paywall)을 가리키므로
           클래스 이름을 바꾸려면 페이지의 JSON-LD 도 같이 고쳐야 한다.
         */}
         <div className="paywall mt-7 rounded-2xl border border-[var(--w-line)] bg-[var(--w-bg)] p-6 sm:p-8">
           <p className="text-[15px] font-bold text-[var(--w-ink)]">
-            이 문항의 답변은 준비 중입니다
+            이 답변은 100문 100답 전체 보기에 들어 있습니다
           </p>
           <p className="mt-2 text-[14px] leading-[1.8] text-[var(--w-ink2)]">
             {notice ||
-              '원장이 직접 답한 본문과 음성은 정식 공개 뒤 보실 수 있습니다. 먼저 열어 둔 문항으로 어떤 내용인지 확인해 보세요.'}
+              '25년간 1만 명의 혼주님을 만난 대표원장 김성희가 가장 많이 받은 질문에 하나씩 답했습니다. 검색으로는 나오지 않는, 상담실에서만 드리던 이야기입니다.'}
           </p>
 
+          {/* 무엇을 받게 되는지 — 말보다 숫자가 낫다 */}
+          <dl className="mt-5 grid grid-cols-3 gap-3 border-y border-[var(--w-line2)] py-4">
+            <div>
+              <dt className="text-[11px] font-bold tracking-wider text-[var(--w-mut)]">문항</dt>
+              <dd className="mt-0.5 text-[19px] font-extrabold text-[var(--w-ink)]">
+                {totals.count}개
+              </dd>
+            </div>
+            <div>
+              <dt className="text-[11px] font-bold tracking-wider text-[var(--w-mut)]">원장 음성</dt>
+              <dd className="mt-0.5 text-[19px] font-extrabold text-[var(--w-ink)]">
+                {totals.minutes}분
+              </dd>
+            </div>
+            <div>
+              <dt className="text-[11px] font-bold tracking-wider text-[var(--w-mut)]">본문</dt>
+              <dd className="mt-0.5 text-[19px] font-extrabold text-[var(--w-ink)]">
+                {Math.round(totals.chars / 1000)}천 자
+              </dd>
+            </div>
+          </dl>
+
           <div className="mt-5 flex flex-wrap gap-2">
-            {storeUrl && (
+            {storeUrl ? (
               <a
                 href={storeUrl}
                 target="_blank"
@@ -91,25 +122,35 @@ export default function Wed100Locked({
               >
                 전체 보기 신청
               </a>
+            ) : (
+              /* 판매 주소가 아직 없으면 이 집이 실제로 상담받는 창구로 보낸다 */
+              <a
+                href="tel:02-323-3321"
+                className="inline-flex items-center rounded-full bg-[var(--w-rose)] px-6 py-3 text-[14px] font-bold text-white transition-opacity hover:opacity-90"
+              >
+                전화로 문의 02-323-3321
+              </a>
             )}
-            <Link
-              href="/honjoo100"
-              className="inline-flex items-center rounded-full border border-[var(--w-line)] px-6 py-3 text-[14px] font-bold text-[var(--w-ink)] transition-colors hover:border-[var(--w-rose)] hover:text-[var(--w-rose)]"
-            >
-              전체 목록 보기
-            </Link>
             <Link
               href="/consultation"
               className="inline-flex items-center rounded-full border border-[var(--w-line)] px-6 py-3 text-[14px] font-bold text-[var(--w-ink)] transition-colors hover:border-[var(--w-rose)] hover:text-[var(--w-rose)]"
             >
               1:1 사전컨설팅
             </Link>
+            <Link
+              href="/honjoo100"
+              className="inline-flex items-center rounded-full border border-[var(--w-line)] px-6 py-3 text-[14px] font-bold text-[var(--w-ink)] transition-colors hover:border-[var(--w-rose)] hover:text-[var(--w-rose)]"
+            >
+              전체 목록 보기
+            </Link>
           </div>
         </div>
 
         {freeSample.length > 0 && (
           <div className="mt-8">
-            <h2 className="text-[15px] font-bold text-[var(--w-ink)]">지금 바로 보실 수 있는 문항</h2>
+            <h2 className="text-[15px] font-bold text-[var(--w-ink)]">
+              먼저 읽어 보실 수 있는 문항
+            </h2>
             <ul className="mt-3 space-y-2">
               {freeSample.map((x) => (
                 <li key={x.slug}>

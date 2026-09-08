@@ -239,6 +239,13 @@ export default async function Wed100DetailPage({
               .filter((x) => access.freeQna.includes(x.slug))
               .slice(0, 5)
               .map((x) => ({ slug: x.slug, question: x.question }))}
+            totals={{
+              count: all.length,
+              minutes: Math.round(
+                all.reduce((a, x) => a + (x.duration ?? estimateDuration(x)), 0) / 60,
+              ),
+              chars: all.reduce((a, x) => a + x.answer.join('').length, 0),
+            }}
           />
         ) : (
         <Wed100Player
