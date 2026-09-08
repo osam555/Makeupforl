@@ -25,6 +25,16 @@ export const metadata: Metadata = {
   },
   // 검색결과에 뜰 사이트 이름을 고정한다. 없으면 도메인이 그대로 노출된다.
   applicationName: SITE_NAME,
+  /*
+    검색엔진 소유확인.
+
+    네이버 웹마스터도구는 이 태그가 <head> 에 있어야 사이트를 인정한다.
+    확인이 끝난 뒤에도 지우면 안 된다 — 주기적으로 다시 확인하고, 사라지면
+    등록이 해제된다. 구글은 DNS TXT 레코드로 확인했으므로 여기에는 없다.
+  */
+  verification: {
+    other: { 'naver-site-verification': 'ad1bef12e37799353f437b8223accc310feeab5b' },
+  },
 };
 
 export default async function RootLayout({
