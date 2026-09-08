@@ -118,6 +118,60 @@ export async function POST(req: Request) {
 
     // 음성 주소만 갈아끼우기 — 어드민에서 음성 파일을 손보고 다시 올렸을 때 쓴다.
     // 본문은 건드리지 않으므로 baseUpdatedAt 충돌 검사도 하지 않는다.
+    /*
+      지정한 문항의 지정한 칸만 고친다.
+
+      제목처럼 한 칸만 바꾸려고 시드(JSON)로 통째로 덮으면, 그동안 관리자에서
+      올린 음성 주소와 사진이 함께 날아간다. Firestore 가 정본이고 시드는
+      폴백일 뿐이므로, 부분 수정은 부분 수정으로 해야 한다.
+
+      본문에 해당하는 칸(question·answer)을 고치면 updatedAt 을 함께 찍는다.
+      그래야 음성이 옛 문구를 읽고 있다는 것이 재생성 목록에 잡힌다.
+
+      POST { action: 'patch', patches: [{ slug, fields: { question?, ... } }] }
+    */
+    if (body?.action === 'patch') {
+      const patches = Array.isArray(body?.patches) ? body.patches : []
+      if (patches.length === 0) {
+        return NextResponse.json({ ok: false, error: '고칠 내용이 없습니다.' }, { status: 400 })
+      }
+
+      // 아무 칸이나 열어 두면 실수로 구조를 망가뜨린다. 글로 된 칸만 허용한다
+      const ALLOWED = new Set(['question', 'question_en', 'partTitle', 'keywords', 'published'])
+      const TOUCHES_BODY = new Set(['question', 'question_en'])
+
+      const done: { slug: string; fields: string[] }[] = []
+      const batch = db.batch()
+      for (const p of patches) {
+        const slug = String(p?.slug ?? '')
+        if (!/^[a-z0-9-]{2,40}$/.test(slug)) {
+          return NextResponse.json({ ok: false, error: `문항 주소가 올바르지 않습니다: ${slug}` }, { status: 400 })
+        }
+        const fields = p?.fields ?? {}
+        const keys = Object.keys(fields).filter((k) => ALLOWED.has(k))
+        if (keys.length === 0) {
+          return NextResponse.json({ ok: false, error: `${slug}: 고칠 수 있는 칸이 없습니다.` }, { status: 400 })
+        }
+        const ref = db.collection('wed100_questions').doc(slug)
+        const snap = await ref.get()
+        if (!snap.exists) {
+          return NextResponse.json({ ok: false, error: `${slug} 문항이 없습니다.` }, { status: 404 })
+        }
+        const patch: Record<string, unknown> = { updatedBy: editor }
+        for (const k of keys) patch[k] = fields[k]
+        if (keys.some((k) => TOUCHES_BODY.has(k))) patch.updatedAt = new Date().toISOString()
+        batch.update(ref, patch)
+        done.push({ slug, fields: keys })
+      }
+      await batch.commit()
+
+      revalidatePath('/honjoo100', 'layout')
+      revalidatePath('/')
+      revalidatePath('/sitemap.xml')
+      revalidatePath('/[topic]', 'page')
+      return NextResponse.json({ ok: true, patched: done.length, done, editor })
+    }
+
     if (body?.action === 'audioUrl') {
       const slug = typeof body?.slug === 'string' ? body.slug : ''
       const audio = typeof body?.audio === 'string' ? body.audio : ''
