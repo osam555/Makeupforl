@@ -22,7 +22,15 @@ export default function SubHero({ title, image }: { title: string; image?: strin
             role="img"
             aria-label={title}
           />
-          <p className="tit">{title}</p>
+          {/*
+            페이지 제목은 h1 이다.
+
+            전에는 헤더 로고가 h1 이라 페이지마다 h1 이 둘이었다. 로고를 빼고 나니
+            이번에는 이 페이지들에 h1 이 하나도 없었다. 잘못된 h1 을 뺐으면 각
+            페이지가 자기 제목을 h1 으로 가져야 한다.
+            보이는 모습은 .sub-visual .tit 가 정하므로 화면은 달라지지 않는다.
+          */}
+          <h1 className="tit">{title}</h1>
         </div>
       )}
       {/* 사진이 없으면 그 자리를 비워둘 이유가 없어 탭 여백을 줄인다 */}

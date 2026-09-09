@@ -66,13 +66,24 @@ export default async function Home() {
   const qnaCount = published.length
   const audioCount = published.filter((i) => (i as { audio?: string }).audio).length
 
-  /* 히어로 왼쪽 — 넓은 화면은 사진 위 카드로, 좁은 화면은 사진 아래로 같은 내용을 쓴다 */
-  const heroCopy = (
+  /*
+    히어로 왼쪽 — 넓은 화면은 사진 위 카드로, 좁은 화면은 사진 아래로 같은 내용을 쓴다.
+
+    같은 내용이 두 번 그려지므로 h1 은 앞의 하나에만 준다. 둘 다 h1 이면 이 페이지가
+    무엇에 대한 것인지 도리어 흐려진다.
+
+    제목에 "혼주메이크업" 을 넣은 것은 이 집이 실제로 그것을 파는 집이기 때문이다.
+    이 낱말을 노리는 페이지가 홈·100문100답 목록·문항 열둘로 이미 여럿이라, 검색어를
+    가장 잘 받아야 할 홈이 정작 제목에 그 말을 안 갖고 있으면 안 된다.
+  */
+  const heroCopy = (asH1: boolean) => (
     <>
       <p className="text-[13px] font-bold tracking-[0.28em] text-[#F46E65]">MAKEUP FOR L</p>
-      <h2 className="mt-3 text-[27px] font-bold leading-[1.3] text-gray-900 sm:text-[33px]">
-        25년, 1만 명의 얼굴
-      </h2>
+      {(() => {
+        const cls = 'mt-3 text-[27px] font-bold leading-[1.3] text-gray-900 sm:text-[33px]'
+        const text = '혼주메이크업 25년, 1만 명의 얼굴'
+        return asH1 ? <h1 className={cls}>{text}</h1> : <h2 className={cls}>{text}</h2>
+      })()}
       <p className="mt-3 text-[15px] leading-[1.75] text-gray-600">
         혼주 메이크업을 중심으로 웨딩·가족·기업행사·화보까지.
         <br />
@@ -184,7 +195,7 @@ export default async function Home() {
         <div className="absolute inset-0 hidden items-center xl:flex">
           <div className="hero-contain flex w-full items-center justify-between gap-8">
             <div className="hero-rise w-[26%] min-w-[330px] max-w-[460px] rounded-3xl bg-white/92 p-7 shadow-[0_24px_60px_-24px_rgba(0,0,0,.4)] ring-1 ring-black/5 backdrop-blur-md">
-              {heroCopy}
+              {heroCopy(true)}
             </div>
             <div className="hero-rise hero-rise-2 w-[26%] min-w-[300px] max-w-[380px] rounded-3xl bg-white/92 p-6 shadow-[0_24px_60px_-24px_rgba(0,0,0,.4)] ring-1 ring-black/5 backdrop-blur-md">
               {fieldPanel}
@@ -195,7 +206,7 @@ export default async function Home() {
 
       {/* 좁은 화면 — 히어로 위에 얹을 자리가 없어 사진 아래로 내린다 */}
       <div className="border-b border-gray-100 bg-white xl:hidden">
-        <div className="hero-rise mfl-contain py-9">{heroCopy}</div>
+        <div className="hero-rise mfl-contain py-9">{heroCopy(false)}</div>
         <div className="hero-rise hero-rise-2 mfl-contain border-t border-gray-100 py-7">{fieldPanel}</div>
       </div>
 
