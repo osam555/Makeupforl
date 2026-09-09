@@ -134,7 +134,7 @@ function AdminDashboard() {
                 key={r.key}
                 onClick={() => setDays(r.key)}
                 className={`rounded-full px-3 py-1 text-[11px] ${
-                  days === r.key ? 'bg-[#A63D5A] font-bold' : 'bg-[#3A322F] text-[#C9BDB6]'
+                  days === r.key ? 'bg-[#A63D5A] font-bold' : 'bg-[#3A322F] text-[#E5DEDA]'
                 }`}
               >
                 최근 {r.label}
@@ -142,13 +142,13 @@ function AdminDashboard() {
             ))}
           </div>
           <div className="ml-auto flex items-center gap-3">
-            <button onClick={load} className="flex items-center gap-1 text-xs text-[#C9BDB6] hover:text-white">
+            <button onClick={load} className="flex items-center gap-1 text-xs text-[#E5DEDA] hover:text-white">
               <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} /> 새로고침
             </button>
-            <Link href="/admin/seo" className="text-xs text-[#C9BDB6] hover:text-white">
+            <Link href="/admin/seo" className="text-xs text-[#E5DEDA] hover:text-white">
               검색어 목표 →
             </Link>
-            <Link href="/admin/wed100" className="text-xs text-[#C9BDB6] hover:text-white">
+            <Link href="/admin/wed100" className="text-xs text-[#E5DEDA] hover:text-white">
               콘텐츠 관리 →
             </Link>
           </div>

@@ -143,7 +143,7 @@ export default function AdminGate({
 
         <div className="my-5 flex items-center gap-3">
           <span className="h-px flex-1 bg-[#E7DDD4]" />
-          <span className="text-[10px] font-bold tracking-wider text-[#B3A69F]">또는</span>
+          <span className="text-[10px] font-bold tracking-wider text-[#E5DEDA]">또는</span>
           <span className="h-px flex-1 bg-[#E7DDD4]" />
         </div>
 

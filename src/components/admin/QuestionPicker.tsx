@@ -123,7 +123,7 @@ export default function QuestionPicker({
       {/* 찾아서 더하기 */}
       <div className="mt-2 flex flex-wrap items-center gap-1.5">
         <span className="relative">
-          <Search className="absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#B3A69F]" />
+          <Search className="absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#E5DEDA]" />
           <input
             value={q}
             onChange={(e) => setQ(e.target.value)}

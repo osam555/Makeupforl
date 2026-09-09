@@ -524,7 +524,7 @@ function AdminWed100Editor({
           >
             {source === 'db' ? 'DB 연결됨' : '시드 JSON (읽기전용 폴백)'}
           </span>
-          <span className="text-xs text-[#B3A69F]">
+          <span className="text-xs text-[#E5DEDA]">
             질문 {items.filter((x) => x.part >= 1 && x.part <= 6).length}문
             {items.some((x) => x.part === 0 || x.part === 7) &&
               ` · 프롤로그/에필로그 ${items.filter((x) => x.part === 0 || x.part === 7).length}`}
@@ -569,9 +569,9 @@ function AdminWed100Editor({
             >
               <Database className="mr-1 h-3.5 w-3.5" /> DB에 시드 넣기
             </Button>
-            <Link href="/admin/dashboard" className="self-center text-xs text-[#B3A69F] hover:text-white">통계 →</Link>
-            <Link href="/admin/seo" className="self-center text-xs text-[#B3A69F] hover:text-white">검색어 목표 →</Link>
-            <Link href="/admin" className="self-center text-xs text-[#B3A69F] hover:text-white">
+            <Link href="/admin/dashboard" className="self-center text-xs text-[#E5DEDA] hover:text-white">통계 →</Link>
+            <Link href="/admin/seo" className="self-center text-xs text-[#E5DEDA] hover:text-white">검색어 목표 →</Link>
+            <Link href="/admin" className="self-center text-xs text-[#E5DEDA] hover:text-white">
               예약관리 →
             </Link>
           </div>
@@ -609,12 +609,12 @@ function AdminWed100Editor({
               <div className="flex items-center gap-2 bg-[#221D1B] px-5 py-3.5 text-white">
                 <Archive className="h-4 w-4" />
                 <b className="text-sm">삭제 보관함</b>
-                <span className="text-xs text-[#B3A69F]">
+                <span className="text-xs text-[#E5DEDA]">
                   {trash === null ? '불러오는 중…' : `${trash.length}개 보관 중`}
                 </span>
                 <button
                   onClick={() => setTrashOpen(false)}
-                  className="ml-auto text-xs text-[#B3A69F] hover:text-white"
+                  className="ml-auto text-xs text-[#E5DEDA] hover:text-white"
                 >
                   닫기 ✕
                 </button>
@@ -682,7 +682,7 @@ function AdminWed100Editor({
           <div className="flex flex-col border-r border-[#E7DDD4] bg-[#FCFAF8]">
             <div className="p-3">
               <div className="relative">
-                <Search className="pointer-events-none absolute left-3 top-2.5 h-4 w-4 text-[#B3A69F]" />
+                <Search className="pointer-events-none absolute left-3 top-2.5 h-4 w-4 text-[#E5DEDA]" />
                 <input
                   value={kw}
                   onChange={(e) => setKw(e.target.value)}
@@ -1012,7 +1012,7 @@ function AdminWed100Editor({
                       </span>
                     </p>
                     <div className="relative ml-auto">
-                      <Search className="pointer-events-none absolute left-2.5 top-2 h-3.5 w-3.5 text-[#B3A69F]" />
+                      <Search className="pointer-events-none absolute left-2.5 top-2 h-3.5 w-3.5 text-[#E5DEDA]" />
                       <input
                         value={photoKw}
                         onChange={(e) => setPhotoKw(e.target.value)}

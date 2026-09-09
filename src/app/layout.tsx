@@ -1,10 +1,11 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import SiteShell from "@/components/layout/SiteShell";
 import { getSiteImages } from "@/lib/siteImages";
 import { Analytics } from "@vercel/analytics/next";
+import RegisterSW from "@/components/analytics/RegisterSW";
 import Track from "@/components/analytics/Track";
 import { SITE_URL, SITE_NAME } from "@/lib/site";
 import { businessJsonLd, jsonLdScript } from "@/lib/seo";
@@ -33,10 +34,35 @@ export const metadata: Metadata = {
     확인이 끝난 뒤에도 지우면 안 된다 — 주기적으로 다시 확인하고, 사라지면
     등록이 해제된다. 구글은 DNS TXT 레코드로 확인했으므로 여기에는 없다.
   */
+  /*
+    홈 화면에 담았을 때의 모습.
+
+    manifest 는 src/app/manifest.ts 가 만든다. 여기서는 사파리가 보는 것들만
+    따로 적는다 — 아이폰은 아직 manifest 의 아이콘을 다 따르지 않는다.
+  */
+  appleWebApp: {
+    capable: true,
+    title: SITE_NAME,
+    statusBarStyle: 'default',
+  },
+  icons: {
+    icon: [{ url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' }],
+    apple: [{ url: '/icons/apple-touch-icon.png', sizes: '180x180' }],
+  },
   verification: {
     other: { 'naver-site-verification': 'ad1bef12e37799353f437b8223accc310feeab5b' },
   },
 };
+
+/*
+  주소창 색.
+
+  홈 화면에 담아 열면 위쪽 띠가 이 색으로 칠해진다. 브랜드 색을 쓰면 앱처럼
+  보이고, 안 쓰면 흰 띠가 남아 웹페이지를 띄운 티가 난다.
+*/
+export const viewport: Viewport = {
+  themeColor: '#A63D5A',
+}
 
 export default async function RootLayout({
   children,
@@ -97,6 +123,8 @@ export default async function RootLayout({
           놓고 보려면 우리 쪽에도 있어야 한다. 사람을 식별하지 않고, 쿠키도 쓰지 않는다.
         */}
         <Track />
+        {/* 홈 화면에 담아 쓸 수 있게. 화면은 언제나 서버를 먼저 본다 */}
+        <RegisterSW />
       </body>
     </html>
   );

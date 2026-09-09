@@ -38,8 +38,17 @@ export default function AdminTabs({ active }: { active: string }) {
             href={t.href}
             aria-current={on ? 'page' : undefined}
             className={[
-              'shrink-0 rounded-lg px-3.5 py-2 text-xs font-bold transition-colors',
-              on ? 'bg-white text-[#2E2724]' : 'text-[#C9BDB6] hover:bg-white/10 hover:text-white',
+              /*
+                고르지 않은 탭도 읽혀야 한다.
+
+                전에는 #C9BDB6 이었다. 계산상 대비는 8:1 로 기준을 넘는데, 12px
+                글씨를 휴대전화에서 보면 그것으로는 부족했다. 숫자가 아니라 눈에
+                보이는 것이 기준이다. 글자를 밝히고 조금 키웠다.
+              */
+              'shrink-0 rounded-lg px-3.5 py-2 text-[13px] font-bold transition-colors',
+              on
+                ? 'bg-white text-[#2E2724]'
+                : 'text-[#EFEAE7] hover:bg-white/15 hover:text-white',
             ].join(' ')}
           >
             {t.label}

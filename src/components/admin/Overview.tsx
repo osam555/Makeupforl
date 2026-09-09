@@ -101,13 +101,25 @@ export default function Overview({
   const noAudio = qna.filter((x) => !x.hasAudio).length
   const thin = qna.filter((x) => x.chars < 300).length
 
+  /*
+    100문100답이 얼마나 읽히나 — 무료와 유료를 나눠 센다.
+
+    합쳐 놓으면 "많이 봤다" 밖에 알 수 없다. 나눠 놓으면 두 가지가 보인다.
+    무료 쪽이 높으면 맛보기가 제 일을 하는 것이고, 유료 쪽이 높으면 제목만 보고도
+    들어올 만큼 궁금해한다는 뜻이다 — 후자는 팔릴 신호에 가깝다.
+  */
+  const qnaViews = (rows: QnaRow[]) =>
+    rows.reduce((n, x) => n + (a.pages[`_honjoo100_${x.slug}`] ?? 0), 0)
+  const openViews = qnaViews(qna.filter((x) => x.open))
+  const lockedViews = qnaViews(qna.filter((x) => !x.open))
+
   return (
     <div className="space-y-6 pt-1">
       {/* ── 1. 한눈에 ───────────────────────────────── */}
       <section>
         <SectionTitle>한눈에</SectionTitle>
         {/* 좁은 화면에서 두 칸씩. 하나씩 떨어지면 여섯 칸이 화면 하나를 다 먹는다 */}
-        <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3 lg:grid-cols-6">
+        <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4 sm:gap-3 lg:grid-cols-7">
           <Stat label="방문" value={a.visits.toLocaleString()} delta={delta(a.visits, b.visits)} hint="최근 7일" />
           <Stat label="조회" value={a.views.toLocaleString()} delta={delta(a.views, b.views)} hint="최근 7일" />
           <Stat
@@ -116,6 +128,11 @@ export default function Overview({
             hint={`${a.dwellCount.toLocaleString()}회 측정`}
           />
           <Stat label="검색어 준비도" value={`${avgReady}%`} hint={`월 ${totalVolume.toLocaleString()}회 겨냥`} />
+          <Stat
+            label="100문100답 조회"
+            value={(openViews + lockedViews).toLocaleString()}
+            hint={`무료 ${openViews.toLocaleString()} · 유료 ${lockedViews.toLocaleString()}`}
+          />
           <Stat
             label="공개 / 유료"
             value={`${content.open} / ${content.total - content.open}`}
@@ -258,7 +275,11 @@ export default function Overview({
         </div>
       </Panel>
 
-      <Panel title="100문100답" href="/admin/wed100" hint="무엇이 읽히고 무엇이 팔리는가">
+      <Panel
+        title="100문100답"
+        href="/admin/wed100"
+        hint={`최근 7일 조회 ${(openViews + lockedViews).toLocaleString()}회 · 무료 ${openViews.toLocaleString()} / 유료 ${lockedViews.toLocaleString()}`}
+      >
         <div className="grid min-w-0 gap-5 lg:grid-cols-2">
           <QnaList
             title={`무료 ${content.open}개가 읽히고 있나`}
