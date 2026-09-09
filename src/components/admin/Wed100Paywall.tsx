@@ -180,7 +180,7 @@ export default function Wed100Paywall({
                 placeholder="https://smartstore.naver.com/..."
                 className="mt-1 h-9 w-full rounded-md border border-[#D4C7BE] bg-white px-2.5 text-xs outline-none focus:border-[#A63D5A]"
               />
-              <span className="mt-1 block text-[11px] text-[#8A7A72]">
+              <span className="mt-1 block text-[0.6875rem] text-[#8A7A72]">
                 비워 두면 [전체 보기 신청] 버튼이 나오지 않습니다.
               </span>
             </label>
@@ -218,7 +218,7 @@ export default function Wed100Paywall({
               placeholder={'hong@gmail.com\nkim@gmail.com  2026-12-08'}
               className="mt-1 w-full rounded-md border border-[#D4C7BE] bg-white px-2.5 py-1.5 font-mono text-xs outline-none focus:border-[#A63D5A]"
             />
-            <span className="mt-1 block text-[11px] leading-relaxed text-[#8A7A72]">
+            <span className="mt-1 block text-[0.6875rem] leading-relaxed text-[#8A7A72]">
               지금 <b>{parseMembers(members).length}명</b>
               {(() => {
                 const today = todayKST()

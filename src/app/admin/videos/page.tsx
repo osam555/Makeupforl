@@ -321,7 +321,7 @@ function AdminVideos({ password, idTokenGetter }: { password: string | null; idT
                           href={youtubeWatch(v.youtubeId)}
                           target="_blank"
                           rel="noreferrer"
-                          className="mt-1 inline-block text-[11px] text-gray-400 underline"
+                          className="mt-1 inline-block text-[0.6875rem] text-gray-400 underline"
                         >
                           {v.youtubeId}
                         </a>

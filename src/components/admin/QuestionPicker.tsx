@@ -76,7 +76,7 @@ export default function QuestionPicker({
               const it = byslug.get(slug)
               return (
                 <li key={slug} className="flex items-center gap-1.5 rounded bg-[#FBF8F5] px-2 py-1.5">
-                  <span className="w-5 shrink-0 text-center text-[11px] font-bold text-[#A63D5A]">
+                  <span className="w-5 shrink-0 text-center text-[0.6875rem] font-bold text-[#A63D5A]">
                     {i + 1}
                   </span>
                   <span className="min-w-0 flex-1 truncate text-xs text-[#3A322E]">
@@ -134,7 +134,7 @@ export default function QuestionPicker({
         <button
           type="button"
           onClick={() => setPart('all')}
-          className={`h-7 rounded-md px-2 text-[11px] ${
+          className={`h-7 rounded-md px-2 text-[0.6875rem] ${
             part === 'all' ? 'bg-[#221D1B] text-white' : 'bg-white text-[#6B5D57] hover:bg-[#F5EFE9]'
           }`}
         >
@@ -145,7 +145,7 @@ export default function QuestionPicker({
             key={p}
             type="button"
             onClick={() => setPart(p)}
-            className={`h-7 rounded-md px-2 text-[11px] ${
+            className={`h-7 rounded-md px-2 text-[0.6875rem] ${
               part === p ? 'bg-[#221D1B] text-white' : 'bg-white text-[#6B5D57] hover:bg-[#F5EFE9]'
             }`}
           >
@@ -153,7 +153,7 @@ export default function QuestionPicker({
           </button>
         ))}
         {max !== undefined && (
-          <span className={`ml-auto text-[11px] ${full ? 'font-bold text-[#A63D5A]' : 'text-[#8A7A72]'}`}>
+          <span className={`ml-auto text-[0.6875rem] ${full ? 'font-bold text-[#A63D5A]' : 'text-[#8A7A72]'}`}>
             {value.length} / {max}
           </span>
         )}

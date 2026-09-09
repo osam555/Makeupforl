@@ -518,7 +518,7 @@ function AdminWed100Editor({
         <div className="flex flex-wrap items-center gap-3 rounded-t-2xl bg-[#221D1B] px-5 py-3.5 text-white">
           <b className="text-sm">100문100답 콘텐츠 관리</b>
           <span
-            className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold ${
+            className={`rounded-full px-2.5 py-0.5 text-[0.625rem] font-bold ${
               source === 'db' ? 'bg-emerald-800 text-emerald-100' : 'bg-amber-800 text-amber-100'
             }`}
           >
@@ -634,14 +634,14 @@ function AdminWed100Editor({
                       className="flex flex-wrap items-center gap-3 rounded-xl border border-[#E7DDD4] px-3.5 py-3"
                     >
                       <span
-                        className="min-w-[52px] text-[10px] font-extrabold"
+                        className="min-w-[52px] text-[0.625rem] font-extrabold"
                         style={{ color: PART_THEME[row.part]?.accent ?? '#7A6A5F' }}
                       >
                         P{row.part}·{String(row.n).padStart(2, '0')}
                       </span>
-                      <span className="flex-1 text-[13px] leading-snug text-[#2E2724]">
+                      <span className="flex-1 text-[0.8125rem] leading-snug text-[#2E2724]">
                         {row.question}
-                        <span className="mt-0.5 block text-[11px] text-[#9A8B84]">
+                        <span className="mt-0.5 block text-[0.6875rem] text-[#9A8B84]">
                           {row.slug} · 자막 {row.cues}줄 · {row.hasAudio ? '음성 있음' : '음성 없음'}
                           {row.deletedAt ? ` · ${row.deletedAt.slice(0, 16).replace('T', ' ')} 삭제` : ''}
                         </span>
@@ -687,7 +687,7 @@ function AdminWed100Editor({
                   value={kw}
                   onChange={(e) => setKw(e.target.value)}
                   placeholder="질문 검색 / slug"
-                  className="w-full rounded-lg border border-[#E7DDD4] py-2 pl-9 pr-3 text-[13px] outline-none focus:border-[#A63D5A]"
+                  className="w-full rounded-lg border border-[#E7DDD4] py-2 pl-9 pr-3 text-[0.8125rem] outline-none focus:border-[#A63D5A]"
                 />
               </div>
               <div className="mt-2 flex flex-wrap gap-1">
@@ -695,7 +695,7 @@ function AdminWed100Editor({
                   <button
                     key={v}
                     onClick={() => setPart(v)}
-                    className={`rounded-full border px-2.5 py-1 text-[11px] ${
+                    className={`rounded-full border px-2.5 py-1 text-[0.6875rem] ${
                       part === v
                         ? 'border-[#A63D5A] bg-[#A63D5A] font-bold text-white'
                         : 'border-[#E7DDD4] bg-white text-[#5B4F49]'
@@ -714,12 +714,12 @@ function AdminWed100Editor({
                     if (dirty && !confirm('저장하지 않은 변경이 있습니다. 이동할까요?')) return
                     setSel(x.slug)
                   }}
-                  className={`flex w-full items-start gap-2.5 border-b border-[#F2EAE3] px-3.5 py-2.5 text-left text-[13px] leading-snug hover:bg-[#F7F0EA] ${
+                  className={`flex w-full items-start gap-2.5 border-b border-[#F2EAE3] px-3.5 py-2.5 text-left text-[0.8125rem] leading-snug hover:bg-[#F7F0EA] ${
                     x.slug === sel ? 'border-l-[3px] border-l-[#A63D5A] bg-[#F6E9ED]' : ''
                   }`}
                 >
                   <span
-                    className="mt-0.5 min-w-[52px] text-[10px] font-extrabold"
+                    className="mt-0.5 min-w-[52px] text-[0.625rem] font-extrabold"
                     style={{ color: PART_THEME[x.part].accent }}
                   >
                     {itemLabel(x)}
@@ -727,7 +727,7 @@ function AdminWed100Editor({
                   <span className="flex-1">
                     <span className="block text-[#2E2724]">{x.question}</span>
                     <span
-                      className="mt-0.5 inline-block rounded bg-[#F2EAE3] px-1.5 py-px text-[10px] font-bold tabular-nums text-[#8A7B73]"
+                      className="mt-0.5 inline-block rounded bg-[#F2EAE3] px-1.5 py-px text-[0.625rem] font-bold tabular-nums text-[#8A7B73]"
                       title={`답변 본문 ${answerChars(x.answer).toLocaleString()}자 (공백 제외 ${answerCharsNoSpace(
                         x.answer,
                       ).toLocaleString()}자)`}
@@ -772,11 +772,11 @@ function AdminWed100Editor({
               />
               <div className="sticky -top-5 z-10 -mx-5 flex flex-wrap items-center gap-2.5 border-b border-[#E7DDD4] bg-white/95 px-5 pb-3 pt-1 backdrop-blur lg:-mx-6 lg:-top-6 lg:px-6">
                 <h2 className="text-lg font-extrabold text-[#2E2724]">{itemLabel(draft)} 편집</h2>
-                <span className="rounded bg-[#EFE7E1] px-2 py-0.5 text-[10px] font-bold text-[#6B5D57]">
+                <span className="rounded bg-[#EFE7E1] px-2 py-0.5 text-[0.625rem] font-bold text-[#6B5D57]">
                   {draft.slug}
                 </span>
                 <span
-                  className={`rounded px-2 py-0.5 text-[10px] font-bold ${
+                  className={`rounded px-2 py-0.5 text-[0.625rem] font-bold ${
                     draft.published !== false
                       ? 'bg-emerald-100 text-emerald-800'
                       : 'bg-red-100 text-red-700'
@@ -785,26 +785,26 @@ function AdminWed100Editor({
                   {draft.published !== false ? '공개중' : '비공개'}
                 </span>
                 <span
-                  className={`rounded px-2 py-0.5 text-[10px] font-bold ${
+                  className={`rounded px-2 py-0.5 text-[0.625rem] font-bold ${
                     draft.audio ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
                   }`}
                 >
                   {draft.audio ? `음성 ${Math.round(draft.duration ?? 0)}초` : '음성 미생성'}
                 </span>
                 {dirty && (
-                  <span className="rounded bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-800">
+                  <span className="rounded bg-amber-100 px-2 py-0.5 text-[0.625rem] font-bold text-amber-800">
                     수정됨 · 저장 필요
                   </span>
                 )}
                 {isStale(draft) && (
                   <span
-                    className="rounded bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-800"
+                    className="rounded bg-amber-100 px-2 py-0.5 text-[0.625rem] font-bold text-amber-800"
                     title="본문을 고친 뒤 음성을 다시 만들지 않았습니다"
                   >
                     음성이 본문보다 오래됨
                   </span>
                 )}
-                <span className="text-[11px] text-[#8A7A72]">
+                <span className="text-[0.6875rem] text-[#8A7A72]">
                   <span title={whenExact(draft.updatedAt)}>본문 {whenText(draft.updatedAt)}</span>
                   <span className="px-1.5 text-[#D4C7BE]">|</span>
                   <span title={whenExact(draft.audioAt)}>음성 {whenText(draft.audioAt)}</span>
@@ -871,13 +871,13 @@ function AdminWed100Editor({
                 <span className="flex flex-wrap items-center gap-2 text-xs font-bold text-[#6B5D57]">
                   답변 본문 (문단은 빈 줄로 구분 · 본문 수정 후 [큐 재생성]으로 자막 갱신)
                   <span className="ml-auto flex items-center gap-2.5 font-normal">
-                    <span className="rounded-full bg-[#F6E9ED] px-2.5 py-0.5 text-[11px] font-extrabold tabular-nums text-[#A63D5A]">
+                    <span className="rounded-full bg-[#F6E9ED] px-2.5 py-0.5 text-[0.6875rem] font-extrabold tabular-nums text-[#A63D5A]">
                       {answerChars(draft.answer).toLocaleString()}자
                       <span className="ml-1 font-medium text-[#B98498]">
                         (공백 제외 {answerCharsNoSpace(draft.answer).toLocaleString()}자)
                       </span>
                     </span>
-                    <span className="text-[11px] text-[#9C8D86]">글자 크기</span>
+                    <span className="text-[0.6875rem] text-[#9C8D86]">글자 크기</span>
                     <span className="flex gap-0.5 rounded-full border border-[#E7DDD4] bg-white p-0.5">
                       {FONT_SIZES.map((f) => (
                         <button
@@ -885,7 +885,7 @@ function AdminWed100Editor({
                           type="button"
                           onClick={() => chooseFont(f.key)}
                           aria-pressed={font === f.key}
-                          className={`rounded-full px-2.5 py-1 text-[11px] transition ${
+                          className={`rounded-full px-2.5 py-1 text-[0.6875rem] transition ${
                             font === f.key
                               ? 'bg-[#A63D5A] font-bold text-white'
                               : 'text-[#6B5D57] hover:bg-[#F6E9ED]'
@@ -916,7 +916,7 @@ function AdminWed100Editor({
                   <p className="text-xs font-bold text-[#6B5D57]">대표 이미지</p>
                   <span className="flex items-center gap-2">
                     <span
-                      className={`rounded-full px-2.5 py-1 text-[11px] font-extrabold ${
+                      className={`rounded-full px-2.5 py-1 text-[0.6875rem] font-extrabold ${
                         draft.photoAuto === false
                           ? 'bg-[#A63D5A] text-white'
                           : 'bg-[#EFE7DF] text-[#6B5D57]'
@@ -931,7 +931,7 @@ function AdminWed100Editor({
                             d.photoAuto = true
                           })
                         }
-                        className="flex items-center gap-1 text-[11px] font-bold text-[#A63D5A] hover:underline"
+                        className="flex items-center gap-1 text-[0.6875rem] font-bold text-[#A63D5A] hover:underline"
                       >
                         <Undo2 className="h-3 w-3" /> 자동 배정으로
                       </button>
@@ -962,7 +962,7 @@ function AdminWed100Editor({
                       unoptimized={isRemote(draft.thumbImage)}
                     />
                   </div>
-                  <div className="min-w-[200px] flex-1 text-[11px] leading-relaxed text-[#6B5D57]">
+                  <div className="min-w-[200px] flex-1 text-[0.6875rem] leading-relaxed text-[#6B5D57]">
                     <p>
                       사진을 고르면 이 문항만 <b>직접 지정</b>으로 바뀌어, 다음에 자동 배정을
                       다시 돌려도 그대로 유지됩니다.
@@ -974,7 +974,7 @@ function AdminWed100Editor({
                       <button
                         onClick={save}
                         disabled={saving || !canWrite}
-                        className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-[#A63D5A] px-3 py-1.5 text-[11px] font-bold text-white transition hover:bg-[#8A2E48] disabled:opacity-40"
+                        className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-[#A63D5A] px-3 py-1.5 text-[0.6875rem] font-bold text-white transition hover:bg-[#8A2E48] disabled:opacity-40"
                       >
                         <Save className="h-3.5 w-3.5" />
                         {saving ? '저장 중…' : '지금 저장'}
@@ -1017,10 +1017,10 @@ function AdminWed100Editor({
                         value={photoKw}
                         onChange={(e) => setPhotoKw(e.target.value)}
                         placeholder="이름·설명 검색"
-                        className="w-44 rounded-lg border border-[#E7DDD4] py-1.5 pl-8 pr-2 text-[11px] outline-none focus:border-[#A63D5A]"
+                        className="w-44 rounded-lg border border-[#E7DDD4] py-1.5 pl-8 pr-2 text-[0.6875rem] outline-none focus:border-[#A63D5A]"
                       />
                     </div>
-                    <label className="flex cursor-pointer items-center gap-1.5 text-[11px] font-bold text-[#6B5D57]">
+                    <label className="flex cursor-pointer items-center gap-1.5 text-[0.6875rem] font-bold text-[#6B5D57]">
                       <input
                         type="checkbox"
                         checked={onlyMine}
@@ -1034,7 +1034,7 @@ function AdminWed100Editor({
                   <div className="mt-2 flex flex-wrap gap-1">
                     <button
                       onClick={() => setPhotoCat('all')}
-                      className={`rounded-full border px-2.5 py-1 text-[11px] font-bold transition ${
+                      className={`rounded-full border px-2.5 py-1 text-[0.6875rem] font-bold transition ${
                         photoCat === 'all'
                           ? 'border-[#A63D5A] bg-[#A63D5A] text-white'
                           : 'border-[#E7DDD4] bg-white text-[#5B4F49] hover:border-[#DFD2C7]'
@@ -1046,7 +1046,7 @@ function AdminWed100Editor({
                       <button
                         key={g.cat}
                         onClick={() => setPhotoCat(g.cat)}
-                        className={`rounded-full border px-2.5 py-1 text-[11px] font-bold transition ${
+                        className={`rounded-full border px-2.5 py-1 text-[0.6875rem] font-bold transition ${
                           photoCat === g.cat
                             ? 'border-[#A63D5A] bg-[#A63D5A] text-white'
                             : 'border-[#E7DDD4] bg-white text-[#5B4F49] hover:border-[#DFD2C7]'
@@ -1059,7 +1059,7 @@ function AdminWed100Editor({
 
                   <div className="mt-2.5 max-h-[300px] overflow-auto rounded-lg bg-[#FCFAF8] p-2">
                     {visiblePhotos.length === 0 ? (
-                      <p className="py-8 text-center text-[11px] text-[#9A8B84]">
+                      <p className="py-8 text-center text-[0.6875rem] text-[#9A8B84]">
                         조건에 맞는 사진이 없습니다.
                       </p>
                     ) : (
@@ -1087,17 +1087,17 @@ function AdminWed100Editor({
                                   unoptimized={mine}
                                 />
                                 {on && (
-                                  <span className="absolute inset-x-0 bottom-0 bg-[#A63D5A] py-0.5 text-center text-[9px] font-extrabold text-white">
+                                  <span className="absolute inset-x-0 bottom-0 bg-[#A63D5A] py-0.5 text-center text-[0.5625rem] font-extrabold text-white">
                                     선택됨
                                   </span>
                                 )}
                                 {!on && mine && (
-                                  <span className="absolute left-1 top-1 rounded bg-emerald-600 px-1 py-px text-[9px] font-extrabold text-white">
+                                  <span className="absolute left-1 top-1 rounded bg-emerald-600 px-1 py-px text-[0.5625rem] font-extrabold text-white">
                                     NEW
                                   </span>
                                 )}
                               </button>
-                              <p className="mt-0.5 truncate text-center text-[9px] text-[#9C8D86]">
+                              <p className="mt-0.5 truncate text-center text-[0.5625rem] text-[#9C8D86]">
                                 {ph.name}
                               </p>
                               {mine && (
@@ -1120,7 +1120,7 @@ function AdminWed100Editor({
 
                 {/* 직접 URL 입력 (외부 이미지·Storage 업로드본) */}
                 <details className="mt-3">
-                  <summary className="cursor-pointer text-[11px] font-bold text-[#8A7C74]">
+                  <summary className="cursor-pointer text-[0.6875rem] font-bold text-[#8A7C74]">
                     이미지 주소 직접 입력 · 기본 이미지로 되돌리기
                   </summary>
                   <div className="mt-2 grid gap-2 sm:grid-cols-2">
@@ -1158,11 +1158,11 @@ function AdminWed100Editor({
                         d.photoAuto = true
                       })
                     }
-                    className="mt-2 inline-flex items-center gap-1.5 rounded-lg border border-[#E7DDD4] bg-white px-3 py-1.5 text-[11px] font-bold text-[#6B5D57] hover:border-[#DFD2C7]"
+                    className="mt-2 inline-flex items-center gap-1.5 rounded-lg border border-[#E7DDD4] bg-white px-3 py-1.5 text-[0.6875rem] font-bold text-[#6B5D57] hover:border-[#DFD2C7]"
                   >
                     <Undo2 className="h-3.5 w-3.5" /> 기본 SVG 이미지로 되돌리기
                   </button>
-                  <p className="mt-1.5 text-[11px] text-[#8A7C74]">
+                  <p className="mt-1.5 text-[0.6875rem] text-[#8A7C74]">
                     비우면 자동 생성 SVG로 돌아갑니다. 스크립트로 사진을 늘리려면 photos 폴더에 넣고
                     <code className="mx-1 rounded bg-[#F2EAE3] px-1">4_build_photos.py</code>
                     →
@@ -1185,7 +1185,7 @@ function AdminWed100Editor({
                   </button>
                 </div>
                 <div className="mt-2 overflow-hidden rounded-xl border border-[#E7DDD4]">
-                  <div className="grid grid-cols-[34px_1fr_1fr_56px] gap-2.5 bg-[#F7F1EC] px-3 py-2 text-[11px] font-extrabold text-[#6B5D57]">
+                  <div className="grid grid-cols-[34px_1fr_1fr_56px] gap-2.5 bg-[#F7F1EC] px-3 py-2 text-[0.6875rem] font-extrabold text-[#6B5D57]">
                     <span>#</span><span>한국어</span><span>English</span><span>시작</span>
                   </div>
                   <div className="max-h-[300px] overflow-auto">
@@ -1194,7 +1194,7 @@ function AdminWed100Editor({
                         key={i}
                         className="grid grid-cols-[34px_1fr_1fr_56px] items-start gap-2.5 border-t border-[#F2EAE3] px-3 py-2"
                       >
-                        <span className="pt-1.5 text-[10px] font-extrabold text-[#C0A16B]">
+                        <span className="pt-1.5 text-[0.625rem] font-extrabold text-[#C0A16B]">
                           {String(i + 1).padStart(2, '0')}
                         </span>
                         <textarea
@@ -1211,7 +1211,7 @@ function AdminWed100Editor({
                           style={cueStyle}
                           className="rounded-md border border-transparent px-2 py-1 outline-none hover:border-[#E7DDD4] focus:border-[#A63D5A]"
                         />
-                        <span className="pt-1.5 font-mono text-[10px] text-[#A3948C]">
+                        <span className="pt-1.5 font-mono text-[0.625rem] text-[#A3948C]">
                           {typeof c.start === 'number'
                             ? `${Math.floor(c.start / 60)}:${String(Math.floor(c.start % 60)).padStart(2, '0')}`
                             : '—'}
@@ -1220,7 +1220,7 @@ function AdminWed100Editor({
                     ))}
                   </div>
                 </div>
-                <p className="mt-2 text-[11px] leading-relaxed text-[#9C8D86]">
+                <p className="mt-2 text-[0.6875rem] leading-relaxed text-[#9C8D86]">
                   자막·본문을 고친 뒤 위쪽 <b>[음성 재생성]</b>을 누르면 이 문항의 음성과 자막
                   타임코드가 다시 만들어집니다. (진행자 여성 · 원장님 1.25배속)
                 </p>

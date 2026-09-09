@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Calendar, Clock, User, Phone, Mail, MessageSquare, X } from 'lucide-react'
 
+
 interface Booking {
   id: string
   name: string
@@ -26,31 +27,11 @@ interface Booking {
 function AdminBookings() {
   const isAuthenticated = true
   const [bookings, setBookings] = useState<Booking[]>([])
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<'all' | 'pending' | 'confirmed' | 'completed' | 'cancelled'>('all')
-
-
-
-  const loadBookings = async () => {
-    setLoading(true)
-
-    try {
-      const db = getDb()
-      if (!db) throw new Error('firebase-not-configured')
-      const { collection, getDocs, orderBy, query, where } = await import('firebase/firestore')
-      const base = collection(db, 'bookings')
-      const q =
-        filter !== 'all'
-          ? query(base, where('status', '==', filter), orderBy('created_at', 'desc'))
-          : query(base, orderBy('created_at', 'desc'))
-      const snap = await getDocs(q)
-      setBookings(snap.docs.map((d) => ({ ...(d.data() as Omit<Booking, 'id'>), id: d.id })))
-    } catch (error) {
-      console.error('Error:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
+  const [live, setLive] = useState(false)
+  const [lastSync, setLastSync] = useState<Date | null>(null)
+  const [reconnectKey, setReconnectKey] = useState(0)
 
   const updateBookingStatus = async (id: string, newStatus: string) => {
     try {
@@ -58,18 +39,62 @@ function AdminBookings() {
       if (!db) throw new Error('firebase-not-configured')
       const { doc, updateDoc } = await import('firebase/firestore')
       await updateDoc(doc(db, 'bookings', id), { status: newStatus })
-      loadBookings() // Reload after update
+      // 실시간 구독(onSnapshot)이 화면을 자동으로 갱신하므로 별도 재조회는 필요 없다.
     } catch (error) {
       console.error('Error:', error)
       alert('상태 업데이트 중 오류가 발생했습니다.')
     }
   }
 
+  // Firestore 실시간 구독: 탭을 열어둔 채로도 새 예약/상태 변경이 즉시 반영된다.
   useEffect(() => {
-    if (isAuthenticated) {
-      loadBookings()
+    if (!isAuthenticated) return
+
+    let unsubscribe: (() => void) | undefined
+    let cancelled = false
+
+    setLoading(true)
+
+    ;(async () => {
+      try {
+        const db = getDb()
+        if (!db) throw new Error('firebase-not-configured')
+        const { collection, onSnapshot, orderBy, query, where } = await import('firebase/firestore')
+        const base = collection(db, 'bookings')
+        const q =
+          filter !== 'all'
+            ? query(base, where('status', '==', filter), orderBy('created_at', 'desc'))
+            : query(base, orderBy('created_at', 'desc'))
+
+        if (cancelled) return
+
+        unsubscribe = onSnapshot(
+          q,
+          (snap) => {
+            setBookings(snap.docs.map((d) => ({ ...(d.data() as Omit<Booking, 'id'>), id: d.id })))
+            setLive(true)
+            setLastSync(new Date())
+            setLoading(false)
+          },
+          (error) => {
+            console.error('Error:', error)
+            setLive(false)
+            setLoading(false)
+          }
+        )
+      } catch (error) {
+        console.error('Error:', error)
+        setLive(false)
+        setLoading(false)
+      }
+    })()
+
+    return () => {
+      cancelled = true
+      setLive(false)
+      if (unsubscribe) unsubscribe()
     }
-  }, [filter])
+  }, [filter, reconnectKey])
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -107,8 +132,22 @@ function AdminBookings() {
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-4 gap-4 flex-wrap">
             <h1 className="text-3xl font-bold text-gray-900">예약 관리</h1>
+            <div className="flex items-center gap-2 text-xs">
+              <span
+                className={`inline-block h-2 w-2 rounded-full ${
+                  live ? 'bg-green-500 animate-pulse' : 'bg-gray-300'
+                }`}
+                aria-hidden="true"
+              />
+              <span className={live ? 'font-medium text-green-700' : 'text-gray-500'}>
+                {live ? '실시간 연결됨' : '연결 대기 중'}
+              </span>
+              {lastSync && (
+                <span className="text-gray-400">· {lastSync.toLocaleTimeString('ko-KR')} 갱신</span>
+              )}
+            </div>
           </div>
 
           {/* Filters */}
@@ -126,11 +165,11 @@ function AdminBookings() {
             ))}
             <Button
               variant="outline"
-              onClick={loadBookings}
+              onClick={() => setReconnectKey((k) => k + 1)}
               size="sm"
               className="ml-auto"
             >
-              새로고침
+              다시 연결
             </Button>
           </div>
         </div>

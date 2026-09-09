@@ -45,7 +45,7 @@ export default function AdminTabs({ active }: { active: string }) {
                 글씨를 휴대전화에서 보면 그것으로는 부족했다. 숫자가 아니라 눈에
                 보이는 것이 기준이다. 글자를 밝히고 조금 키웠다.
               */
-              'shrink-0 rounded-lg px-3.5 py-2 text-[13px] font-bold transition-colors',
+              'shrink-0 rounded-lg px-3.5 py-2 text-[0.8125rem] font-bold transition-colors',
               on
                 ? 'bg-white text-[#2E2724]'
                 : 'text-[#EFEAE7] hover:bg-white/15 hover:text-white',

@@ -133,7 +133,7 @@ function AdminDashboard() {
               <button
                 key={r.key}
                 onClick={() => setDays(r.key)}
-                className={`rounded-full px-3 py-1 text-[11px] ${
+                className={`rounded-full px-3 py-1 text-[0.6875rem] ${
                   days === r.key ? 'bg-[#A63D5A] font-bold' : 'bg-[#3A322F] text-[#E5DEDA]'
                 }`}
               >
@@ -166,7 +166,7 @@ function AdminDashboard() {
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {kpi.map((k) => (
               <div key={k.l} className="rounded-2xl border border-[#E7DDD4] p-4">
-                <p className="text-[11px] font-bold text-[#6B5D57]">{k.l}</p>
+                <p className="text-[0.6875rem] font-bold text-[#6B5D57]">{k.l}</p>
                 <p className="mt-1.5 text-2xl font-black text-[#2E2724]">{k.v}</p>
               </div>
             ))}
@@ -197,7 +197,7 @@ function AdminDashboard() {
                             style={{ width: `${(v / max) * 100}%` }}
                           />
                         </span>
-                        <span className="w-14 text-right font-mono text-[11px] text-[#8A7B73]">
+                        <span className="w-14 text-right font-mono text-[0.6875rem] text-[#8A7B73]">
                           {v.toLocaleString()}
                         </span>
                       </div>
@@ -219,7 +219,7 @@ function AdminDashboard() {
                 ].map(([v, l]) => (
                   <div key={l} className="rounded-xl bg-[#FCFAF8] p-3 text-center">
                     <p className="text-lg font-black text-[#A63D5A]">{v}</p>
-                    <p className="text-[10px] text-[#6B5D57]">{l}</p>
+                    <p className="text-[0.625rem] text-[#6B5D57]">{l}</p>
                   </div>
                 ))}
               </div>
@@ -243,7 +243,7 @@ function AdminDashboard() {
                           }}
                         />
                       </span>
-                      <span className="w-10 text-right font-mono text-[10px] text-[#8A7B73]">
+                      <span className="w-10 text-right font-mono text-[0.625rem] text-[#8A7B73]">
                         {total > 1 ? `${Math.round((v / total) * 100)}%` : '—'}
                       </span>
                     </div>

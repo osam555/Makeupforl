@@ -152,7 +152,7 @@ export default function Overview({
           </span>
         </SectionTitle>
         {todo.length === 0 ? (
-          <p className="rounded-xl border border-[#DCE8E0] bg-white p-4 text-[13px] text-[#3F6B57]">
+          <p className="rounded-xl border border-[#DCE8E0] bg-white p-4 text-[0.8125rem] text-[#3F6B57]">
             검색어 쪽에서 할 수 있는 것은 다 했습니다. 이제는 색인과 시간의 문제입니다 —
             4주 뒤 순위를 다시 재 보세요.
           </p>
@@ -161,25 +161,25 @@ export default function Overview({
             {todo.map((u, i) => (
               <li
                 key={i}
-                className="rounded-xl border border-[#E0D6CC] bg-white p-3.5 text-[13px] leading-relaxed"
+                className="rounded-xl border border-[#E0D6CC] bg-white p-3.5 text-[0.8125rem] leading-relaxed"
               >
                 <div className="flex flex-wrap items-baseline gap-x-2">
-                  <span className="rounded bg-[#F6E9ED] px-1.5 py-0.5 text-[11px] font-bold text-[#A63D5A]">
+                  <span className="rounded bg-[#F6E9ED] px-1.5 py-0.5 text-[0.6875rem] font-bold text-[#A63D5A]">
                     +{u.gain}%
                   </span>
                   <b className="text-[#2E2724]">{u.term}</b>
-                  <span className="text-[11px] text-[#8A7A72]">
+                  <span className="text-[0.6875rem] text-[#8A7A72]">
                     월 {u.volume.toLocaleString()}회
                   </span>
                   <span className="text-[#3A322E]">— {u.what}</span>
                 </div>
-                <p className="mt-1 text-[12px] text-[#6B5D57]">{u.how}</p>
+                <p className="mt-1 text-[0.75rem] text-[#6B5D57]">{u.how}</p>
               </li>
             ))}
           </ol>
         )}
         {(noAudio > 0 || thin > 0) && (
-          <p className="mt-2 rounded-xl border border-[#E8DFD7] bg-white p-3 text-[12px] text-[#6B5D57]">
+          <p className="mt-2 rounded-xl border border-[#E8DFD7] bg-white p-3 text-[0.75rem] text-[#6B5D57]">
             콘텐츠 쪽에서도{' '}
             {noAudio > 0 && <b className="text-[#A63D5A]">음성 없는 문항 {noAudio}개</b>}
             {noAudio > 0 && thin > 0 && ' · '}
@@ -228,7 +228,7 @@ export default function Overview({
                 }))}
               empty="아직 기록이 없습니다"
             />
-            <p className="mt-3 text-[11px] leading-relaxed text-[#8A7A72]">
+            <p className="mt-3 text-[0.6875rem] leading-relaxed text-[#8A7A72]">
               사람을 식별하지 않습니다. 쿠키를 쓰지 않고 IP·기기 정보도 저장하지 않으며,
               관리자 화면은 세지 않습니다.
             </p>
@@ -248,10 +248,10 @@ export default function Overview({
                 <span className="text-xs font-bold text-[#3A322E] sm:w-24 sm:shrink-0">
                   {t.term}
                 </span>
-                <span className="text-[11px] tabular-nums text-[#8A7A72] sm:w-16 sm:shrink-0 sm:text-right">
+                <span className="text-[0.6875rem] tabular-nums text-[#8A7A72] sm:w-16 sm:shrink-0 sm:text-right">
                   {t.volume.toLocaleString()}
                 </span>
-                <span className="ml-auto text-[11px] font-bold tabular-nums text-[#2E2724] sm:order-last sm:ml-0 sm:w-10 sm:text-right">
+                <span className="ml-auto text-[0.6875rem] font-bold tabular-nums text-[#2E2724] sm:order-last sm:ml-0 sm:w-10 sm:text-right">
                   {scores[t.term]}%
                 </span>
               </div>
@@ -296,7 +296,7 @@ export default function Overview({
             empty="잠긴 문항이 없습니다"
           />
         </div>
-        <div className="mt-4 flex flex-wrap gap-x-5 gap-y-1 border-t border-[#F0E9E3] pt-3 text-[11px] text-[#6B5D57]">
+        <div className="mt-4 flex flex-wrap gap-x-5 gap-y-1 border-t border-[#F0E9E3] pt-3 text-[0.6875rem] text-[#6B5D57]">
           <span>
             원장 음성 <b className="text-[#2E2724]">{content.audioMinutes}분</b>
           </span>
@@ -384,7 +384,7 @@ function Stat({
     <div
       className={`rounded-xl border bg-white p-3.5 ${warn ? 'border-[#E8C7CF]' : 'border-[#E0D6CC]'}`}
     >
-      <p className="text-[11px] font-bold tracking-wider text-[#8A7A72]">{label}</p>
+      <p className="text-[0.6875rem] font-bold tracking-wider text-[#8A7A72]">{label}</p>
       <p className="mt-1 flex items-baseline gap-1.5">
         <span className="text-xl font-extrabold tabular-nums text-[#2E2724]">{value}</span>
         {delta !== null && delta !== undefined && delta !== 0 && (
@@ -394,7 +394,7 @@ function Stat({
           </span>
         )}
       </p>
-      <p className={`mt-0.5 text-[11px] ${warn ? 'text-[#A63D5A]' : 'text-[#8A7A72]'}`}>{hint}</p>
+      <p className={`mt-0.5 text-[0.6875rem] ${warn ? 'text-[#A63D5A]' : 'text-[#8A7A72]'}`}>{hint}</p>
     </div>
   )
 }
@@ -418,7 +418,7 @@ function List({
           {rows.map((r, i) => (
             <li key={i} className="flex min-w-0 items-center gap-2 text-xs">
               <span className="min-w-0 flex-1 truncate text-[#3A322E]">{r.left}</span>
-              {r.mid && <span className="shrink-0 text-[11px] text-[#8A7A72]">{r.mid}</span>}
+              {r.mid && <span className="shrink-0 text-[0.6875rem] text-[#8A7A72]">{r.mid}</span>}
               <b className="w-12 shrink-0 text-right tabular-nums text-[#2E2724]">{r.right}</b>
             </li>
           ))}
@@ -448,14 +448,14 @@ function QnaList({
   return (
     <div className="min-w-0">
       <p className="text-xs font-bold text-[#3A322E]">{title}</p>
-      <p className="mt-0.5 text-[11px] leading-relaxed text-[#8A7A72]">{hint}</p>
+      <p className="mt-0.5 text-[0.6875rem] leading-relaxed text-[#8A7A72]">{hint}</p>
       {sorted.length === 0 ? (
         <p className="py-6 text-center text-xs text-[#9A8B84]">{empty}</p>
       ) : (
         <ul className="mt-2.5 space-y-1.5">
           {sorted.slice(0, 8).map((r) => (
             <li key={r.slug} className="flex min-w-0 items-center gap-2 text-xs">
-              <span className="w-8 shrink-0 text-[10px] font-extrabold text-[#8A7A72]">
+              <span className="w-8 shrink-0 text-[0.625rem] font-extrabold text-[#8A7A72]">
                 P{r.part}
               </span>
               <span className="min-w-0 flex-1 truncate text-[#3A322E]">{r.question}</span>
@@ -467,7 +467,7 @@ function QnaList({
         </ul>
       )}
       {!any && sorted.length > 0 && (
-        <p className="mt-2 text-[11px] text-[#8A7A72]">
+        <p className="mt-2 text-[0.6875rem] text-[#8A7A72]">
           아직 조회 기록이 없습니다. 쌓이면 많이 본 순서로 정렬됩니다.
         </p>
       )}
@@ -502,7 +502,7 @@ function Bars({ days }: { days: DailyStat[] }) {
           </div>
         ))}
       </div>
-      <div className="mt-1.5 flex justify-between text-[10px] text-[#8A7A72]">
+      <div className="mt-1.5 flex justify-between text-[0.625rem] text-[#8A7A72]">
         <span>{days[0]?.date.slice(5)}</span>
         <span>일별 조회 · 최대 {max.toLocaleString()}회</span>
         <span>{days[days.length - 1]?.date.slice(5)}</span>
@@ -514,7 +514,7 @@ function Bars({ days }: { days: DailyStat[] }) {
 function History({ history }: { history: SeoSnapshot[] }) {
   if (history.length < 2) {
     return (
-      <p className="rounded-lg border border-[#E8DFD7] bg-[#FBF8F5] p-3 text-[11px] leading-relaxed text-[#8A7A72]">
+      <p className="rounded-lg border border-[#E8DFD7] bg-[#FBF8F5] p-3 text-[0.6875rem] leading-relaxed text-[#8A7A72]">
         기록이 {history.length}일치입니다. 이 화면을 열 때마다 그날의 준비도가 한 번 남으므로,
         며칠 지나면 변화가 보입니다.
       </p>
@@ -546,7 +546,7 @@ function History({ history }: { history: SeoSnapshot[] }) {
           </circle>
         ))}
       </svg>
-      <div className="mt-1 flex justify-between text-[10px] text-[#8A7A72]">
+      <div className="mt-1 flex justify-between text-[0.625rem] text-[#8A7A72]">
         <span>{history[0].date.slice(5)}</span>
         <span>평균 준비도 {pts[pts.length - 1].v}%</span>
         <span>{history[history.length - 1].date.slice(5)}</span>

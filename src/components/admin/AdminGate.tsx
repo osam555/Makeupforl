@@ -5,6 +5,7 @@ import { KeyRound, LogIn, ShieldCheck, TriangleAlert } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import FontSizeToggle, { useFontSize } from '@/components/admin/FontSize'
 import { firebaseConfigured } from '@/lib/firebase/client'
 import { ADMIN_EMAILS, signInAdmin, signOutAdmin, watchAdmin } from '@/lib/firebase/auth'
 
@@ -33,6 +34,7 @@ export default function AdminGate({
   title: string
   children: (ctx: AdminCtx) => React.ReactNode
 }) {
+  const [font, setFont] = useFontSize()
   const [email, setEmail] = useState<string | null>(null)
   const [pwOk, setPwOk] = useState(false)
   const [checking, setChecking] = useState(true)
@@ -82,7 +84,7 @@ export default function AdminGate({
             <>
               <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
               <span className="text-[#6B5D57]">{email}</span>
-              <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800">
+              <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[0.625rem] font-bold text-emerald-800">
                 편집 가능
               </span>
               <button
@@ -99,7 +101,7 @@ export default function AdminGate({
             <>
               <TriangleAlert className="h-3.5 w-3.5 text-amber-600" />
               <span className="text-[#6B5D57]">비밀번호 로그인</span>
-              <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-800">
+              <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[0.625rem] font-bold text-amber-800">
                 편집 가능
               </span>
               <button
@@ -111,7 +113,19 @@ export default function AdminGate({
             </>
           )}
         </div>
-        {children({ email, mode, password: pwOk ? pw : null, canWrite })}
+        {/*
+          글자 크기를 뿌리에서 키운다.
+
+          곳곳의 글자를 하나씩 고치는 대신 이 칸의 기준 크기를 올리면, rem 으로 잡힌
+          글자와 여백·아이콘이 함께 커진다. 글자만 커지고 칸이 그대로면 오히려 더
+          답답해진다. 기본은 '크게' 다 — 이 화면을 매일 보시는 분 눈에 맞춘다.
+        */}
+        <div style={{ fontSize: font === 'large' ? '17.6px' : '16px' }}>
+          <div className="mx-auto flex max-w-5xl justify-end px-5 pt-3">
+            <FontSizeToggle size={font} onChange={setFont} />
+          </div>
+          {children({ email, mode, password: pwOk ? pw : null, canWrite })}
+        </div>
       </>
     )
   }
@@ -136,14 +150,14 @@ export default function AdminGate({
           {busy ? '로그인 중…' : 'Google 계정으로 로그인'}
         </Button>
         {!firebaseConfigured && (
-          <p className="mt-2 text-[11px] leading-relaxed text-amber-700">
+          <p className="mt-2 text-[0.6875rem] leading-relaxed text-amber-700">
             Firebase가 아직 연결되지 않아 구글 로그인을 쓸 수 없습니다. (FIREBASE_SETUP.md 참고)
           </p>
         )}
 
         <div className="my-5 flex items-center gap-3">
           <span className="h-px flex-1 bg-[#E7DDD4]" />
-          <span className="text-[10px] font-bold tracking-wider text-[#E5DEDA]">또는</span>
+          <span className="text-[0.625rem] font-bold tracking-wider text-[#E5DEDA]">또는</span>
           <span className="h-px flex-1 bg-[#E7DDD4]" />
         </div>
 

@@ -245,9 +245,9 @@ export default function Wed100PhotoUpload({
   const notice =
     err || doneMsg ? (
       <div className="mt-2 space-y-1.5">
-        {err && <p className="text-[11px] font-bold text-[#C0392B]">{err}</p>}
+        {err && <p className="text-[0.6875rem] font-bold text-[#C0392B]">{err}</p>}
         {doneMsg && (
-          <p className="flex items-start gap-1.5 rounded-lg bg-emerald-50 px-3 py-2 text-[11px] font-bold leading-relaxed text-emerald-800">
+          <p className="flex items-start gap-1.5 rounded-lg bg-emerald-50 px-3 py-2 text-[0.6875rem] font-bold leading-relaxed text-emerald-800">
             <CheckCircle2 className="mt-px h-3.5 w-3.5 shrink-0" />
             {doneMsg}
           </p>
@@ -261,11 +261,11 @@ export default function Wed100PhotoUpload({
         <p className="flex items-center gap-1.5 text-xs font-bold text-[#6B5D57]">
           <ImagePlus className="h-3.5 w-3.5 text-[#A63D5A]" /> 새 사진 올리기
         </p>
-        <span className="text-[11px] text-[#8A7C74]">올린 사진 {uploaded.length}장</span>
+        <span className="text-[0.6875rem] text-[#8A7C74]">올린 사진 {uploaded.length}장</span>
       </div>
 
       {!googleEmail && (
-        <p className="mt-2 rounded-lg bg-[#FDF3E7] px-3 py-2 text-[11px] leading-relaxed text-[#8A6A48]">
+        <p className="mt-2 rounded-lg bg-[#FDF3E7] px-3 py-2 text-[0.6875rem] leading-relaxed text-[#8A6A48]">
           사진 올리기는 <b>관리자 구글 계정 로그인</b>이 필요합니다. 저장소(Storage) 규칙이
           비밀번호 로그인은 받지 않습니다. 위에서 구글로 로그인해 주세요.
         </p>
@@ -284,7 +284,7 @@ export default function Wed100PhotoUpload({
         <p className="mt-1.5 text-xs font-bold text-[#6B5D57]">
           사진을 끌어다 놓거나 눌러서 고르세요 · 붙여넣기(Ctrl+V)도 됩니다
         </p>
-        <p className="mt-1 text-[11px] text-[#8A7C74]">
+        <p className="mt-1 text-[0.6875rem] text-[#8A7C74]">
           여러 장을 한 번에 올릴 수 있습니다. 히어로(16:9)와 썸네일(정사각)은 자동으로 만듭니다.
         </p>
       </div>
@@ -324,8 +324,8 @@ export default function Wed100PhotoUpload({
               </div>
 
               <div className="min-w-[220px] flex-1">
-                <p className="truncate text-[11px] font-bold text-[#4A403B]">{r.file.name}</p>
-                <p className="text-[10px] text-[#8A7C74]">
+                <p className="truncate text-[0.6875rem] font-bold text-[#4A403B]">{r.file.name}</p>
+                <p className="text-[0.625rem] text-[#8A7C74]">
                   {r.bitmap.width}×{r.bitmap.height} · 기준점 {r.fx.toFixed(2)}, {r.fy.toFixed(2)}
                 </p>
 
@@ -334,7 +334,7 @@ export default function Wed100PhotoUpload({
                     <button
                       key={c}
                       onClick={() => patch(r.id, (v) => (v.cat = c))}
-                      className={`rounded-md border px-2 py-1 text-[10px] font-bold transition ${
+                      className={`rounded-md border px-2 py-1 text-[0.625rem] font-bold transition ${
                         r.cat === c
                           ? 'border-[#A63D5A] bg-[#A63D5A] text-white'
                           : 'border-[#E7DDD4] text-[#6B5D57] hover:border-[#DFD2C7]'
@@ -349,12 +349,12 @@ export default function Wed100PhotoUpload({
                   value={r.note}
                   onChange={(e) => patch(r.id, (v) => (v.note = e.target.value))}
                   placeholder="설명 (예: 분홍 저고리 측면, 쪽머리 비녀)"
-                  className="mt-1.5 w-full rounded-md border border-[#E7DDD4] px-2 py-1.5 text-[11px] outline-none focus:border-[#A63D5A]"
+                  className="mt-1.5 w-full rounded-md border border-[#E7DDD4] px-2 py-1.5 text-[0.6875rem] outline-none focus:border-[#A63D5A]"
                 />
 
                 {r.message && (
                   <p
-                    className={`mt-1 text-[11px] font-bold ${
+                    className={`mt-1 text-[0.6875rem] font-bold ${
                       r.state === 'error' ? 'text-[#C0392B]' : 'text-[#2E7D5B]'
                     }`}
                   >
@@ -379,7 +379,7 @@ export default function Wed100PhotoUpload({
           ))}
 
           {onApply && (
-            <label className="flex cursor-pointer items-center gap-2 rounded-lg bg-white px-3 py-2 text-[11px] font-bold text-[#6B5D57]">
+            <label className="flex cursor-pointer items-center gap-2 rounded-lg bg-white px-3 py-2 text-[0.6875rem] font-bold text-[#6B5D57]">
               <input
                 type="checkbox"
                 checked={applyNow}
@@ -404,7 +404,7 @@ export default function Wed100PhotoUpload({
             {!googleEmail && (
               // 버튼이 왜 눌리지 않는지 버튼 옆에서 바로 알려 준다.
               // 위쪽 안내문은 목록이 길어지면 화면 밖으로 밀려 보이지 않는다.
-              <span className="text-[11px] font-bold text-[#C0392B]">
+              <span className="text-[0.6875rem] font-bold text-[#C0392B]">
                 ← 구글 계정으로 로그인해야 눌립니다 (비밀번호 로그인은 사진 올리기 불가)
               </span>
             )}

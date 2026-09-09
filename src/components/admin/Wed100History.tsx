@@ -142,18 +142,18 @@ export default function Wed100History({
                   key={v.id}
                   className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border border-[#E7DDD4] bg-white px-3 py-2.5"
                 >
-                  <span className="font-mono text-[11px] text-[#8A7A72]">{when(v.savedAt)}</span>
-                  <span className="flex-1 text-[12.5px] leading-snug text-[#2E2724]">
+                  <span className="font-mono text-[0.6875rem] text-[#8A7A72]">{when(v.savedAt)}</span>
+                  <span className="flex-1 text-[0.7812rem] leading-snug text-[#2E2724]">
                     {v.question}
                   </span>
-                  <span className="text-[11px] text-[#8A7A72]">
+                  <span className="text-[0.6875rem] text-[#8A7A72]">
                     {v.fields.join(', ')} · {v.editor}
                   </span>
                   <button
                     type="button"
                     onClick={() => void revert(v)}
                     disabled={busy}
-                    className="inline-flex items-center gap-1 rounded-md border border-[#D4C7BE] px-2.5 py-1 text-[11px] font-bold text-[#3A322E] hover:border-[#A63D5A] hover:text-[#A63D5A] disabled:opacity-50"
+                    className="inline-flex items-center gap-1 rounded-md border border-[#D4C7BE] px-2.5 py-1 text-[0.6875rem] font-bold text-[#3A322E] hover:border-[#A63D5A] hover:text-[#A63D5A] disabled:opacity-50"
                   >
                     <Undo2 className="h-3 w-3" />
                     이 판으로
@@ -168,7 +168,7 @@ export default function Wed100History({
               {msg.text}
             </p>
           )}
-          <p className="mt-2 text-[11px] leading-relaxed text-[#8A7A72]">
+          <p className="mt-2 text-[0.6875rem] leading-relaxed text-[#8A7A72]">
             문항마다 최근 20개 판까지 보관합니다. 되돌리기도 수정이라 되돌리기 직전 내용이 한 벌
             더 남습니다.
           </p>

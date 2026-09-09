@@ -73,29 +73,29 @@ export default function SeoMonitor({
       {/* 좁은 화면에서 두 칸씩 — 하나씩 떨어지면 요약만으로 화면이 다 찬다 */}
       <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3">
         <div className="rounded-xl border border-[#E0D6CC] bg-white p-3.5 sm:p-4">
-          <p className="text-[11px] font-bold tracking-wider text-[#8A7A72]">노리는 검색량</p>
+          <p className="text-[0.6875rem] font-bold tracking-wider text-[#8A7A72]">노리는 검색량</p>
           <p className="mt-1 text-2xl font-extrabold text-[#2E2724]">
             {totalVolume.toLocaleString()}
             <span className="ml-1 text-sm font-bold text-[#8A7A72]">회/월</span>
           </p>
-          <p className="mt-1 text-[11px] text-[#8A7A72]">
+          <p className="mt-1 text-[0.6875rem] text-[#8A7A72]">
             네이버 키워드도구 {VOLUME_MEASURED_AT} 기준
           </p>
         </div>
         <div className="rounded-xl border border-[#E0D6CC] bg-white p-3.5 sm:p-4">
-          <p className="text-[11px] font-bold tracking-wider text-[#8A7A72]">평균 준비도</p>
+          <p className="text-[0.6875rem] font-bold tracking-wider text-[#8A7A72]">평균 준비도</p>
           <p className="mt-1 text-2xl font-extrabold text-[#2E2724]">{avgReadiness}%</p>
-          <p className="mt-1 text-[11px] leading-relaxed text-[#8A7A72]">
+          <p className="mt-1 text-[0.6875rem] leading-relaxed text-[#8A7A72]">
             우리가 할 수 있는 것을 얼마나 했는가. 순위가 아니다
           </p>
         </div>
         <div className="rounded-xl border border-[#E0D6CC] bg-white p-3.5 sm:p-4">
-          <p className="text-[11px] font-bold tracking-wider text-[#8A7A72]">순위 기록</p>
+          <p className="text-[0.6875rem] font-bold tracking-wider text-[#8A7A72]">순위 기록</p>
           <p className="mt-1 text-2xl font-extrabold text-[#2E2724]">
             {SEO_TARGETS.filter((t) => !isStale(ranks[t.term]?.checkedAt ?? '')).length} /{' '}
             {SEO_TARGETS.length}
           </p>
-          <p className="mt-1 text-[11px] text-[#8A7A72]">최근 30일 안에 재 본 검색어</p>
+          <p className="mt-1 text-[0.6875rem] text-[#8A7A72]">최근 30일 안에 재 본 검색어</p>
         </div>
       </div>
 
@@ -109,7 +109,7 @@ export default function SeoMonitor({
         return (
           <div key={t.term} className="rounded-xl border border-[#E0D6CC] bg-[#FBF8F5] p-3.5 sm:p-4">
             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <b className="text-[15px] text-[#2E2724]">{t.term}</b>
+              <b className="text-[0.9375rem] text-[#2E2724]">{t.term}</b>
               <span className="text-xs font-bold text-[#A63D5A]">
                 월 {t.volume.toLocaleString()}회
               </span>
@@ -127,13 +127,13 @@ export default function SeoMonitor({
               />
             </div>
 
-            <p className="mt-2 text-[11px] leading-relaxed text-[#8A7A72]">
+            <p className="mt-2 text-[0.6875rem] leading-relaxed text-[#8A7A72]">
               <span className="sm:hidden">담당 {t.owner} · </span>
               {t.why}
             </p>
 
             {/* 우리가 아는 것 */}
-            <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-[#6B5D57]">
+            <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[0.6875rem] text-[#6B5D57]">
               <span>
                 본문 <b className="text-[#2E2724]">{f.ownerChars.toLocaleString()}자</b>
               </span>
@@ -171,7 +171,7 @@ export default function SeoMonitor({
                 ] as const
               ).map(([label, key]) => (
                 <label key={key} className="block">
-                  <span className="text-[11px] font-bold text-[#3A322E]">{label}</span>
+                  <span className="text-[0.6875rem] font-bold text-[#3A322E]">{label}</span>
                   <input
                     type="number"
                     min={1}
@@ -185,7 +185,7 @@ export default function SeoMonitor({
                 </label>
               ))}
               <label className="block">
-                <span className="text-[11px] font-bold text-[#3A322E]">
+                <span className="text-[0.6875rem] font-bold text-[#3A322E]">
                   잰 날 {stale && r.checkedAt && <span className="text-[#A63D5A]">· 오래됨</span>}
                 </span>
                 <input
@@ -196,7 +196,7 @@ export default function SeoMonitor({
                 />
               </label>
               <label className="col-span-2 block sm:col-span-1">
-                <span className="text-[11px] font-bold text-[#3A322E]">메모</span>
+                <span className="text-[0.6875rem] font-bold text-[#3A322E]">메모</span>
                 <input
                   value={r.note}
                   onChange={(e) => set(t.term, { note: e.target.value })}
@@ -210,7 +210,7 @@ export default function SeoMonitor({
             {ready.todo.length > 0 && (
               <ul className="mt-3 space-y-1 rounded-lg border border-[#E8DFD7] bg-white p-3">
                 {ready.todo.map((x, i) => (
-                  <li key={i} className="flex gap-2 text-[11.5px] leading-relaxed text-[#3A322E]">
+                  <li key={i} className="flex gap-2 text-[0.7188rem] leading-relaxed text-[#3A322E]">
                     <span className="mt-[6px] h-1 w-1 shrink-0 rounded-full bg-[#A63D5A]" />
                     {x}
                   </li>
@@ -218,7 +218,7 @@ export default function SeoMonitor({
               </ul>
             )}
             {ready.todo.length === 0 && (
-              <p className="mt-3 rounded-lg border border-[#DCE8E0] bg-white p-3 text-[11.5px] text-[#3F6B57]">
+              <p className="mt-3 rounded-lg border border-[#DCE8E0] bg-white p-3 text-[0.7188rem] text-[#3F6B57]">
                 할 수 있는 것은 다 했습니다. 이제는 색인과 시간의 문제입니다 — 4주 뒤 순위를 다시
                 재 보세요.
               </p>
@@ -241,7 +241,7 @@ export default function SeoMonitor({
             {msg.text}
           </span>
         )}
-        <span className="ml-auto inline-flex items-center gap-1.5 text-[11px] text-[#8A7A72]">
+        <span className="ml-auto inline-flex items-center gap-1.5 text-[0.6875rem] text-[#8A7A72]">
           <TrendingUp className="h-3.5 w-3.5" />
           순위는 네이버·구글에서 직접 검색해 보고 적어 주세요
         </span>

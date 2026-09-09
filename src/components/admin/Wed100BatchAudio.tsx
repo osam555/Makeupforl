@@ -189,7 +189,7 @@ export default function Wed100BatchAudio({
                     <div className="truncate text-xs text-[#3A322E]">
                       <span className="text-[#8A7A72]">{r.slug}</span> · {r.question}
                     </div>
-                    <div className="mt-0.5 text-[11px] text-[#8A7A72]">
+                    <div className="mt-0.5 text-[0.6875rem] text-[#8A7A72]">
                       <span title={whenExact(r.updatedAt)}>본문 {whenText(r.updatedAt)}</span>
                       <span className="px-1.5 text-[#D4C7BE]">|</span>
                       <span title={whenExact(r.audioAt)}>음성 {whenText(r.audioAt)}</span>
@@ -228,7 +228,7 @@ export default function Wed100BatchAudio({
             )}
           </div>
 
-          <p className="mt-2 text-[11px] leading-relaxed text-[#8A7A72]">
+          <p className="mt-2 text-[0.6875rem] leading-relaxed text-[#8A7A72]">
             원장 답변만 새로 만들고 질문 음성은 기존 것을 그대로 씁니다. 자막 타임코드도 함께
             맞춰지며 결과는 바로 사이트에 반영됩니다.
           </p>
