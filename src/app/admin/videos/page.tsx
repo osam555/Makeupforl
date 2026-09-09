@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { ArrowDown, ArrowUp, Eye, EyeOff, Link2, Plus, Save, Trash2 } from 'lucide-react'
 
 import AdminGate from '@/components/admin/AdminGate'
+import AdminTabs from '@/components/admin/AdminTabs'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import seedRaw from '@/data/videos.json'
@@ -176,6 +177,7 @@ function AdminVideos({ password, idTokenGetter }: { password: string | null; idT
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="mx-auto max-w-5xl px-6">
+        <AdminTabs active="/admin/videos" />
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">유튜브 채널 관리</h1>

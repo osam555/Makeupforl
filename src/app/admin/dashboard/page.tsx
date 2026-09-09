@@ -7,6 +7,7 @@ import { BarChart3, RefreshCw } from 'lucide-react'
 import seedRaw from '@/data/wed100.json'
 import { getDb } from '@/lib/firebase/client'
 import AdminGate from '@/components/admin/AdminGate'
+import AdminTabs from '@/components/admin/AdminTabs'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import type { Wed100Data } from '@/types/wed100'
@@ -125,6 +126,7 @@ function AdminDashboard() {
   return (
     <div className="bg-[#EFE9E3] px-4 py-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
+        <AdminTabs active="/admin/dashboard" />
         <div className="flex flex-wrap items-center gap-3 rounded-t-2xl bg-[#221D1B] px-5 py-3.5 text-white">
           <BarChart3 className="h-4 w-4" />
           <b className="text-sm">100문100답 통계</b>
