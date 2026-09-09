@@ -9,10 +9,18 @@ import { GALLERY_TABS, categoryHref, toSlug } from '@/lib/galleryCategories'
 type Props = {
   /** 'all' 또는 분야 슬러그. 경로(/gallery/honju)에서 넘어온다 */
   category: string
+  /** 서버가 미리 읽어 넘긴 사진 — 첫 화면이 비지 않게 한다 */
+  initial?: {
+    id: string
+    url: string
+    alt_text: string | null
+    category?: string
+    order_position: number
+  }[]
 }
 
 /** 분야 전환 탭 + 사진 그리드. 제목은 각 페이지가 알아서 붙인다 */
-export default function GalleryClient({ category }: Props) {
+export default function GalleryClient({ category, initial }: Props) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const legacy = searchParams.get('cat')
@@ -52,7 +60,7 @@ export default function GalleryClient({ category }: Props) {
           </ul>
         </nav>
 
-        <GalleryGrid category={category} />
+        <GalleryGrid category={category} initial={initial} />
       </div>
     </div>
   )

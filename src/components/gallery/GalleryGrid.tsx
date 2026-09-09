@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { getDb } from '@/lib/firebase/client'
 import gallerySeed from '@/data/gallery.json'
+import { galleryAlt } from '@/lib/galleryAlt'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { ChevronLeft, ChevronRight, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -19,11 +20,19 @@ interface GalleryImage {
 
 interface GalleryGridProps {
   category: string
+  /**
+   * 서버가 미리 읽어 넘긴 사진.
+   *
+   * 전에는 브라우저가 Firestore 를 읽을 때까지 이 자리가 비어 있었다. 그래서
+   * 서버가 보내는 HTML 에 사진이 한 장도 없었고, 검색엔진에는 사진 마흔여섯 장이
+   * 아예 존재하지 않았다. 이미지 검색은 혼주 메이크업에서 작은 유입이 아니다.
+   */
+  initial?: GalleryImage[]
 }
 
-export default function GalleryGrid({ category }: GalleryGridProps) {
-  const [images, setImages] = useState<GalleryImage[]>([])
-  const [loading, setLoading] = useState(true)
+export default function GalleryGrid({ category, initial }: GalleryGridProps) {
+  const [images, setImages] = useState<GalleryImage[]>(initial ?? [])
+  const [loading, setLoading] = useState(!initial || initial.length === 0)
   const [selectedImage, setSelectedImage] = useState<number | null>(null)
 
   useEffect(() => {
@@ -109,7 +118,7 @@ export default function GalleryGrid({ category }: GalleryGridProps) {
           >
             <Image
               src={image.url}
-              alt={image.alt_text || '갤러리 이미지'}
+              alt={galleryAlt(image.alt_text, image.category)}
               fill
               className="object-cover group-hover:scale-110 transition-transform duration-300"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
@@ -162,7 +171,10 @@ export default function GalleryGrid({ category }: GalleryGridProps) {
               <div className="relative w-full h-full flex items-center justify-center p-12">
                 <Image
                   src={displayImages[selectedImage].url}
-                  alt={displayImages[selectedImage].alt_text || '갤러리 이미지'}
+                  alt={galleryAlt(
+                    displayImages[selectedImage].alt_text,
+                    displayImages[selectedImage].category,
+                  )}
                   fill
                   className="object-contain"
                   sizes="100vw"

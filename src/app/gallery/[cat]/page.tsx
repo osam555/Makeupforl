@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation'
 import { Check, CalendarCheck, MessageCircle } from 'lucide-react'
 import GalleryClient from '@/components/gallery/GalleryClient'
 import SubHero from '@/components/layout/SubHero'
+import { getGalleryImages } from '@/lib/galleryImages'
 import { getSiteImages } from '@/lib/siteImages'
 import { GALLERY_CATEGORIES, findCategory } from '@/lib/galleryCategories'
 
@@ -33,6 +34,16 @@ export default async function GalleryCategoryPage({ params }: Params) {
   if (!c) notFound()
 
   const img = await getSiteImages()
+  /*
+    사진을 서버에서 미리 읽는다.
+
+    전에는 브라우저가 Firestore 를 읽을 때까지 이 자리가 비어 있어, 서버가 보내는
+    HTML 에 사진이 한 장도 없었다. 검색엔진에는 이 분야 사진이 아예 존재하지 않은
+    셈이다 — 이미지 검색은 혼주 메이크업에서 작은 유입이 아니다.
+  */
+  const photos = (await getGalleryImages())
+    .filter((x) => x.category === c.slug)
+    .map((x, i) => ({ ...x, order_position: x.order_position ?? i }))
   return (
     <>
       {/*
@@ -93,7 +104,7 @@ export default async function GalleryCategoryPage({ params }: Params) {
           <h2 className="text-2xl font-bold text-gray-900">{c.menuName} 포트폴리오</h2>
         </div>
         <Suspense fallback={<div className="bg-gray-50 py-12" />}>
-          <GalleryClient category={c.slug} />
+          <GalleryClient category={c.slug} initial={photos} />
         </Suspense>
       </section>
 
