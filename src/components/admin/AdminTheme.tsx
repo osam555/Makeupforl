@@ -42,7 +42,8 @@ export default function AdminTheme({ children }: { children: React.ReactNode }) 
       <div
         className="admin-theme min-h-screen"
         data-theme={theme}
-        style={{ fontSize: font === 'large' ? '17.6px' : '16px' }}
+        data-size={font}
+        style={{ fontSize: font === 'large' ? '20px' : '16px' }}
       >
         {children}
       </div>
