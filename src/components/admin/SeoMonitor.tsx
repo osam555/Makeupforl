@@ -70,8 +70,9 @@ export default function SeoMonitor({
   return (
     <div className="space-y-5">
       {/* 요약 */}
-      <div className="grid gap-3 sm:grid-cols-3">
-        <div className="rounded-xl border border-[#E0D6CC] bg-white p-4">
+      {/* 좁은 화면에서 두 칸씩 — 하나씩 떨어지면 요약만으로 화면이 다 찬다 */}
+      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3">
+        <div className="rounded-xl border border-[#E0D6CC] bg-white p-3.5 sm:p-4">
           <p className="text-[11px] font-bold tracking-wider text-[#8A7A72]">노리는 검색량</p>
           <p className="mt-1 text-2xl font-extrabold text-[#2E2724]">
             {totalVolume.toLocaleString()}
@@ -81,14 +82,14 @@ export default function SeoMonitor({
             네이버 키워드도구 {VOLUME_MEASURED_AT} 기준
           </p>
         </div>
-        <div className="rounded-xl border border-[#E0D6CC] bg-white p-4">
+        <div className="rounded-xl border border-[#E0D6CC] bg-white p-3.5 sm:p-4">
           <p className="text-[11px] font-bold tracking-wider text-[#8A7A72]">평균 준비도</p>
           <p className="mt-1 text-2xl font-extrabold text-[#2E2724]">{avgReadiness}%</p>
           <p className="mt-1 text-[11px] leading-relaxed text-[#8A7A72]">
             우리가 할 수 있는 것을 얼마나 했는가. 순위가 아니다
           </p>
         </div>
-        <div className="rounded-xl border border-[#E0D6CC] bg-white p-4">
+        <div className="rounded-xl border border-[#E0D6CC] bg-white p-3.5 sm:p-4">
           <p className="text-[11px] font-bold tracking-wider text-[#8A7A72]">순위 기록</p>
           <p className="mt-1 text-2xl font-extrabold text-[#2E2724]">
             {SEO_TARGETS.filter((t) => !isStale(ranks[t.term]?.checkedAt ?? '')).length} /{' '}
@@ -106,13 +107,13 @@ export default function SeoMonitor({
         const stale = isStale(r.checkedAt)
 
         return (
-          <div key={t.term} className="rounded-xl border border-[#E0D6CC] bg-[#FBF8F5] p-4">
+          <div key={t.term} className="rounded-xl border border-[#E0D6CC] bg-[#FBF8F5] p-3.5 sm:p-4">
             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
               <b className="text-[15px] text-[#2E2724]">{t.term}</b>
               <span className="text-xs font-bold text-[#A63D5A]">
                 월 {t.volume.toLocaleString()}회
               </span>
-              <span className="text-xs text-[#8A7A72]">담당 {t.owner}</span>
+              <span className="hidden text-xs text-[#8A7A72] sm:inline">담당 {t.owner}</span>
               <span className="ml-auto text-xs font-bold text-[#3A322E]">
                 준비도 {ready.score}%
                 {ach !== null && <span className="ml-2 text-[#A63D5A]">달성도 {ach}%</span>}
@@ -126,7 +127,10 @@ export default function SeoMonitor({
               />
             </div>
 
-            <p className="mt-2 text-[11px] leading-relaxed text-[#8A7A72]">{t.why}</p>
+            <p className="mt-2 text-[11px] leading-relaxed text-[#8A7A72]">
+              <span className="sm:hidden">담당 {t.owner} · </span>
+              {t.why}
+            </p>
 
             {/* 우리가 아는 것 */}
             <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-[#6B5D57]">
@@ -151,7 +155,14 @@ export default function SeoMonitor({
             </div>
 
             {/* 밖에서 재야 아는 것 */}
-            <div className="mt-3 grid gap-2 sm:grid-cols-5">
+            {/*
+              좁은 화면에서는 두 칸씩.
+
+              순위 세 개와 날짜·메모를 한 줄에 다섯으로 두면 휴대전화에서 세로로
+              길게 늘어져, 검색어 하나가 화면 하나를 다 먹는다. 메모만 한 줄을
+              통째로 쓴다 — 짧게 적을 칸이 아니다.
+            */}
+            <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-5">
               {(
                 [
                   ['네이버 순위', 'naver'],
@@ -184,7 +195,7 @@ export default function SeoMonitor({
                   className="mt-1 h-8 w-full rounded-md border border-[#D4C7BE] bg-white px-2 font-mono text-xs outline-none focus:border-[#A63D5A]"
                 />
               </label>
-              <label className="block">
+              <label className="col-span-2 block sm:col-span-1">
                 <span className="text-[11px] font-bold text-[#3A322E]">메모</span>
                 <input
                   value={r.note}

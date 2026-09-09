@@ -20,7 +20,13 @@ const TABS = [
 
 export default function AdminTabs({ active }: { active: string }) {
   return (
-    <nav className="mb-5 flex flex-wrap gap-1.5 rounded-xl bg-[#2E2724] p-1.5">
+    /*
+      좁은 화면에서는 옆으로 민다.
+
+      여섯 개를 줄바꿈시키면 휴대전화에서 세 줄이 되어 화면 위쪽을 다 먹는다.
+      한 줄로 두고 손가락으로 미는 편이 익숙하다. 스크롤바는 감춘다.
+    */
+    <nav className="mb-5 -mx-1 flex gap-1.5 overflow-x-auto rounded-xl bg-[#2E2724] p-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:flex-wrap sm:overflow-visible">
       {TABS.map((t) => {
         const on = t.href === active
         return (
@@ -29,7 +35,7 @@ export default function AdminTabs({ active }: { active: string }) {
             href={t.href}
             aria-current={on ? 'page' : undefined}
             className={[
-              'rounded-lg px-3.5 py-2 text-xs font-bold transition-colors',
+              'shrink-0 rounded-lg px-3.5 py-2 text-xs font-bold transition-colors',
               on ? 'bg-white text-[#2E2724]' : 'text-[#C9BDB6] hover:bg-white/10 hover:text-white',
             ].join(' ')}
           >

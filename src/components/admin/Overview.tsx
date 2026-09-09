@@ -106,7 +106,8 @@ export default function Overview({
       {/* ── 1. 한눈에 ───────────────────────────────── */}
       <section>
         <SectionTitle>한눈에</SectionTitle>
-        <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-6">
+        {/* 좁은 화면에서 두 칸씩. 하나씩 떨어지면 여섯 칸이 화면 하나를 다 먹는다 */}
+        <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3 lg:grid-cols-6">
           <Stat label="방문" value={a.visits.toLocaleString()} delta={delta(a.visits, b.visits)} hint="최근 7일" />
           <Stat label="조회" value={a.views.toLocaleString()} delta={delta(a.views, b.views)} hint="최근 7일" />
           <Stat
@@ -211,22 +212,30 @@ export default function Overview({
       </Panel>
 
       <Panel title="검색" href="/admin/seo" hint="노린 말에 얼마나 준비됐는가">
-        <div className="space-y-2">
+        <div className="space-y-3 sm:space-y-2">
           {SEO_TARGETS.map((t) => (
-            <div key={t.term} className="flex items-center gap-3">
-              <span className="w-24 shrink-0 text-xs font-bold text-[#3A322E]">{t.term}</span>
-              <span className="w-16 shrink-0 text-right text-[11px] tabular-nums text-[#8A7A72]">
-                {t.volume.toLocaleString()}
-              </span>
-              <div className="h-2 flex-1 overflow-hidden rounded-full bg-[#EFE7E1]">
+            /*
+              좁은 화면에서는 이름·검색량·점수를 한 줄에 올리고 막대를 아래로 내린다.
+              한 줄에 넷을 욱여넣으면 막대가 손톱만 해져서 무엇을 보라는 것인지 모른다.
+            */
+            <div key={t.term} className="sm:flex sm:items-center sm:gap-3">
+              <div className="flex items-baseline gap-2 sm:contents">
+                <span className="text-xs font-bold text-[#3A322E] sm:w-24 sm:shrink-0">
+                  {t.term}
+                </span>
+                <span className="text-[11px] tabular-nums text-[#8A7A72] sm:w-16 sm:shrink-0 sm:text-right">
+                  {t.volume.toLocaleString()}
+                </span>
+                <span className="ml-auto text-[11px] font-bold tabular-nums text-[#2E2724] sm:order-last sm:ml-0 sm:w-10 sm:text-right">
+                  {scores[t.term]}%
+                </span>
+              </div>
+              <div className="mt-1 h-2 overflow-hidden rounded-full bg-[#EFE7E1] sm:mt-0 sm:flex-1">
                 <div
                   className="h-full rounded-full bg-[#A63D5A]"
                   style={{ width: `${scores[t.term]}%` }}
                 />
               </div>
-              <span className="w-10 shrink-0 text-right text-[11px] font-bold tabular-nums text-[#2E2724]">
-                {scores[t.term]}%
-              </span>
             </div>
           ))}
         </div>
@@ -281,7 +290,7 @@ export default function Overview({
       </Panel>
 
       <Panel title="사이트" href="" hint="검색엔진이 볼 수 있는 것">
-        <div className="grid gap-3 sm:grid-cols-3">
+        <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3">
           <Stat label="색인 대상" value={`${content.sitemap}`} hint="사이트맵 등록 주소" />
           <Stat label="검색어 허브" value={`${content.hubs}장`} hint="주제별 모음 페이지" />
           <Stat
@@ -314,7 +323,7 @@ function Panel({
   children: React.ReactNode
 }) {
   return (
-    <section className="rounded-xl border border-[#E0D6CC] bg-white p-4">
+    <section className="rounded-xl border border-[#E0D6CC] bg-white p-3.5 sm:p-4">
       <div className="mb-3 flex flex-wrap items-baseline gap-2">
         <h2 className="text-sm font-extrabold text-[#2E2724]">{title}</h2>
         <span className="text-xs text-[#8A7A72]">{hint}</span>
