@@ -118,7 +118,7 @@ export default function GalleryGrid({ category, initial }: GalleryGridProps) {
           >
             <Image
               src={image.url}
-              alt={galleryAlt(image.alt_text, image.category)}
+              alt={galleryAlt(image.alt_text, image.category, image.id)}
               fill
               className="object-cover group-hover:scale-110 transition-transform duration-300"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
@@ -174,6 +174,7 @@ export default function GalleryGrid({ category, initial }: GalleryGridProps) {
                   alt={galleryAlt(
                     displayImages[selectedImage].alt_text,
                     displayImages[selectedImage].category,
+                    displayImages[selectedImage].id,
                   )}
                   fill
                   className="object-contain"

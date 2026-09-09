@@ -1,4 +1,5 @@
 import { GALLERY_CATEGORIES } from '@/lib/galleryCategories'
+import perPhoto from '@/data/galleryAlt.json'
 
 /**
  * 사진 설명(alt).
@@ -24,8 +25,29 @@ const BY_SLUG: Record<string, string> = {
   'photoshoot-profile': '화보·프로필 메이크업',
 }
 
-/** 사람이 적어 둔 설명이 있으면 그대로, 번호뿐이면 분야를 말해 주는 문장으로 */
-export function galleryAlt(altText: string | null | undefined, category?: string): string {
+/**
+ * 사진 한 장마다 적어 둔 설명.
+ *
+ * 사진을 하나씩 보고 실제로 보이는 것만 적은 것이다 — 저고리 색, 머리 모양,
+ * 각도 같은 것. 판단이 어려운 사진은 아예 넣지 않았고, 그런 사진은 아래
+ * 분야 문장으로 떨어진다. 빈 값을 넣어 두는 것보다 없는 편이 낫다.
+ */
+const PER_PHOTO = perPhoto as Record<string, string>
+
+/**
+ * 순서: 사진마다 적은 설명 → 사람이 적어 둔 옛 설명 → 분야를 말해 주는 문장.
+ */
+export function galleryAlt(
+  altText: string | null | undefined,
+  category?: string,
+  id?: string,
+): string {
+  const own = id ? PER_PHOTO[id]?.trim() : ''
+  if (own) {
+    const label = BY_SLUG[category ?? '']?.split(' — ')[0]
+    return label ? `${label} — ${own}` : own
+  }
+
   const cur = (altText ?? '').trim()
   if (cur && !GENERIC.test(cur)) return cur
 
