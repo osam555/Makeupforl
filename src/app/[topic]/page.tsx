@@ -69,11 +69,38 @@ export default async function HubPage({ params }: Params) {
     .filter((x) => isOpen(access, x.slug))
     .slice(0, 10)
 
+  /*
+    가격을 구조화 데이터로도 내보낸다.
+
+    상위 경쟁 페이지의 절반이 금액을 숫자로 적어 두고, 검색하는 사람이 찾는 것도
+    대개 "얼마인가" 다. 화면에 적은 값과 같은 값을 검색엔진에도 알려 준다.
+  */
+  const offers = hub.prices?.map((x) => ({
+    '@type': 'Offer',
+    name: x.label,
+    ...(/^[\d,]+원$/.test(x.amount)
+      ? { price: x.amount.replace(/[^\d]/g, ''), priceCurrency: 'KRW' }
+      : {}),
+  }))
+
   const jsonLd = [
     breadcrumbJsonLd([
       { name: '혼주메이크업 100문100답', path: '/honjoo100' },
       { name: hub.slug, path: `/${hub.slug}` },
     ]),
+    ...(offers && offers.length > 0
+      ? [
+          {
+            '@context': 'https://schema.org',
+            '@type': 'Service',
+            name: hub.slug,
+            serviceType: '혼주 메이크업',
+            provider: { '@id': `${SITE_URL}/#business` },
+            areaServed: { '@type': 'City', name: '서울' },
+            offers,
+          },
+        ]
+      : []),
     {
       '@context': 'https://schema.org',
       '@type': 'FAQPage',
@@ -166,6 +193,43 @@ export default async function HubPage({ params }: Params) {
             </section>
           ))}
         </div>
+
+        {/*
+          가격.
+
+          사이트 전체에 금액이 한 줄도 없었다. 그런데 경쟁 페이지의 절반이
+          숫자를 적어 두고 시세도 이미 검색 결과에 다 드러나 있어, 숨기는 실익이
+          없다. 값은 네이버 플레이스에 이 집이 직접 등록해 둔 것과 같게 맞춘다 —
+          채널마다 다른 금액이 보이는 것이 더 큰 손해다.
+        */}
+        {hub.prices && hub.prices.length > 0 && (
+          <section className="mt-14">
+            <h2 className="text-2xl font-extrabold text-[var(--w-ink)]">가격</h2>
+            <p className="mt-2 text-[15px] text-[var(--w-ink2)]">
+              1:1 사전 컨설팅과 대표원장 담당이 포함된 금액입니다. 출장은 지역에 따라 달라져
+              문의해 주셔야 합니다.
+            </p>
+            <div className="mt-5 overflow-hidden rounded-xl border border-[var(--w-line)]">
+              <table className="w-full text-[15px]">
+                <tbody>
+                  {hub.prices.map((x, i) => (
+                    <tr
+                      key={x.label}
+                      className={i % 2 ? 'bg-[var(--w-card2)]' : 'bg-[var(--w-card)]'}
+                    >
+                      <th className="px-5 py-3.5 text-left font-semibold text-[var(--w-ink)]">
+                        {x.label}
+                      </th>
+                      <td className="px-5 py-3.5 text-right font-bold tabular-nums text-[var(--w-ink)]">
+                        {x.amount}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        )}
 
         {/* 다음 걸음 */}
         <div className="mt-16 rounded-xl border border-[var(--w-line)] bg-[var(--w-card2)] p-7 text-center">
