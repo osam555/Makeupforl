@@ -121,18 +121,18 @@ export default function Wed100McLevel({
   const bad = rows.filter((r) => r.state === 'error')
 
   return (
-    <div className="rounded-xl border border-[#E7DDD4] bg-[#FCFAF8] p-3.5">
+    <div className="rounded-xl border border-[var(--a-e7ddd4)] bg-[var(--a-fcfaf8)] p-3.5">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className="text-xs font-bold text-[#6B5D57]">MC 음량 맞추기</p>
-        <span className="text-[0.6875rem] text-[#8A7C74]">음성 있는 문항 {targets.length}개</span>
+        <p className="text-xs font-bold text-[var(--a-6b5d57)]">MC 음량 맞추기</p>
+        <span className="text-[0.6875rem] text-[var(--a-8a7c74)]">음성 있는 문항 {targets.length}개</span>
       </div>
-      <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-[#8A7C74]">
+      <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-[var(--a-8a7c74)]">
         진행자 질문이 원장님 답변보다 평균 9dB 작습니다. 각 파일의 앞쪽 질문 구간만 재서
         답변과 같은 음량으로 올립니다. 답변 구간은 손대지 않아 음질이 그대로입니다.
       </p>
 
       {!googleEmail && (
-        <p className="mt-2 rounded-lg bg-[#FDF3E7] px-3 py-2 text-[0.6875rem] leading-relaxed text-[#8A6A48]">
+        <p className="mt-2 rounded-lg bg-[var(--a-fdf3e7)] px-3 py-2 text-[0.6875rem] leading-relaxed text-[var(--a-8a6a48)]">
           음성을 다시 올리려면 <b>관리자 구글 계정 로그인</b>이 필요합니다.
         </p>
       )}
@@ -141,7 +141,7 @@ export default function Wed100McLevel({
         <button
           onClick={() => void run()}
           disabled={busy || !googleEmail || targets.length === 0}
-          className="flex items-center gap-1.5 rounded-lg bg-[#A63D5A] px-4 py-2 text-xs font-bold text-white transition hover:bg-[#8E3049] disabled:opacity-40"
+          className="flex items-center gap-1.5 rounded-lg bg-[var(--a-a63d5a)] px-4 py-2 text-xs font-bold text-white transition hover:bg-[var(--a-8e3049)] disabled:opacity-40"
         >
           {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Volume2 className="h-3.5 w-3.5" />}
           {busy ? `${at} / ${targets.length} 처리 중…` : `${targets.length}개 음량 맞추기`}
@@ -149,35 +149,35 @@ export default function Wed100McLevel({
         {busy && (
           <button
             onClick={() => (stopRef.current = true)}
-            className="rounded-lg border border-[#E7DDD4] px-3 py-2 text-xs font-bold text-[#6B5D57]"
+            className="rounded-lg border border-[var(--a-e7ddd4)] px-3 py-2 text-xs font-bold text-[var(--a-6b5d57)]"
           >
             멈추기
           </button>
         )}
         {rows.length > 0 && (
-          <span className="text-[0.6875rem] font-bold text-[#6B5D57]">
+          <span className="text-[0.6875rem] font-bold text-[var(--a-6b5d57)]">
             고침 {done} · 건너뜀 {skip}
-            {bad.length > 0 && <span className="text-[#C0392B]"> · 실패 {bad.length}</span>}
+            {bad.length > 0 && <span className="text-[var(--a-c0392b)]"> · 실패 {bad.length}</span>}
           </span>
         )}
       </div>
 
       {rows.length > 0 && (
-        <div className="mt-2.5 max-h-52 overflow-y-auto rounded-lg border border-[#E7DDD4] bg-white">
+        <div className="mt-2.5 max-h-52 overflow-y-auto rounded-lg border border-[var(--a-e7ddd4)] bg-white">
           {rows.map((r) => (
             <div
               key={r.slug}
-              className="flex items-center gap-2 border-b border-[#F3EDE7] px-2.5 py-1.5 text-[0.6875rem] last:border-0"
+              className="flex items-center gap-2 border-b border-[var(--a-f3ede7)] px-2.5 py-1.5 text-[0.6875rem] last:border-0"
             >
               {r.state === 'error' ? (
-                <XCircle className="h-3.5 w-3.5 shrink-0 text-[#C0392B]" />
+                <XCircle className="h-3.5 w-3.5 shrink-0 text-[var(--a-c0392b)]" />
               ) : (
                 <CheckCircle2
-                  className={`h-3.5 w-3.5 shrink-0 ${r.state === 'done' ? 'text-[#2E7D5B]' : 'text-[#B9ACA3]'}`}
+                  className={`h-3.5 w-3.5 shrink-0 ${r.state === 'done' ? 'text-[var(--a-2e7d5b)]' : 'text-[var(--a-b9aca3)]'}`}
                 />
               )}
-              <span className="w-16 shrink-0 font-mono font-bold text-[#4A403B]">{r.slug}</span>
-              <span className={r.state === 'error' ? 'text-[#C0392B]' : 'text-[#6B5D57]'}>{r.message}</span>
+              <span className="w-16 shrink-0 font-mono font-bold text-[var(--a-4a403b)]">{r.slug}</span>
+              <span className={r.state === 'error' ? 'text-[var(--a-c0392b)]' : 'text-[var(--a-6b5d57)]'}>{r.message}</span>
             </div>
           ))}
         </div>

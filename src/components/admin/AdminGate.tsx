@@ -4,7 +4,8 @@ import { useCallback, useEffect, useState } from 'react'
 import { LogIn, ShieldCheck } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-import FontSizeToggle, { useFontSize } from '@/components/admin/FontSize'
+import AdminToolbar from '@/components/admin/AdminToolbar'
+import { useAdminPrefs } from '@/components/admin/AdminTheme'
 import { firebaseConfigured } from '@/lib/firebase/client'
 import { ADMIN_EMAILS, signInAdmin, signOutAdmin, watchAdmin } from '@/lib/firebase/auth'
 
@@ -37,7 +38,7 @@ export default function AdminGate({
   title: string
   children: (ctx: AdminCtx) => React.ReactNode
 }) {
-  const [font, setFont] = useFontSize()
+  const { font, setFont, theme, setTheme } = useAdminPrefs()
   const [email, setEmail] = useState<string | null>(null)
   const [checking, setChecking] = useState(true)
   const [err, setErr] = useState<string | null>(null)
@@ -69,7 +70,7 @@ export default function AdminGate({
 
   if (checking) {
     return (
-      <div className="flex min-h-[50vh] items-center justify-center text-sm text-[#8A7B73]">
+      <div className="flex min-h-[50vh] items-center justify-center text-sm text-[var(--a-8a7b73)]">
         확인 중…
       </div>
     )
@@ -82,7 +83,7 @@ export default function AdminGate({
       <>
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-end gap-2 px-4 pt-4 text-xs lg:px-8">
           <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
-          <span className="text-[#6B5D57]">{email}</span>
+          <span className="text-[var(--a-6b5d57)]">{email}</span>
           <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[0.625rem] font-bold text-emerald-800">
             편집 가능
           </span>
@@ -91,43 +92,34 @@ export default function AdminGate({
               void signOutAdmin()
               setEmail(null)
             }}
-            className="underline text-[#8A7B73] hover:text-[#A63D5A]"
+            className="underline text-[var(--a-8a7b73)] hover:text-[var(--a-a63d5a)]"
           >
             로그아웃
           </button>
         </div>
-        {/*
-          글자 크기를 뿌리에서 키운다.
-
-          곳곳의 글자를 하나씩 고치는 대신 이 칸의 기준 크기를 올리면, rem 으로 잡힌
-          글자와 여백·아이콘이 함께 커진다. 글자만 커지고 칸이 그대로면 오히려 더
-          답답해진다. 기본은 '크게' 다 — 이 화면을 매일 보시는 분 눈에 맞춘다.
-        */}
-        <div style={{ fontSize: font === 'large' ? '17.6px' : '16px' }}>
-          <div className="mx-auto flex max-w-5xl justify-end px-5 pt-3">
-            <FontSizeToggle size={font} onChange={setFont} />
-          </div>
-          {children({ email, mode, password: null, canWrite })}
+        <div className="mx-auto max-w-5xl px-5 pt-3">
+          <AdminToolbar font={font} onFont={setFont} theme={theme} onTheme={setTheme} />
         </div>
+        {children({ email, mode, password: null, canWrite })}
       </>
     )
   }
 
   return (
-    <div className="flex min-h-[60vh] items-center justify-center bg-[#FBF7F3] px-6 py-12">
-      <div className="w-full max-w-sm rounded-2xl border border-[#E7DDD4] bg-white p-8 shadow">
-        <h1 className="text-lg font-extrabold text-[#2E2724]">{title}</h1>
+    <div className="flex min-h-[60vh] items-center justify-center bg-[var(--a-fbf7f3)] px-6 py-12">
+      <div className="w-full max-w-sm rounded-2xl border border-[var(--a-e7ddd4)] bg-white p-8 shadow">
+        <h1 className="text-lg font-extrabold text-[var(--a-2e2724)]">{title}</h1>
 
         {/* 관리자 구글 계정만 받는다 */}
-        <p className="mt-1.5 text-xs leading-relaxed text-[#8A7B73]">
+        <p className="mt-1.5 text-xs leading-relaxed text-[var(--a-8a7b73)]">
           아래 관리자 계정으로만 들어올 수 있습니다.
           <br />
-          <span className="text-[#6B5D57]">{ADMIN_EMAILS.join(', ')}</span>
+          <span className="text-[var(--a-6b5d57)]">{ADMIN_EMAILS.join(', ')}</span>
         </p>
         <Button
           onClick={login}
           disabled={busy || !firebaseConfigured}
-          className="mt-4 w-full bg-[#A63D5A] hover:bg-[#8A2E48]"
+          className="mt-4 w-full bg-[var(--a-a63d5a)] hover:bg-[var(--a-8a2e48)]"
         >
           <LogIn className="mr-1.5 h-4 w-4" />
           {busy ? '로그인 중…' : 'Google 계정으로 로그인'}

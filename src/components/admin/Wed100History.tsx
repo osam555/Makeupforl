@@ -108,52 +108,52 @@ export default function Wed100History({
   }
 
   return (
-    <div className="mt-3 rounded-xl border border-[#E0D6CC] bg-[#FBF8F5] p-3">
+    <div className="mt-3 rounded-xl border border-[var(--a-e0d6cc)] bg-[var(--a-fbf8f5)] p-3">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center gap-2 text-left text-xs font-bold text-[#3A322E]"
+        className="flex w-full items-center gap-2 text-left text-xs font-bold text-[var(--a-3a322e)]"
       >
         <History className="h-3.5 w-3.5" />
         수정 이력
-        <span className="font-normal text-[#8A7A72]">
+        <span className="font-normal text-[var(--a-8a7a72)]">
           {versions === null ? '' : `${versions.length}개 판`}
         </span>
-        <span className="ml-auto text-[#8A7A72]">{open ? '접기 ▲' : '펼치기 ▼'}</span>
+        <span className="ml-auto text-[var(--a-8a7a72)]">{open ? '접기 ▲' : '펼치기 ▼'}</span>
       </button>
 
       {open && (
         <div className="mt-3">
           {versions === null ? (
-            <p className="flex items-center gap-2 py-4 text-xs text-[#8A7A72]">
+            <p className="flex items-center gap-2 py-4 text-xs text-[var(--a-8a7a72)]">
               <Loader2 className="h-3.5 w-3.5 animate-spin" />
               불러오는 중…
             </p>
           ) : versions.length === 0 ? (
-            <p className="py-4 text-xs leading-relaxed text-[#8A7A72]">
+            <p className="py-4 text-xs leading-relaxed text-[var(--a-8a7a72)]">
               아직 남은 판이 없습니다. 이 문항을 처음 고치는 순간부터 직전 내용이 여기에 쌓입니다.
               <br />
-              지금 내용: <b className="text-[#3A322E]">{question}</b>
+              지금 내용: <b className="text-[var(--a-3a322e)]">{question}</b>
             </p>
           ) : (
             <ul className="space-y-2">
               {versions.map((v) => (
                 <li
                   key={v.id}
-                  className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border border-[#E7DDD4] bg-white px-3 py-2.5"
+                  className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border border-[var(--a-e7ddd4)] bg-white px-3 py-2.5"
                 >
-                  <span className="font-mono text-[0.6875rem] text-[#8A7A72]">{when(v.savedAt)}</span>
-                  <span className="flex-1 text-[0.7812rem] leading-snug text-[#2E2724]">
+                  <span className="font-mono text-[0.6875rem] text-[var(--a-8a7a72)]">{when(v.savedAt)}</span>
+                  <span className="flex-1 text-[0.7812rem] leading-snug text-[var(--a-2e2724)]">
                     {v.question}
                   </span>
-                  <span className="text-[0.6875rem] text-[#8A7A72]">
+                  <span className="text-[0.6875rem] text-[var(--a-8a7a72)]">
                     {v.fields.join(', ')} · {v.editor}
                   </span>
                   <button
                     type="button"
                     onClick={() => void revert(v)}
                     disabled={busy}
-                    className="inline-flex items-center gap-1 rounded-md border border-[#D4C7BE] px-2.5 py-1 text-[0.6875rem] font-bold text-[#3A322E] hover:border-[#A63D5A] hover:text-[#A63D5A] disabled:opacity-50"
+                    className="inline-flex items-center gap-1 rounded-md border border-[var(--a-d4c7be)] px-2.5 py-1 text-[0.6875rem] font-bold text-[var(--a-3a322e)] hover:border-[var(--a-a63d5a)] hover:text-[var(--a-a63d5a)] disabled:opacity-50"
                   >
                     <Undo2 className="h-3 w-3" />
                     이 판으로
@@ -164,11 +164,11 @@ export default function Wed100History({
           )}
 
           {msg && (
-            <p className={`mt-2 text-xs ${msg.ok ? 'text-[#3F6B57]' : 'text-[#A63D5A]'}`}>
+            <p className={`mt-2 text-xs ${msg.ok ? 'text-[var(--a-3f6b57)]' : 'text-[var(--a-a63d5a)]'}`}>
               {msg.text}
             </p>
           )}
-          <p className="mt-2 text-[0.6875rem] leading-relaxed text-[#8A7A72]">
+          <p className="mt-2 text-[0.6875rem] leading-relaxed text-[var(--a-8a7a72)]">
             문항마다 최근 20개 판까지 보관합니다. 되돌리기도 수정이라 되돌리기 직전 내용이 한 벌
             더 남습니다.
           </p>

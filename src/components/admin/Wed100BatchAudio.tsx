@@ -129,15 +129,15 @@ export default function Wed100BatchAudio({
   const failed = Object.values(state).filter((s) => s === 'error').length
 
   return (
-    <div className="rounded-xl border border-[#E0D6CC] bg-[#FBF8F5] p-4">
+    <div className="rounded-xl border border-[var(--a-e0d6cc)] bg-[var(--a-fbf8f5)] p-4">
       <div className="flex flex-wrap items-center gap-2">
-        <RefreshCw className="h-4 w-4 text-[#8A7A72]" />
-        <b className="text-sm text-[#3A322E]">일괄 음성 재생성</b>
-        <span className="text-xs text-[#8A7A72]">본문이 바뀌었는데 음성이 옛 것인 문항</span>
+        <RefreshCw className="h-4 w-4 text-[var(--a-8a7a72)]" />
+        <b className="text-sm text-[var(--a-3a322e)]">일괄 음성 재생성</b>
+        <span className="text-xs text-[var(--a-8a7a72)]">본문이 바뀌었는데 음성이 옛 것인 문항</span>
         <button
           onClick={() => void scan()}
           disabled={scanning || busy}
-          className="ml-auto inline-flex h-8 items-center gap-1 rounded-md border border-[#D4C7BE] bg-white px-3 text-xs font-medium text-[#3A322E] hover:bg-[#F5EFE9] disabled:opacity-50"
+          className="ml-auto inline-flex h-8 items-center gap-1 rounded-md border border-[var(--a-d4c7be)] bg-white px-3 text-xs font-medium text-[var(--a-3a322e)] hover:bg-[var(--a-f5efe9)] disabled:opacity-50"
         >
           {scanning ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Search className="h-3.5 w-3.5" />}
           {scanning ? '찾는 중…' : '다시 만들 문항 찾기'}
@@ -147,12 +147,12 @@ export default function Wed100BatchAudio({
       {err && <p className="mt-3 text-xs text-red-700">{err}</p>}
 
       {rows && rows.length === 0 && (
-        <p className="mt-3 text-xs text-[#6B5D57]">모든 문항의 음성이 본문과 맞습니다.</p>
+        <p className="mt-3 text-xs text-[var(--a-6b5d57)]">모든 문항의 음성이 본문과 맞습니다.</p>
       )}
 
       {rows && rows.length > 0 && (
         <>
-          <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-[#6B5D57]">
+          <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-[var(--a-6b5d57)]">
             <span>
               {rows.length}개 발견 · <b>{picked.size}개</b> 선택
             </span>
@@ -170,13 +170,13 @@ export default function Wed100BatchAudio({
             )}
           </div>
 
-          <div className="mt-2 max-h-[46vh] overflow-auto rounded-lg border border-[#E8DFD7] bg-white">
+          <div className="mt-2 max-h-[46vh] overflow-auto rounded-lg border border-[var(--a-e8dfd7)] bg-white">
             {rows.map((r) => {
               const st = state[r.slug]
               return (
                 <label
                   key={r.slug}
-                  className="flex cursor-pointer items-start gap-2.5 border-b border-[#F0EAE4] px-3 py-2 last:border-0 hover:bg-[#FBF8F5]"
+                  className="flex cursor-pointer items-start gap-2.5 border-b border-[var(--a-f0eae4)] px-3 py-2 last:border-0 hover:bg-[var(--a-fbf8f5)]"
                 >
                   <input
                     type="checkbox"
@@ -186,21 +186,21 @@ export default function Wed100BatchAudio({
                     className="mt-1"
                   />
                   <div className="min-w-0 flex-1">
-                    <div className="truncate text-xs text-[#3A322E]">
-                      <span className="text-[#8A7A72]">{r.slug}</span> · {r.question}
+                    <div className="truncate text-xs text-[var(--a-3a322e)]">
+                      <span className="text-[var(--a-8a7a72)]">{r.slug}</span> · {r.question}
                     </div>
-                    <div className="mt-0.5 text-[0.6875rem] text-[#8A7A72]">
+                    <div className="mt-0.5 text-[0.6875rem] text-[var(--a-8a7a72)]">
                       <span title={whenExact(r.updatedAt)}>본문 {whenText(r.updatedAt)}</span>
-                      <span className="px-1.5 text-[#D4C7BE]">|</span>
+                      <span className="px-1.5 text-[var(--a-d4c7be)]">|</span>
                       <span title={whenExact(r.audioAt)}>음성 {whenText(r.audioAt)}</span>
-                      <span className="px-1.5 text-[#D4C7BE]">|</span>
+                      <span className="px-1.5 text-[var(--a-d4c7be)]">|</span>
                       {r.reasons.join(' · ')}
                       {r.cues !== r.sentences && ` · 자막 ${r.cues}줄 → ${r.sentences}줄로 다시 나눔`}
                       {note[r.slug] && ` · ${note[r.slug]}`}
                     </div>
                   </div>
                   <div className="mt-0.5 w-4 shrink-0">
-                    {st === 'run' && <Loader2 className="h-4 w-4 animate-spin text-[#8A7A72]" />}
+                    {st === 'run' && <Loader2 className="h-4 w-4 animate-spin text-[var(--a-8a7a72)]" />}
                     {st === 'done' && <CheckCircle2 className="h-4 w-4 text-emerald-600" />}
                     {st === 'error' && <XCircle className="h-4 w-4 text-red-600" />}
                   </div>
@@ -213,7 +213,7 @@ export default function Wed100BatchAudio({
             <button
               onClick={() => void run()}
               disabled={busy || picked.size === 0}
-              className="inline-flex h-9 items-center gap-1.5 rounded-md bg-[#221D1B] px-4 text-xs font-medium text-white hover:bg-[#3A322E] disabled:opacity-50"
+              className="inline-flex h-9 items-center gap-1.5 rounded-md bg-[var(--a-221d1b)] px-4 text-xs font-medium text-white hover:bg-[var(--a-3a322e)] disabled:opacity-50"
             >
               {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="h-3.5 w-3.5" />}
               {busy ? `만드는 중… (${done + failed}/${picked.size})` : `선택한 ${picked.size}개 다시 만들기`}
@@ -221,14 +221,14 @@ export default function Wed100BatchAudio({
             {busy && (
               <button
                 onClick={() => (stopRef.current = true)}
-                className="h-9 rounded-md border border-[#D4C7BE] px-3 text-xs text-[#6B5D57] hover:bg-white"
+                className="h-9 rounded-md border border-[var(--a-d4c7be)] px-3 text-xs text-[var(--a-6b5d57)] hover:bg-white"
               >
                 이번 건까지만 하고 멈추기
               </button>
             )}
           </div>
 
-          <p className="mt-2 text-[0.6875rem] leading-relaxed text-[#8A7A72]">
+          <p className="mt-2 text-[0.6875rem] leading-relaxed text-[var(--a-8a7a72)]">
             원장 답변만 새로 만들고 질문 음성은 기존 것을 그대로 씁니다. 자막 타임코드도 함께
             맞춰지며 결과는 바로 사이트에 반영됩니다.
           </p>

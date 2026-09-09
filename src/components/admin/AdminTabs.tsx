@@ -28,7 +28,7 @@ export default function AdminTabs({ active }: { active: string }) {
       옅은 그늘을 두어 "더 있다" 는 것이 보이게 한다 — 스크롤바도 없고 힌트도 없으면
       뒤쪽 탭이 있는 줄을 모른다.
     */
-    <nav className="relative mb-5 -mx-1 rounded-xl bg-[#2E2724] sm:mx-0">
+    <nav className="relative mb-5 -mx-1 rounded-xl bg-[var(--a-2e2724)] sm:mx-0">
       <div className="flex gap-1.5 overflow-x-auto p-1.5 pr-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:flex-wrap sm:overflow-visible sm:pr-1.5">
       {TABS.map((t) => {
         const on = t.href === active
@@ -55,8 +55,8 @@ export default function AdminTabs({ active }: { active: string }) {
                 앞서 색만 밝혔을 때 달라진 게 없던 이유가 이것이다.
               */
               on
-                ? 'bg-white text-[#2E2724]!'
-                : 'text-[#EFEAE7]! hover:bg-white/15 hover:text-white!',
+                ? 'bg-white text-[var(--a-2e2724)]!'
+                : 'text-[var(--a-efeae7)]! hover:bg-white/15 hover:text-white!',
             ].join(' ')}
           >
             {t.label}

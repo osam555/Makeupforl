@@ -124,10 +124,10 @@ function AdminDashboard() {
   ]
 
   return (
-    <div className="bg-[#EFE9E3] px-4 py-6 lg:px-8">
+    <div className="bg-[var(--a-efe9e3)] px-4 py-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <AdminTabs active="/admin/dashboard" />
-        <div className="flex flex-wrap items-center gap-3 rounded-t-2xl bg-[#221D1B] px-5 py-3.5 text-white">
+        <div className="flex flex-wrap items-center gap-3 rounded-t-2xl bg-[var(--a-221d1b)] px-5 py-3.5 text-white">
           <BarChart3 className="h-4 w-4" />
           <b className="text-sm">100문100답 통계</b>
           <div className="ml-2 flex gap-1">
@@ -136,7 +136,7 @@ function AdminDashboard() {
                 key={r.key}
                 onClick={() => setDays(r.key)}
                 className={`rounded-full px-3 py-1 text-[0.6875rem] ${
-                  days === r.key ? 'bg-[#A63D5A] font-bold' : 'bg-[#3A322F] text-[#E5DEDA]'
+                  days === r.key ? 'bg-[var(--a-a63d5a)] font-bold' : 'bg-[var(--a-3a322f)] text-[var(--a-e5deda)]'
                 }`}
               >
                 최근 {r.label}
@@ -144,13 +144,13 @@ function AdminDashboard() {
             ))}
           </div>
           <div className="ml-auto flex items-center gap-3">
-            <button onClick={load} className="flex items-center gap-1 text-xs text-[#E5DEDA] hover:text-white">
+            <button onClick={load} className="flex items-center gap-1 text-xs text-[var(--a-e5deda)] hover:text-white">
               <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} /> 새로고침
             </button>
-            <Link href="/admin/seo" className="text-xs text-[#E5DEDA] hover:text-white">
+            <Link href="/admin/seo" className="text-xs text-[var(--a-e5deda)] hover:text-white">
               검색어 목표 →
             </Link>
-            <Link href="/admin/wed100" className="text-xs text-[#E5DEDA] hover:text-white">
+            <Link href="/admin/wed100" className="text-xs text-[var(--a-e5deda)] hover:text-white">
               콘텐츠 관리 →
             </Link>
           </div>
@@ -167,19 +167,19 @@ function AdminDashboard() {
           {/* KPI */}
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {kpi.map((k) => (
-              <div key={k.l} className="rounded-2xl border border-[#E7DDD4] p-4">
-                <p className="text-[0.6875rem] font-bold text-[#6B5D57]">{k.l}</p>
-                <p className="mt-1.5 text-2xl font-black text-[#2E2724]">{k.v}</p>
+              <div key={k.l} className="rounded-2xl border border-[var(--a-e7ddd4)] p-4">
+                <p className="text-[0.6875rem] font-bold text-[var(--a-6b5d57)]">{k.l}</p>
+                <p className="mt-1.5 text-2xl font-black text-[var(--a-2e2724)]">{k.v}</p>
               </div>
             ))}
           </div>
 
           <div className="mt-4 grid gap-4 lg:grid-cols-[1.4fr_1fr]">
             {/* TOP 질문 */}
-            <div className="rounded-2xl border border-[#E7DDD4] p-5">
-              <h2 className="text-sm font-extrabold text-[#2E2724]">가장 많이 본 질문 TOP 10</h2>
+            <div className="rounded-2xl border border-[var(--a-e7ddd4)] p-5">
+              <h2 className="text-sm font-extrabold text-[var(--a-2e2724)]">가장 많이 본 질문 TOP 10</h2>
               {stats.top.length === 0 ? (
-                <p className="mt-4 text-xs text-[#9C8D86]">
+                <p className="mt-4 text-xs text-[var(--a-9c8d86)]">
                   아직 집계된 이벤트가 없습니다. 사이트 배포 후 방문이 쌓이면 여기에 표시됩니다.
                 </p>
               ) : (
@@ -190,16 +190,16 @@ function AdminDashboard() {
                     const v = s.view + s.play
                     return (
                       <div key={slug} className="flex items-center gap-3 text-xs">
-                        <span className="w-52 truncate text-[#4A403B]">
+                        <span className="w-52 truncate text-[var(--a-4a403b)]">
                           {item?.question ?? slug}
                         </span>
-                        <span className="h-2 flex-1 overflow-hidden rounded-full bg-[#F2EAE3]">
+                        <span className="h-2 flex-1 overflow-hidden rounded-full bg-[var(--a-f2eae3)]">
                           <span
-                            className="block h-full rounded-full bg-gradient-to-r from-[#A63D5A] to-[#D98BA3]"
+                            className="block h-full rounded-full bg-gradient-to-r from-[var(--a-a63d5a)] to-[var(--a-d98ba3)]"
                             style={{ width: `${(v / max) * 100}%` }}
                           />
                         </span>
-                        <span className="w-14 text-right font-mono text-[0.6875rem] text-[#8A7B73]">
+                        <span className="w-14 text-right font-mono text-[0.6875rem] text-[var(--a-8a7b73)]">
                           {v.toLocaleString()}
                         </span>
                       </div>
@@ -210,8 +210,8 @@ function AdminDashboard() {
             </div>
 
             {/* 커버리지 + 파트 비중 */}
-            <div className="rounded-2xl border border-[#E7DDD4] p-5">
-              <h2 className="text-sm font-extrabold text-[#2E2724]">콘텐츠 제작 커버리지</h2>
+            <div className="rounded-2xl border border-[var(--a-e7ddd4)] p-5">
+              <h2 className="text-sm font-extrabold text-[var(--a-2e2724)]">콘텐츠 제작 커버리지</h2>
               <div className="mt-3 grid grid-cols-2 gap-2.5">
                 {[
                   [`${coverage.total}`, '본문(문)'],
@@ -219,24 +219,24 @@ function AdminDashboard() {
                   [`${coverage.withEn}/${coverage.total}`, '영문 자막'],
                   [`${coverage.cueCount}`, '자막 큐'],
                 ].map(([v, l]) => (
-                  <div key={l} className="rounded-xl bg-[#FCFAF8] p-3 text-center">
-                    <p className="text-lg font-black text-[#A63D5A]">{v}</p>
-                    <p className="text-[0.625rem] text-[#6B5D57]">{l}</p>
+                  <div key={l} className="rounded-xl bg-[var(--a-fcfaf8)] p-3 text-center">
+                    <p className="text-lg font-black text-[var(--a-a63d5a)]">{v}</p>
+                    <p className="text-[0.625rem] text-[var(--a-6b5d57)]">{l}</p>
                   </div>
                 ))}
               </div>
 
-              <h2 className="mt-6 text-sm font-extrabold text-[#2E2724]">파트별 소비 비중</h2>
+              <h2 className="mt-6 text-sm font-extrabold text-[var(--a-2e2724)]">파트별 소비 비중</h2>
               <div className="mt-3 space-y-2">
                 {seed.parts.map((p) => {
                   const v = stats.perPart.get(p.part) ?? 0
                   const total = [...stats.perPart.values()].reduce((a, b) => a + b, 0) || 1
                   return (
                     <div key={p.part} className="flex items-center gap-2.5 text-xs">
-                      <span className="w-32 truncate text-[#4A403B]">
+                      <span className="w-32 truncate text-[var(--a-4a403b)]">
                         P{p.part} {p.title}
                       </span>
-                      <span className="h-2 flex-1 overflow-hidden rounded-full bg-[#F2EAE3]">
+                      <span className="h-2 flex-1 overflow-hidden rounded-full bg-[var(--a-f2eae3)]">
                         <span
                           className="block h-full rounded-full"
                           style={{
@@ -245,7 +245,7 @@ function AdminDashboard() {
                           }}
                         />
                       </span>
-                      <span className="w-10 text-right font-mono text-[0.625rem] text-[#8A7B73]">
+                      <span className="w-10 text-right font-mono text-[0.625rem] text-[var(--a-8a7b73)]">
                         {total > 1 ? `${Math.round((v / total) * 100)}%` : '—'}
                       </span>
                     </div>

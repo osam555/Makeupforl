@@ -67,20 +67,20 @@ export default function QuestionPicker({
   return (
     <div>
       {/* 고른 것 — 순서가 중요한 경우 여기서 바로 옮긴다 */}
-      <div className="rounded-lg border border-[#E8DFD7] bg-white p-2">
+      <div className="rounded-lg border border-[var(--a-e8dfd7)] bg-white p-2">
         {value.length === 0 ? (
-          <p className="px-1 py-2 text-xs text-[#8A7A72]">아직 고른 문항이 없습니다.</p>
+          <p className="px-1 py-2 text-xs text-[var(--a-8a7a72)]">아직 고른 문항이 없습니다.</p>
         ) : (
           <ul className="space-y-1">
             {value.map((slug, i) => {
               const it = byslug.get(slug)
               return (
-                <li key={slug} className="flex items-center gap-1.5 rounded bg-[#FBF8F5] px-2 py-1.5">
-                  <span className="w-5 shrink-0 text-center text-[0.6875rem] font-bold text-[#A63D5A]">
+                <li key={slug} className="flex items-center gap-1.5 rounded bg-[var(--a-fbf8f5)] px-2 py-1.5">
+                  <span className="w-5 shrink-0 text-center text-[0.6875rem] font-bold text-[var(--a-a63d5a)]">
                     {i + 1}
                   </span>
-                  <span className="min-w-0 flex-1 truncate text-xs text-[#3A322E]">
-                    <span className="text-[#8A7A72]">{slug}</span>
+                  <span className="min-w-0 flex-1 truncate text-xs text-[var(--a-3a322e)]">
+                    <span className="text-[var(--a-8a7a72)]">{slug}</span>
                     {it ? ` · ${it.question}` : ' · (없는 문항)'}
                   </span>
                   {ordered && (
@@ -90,7 +90,7 @@ export default function QuestionPicker({
                         onClick={() => move(i, -1)}
                         disabled={i === 0}
                         aria-label="위로"
-                        className="rounded p-0.5 text-[#8A7A72] hover:bg-white disabled:opacity-30"
+                        className="rounded p-0.5 text-[var(--a-8a7a72)] hover:bg-white disabled:opacity-30"
                       >
                         <ChevronUp className="h-3.5 w-3.5" />
                       </button>
@@ -99,7 +99,7 @@ export default function QuestionPicker({
                         onClick={() => move(i, 1)}
                         disabled={i === value.length - 1}
                         aria-label="아래로"
-                        className="rounded p-0.5 text-[#8A7A72] hover:bg-white disabled:opacity-30"
+                        className="rounded p-0.5 text-[var(--a-8a7a72)] hover:bg-white disabled:opacity-30"
                       >
                         <ChevronDown className="h-3.5 w-3.5" />
                       </button>
@@ -109,7 +109,7 @@ export default function QuestionPicker({
                     type="button"
                     onClick={() => toggle(slug)}
                     aria-label="빼기"
-                    className="rounded p-0.5 text-[#8A7A72] hover:bg-white hover:text-red-600"
+                    className="rounded p-0.5 text-[var(--a-8a7a72)] hover:bg-white hover:text-red-600"
                   >
                     <X className="h-3.5 w-3.5" />
                   </button>
@@ -123,19 +123,19 @@ export default function QuestionPicker({
       {/* 찾아서 더하기 */}
       <div className="mt-2 flex flex-wrap items-center gap-1.5">
         <span className="relative">
-          <Search className="absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#E5DEDA]" />
+          <Search className="absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--a-e5deda)]" />
           <input
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="질문 검색"
-            className="h-8 w-44 rounded-md border border-[#D4C7BE] bg-white pl-7 pr-2 text-xs outline-none focus:border-[#A63D5A]"
+            className="h-8 w-44 rounded-md border border-[var(--a-d4c7be)] bg-white pl-7 pr-2 text-xs outline-none focus:border-[var(--a-a63d5a)]"
           />
         </span>
         <button
           type="button"
           onClick={() => setPart('all')}
           className={`h-7 rounded-md px-2 text-[0.6875rem] ${
-            part === 'all' ? 'bg-[#221D1B] text-white' : 'bg-white text-[#6B5D57] hover:bg-[#F5EFE9]'
+            part === 'all' ? 'bg-[var(--a-221d1b)] text-white' : 'bg-white text-[var(--a-6b5d57)] hover:bg-[var(--a-f5efe9)]'
           }`}
         >
           전체
@@ -146,27 +146,27 @@ export default function QuestionPicker({
             type="button"
             onClick={() => setPart(p)}
             className={`h-7 rounded-md px-2 text-[0.6875rem] ${
-              part === p ? 'bg-[#221D1B] text-white' : 'bg-white text-[#6B5D57] hover:bg-[#F5EFE9]'
+              part === p ? 'bg-[var(--a-221d1b)] text-white' : 'bg-white text-[var(--a-6b5d57)] hover:bg-[var(--a-f5efe9)]'
             }`}
           >
             {p === 0 ? '프롤로그' : `P${p}`}
           </button>
         ))}
         {max !== undefined && (
-          <span className={`ml-auto text-[0.6875rem] ${full ? 'font-bold text-[#A63D5A]' : 'text-[#8A7A72]'}`}>
+          <span className={`ml-auto text-[0.6875rem] ${full ? 'font-bold text-[var(--a-a63d5a)]' : 'text-[var(--a-8a7a72)]'}`}>
             {value.length} / {max}
           </span>
         )}
       </div>
 
-      <div className="mt-1.5 max-h-52 overflow-auto rounded-lg border border-[#E8DFD7] bg-white">
-        {shown.length === 0 && <p className="px-3 py-3 text-xs text-[#8A7A72]">찾는 문항이 없습니다.</p>}
+      <div className="mt-1.5 max-h-52 overflow-auto rounded-lg border border-[var(--a-e8dfd7)] bg-white">
+        {shown.length === 0 && <p className="px-3 py-3 text-xs text-[var(--a-8a7a72)]">찾는 문항이 없습니다.</p>}
         {shown.map((x) => {
           const on = value.includes(x.slug)
           return (
             <label
               key={x.slug}
-              className={`flex cursor-pointer items-start gap-2 border-b border-[#F0EAE4] px-3 py-1.5 last:border-0 hover:bg-[#FBF8F5] ${
+              className={`flex cursor-pointer items-start gap-2 border-b border-[var(--a-f0eae4)] px-3 py-1.5 last:border-0 hover:bg-[var(--a-fbf8f5)] ${
                 !on && full ? 'opacity-40' : ''
               }`}
             >
@@ -177,8 +177,8 @@ export default function QuestionPicker({
                 onChange={() => toggle(x.slug)}
                 className="mt-0.5"
               />
-              <span className="min-w-0 flex-1 truncate text-xs text-[#3A322E]">
-                <span className="text-[#8A7A72]">{x.slug}</span> · {x.question}
+              <span className="min-w-0 flex-1 truncate text-xs text-[var(--a-3a322e)]">
+                <span className="text-[var(--a-8a7a72)]">{x.slug}</span> · {x.question}
               </span>
             </label>
           )

@@ -50,9 +50,9 @@ export default async function AdminHome() {
   }))
 
   return (
-    <div className="min-h-screen bg-[#F4F1EE] py-8">
+    <div className="min-h-screen bg-[var(--a-f4f1ee)] py-8">
       <div className="mx-auto max-w-5xl px-5">
-        <h1 className="mb-4 text-xl font-extrabold text-[#2E2724]">메이크업포엘 관리</h1>
+        <h1 className="mb-4 text-xl font-extrabold text-[var(--a-2e2724)]">메이크업포엘 관리</h1>
         <AdminTabs active="/admin" />
         <OverviewGate days={days} facts={facts} content={content} qna={qna} history={history} />
       </div>

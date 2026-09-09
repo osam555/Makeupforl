@@ -158,12 +158,12 @@ export default function Overview({
       <section>
         <SectionTitle>
           지금 할 일
-          <span className="ml-2 font-normal text-[#8A7A72]">
+          <span className="ml-2 font-normal text-[var(--a-8a7a72)]">
             · 검색량과 점수를 곱해 효과가 큰 것부터
           </span>
         </SectionTitle>
         {todo.length === 0 ? (
-          <p className="rounded-xl border border-[#DCE8E0] bg-white p-4 text-[0.8125rem] text-[#3F6B57]">
+          <p className="rounded-xl border border-[var(--a-dce8e0)] bg-white p-4 text-[0.8125rem] text-[var(--a-3f6b57)]">
             검색어 쪽에서 할 수 있는 것은 다 했습니다. 이제는 색인과 시간의 문제입니다 —
             4주 뒤 순위를 다시 재 보세요.
           </p>
@@ -172,30 +172,30 @@ export default function Overview({
             {todo.map((u, i) => (
               <li
                 key={i}
-                className="rounded-xl border border-[#E0D6CC] bg-white p-3.5 text-[0.8125rem] leading-relaxed"
+                className="rounded-xl border border-[var(--a-e0d6cc)] bg-white p-3.5 text-[0.8125rem] leading-relaxed"
               >
                 <div className="flex flex-wrap items-baseline gap-x-2">
-                  <span className="rounded bg-[#F6E9ED] px-1.5 py-0.5 text-[0.6875rem] font-bold text-[#A63D5A]">
+                  <span className="rounded bg-[var(--a-f6e9ed)] px-1.5 py-0.5 text-[0.6875rem] font-bold text-[var(--a-a63d5a)]">
                     +{u.gain}%
                   </span>
-                  <b className="text-[#2E2724]">{u.term}</b>
-                  <span className="text-[0.6875rem] text-[#8A7A72]">
+                  <b className="text-[var(--a-2e2724)]">{u.term}</b>
+                  <span className="text-[0.6875rem] text-[var(--a-8a7a72)]">
                     월 {u.volume.toLocaleString()}회
                   </span>
-                  <span className="text-[#3A322E]">— {u.what}</span>
+                  <span className="text-[var(--a-3a322e)]">— {u.what}</span>
                 </div>
-                <p className="mt-1 text-[0.75rem] text-[#6B5D57]">{u.how}</p>
+                <p className="mt-1 text-[0.75rem] text-[var(--a-6b5d57)]">{u.how}</p>
               </li>
             ))}
           </ol>
         )}
         {(noAudio > 0 || thin > 0) && (
-          <p className="mt-2 rounded-xl border border-[#E8DFD7] bg-white p-3 text-[0.75rem] text-[#6B5D57]">
+          <p className="mt-2 rounded-xl border border-[var(--a-e8dfd7)] bg-white p-3 text-[0.75rem] text-[var(--a-6b5d57)]">
             콘텐츠 쪽에서도{' '}
-            {noAudio > 0 && <b className="text-[#A63D5A]">음성 없는 문항 {noAudio}개</b>}
+            {noAudio > 0 && <b className="text-[var(--a-a63d5a)]">음성 없는 문항 {noAudio}개</b>}
             {noAudio > 0 && thin > 0 && ' · '}
             {thin > 0 && <b>본문 300자 미만 {thin}개</b>}가 남아 있습니다.{' '}
-            <Link href="/admin/wed100" className="font-bold text-[#A63D5A]">
+            <Link href="/admin/wed100" className="font-bold text-[var(--a-a63d5a)]">
               문항 관리 →
             </Link>
           </p>
@@ -239,7 +239,7 @@ export default function Overview({
                 }))}
               empty="아직 기록이 없습니다"
             />
-            <p className="mt-3 text-[0.6875rem] leading-relaxed text-[#8A7A72]">
+            <p className="mt-3 text-[0.6875rem] leading-relaxed text-[var(--a-8a7a72)]">
               사람을 식별하지 않습니다. 쿠키를 쓰지 않고 IP·기기 정보도 저장하지 않으며,
               관리자 화면은 세지 않습니다.
             </p>
@@ -256,19 +256,19 @@ export default function Overview({
             */
             <div key={t.term} className="sm:flex sm:items-center sm:gap-3">
               <div className="flex items-baseline gap-2 sm:contents">
-                <span className="text-xs font-bold text-[#3A322E] sm:w-24 sm:shrink-0">
+                <span className="text-xs font-bold text-[var(--a-3a322e)] sm:w-24 sm:shrink-0">
                   {t.term}
                 </span>
-                <span className="text-[0.6875rem] tabular-nums text-[#8A7A72] sm:w-16 sm:shrink-0 sm:text-right">
+                <span className="text-[0.6875rem] tabular-nums text-[var(--a-8a7a72)] sm:w-16 sm:shrink-0 sm:text-right">
                   {t.volume.toLocaleString()}
                 </span>
-                <span className="ml-auto text-[0.6875rem] font-bold tabular-nums text-[#2E2724] sm:order-last sm:ml-0 sm:w-10 sm:text-right">
+                <span className="ml-auto text-[0.6875rem] font-bold tabular-nums text-[var(--a-2e2724)] sm:order-last sm:ml-0 sm:w-10 sm:text-right">
                   {scores[t.term]}%
                 </span>
               </div>
-              <div className="mt-1 h-2 overflow-hidden rounded-full bg-[#EFE7E1] sm:mt-0 sm:flex-1">
+              <div className="mt-1 h-2 overflow-hidden rounded-full bg-[var(--a-efe7e1)] sm:mt-0 sm:flex-1">
                 <div
-                  className="h-full rounded-full bg-[#A63D5A]"
+                  className="h-full rounded-full bg-[var(--a-a63d5a)]"
                   style={{ width: `${scores[t.term]}%` }}
                 />
               </div>
@@ -276,9 +276,9 @@ export default function Overview({
           ))}
         </div>
         <div className="mt-5">
-          <p className="mb-2 text-xs font-bold text-[#3A322E]">
+          <p className="mb-2 text-xs font-bold text-[var(--a-3a322e)]">
             준비도 변화{' '}
-            <span className="font-normal text-[#8A7A72]">
+            <span className="font-normal text-[var(--a-8a7a72)]">
               · 어드민을 연 날만 기록됩니다
             </span>
           </p>
@@ -307,20 +307,20 @@ export default function Overview({
             empty="잠긴 문항이 없습니다"
           />
         </div>
-        <div className="mt-4 flex flex-wrap gap-x-5 gap-y-1 border-t border-[#F0E9E3] pt-3 text-[0.6875rem] text-[#6B5D57]">
+        <div className="mt-4 flex flex-wrap gap-x-5 gap-y-1 border-t border-[var(--a-f0e9e3)] pt-3 text-[0.6875rem] text-[var(--a-6b5d57)]">
           <span>
-            원장 음성 <b className="text-[#2E2724]">{content.audioMinutes}분</b>
+            원장 음성 <b className="text-[var(--a-2e2724)]">{content.audioMinutes}분</b>
           </span>
           <span>
             음성 없는 문항{' '}
-            <b className={noAudio ? 'text-[#A63D5A]' : 'text-[#2E2724]'}>{noAudio}개</b>
+            <b className={noAudio ? 'text-[var(--a-a63d5a)]' : 'text-[var(--a-2e2724)]'}>{noAudio}개</b>
           </span>
           <span>
-            본문 300자 미만 <b className="text-[#2E2724]">{thin}개</b>
+            본문 300자 미만 <b className="text-[var(--a-2e2724)]">{thin}개</b>
           </span>
           <span>
             파트별 무료{' '}
-            <b className="text-[#2E2724]">
+            <b className="text-[var(--a-2e2724)]">
               {[1, 2, 3, 4, 5, 6]
                 .map((p) => qna.filter((x) => x.open && x.part === p).length)
                 .join(' · ')}
@@ -348,7 +348,7 @@ export default function Overview({
 /* ── 조각들 ─────────────────────────────────────── */
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
-  return <h2 className="mb-2.5 text-sm font-extrabold text-[#2E2724]">{children}</h2>
+  return <h2 className="mb-2.5 text-sm font-extrabold text-[var(--a-2e2724)]">{children}</h2>
 }
 
 function Panel({
@@ -363,12 +363,12 @@ function Panel({
   children: React.ReactNode
 }) {
   return (
-    <section className="rounded-xl border border-[#E0D6CC] bg-white p-3.5 sm:p-4">
+    <section className="rounded-xl border border-[var(--a-e0d6cc)] bg-white p-3.5 sm:p-4">
       <div className="mb-3 flex flex-wrap items-baseline gap-2">
-        <h2 className="text-sm font-extrabold text-[#2E2724]">{title}</h2>
-        <span className="text-xs text-[#8A7A72]">{hint}</span>
+        <h2 className="text-sm font-extrabold text-[var(--a-2e2724)]">{title}</h2>
+        <span className="text-xs text-[var(--a-8a7a72)]">{hint}</span>
         {href && (
-          <Link href={href} className="ml-auto text-xs font-bold text-[#A63D5A]">
+          <Link href={href} className="ml-auto text-xs font-bold text-[var(--a-a63d5a)]">
             자세히 →
           </Link>
         )}
@@ -398,21 +398,21 @@ function Stat({
     <div
       className={[
         'rounded-xl border bg-white p-3.5',
-        warn ? 'border-[#E8C7CF]' : 'border-[#E0D6CC]',
+        warn ? 'border-[var(--a-e8c7cf)]' : 'border-[var(--a-e0d6cc)]',
         wide ? 'col-span-2 lg:col-span-1' : '',
       ].join(' ')}
     >
-      <p className="text-[0.6875rem] font-bold tracking-wider text-[#8A7A72]">{label}</p>
+      <p className="text-[0.6875rem] font-bold tracking-wider text-[var(--a-8a7a72)]">{label}</p>
       <p className="mt-1 flex items-baseline gap-1.5">
-        <span className="text-xl font-extrabold tabular-nums text-[#2E2724]">{value}</span>
+        <span className="text-xl font-extrabold tabular-nums text-[var(--a-2e2724)]">{value}</span>
         {delta !== null && delta !== undefined && delta !== 0 && (
-          <span className={`text-xs font-bold ${delta > 0 ? 'text-[#3F6B57]' : 'text-[#A63D5A]'}`}>
+          <span className={`text-xs font-bold ${delta > 0 ? 'text-[var(--a-3f6b57)]' : 'text-[var(--a-a63d5a)]'}`}>
             {delta > 0 ? '+' : ''}
             {delta}%
           </span>
         )}
       </p>
-      <p className={`mt-0.5 text-[0.6875rem] ${warn ? 'text-[#A63D5A]' : 'text-[#8A7A72]'}`}>{hint}</p>
+      <p className={`mt-0.5 text-[0.6875rem] ${warn ? 'text-[var(--a-a63d5a)]' : 'text-[var(--a-8a7a72)]'}`}>{hint}</p>
     </div>
   )
 }
@@ -428,16 +428,16 @@ function List({
 }) {
   return (
     <div className="min-w-0">
-      <p className="mb-2 text-xs font-bold text-[#3A322E]">{title}</p>
+      <p className="mb-2 text-xs font-bold text-[var(--a-3a322e)]">{title}</p>
       {rows.length === 0 ? (
-        <p className="py-6 text-center text-xs text-[#9A8B84]">{empty}</p>
+        <p className="py-6 text-center text-xs text-[var(--a-9a8b84)]">{empty}</p>
       ) : (
         <ul className="space-y-1.5">
           {rows.map((r, i) => (
             <li key={i} className="flex min-w-0 items-center gap-2 text-xs">
-              <span className="min-w-0 flex-1 truncate text-[#3A322E]">{r.left}</span>
-              {r.mid && <span className="shrink-0 text-[0.6875rem] text-[#8A7A72]">{r.mid}</span>}
-              <b className="w-12 shrink-0 text-right tabular-nums text-[#2E2724]">{r.right}</b>
+              <span className="min-w-0 flex-1 truncate text-[var(--a-3a322e)]">{r.left}</span>
+              {r.mid && <span className="shrink-0 text-[0.6875rem] text-[var(--a-8a7a72)]">{r.mid}</span>}
+              <b className="w-12 shrink-0 text-right tabular-nums text-[var(--a-2e2724)]">{r.right}</b>
             </li>
           ))}
         </ul>
@@ -465,19 +465,19 @@ function QnaList({
 
   return (
     <div className="min-w-0">
-      <p className="text-xs font-bold text-[#3A322E]">{title}</p>
-      <p className="mt-0.5 text-[0.6875rem] leading-relaxed text-[#8A7A72]">{hint}</p>
+      <p className="text-xs font-bold text-[var(--a-3a322e)]">{title}</p>
+      <p className="mt-0.5 text-[0.6875rem] leading-relaxed text-[var(--a-8a7a72)]">{hint}</p>
       {sorted.length === 0 ? (
-        <p className="py-6 text-center text-xs text-[#9A8B84]">{empty}</p>
+        <p className="py-6 text-center text-xs text-[var(--a-9a8b84)]">{empty}</p>
       ) : (
         <ul className="mt-2.5 space-y-1.5">
           {sorted.slice(0, 8).map((r) => (
             <li key={r.slug} className="flex min-w-0 items-center gap-2 text-xs">
-              <span className="w-8 shrink-0 text-[0.625rem] font-extrabold text-[#8A7A72]">
+              <span className="w-8 shrink-0 text-[0.625rem] font-extrabold text-[var(--a-8a7a72)]">
                 P{r.part}
               </span>
-              <span className="min-w-0 flex-1 truncate text-[#3A322E]">{r.question}</span>
-              <b className="w-10 shrink-0 text-right tabular-nums text-[#2E2724]">
+              <span className="min-w-0 flex-1 truncate text-[var(--a-3a322e)]">{r.question}</span>
+              <b className="w-10 shrink-0 text-right tabular-nums text-[var(--a-2e2724)]">
                 {any ? viewOf(r.slug).toLocaleString() : '—'}
               </b>
             </li>
@@ -485,7 +485,7 @@ function QnaList({
         </ul>
       )}
       {!any && sorted.length > 0 && (
-        <p className="mt-2 text-[0.6875rem] text-[#8A7A72]">
+        <p className="mt-2 text-[0.6875rem] text-[var(--a-8a7a72)]">
           아직 조회 기록이 없습니다. 쌓이면 많이 본 순서로 정렬됩니다.
         </p>
       )}
@@ -511,7 +511,7 @@ function Bars({ days }: { days: DailyStat[] }) {
             title={`${d.date} · 방문 ${d.visits} · 조회 ${d.views}`}
           >
             <div
-              className="w-full rounded-t-sm bg-[#A63D5A]"
+              className="w-full rounded-t-sm bg-[var(--a-a63d5a)]"
               style={{
                 height: `${Math.max(2, (d.views / max) * 96)}px`,
                 opacity: d.views ? 1 : 0.15,
@@ -520,7 +520,7 @@ function Bars({ days }: { days: DailyStat[] }) {
           </div>
         ))}
       </div>
-      <div className="mt-1.5 flex justify-between text-[0.625rem] text-[#8A7A72]">
+      <div className="mt-1.5 flex justify-between text-[0.625rem] text-[var(--a-8a7a72)]">
         <span>{days[0]?.date.slice(5)}</span>
         <span>일별 조회 · 최대 {max.toLocaleString()}회</span>
         <span>{days[days.length - 1]?.date.slice(5)}</span>
@@ -532,7 +532,7 @@ function Bars({ days }: { days: DailyStat[] }) {
 function History({ history }: { history: SeoSnapshot[] }) {
   if (history.length < 2) {
     return (
-      <p className="rounded-lg border border-[#E8DFD7] bg-[#FBF8F5] p-3 text-[0.6875rem] leading-relaxed text-[#8A7A72]">
+      <p className="rounded-lg border border-[var(--a-e8dfd7)] bg-[var(--a-fbf8f5)] p-3 text-[0.6875rem] leading-relaxed text-[var(--a-8a7a72)]">
         기록이 {history.length}일치입니다. 이 화면을 열 때마다 그날의 준비도가 한 번 남으므로,
         며칠 지나면 변화가 보입니다.
       </p>
@@ -564,7 +564,7 @@ function History({ history }: { history: SeoSnapshot[] }) {
           </circle>
         ))}
       </svg>
-      <div className="mt-1 flex justify-between text-[0.625rem] text-[#8A7A72]">
+      <div className="mt-1 flex justify-between text-[0.625rem] text-[var(--a-8a7a72)]">
         <span>{history[0].date.slice(5)}</span>
         <span>평균 준비도 {pts[pts.length - 1].v}%</span>
         <span>{history[history.length - 1].date.slice(5)}</span>

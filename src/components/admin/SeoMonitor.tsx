@@ -72,30 +72,30 @@ export default function SeoMonitor({
       {/* 요약 */}
       {/* 좁은 화면에서 두 칸씩 — 하나씩 떨어지면 요약만으로 화면이 다 찬다 */}
       <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3">
-        <div className="rounded-xl border border-[#E0D6CC] bg-white p-3.5 sm:p-4">
-          <p className="text-[0.6875rem] font-bold tracking-wider text-[#8A7A72]">노리는 검색량</p>
-          <p className="mt-1 text-2xl font-extrabold text-[#2E2724]">
+        <div className="rounded-xl border border-[var(--a-e0d6cc)] bg-white p-3.5 sm:p-4">
+          <p className="text-[0.6875rem] font-bold tracking-wider text-[var(--a-8a7a72)]">노리는 검색량</p>
+          <p className="mt-1 text-2xl font-extrabold text-[var(--a-2e2724)]">
             {totalVolume.toLocaleString()}
-            <span className="ml-1 text-sm font-bold text-[#8A7A72]">회/월</span>
+            <span className="ml-1 text-sm font-bold text-[var(--a-8a7a72)]">회/월</span>
           </p>
-          <p className="mt-1 text-[0.6875rem] text-[#8A7A72]">
+          <p className="mt-1 text-[0.6875rem] text-[var(--a-8a7a72)]">
             네이버 키워드도구 {VOLUME_MEASURED_AT} 기준
           </p>
         </div>
-        <div className="rounded-xl border border-[#E0D6CC] bg-white p-3.5 sm:p-4">
-          <p className="text-[0.6875rem] font-bold tracking-wider text-[#8A7A72]">평균 준비도</p>
-          <p className="mt-1 text-2xl font-extrabold text-[#2E2724]">{avgReadiness}%</p>
-          <p className="mt-1 text-[0.6875rem] leading-relaxed text-[#8A7A72]">
+        <div className="rounded-xl border border-[var(--a-e0d6cc)] bg-white p-3.5 sm:p-4">
+          <p className="text-[0.6875rem] font-bold tracking-wider text-[var(--a-8a7a72)]">평균 준비도</p>
+          <p className="mt-1 text-2xl font-extrabold text-[var(--a-2e2724)]">{avgReadiness}%</p>
+          <p className="mt-1 text-[0.6875rem] leading-relaxed text-[var(--a-8a7a72)]">
             우리가 할 수 있는 것을 얼마나 했는가. 순위가 아니다
           </p>
         </div>
-        <div className="rounded-xl border border-[#E0D6CC] bg-white p-3.5 sm:p-4">
-          <p className="text-[0.6875rem] font-bold tracking-wider text-[#8A7A72]">순위 기록</p>
-          <p className="mt-1 text-2xl font-extrabold text-[#2E2724]">
+        <div className="rounded-xl border border-[var(--a-e0d6cc)] bg-white p-3.5 sm:p-4">
+          <p className="text-[0.6875rem] font-bold tracking-wider text-[var(--a-8a7a72)]">순위 기록</p>
+          <p className="mt-1 text-2xl font-extrabold text-[var(--a-2e2724)]">
             {SEO_TARGETS.filter((t) => !isStale(ranks[t.term]?.checkedAt ?? '')).length} /{' '}
             {SEO_TARGETS.length}
           </p>
-          <p className="mt-1 text-[0.6875rem] text-[#8A7A72]">최근 30일 안에 재 본 검색어</p>
+          <p className="mt-1 text-[0.6875rem] text-[var(--a-8a7a72)]">최근 30일 안에 재 본 검색어</p>
         </div>
       </div>
 
@@ -107,49 +107,49 @@ export default function SeoMonitor({
         const stale = isStale(r.checkedAt)
 
         return (
-          <div key={t.term} className="rounded-xl border border-[#E0D6CC] bg-[#FBF8F5] p-3.5 sm:p-4">
+          <div key={t.term} className="rounded-xl border border-[var(--a-e0d6cc)] bg-[var(--a-fbf8f5)] p-3.5 sm:p-4">
             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <b className="text-[0.9375rem] text-[#2E2724]">{t.term}</b>
-              <span className="text-xs font-bold text-[#A63D5A]">
+              <b className="text-[0.9375rem] text-[var(--a-2e2724)]">{t.term}</b>
+              <span className="text-xs font-bold text-[var(--a-a63d5a)]">
                 월 {t.volume.toLocaleString()}회
               </span>
-              <span className="hidden text-xs text-[#8A7A72] sm:inline">담당 {t.owner}</span>
-              <span className="ml-auto text-xs font-bold text-[#3A322E]">
+              <span className="hidden text-xs text-[var(--a-8a7a72)] sm:inline">담당 {t.owner}</span>
+              <span className="ml-auto text-xs font-bold text-[var(--a-3a322e)]">
                 준비도 {ready.score}%
-                {ach !== null && <span className="ml-2 text-[#A63D5A]">달성도 {ach}%</span>}
+                {ach !== null && <span className="ml-2 text-[var(--a-a63d5a)]">달성도 {ach}%</span>}
               </span>
             </div>
 
-            <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-[#E7DDD4]">
+            <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-[var(--a-e7ddd4)]">
               <div
-                className="h-full rounded-full bg-[#A63D5A]"
+                className="h-full rounded-full bg-[var(--a-a63d5a)]"
                 style={{ width: `${ready.score}%` }}
               />
             </div>
 
-            <p className="mt-2 text-[0.6875rem] leading-relaxed text-[#8A7A72]">
+            <p className="mt-2 text-[0.6875rem] leading-relaxed text-[var(--a-8a7a72)]">
               <span className="sm:hidden">담당 {t.owner} · </span>
               {t.why}
             </p>
 
             {/* 우리가 아는 것 */}
-            <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[0.6875rem] text-[#6B5D57]">
+            <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[0.6875rem] text-[var(--a-6b5d57)]">
               <span>
-                본문 <b className="text-[#2E2724]">{f.ownerChars.toLocaleString()}자</b>
+                본문 <b className="text-[var(--a-2e2724)]">{f.ownerChars.toLocaleString()}자</b>
               </span>
               <span>
-                뒷받침 문항 <b className="text-[#2E2724]">{f.questions}개</b>
+                뒷받침 문항 <b className="text-[var(--a-2e2724)]">{f.questions}개</b>
               </span>
               <span>
-                내부 링크 <b className="text-[#2E2724]">{f.inboundLinks}개</b>
+                내부 링크 <b className="text-[var(--a-2e2724)]">{f.inboundLinks}개</b>
               </span>
               <span>
                 제목 보유 페이지{' '}
-                <b className={f.titlePages.length > 1 ? 'text-[#A63D5A]' : 'text-[#2E2724]'}>
+                <b className={f.titlePages.length > 1 ? 'text-[var(--a-a63d5a)]' : 'text-[var(--a-2e2724)]'}>
                   {f.titlePages.length}개
                 </b>
                 {f.titlePages.length > 1 && (
-                  <span className="text-[#A63D5A]"> — {f.titlePages.join(', ')}</span>
+                  <span className="text-[var(--a-a63d5a)]"> — {f.titlePages.join(', ')}</span>
                 )}
               </span>
             </div>
@@ -171,7 +171,7 @@ export default function SeoMonitor({
                 ] as const
               ).map(([label, key]) => (
                 <label key={key} className="block">
-                  <span className="text-[0.6875rem] font-bold text-[#3A322E]">{label}</span>
+                  <span className="text-[0.6875rem] font-bold text-[var(--a-3a322e)]">{label}</span>
                   <input
                     type="number"
                     min={1}
@@ -180,45 +180,45 @@ export default function SeoMonitor({
                       set(t.term, { [key]: e.target.value === '' ? null : Number(e.target.value) })
                     }
                     placeholder={key === 'goal' ? '10' : '못 찾음'}
-                    className="mt-1 h-8 w-full rounded-md border border-[#D4C7BE] bg-white px-2 text-xs outline-none focus:border-[#A63D5A]"
+                    className="mt-1 h-8 w-full rounded-md border border-[var(--a-d4c7be)] bg-white px-2 text-xs outline-none focus:border-[var(--a-a63d5a)]"
                   />
                 </label>
               ))}
               <label className="block">
-                <span className="text-[0.6875rem] font-bold text-[#3A322E]">
-                  잰 날 {stale && r.checkedAt && <span className="text-[#A63D5A]">· 오래됨</span>}
+                <span className="text-[0.6875rem] font-bold text-[var(--a-3a322e)]">
+                  잰 날 {stale && r.checkedAt && <span className="text-[var(--a-a63d5a)]">· 오래됨</span>}
                 </span>
                 <input
                   value={r.checkedAt}
                   onChange={(e) => set(t.term, { checkedAt: e.target.value })}
                   placeholder="2026-09-09"
-                  className="mt-1 h-8 w-full rounded-md border border-[#D4C7BE] bg-white px-2 font-mono text-xs outline-none focus:border-[#A63D5A]"
+                  className="mt-1 h-8 w-full rounded-md border border-[var(--a-d4c7be)] bg-white px-2 font-mono text-xs outline-none focus:border-[var(--a-a63d5a)]"
                 />
               </label>
               <label className="col-span-2 block sm:col-span-1">
-                <span className="text-[0.6875rem] font-bold text-[#3A322E]">메모</span>
+                <span className="text-[0.6875rem] font-bold text-[var(--a-3a322e)]">메모</span>
                 <input
                   value={r.note}
                   onChange={(e) => set(t.term, { note: e.target.value })}
                   placeholder="상단이 파워링크뿐 등"
-                  className="mt-1 h-8 w-full rounded-md border border-[#D4C7BE] bg-white px-2 text-xs outline-none focus:border-[#A63D5A]"
+                  className="mt-1 h-8 w-full rounded-md border border-[var(--a-d4c7be)] bg-white px-2 text-xs outline-none focus:border-[var(--a-a63d5a)]"
                 />
               </label>
             </div>
 
             {/* 달성 방안 — 준비도에서 빠진 것이 그대로 할 일이 된다 */}
             {ready.todo.length > 0 && (
-              <ul className="mt-3 space-y-1 rounded-lg border border-[#E8DFD7] bg-white p-3">
+              <ul className="mt-3 space-y-1 rounded-lg border border-[var(--a-e8dfd7)] bg-white p-3">
                 {ready.todo.map((x, i) => (
-                  <li key={i} className="flex gap-2 text-[0.7188rem] leading-relaxed text-[#3A322E]">
-                    <span className="mt-[6px] h-1 w-1 shrink-0 rounded-full bg-[#A63D5A]" />
+                  <li key={i} className="flex gap-2 text-[0.7188rem] leading-relaxed text-[var(--a-3a322e)]">
+                    <span className="mt-[6px] h-1 w-1 shrink-0 rounded-full bg-[var(--a-a63d5a)]" />
                     {x}
                   </li>
                 ))}
               </ul>
             )}
             {ready.todo.length === 0 && (
-              <p className="mt-3 rounded-lg border border-[#DCE8E0] bg-white p-3 text-[0.7188rem] text-[#3F6B57]">
+              <p className="mt-3 rounded-lg border border-[var(--a-dce8e0)] bg-white p-3 text-[0.7188rem] text-[var(--a-3f6b57)]">
                 할 수 있는 것은 다 했습니다. 이제는 색인과 시간의 문제입니다 — 4주 뒤 순위를 다시
                 재 보세요.
               </p>
@@ -231,17 +231,17 @@ export default function SeoMonitor({
         <button
           onClick={() => void save()}
           disabled={busy}
-          className="inline-flex items-center gap-2 rounded-lg bg-[#2E2724] px-5 py-2.5 text-sm font-bold text-white disabled:opacity-60"
+          className="inline-flex items-center gap-2 rounded-lg bg-[var(--a-2e2724)] px-5 py-2.5 text-sm font-bold text-white disabled:opacity-60"
         >
           {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
           순위 기록 저장
         </button>
         {msg && (
-          <span className={`text-xs ${msg.ok ? 'text-[#3F6B57]' : 'text-[#A63D5A]'}`}>
+          <span className={`text-xs ${msg.ok ? 'text-[var(--a-3f6b57)]' : 'text-[var(--a-a63d5a)]'}`}>
             {msg.text}
           </span>
         )}
-        <span className="ml-auto inline-flex items-center gap-1.5 text-[0.6875rem] text-[#8A7A72]">
+        <span className="ml-auto inline-flex items-center gap-1.5 text-[0.6875rem] text-[var(--a-8a7a72)]">
           <TrendingUp className="h-3.5 w-3.5" />
           순위는 네이버·구글에서 직접 검색해 보고 적어 주세요
         </span>

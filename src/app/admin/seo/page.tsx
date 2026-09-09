@@ -14,9 +14,9 @@ export default async function AdminSeoPage() {
   const [facts, config] = await Promise.all([collectSeoFacts(), getSeoConfig()])
 
   return (
-    <div className="min-h-screen bg-[#F4F1EE] py-8">
+    <div className="min-h-screen bg-[var(--a-f4f1ee)] py-8">
       <div className="mx-auto max-w-5xl px-5">
-        <h1 className="mb-4 text-xl font-extrabold text-[#2E2724]">검색어 목표와 달성도</h1>
+        <h1 className="mb-4 text-xl font-extrabold text-[var(--a-2e2724)]">검색어 목표와 달성도</h1>
         <AdminTabs active="/admin/seo" />
         <SeoGate facts={facts} config={config} />
       </div>

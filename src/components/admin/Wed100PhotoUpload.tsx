@@ -245,7 +245,7 @@ export default function Wed100PhotoUpload({
   const notice =
     err || doneMsg ? (
       <div className="mt-2 space-y-1.5">
-        {err && <p className="text-[0.6875rem] font-bold text-[#C0392B]">{err}</p>}
+        {err && <p className="text-[0.6875rem] font-bold text-[var(--a-c0392b)]">{err}</p>}
         {doneMsg && (
           <p className="flex items-start gap-1.5 rounded-lg bg-emerald-50 px-3 py-2 text-[0.6875rem] font-bold leading-relaxed text-emerald-800">
             <CheckCircle2 className="mt-px h-3.5 w-3.5 shrink-0" />
@@ -256,16 +256,16 @@ export default function Wed100PhotoUpload({
     ) : null
 
   return (
-    <div ref={boxRef} className="rounded-xl border border-[#E7DDD4] bg-[#FCFAF8] p-3.5">
+    <div ref={boxRef} className="rounded-xl border border-[var(--a-e7ddd4)] bg-[var(--a-fcfaf8)] p-3.5">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className="flex items-center gap-1.5 text-xs font-bold text-[#6B5D57]">
-          <ImagePlus className="h-3.5 w-3.5 text-[#A63D5A]" /> 새 사진 올리기
+        <p className="flex items-center gap-1.5 text-xs font-bold text-[var(--a-6b5d57)]">
+          <ImagePlus className="h-3.5 w-3.5 text-[var(--a-a63d5a)]" /> 새 사진 올리기
         </p>
-        <span className="text-[0.6875rem] text-[#8A7C74]">올린 사진 {uploaded.length}장</span>
+        <span className="text-[0.6875rem] text-[var(--a-8a7c74)]">올린 사진 {uploaded.length}장</span>
       </div>
 
       {!googleEmail && (
-        <p className="mt-2 rounded-lg bg-[#FDF3E7] px-3 py-2 text-[0.6875rem] leading-relaxed text-[#8A6A48]">
+        <p className="mt-2 rounded-lg bg-[var(--a-fdf3e7)] px-3 py-2 text-[0.6875rem] leading-relaxed text-[var(--a-8a6a48)]">
           사진 올리기는 <b>관리자 구글 계정 로그인</b>이 필요합니다. 저장소(Storage) 규칙이
           비밀번호 로그인은 받지 않습니다. 위에서 구글로 로그인해 주세요.
         </p>
@@ -278,13 +278,13 @@ export default function Wed100PhotoUpload({
           void addFiles(e.dataTransfer.files)
         }}
         onClick={() => inputRef.current?.click()}
-        className="mt-2.5 cursor-pointer rounded-lg border-2 border-dashed border-[#DFD2C7] px-4 py-5 text-center transition hover:border-[#A63D5A] hover:bg-white"
+        className="mt-2.5 cursor-pointer rounded-lg border-2 border-dashed border-[var(--a-dfd2c7)] px-4 py-5 text-center transition hover:border-[var(--a-a63d5a)] hover:bg-white"
       >
-        <Upload className="mx-auto h-5 w-5 text-[#A63D5A]" />
-        <p className="mt-1.5 text-xs font-bold text-[#6B5D57]">
+        <Upload className="mx-auto h-5 w-5 text-[var(--a-a63d5a)]" />
+        <p className="mt-1.5 text-xs font-bold text-[var(--a-6b5d57)]">
           사진을 끌어다 놓거나 눌러서 고르세요 · 붙여넣기(Ctrl+V)도 됩니다
         </p>
-        <p className="mt-1 text-[0.6875rem] text-[#8A7C74]">
+        <p className="mt-1 text-[0.6875rem] text-[var(--a-8a7c74)]">
           여러 장을 한 번에 올릴 수 있습니다. 히어로(16:9)와 썸네일(정사각)은 자동으로 만듭니다.
         </p>
       </div>
@@ -307,7 +307,7 @@ export default function Wed100PhotoUpload({
           {rows.map((r) => (
             <div
               key={r.id}
-              className="flex flex-wrap items-start gap-3 rounded-lg border border-[#E7DDD4] bg-white p-2.5"
+              className="flex flex-wrap items-start gap-3 rounded-lg border border-[var(--a-e7ddd4)] bg-white p-2.5"
             >
               {/* 미리보기 — 누르면 그 지점이 크롭 기준이 된다 */}
               <div
@@ -324,8 +324,8 @@ export default function Wed100PhotoUpload({
               </div>
 
               <div className="min-w-[220px] flex-1">
-                <p className="truncate text-[0.6875rem] font-bold text-[#4A403B]">{r.file.name}</p>
-                <p className="text-[0.625rem] text-[#8A7C74]">
+                <p className="truncate text-[0.6875rem] font-bold text-[var(--a-4a403b)]">{r.file.name}</p>
+                <p className="text-[0.625rem] text-[var(--a-8a7c74)]">
                   {r.bitmap.width}×{r.bitmap.height} · 기준점 {r.fx.toFixed(2)}, {r.fy.toFixed(2)}
                 </p>
 
@@ -336,8 +336,8 @@ export default function Wed100PhotoUpload({
                       onClick={() => patch(r.id, (v) => (v.cat = c))}
                       className={`rounded-md border px-2 py-1 text-[0.625rem] font-bold transition ${
                         r.cat === c
-                          ? 'border-[#A63D5A] bg-[#A63D5A] text-white'
-                          : 'border-[#E7DDD4] text-[#6B5D57] hover:border-[#DFD2C7]'
+                          ? 'border-[var(--a-a63d5a)] bg-[var(--a-a63d5a)] text-white'
+                          : 'border-[var(--a-e7ddd4)] text-[var(--a-6b5d57)] hover:border-[var(--a-dfd2c7)]'
                       }`}
                     >
                       {PHOTO_CAT_LABEL[c] ?? c}
@@ -349,13 +349,13 @@ export default function Wed100PhotoUpload({
                   value={r.note}
                   onChange={(e) => patch(r.id, (v) => (v.note = e.target.value))}
                   placeholder="설명 (예: 분홍 저고리 측면, 쪽머리 비녀)"
-                  className="mt-1.5 w-full rounded-md border border-[#E7DDD4] px-2 py-1.5 text-[0.6875rem] outline-none focus:border-[#A63D5A]"
+                  className="mt-1.5 w-full rounded-md border border-[var(--a-e7ddd4)] px-2 py-1.5 text-[0.6875rem] outline-none focus:border-[var(--a-a63d5a)]"
                 />
 
                 {r.message && (
                   <p
                     className={`mt-1 text-[0.6875rem] font-bold ${
-                      r.state === 'error' ? 'text-[#C0392B]' : 'text-[#2E7D5B]'
+                      r.state === 'error' ? 'text-[var(--a-c0392b)]' : 'text-[var(--a-2e7d5b)]'
                     }`}
                   >
                     {r.state === 'error' ? r.message : `${r.message} 으로 저장됨`}
@@ -367,7 +367,7 @@ export default function Wed100PhotoUpload({
                 onClick={() => drop(r.id)}
                 disabled={r.state === 'busy'}
                 aria-label="목록에서 빼기"
-                className="rounded-md p-1.5 text-[#8A7C74] hover:bg-[#F5EFE9] hover:text-[#C0392B] disabled:opacity-40"
+                className="rounded-md p-1.5 text-[var(--a-8a7c74)] hover:bg-[var(--a-f5efe9)] hover:text-[var(--a-c0392b)] disabled:opacity-40"
               >
                 {r.state === 'busy' ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -379,12 +379,12 @@ export default function Wed100PhotoUpload({
           ))}
 
           {onApply && (
-            <label className="flex cursor-pointer items-center gap-2 rounded-lg bg-white px-3 py-2 text-[0.6875rem] font-bold text-[#6B5D57]">
+            <label className="flex cursor-pointer items-center gap-2 rounded-lg bg-white px-3 py-2 text-[0.6875rem] font-bold text-[var(--a-6b5d57)]">
               <input
                 type="checkbox"
                 checked={applyNow}
                 onChange={(e) => setApplyNow(e.target.checked)}
-                className="h-3.5 w-3.5 accent-[#A63D5A]"
+                className="h-3.5 w-3.5 accent-[var(--a-a63d5a)]"
               />
               올린 뒤 바로 {applyLabel ? `“${applyLabel}”` : '이 문항'} 대표 이미지로 지정
             </label>
@@ -396,7 +396,7 @@ export default function Wed100PhotoUpload({
             <button
               onClick={() => void uploadAll()}
               disabled={busy || waiting === 0 || !googleEmail}
-              className="flex items-center gap-1.5 rounded-lg bg-[#A63D5A] px-4 py-2 text-xs font-bold text-white transition hover:bg-[#8E3049] disabled:opacity-40"
+              className="flex items-center gap-1.5 rounded-lg bg-[var(--a-a63d5a)] px-4 py-2 text-xs font-bold text-white transition hover:bg-[var(--a-8e3049)] disabled:opacity-40"
             >
               {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Upload className="h-3.5 w-3.5" />}
               {busy ? '올리는 중…' : `${waiting}장 올리기`}
@@ -404,7 +404,7 @@ export default function Wed100PhotoUpload({
             {!googleEmail && (
               // 버튼이 왜 눌리지 않는지 버튼 옆에서 바로 알려 준다.
               // 위쪽 안내문은 목록이 길어지면 화면 밖으로 밀려 보이지 않는다.
-              <span className="text-[0.6875rem] font-bold text-[#C0392B]">
+              <span className="text-[0.6875rem] font-bold text-[var(--a-c0392b)]">
                 ← 구글 계정으로 로그인해야 눌립니다 (비밀번호 로그인은 사진 올리기 불가)
               </span>
             )}
@@ -414,7 +414,7 @@ export default function Wed100PhotoUpload({
                 setRows([])
               }}
               disabled={busy}
-              className="flex items-center gap-1.5 rounded-lg border border-[#E7DDD4] px-3 py-2 text-xs font-bold text-[#6B5D57] disabled:opacity-40"
+              className="flex items-center gap-1.5 rounded-lg border border-[var(--a-e7ddd4)] px-3 py-2 text-xs font-bold text-[var(--a-6b5d57)] disabled:opacity-40"
             >
               <Trash2 className="h-3.5 w-3.5" /> 목록 비우기
             </button>

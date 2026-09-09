@@ -54,8 +54,8 @@ export default function FontSizeToggle({
   onChange: (v: FontSize) => void
 }) {
   return (
-    <div className="inline-flex items-center gap-1 rounded-lg border border-[#E0D6CC] bg-white p-1">
-      <Type className="ml-1 h-3.5 w-3.5 text-[#8A7A72]" aria-hidden />
+    <div className="inline-flex items-center gap-1 rounded-lg border border-[var(--a-e0d6cc)] bg-white p-1">
+      <Type className="ml-1 h-3.5 w-3.5 text-[var(--a-8a7a72)]" aria-hidden />
       {(
         [
           ['normal', '일반'],
@@ -69,7 +69,7 @@ export default function FontSizeToggle({
           aria-pressed={size === v}
           className={[
             'rounded-md px-2.5 py-1 text-xs font-bold transition-colors',
-            size === v ? 'bg-[#2E2724] text-white' : 'text-[#6B5D57] hover:bg-[#F4F1EE]',
+            size === v ? 'bg-[var(--a-2e2724)] text-white' : 'text-[var(--a-6b5d57)] hover:bg-[var(--a-f4f1ee)]',
           ].join(' ')}
         >
           {label}

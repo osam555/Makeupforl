@@ -68,15 +68,15 @@ export default function Wed100HomeQna({
   }
 
   return (
-    <div className="rounded-xl border border-[#E0D6CC] bg-[#FBF8F5] p-4">
+    <div className="rounded-xl border border-[var(--a-e0d6cc)] bg-[var(--a-fbf8f5)] p-4">
       <div className="flex flex-wrap items-center gap-2">
-        <Home className="h-4 w-4 text-[#8A7A72]" />
-        <b className="text-sm text-[#3A322E]">홈에 띄울 문항</b>
-        <span className="text-xs text-[#8A7A72]">비워 두면 기본값이 나갑니다</span>
+        <Home className="h-4 w-4 text-[var(--a-8a7a72)]" />
+        <b className="text-sm text-[var(--a-3a322e)]">홈에 띄울 문항</b>
+        <span className="text-xs text-[var(--a-8a7a72)]">비워 두면 기본값이 나갑니다</span>
         <button
           onClick={() => void save()}
           disabled={busy || !loaded}
-          className="ml-auto inline-flex h-8 items-center gap-1 rounded-md bg-[#221D1B] px-3 text-xs font-medium text-white hover:bg-[#3A322E] disabled:opacity-50"
+          className="ml-auto inline-flex h-8 items-center gap-1 rounded-md bg-[var(--a-221d1b)] px-3 text-xs font-medium text-white hover:bg-[var(--a-3a322e)] disabled:opacity-50"
         >
           {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
           저장
@@ -88,20 +88,20 @@ export default function Wed100HomeQna({
       )}
 
       {!loaded ? (
-        <p className="mt-3 text-xs text-[#8A7A72]">불러오는 중…</p>
+        <p className="mt-3 text-xs text-[var(--a-8a7a72)]">불러오는 중…</p>
       ) : (
         <div className="mt-3 grid gap-4 lg:grid-cols-2">
           <div>
-            <p className="mb-1.5 text-xs font-bold text-[#3A322E]">
+            <p className="mb-1.5 text-xs font-bold text-[var(--a-3a322e)]">
               첫 화면 좌측 슬라이드{' '}
-              <span className="font-normal text-[#8A7A72]">— 고른 순서대로 5초마다 돌아갑니다</span>
+              <span className="font-normal text-[var(--a-8a7a72)]">— 고른 순서대로 5초마다 돌아갑니다</span>
             </p>
             <QuestionPicker items={items} value={hero} onChange={setHero} max={HERO_MAX} ordered />
           </div>
           <div>
-            <p className="mb-1.5 text-xs font-bold text-[#3A322E]">
+            <p className="mb-1.5 text-xs font-bold text-[var(--a-3a322e)]">
               홈 아래 100문100답 섹션{' '}
-              <span className="font-normal text-[#8A7A72]">— 카드로 한 번에 펼쳐집니다</span>
+              <span className="font-normal text-[var(--a-8a7a72)]">— 카드로 한 번에 펼쳐집니다</span>
             </p>
             <QuestionPicker items={items} value={section} onChange={setSection} max={SECTION_MAX} ordered />
           </div>

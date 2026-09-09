@@ -1,0 +1,194 @@
+/*
+  어드민 색 테마.
+
+  관리 화면의 색이 파일 곳곳에 값으로 박혀 있어 한꺼번에 바꿀 방법이 없었다.
+  값을 변수로 빼고, 어두운 테마에서는 그 변수만 갈아 끼운다. 밝은 테마의 값은
+  전과 한 글자도 다르지 않으므로 지금 화면이 달라 보일 일은 없다.
+
+  어두운 값은 밝기를 뒤집어 만들되 색상(hue)은 그대로 두었다 — 이 집의 자주색이
+  자주색으로 남는다. 다만 그냥 뒤집기만 하면 두 가지가 어긋난다.
+
+  하나. 중간 밝기(본문 옆 흐린 글씨)가 어두운 바탕에서 묻힌다. 그래서 밝은 화면에서
+  맡던 역할이 어두운 화면에서도 같은 역할이 되도록 구간마다 다르게 옮겼다.
+
+  둘. 면(面)의 순서가 뒤집힌다. 밝은 화면에서는 흰 카드가 바탕보다 밝은데, 그대로
+  뒤집으면 카드가 바탕보다 어두워져 경계가 사라진다. 그래서 바탕·카드·테두리
+  세 가지는 값을 따로 정해 순서를 되살렸다 — 바탕이 가장 어둡고 그 위에 카드,
+  테두리가 가장 밝다.
+
+  변수 표는 스크립트로 만든다. 손으로 고치지 말 것 — 맨 아래 손글씨 규칙만 예외다.
+*/
+.admin-theme {
+  --a-221d1b: #221D1B;
+  --a-2e2724: #2E2724;
+  --a-2e7d5b: #2E7D5B;
+  --a-3a322e: #3A322E;
+  --a-3a322f: #3A322F;
+  --a-3f6b57: #3F6B57;
+  --a-4a403b: #4A403B;
+  --a-5b4f49: #5B4F49;
+  --a-6b5d57: #6B5D57;
+  --a-8a2e48: #8A2E48;
+  --a-8a6a48: #8A6A48;
+  --a-8a7a72: #8A7A72;
+  --a-8a7b73: #8A7B73;
+  --a-8a7c74: #8A7C74;
+  --a-8e3049: #8E3049;
+  --a-9a8b84: #9A8B84;
+  --a-9c8d86: #9C8D86;
+  --a-a3948c: #A3948C;
+  --a-a63d5a: #A63D5A;
+  --a-b98498: #B98498;
+  --a-b9aca3: #B9ACA3;
+  --a-c0392b: #C0392B;
+  --a-c0a16b: #C0A16B;
+  --a-d4c7be: #D4C7BE;
+  --a-d98ba3: #D98BA3;
+  --a-dcd2cb: #DCD2CB;
+  --a-dce8e0: #DCE8E0;
+  --a-dfd2c7: #DFD2C7;
+  --a-e0d6cc: #E0D6CC;
+  --a-e2564c: #E2564C;
+  --a-e5deda: #E5DEDA;
+  --a-e7ddd4: #E7DDD4;
+  --a-e8c7cf: #E8C7CF;
+  --a-e8dfd7: #E8DFD7;
+  --a-efe7df: #EFE7DF;
+  --a-efe7e1: #EFE7E1;
+  --a-efe9e3: #EFE9E3;
+  --a-efeae7: #EFEAE7;
+  --a-f0e9e3: #F0E9E3;
+  --a-f0eae4: #F0EAE4;
+  --a-f2eae3: #F2EAE3;
+  --a-f3ede7: #F3EDE7;
+  --a-f46e65: #F46E65;
+  --a-f4f1ee: #F4F1EE;
+  --a-f5efe9: #F5EFE9;
+  --a-f6e9ed: #F6E9ED;
+  --a-f7f0ea: #F7F0EA;
+  --a-f7f1ec: #F7F1EC;
+  --a-fbf7f3: #FBF7F3;
+  --a-fbf8f5: #FBF8F5;
+  --a-fcfaf8: #FCFAF8;
+  --a-fdf3e7: #FDF3E7;
+}
+
+.admin-theme[data-theme='dark'] {
+  color-scheme: dark;
+  background: #16130F;
+
+  --a-221d1b: #ECE6E4;
+  --a-2e2724: #E5DDDA;
+  --a-2e7d5b: #5DAA86;
+  --a-3a322e: #DCD4D0;
+  --a-3a322f: #DCD4D1;
+  --a-3f6b57: #83B19B;
+  --a-4a403b: #CFC5C0;
+  --a-5b4f49: #BEB2AD;
+  --a-6b5d57: #B0A19A;
+  --a-8a2e48: #EA98A8;
+  --a-8a6a48: #AD8C69;
+  --a-8a7a72: #8E7E76;
+  --a-8a7b73: #8C7D75;
+  --a-8a7c74: #8B7D75;
+  --a-8e3049: #E894A4;
+  --a-9a8b84: #776962;
+  --a-9c8d86: #756760;
+  --a-a3948c: #6C5E57;
+  --a-a63d5a: #E4758F;
+  --a-b98498: #845366;
+  --a-b9aca3: #50453D;
+  --a-c0392b: #EC6250;
+  --a-c0a16b: #674B12;
+  --a-d4c7be: #37302A;
+  --a-d98ba3: #7B374F;
+  --a-dcd2cb: #37302A;
+  --a-dce8e0: #16130F;
+  --a-dfd2c7: #37302A;
+  --a-e0d6cc: #37302A;
+  --a-e2564c: #C33832;
+  --a-e5deda: #16130F;
+  --a-e7ddd4: #16130F;
+  --a-e8c7cf: #37302A;
+  --a-e8dfd7: #16130F;
+  --a-efe7df: #16130F;
+  --a-efe7e1: #16130F;
+  --a-efe9e3: #16130F;
+  --a-efeae7: #16130F;
+  --a-f0e9e3: #16130F;
+  --a-f0eae4: #16130F;
+  --a-f2eae3: #16130F;
+  --a-f3ede7: #16130F;
+  --a-f46e65: #A32021;
+  --a-f4f1ee: #16130F;
+  --a-f5efe9: #16130F;
+  --a-f6e9ed: #16130F;
+  --a-f7f0ea: #16130F;
+  --a-f7f1ec: #16130F;
+  --a-fbf7f3: #16130F;
+  --a-fbf8f5: #16130F;
+  --a-fcfaf8: #16130F;
+  --a-fdf3e7: #16130F;
+
+  /* 카드. 바탕(#16130F)보다 밝고 테두리(#37302A)보다 어둡다 */
+  --color-white: #221D19;
+
+  /* 이름 있는 색은 단계를 맞바꾼다: 50↔900, 100↔800 … */
+  --color-amber-100: #92400E;
+  --color-amber-200: #B45309;
+  --color-amber-50: #78350F;
+  --color-amber-500: #FBBF24;
+  --color-amber-700: #FDE68A;
+  --color-amber-800: #FEF3C7;
+  --color-emerald-100: #065F46;
+  --color-emerald-50: #064E3B;
+  --color-emerald-600: #6EE7B7;
+  --color-emerald-700: #A7F3D0;
+  --color-emerald-800: #D1FAE5;
+  --color-gray-100: #1F2937;
+  --color-gray-200: #374151;
+  --color-gray-300: #4B5563;
+  --color-gray-400: #6B7280;
+  --color-gray-50: #111827;
+  --color-gray-500: #9CA3AF;
+  --color-gray-600: #D1D5DB;
+  --color-gray-700: #E5E7EB;
+  --color-gray-800: #F3F4F6;
+  --color-gray-900: #F9FAFB;
+  --color-green-100: #166534;
+  --color-green-50: #14532D;
+  --color-green-500: #4ADE80;
+  --color-green-600: #86EFAC;
+  --color-green-700: #BBF7D0;
+  --color-green-800: #DCFCE7;
+  --color-red-100: #991B1B;
+  --color-red-200: #B91C1C;
+  --color-red-300: #DC2626;
+  --color-red-400: #EF4444;
+  --color-red-50: #7F1D1D;
+  --color-red-600: #FCA5A5;
+  --color-red-700: #FECACA;
+  --color-red-800: #FEE2E2;
+}
+
+/*
+  입력칸 글자색.
+
+  input·textarea 는 색을 따로 주지 않으면 브라우저 기본값(검정)을 쓴다. 바탕만
+  어두워지고 글자는 검정으로 남아, 적어 놓은 날짜와 순위가 보이지 않았다.
+*/
+.admin-theme[data-theme='dark'] input,
+.admin-theme[data-theme='dark'] textarea,
+.admin-theme[data-theme='dark'] select {
+  color: #E5DDDA;
+}
+
+.admin-theme[data-theme='dark'] input::placeholder,
+.admin-theme[data-theme='dark'] textarea::placeholder {
+  color: #8E7E76;
+}
+
+/* 어두운 화면에서 흰 사진은 눈이 부시다. 아주 조금만 눌러 둔다 */
+.admin-theme[data-theme='dark'] img {
+  filter: brightness(0.92);
+}

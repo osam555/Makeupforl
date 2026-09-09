@@ -120,17 +120,17 @@ export default function Wed100Paywall({
   const locked = Math.max(0, items.length - free.length)
 
   return (
-    <div className="rounded-xl border border-[#E0D6CC] bg-[#FBF8F5] p-4">
+    <div className="rounded-xl border border-[var(--a-e0d6cc)] bg-[var(--a-fbf8f5)] p-4">
       <div className="flex flex-wrap items-center gap-2">
-        <Lock className="h-4 w-4 text-[#8A7A72]" />
-        <b className="text-sm text-[#3A322E]">공개 범위</b>
-        <span className="text-xs text-[#8A7A72]">
+        <Lock className="h-4 w-4 text-[var(--a-8a7a72)]" />
+        <b className="text-sm text-[var(--a-3a322e)]">공개 범위</b>
+        <span className="text-xs text-[var(--a-8a7a72)]">
           {paywall ? `무료 ${free.length}개 · 잠김 ${locked}개` : '전 문항 공개 중'}
         </span>
         <button
           onClick={() => void save()}
           disabled={busy || !loaded}
-          className="ml-auto inline-flex h-8 items-center gap-1 rounded-md bg-[#221D1B] px-3 text-xs font-medium text-white hover:bg-[#3A322E] disabled:opacity-50"
+          className="ml-auto inline-flex h-8 items-center gap-1 rounded-md bg-[var(--a-221d1b)] px-3 text-xs font-medium text-white hover:bg-[var(--a-3a322e)] disabled:opacity-50"
         >
           {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
           저장
@@ -142,19 +142,19 @@ export default function Wed100Paywall({
       )}
 
       {!loaded ? (
-        <p className="mt-3 text-xs text-[#8A7A72]">불러오는 중…</p>
+        <p className="mt-3 text-xs text-[var(--a-8a7a72)]">불러오는 중…</p>
       ) : (
         <>
-          <label className="mt-3 flex cursor-pointer items-start gap-2.5 rounded-lg border border-[#E8DFD7] bg-white p-3">
+          <label className="mt-3 flex cursor-pointer items-start gap-2.5 rounded-lg border border-[var(--a-e8dfd7)] bg-white p-3">
             <input
               type="checkbox"
               checked={paywall}
               onChange={(e) => setPaywall(e.target.checked)}
               className="mt-0.5"
             />
-            <span className="text-xs leading-relaxed text-[#3A322E]">
+            <span className="text-xs leading-relaxed text-[var(--a-3a322e)]">
               <b>잠금 켜기</b> — 아래에서 고른 문항만 본문과 음성이 열립니다.
-              <span className="mt-1 block text-[#8A7A72]">
+              <span className="mt-1 block text-[var(--a-8a7a72)]">
                 잠긴 문항도 페이지는 열려 있어 검색에는 제목이 걸립니다. 답변 글과 음성 주소는
                 아예 내보내지 않으므로 소스 보기로도 읽히지 않습니다.
               </span>
@@ -162,9 +162,9 @@ export default function Wed100Paywall({
           </label>
 
           <div className="mt-3">
-            <p className="mb-1.5 text-xs font-bold text-[#3A322E]">
+            <p className="mb-1.5 text-xs font-bold text-[var(--a-3a322e)]">
               무료로 열 문항{' '}
-              <span className="font-normal text-[#8A7A72]">
+              <span className="font-normal text-[var(--a-8a7a72)]">
                 — 잠긴 문항 화면에 &ldquo;지금 보실 수 있는 문항&rdquo;으로 앞의 5개가 함께 나옵니다
               </span>
             </p>
@@ -173,25 +173,25 @@ export default function Wed100Paywall({
 
           <div className="mt-3 grid gap-3 sm:grid-cols-2">
             <label className="block">
-              <span className="text-xs font-bold text-[#3A322E]">구매 안내 주소</span>
+              <span className="text-xs font-bold text-[var(--a-3a322e)]">구매 안내 주소</span>
               <input
                 value={storeUrl}
                 onChange={(e) => setStoreUrl(e.target.value)}
                 placeholder="https://smartstore.naver.com/..."
-                className="mt-1 h-9 w-full rounded-md border border-[#D4C7BE] bg-white px-2.5 text-xs outline-none focus:border-[#A63D5A]"
+                className="mt-1 h-9 w-full rounded-md border border-[var(--a-d4c7be)] bg-white px-2.5 text-xs outline-none focus:border-[var(--a-a63d5a)]"
               />
-              <span className="mt-1 block text-[0.6875rem] text-[#8A7A72]">
+              <span className="mt-1 block text-[0.6875rem] text-[var(--a-8a7a72)]">
                 비워 두면 [전체 보기 신청] 버튼이 나오지 않습니다.
               </span>
             </label>
             <label className="block">
-              <span className="text-xs font-bold text-[#3A322E]">잠긴 문항 안내 문구</span>
+              <span className="text-xs font-bold text-[var(--a-3a322e)]">잠긴 문항 안내 문구</span>
               <textarea
                 value={notice}
                 onChange={(e) => setNotice(e.target.value)}
                 rows={2}
                 placeholder="비우면 기본 문구가 나갑니다"
-                className="mt-1 w-full rounded-md border border-[#D4C7BE] bg-white px-2.5 py-1.5 text-xs outline-none focus:border-[#A63D5A]"
+                className="mt-1 w-full rounded-md border border-[var(--a-d4c7be)] bg-white px-2.5 py-1.5 text-xs outline-none focus:border-[var(--a-a63d5a)]"
               />
             </label>
           </div>
@@ -204,9 +204,9 @@ export default function Wed100Paywall({
             따로 내려주므로, 명단이 늘어도 사이트 속도는 그대로다.
           */}
           <label className="mt-3 block">
-            <span className="text-xs font-bold text-[#3A322E]">
+            <span className="text-xs font-bold text-[var(--a-3a322e)]">
               전체 열람 계정{' '}
-              <span className="font-normal text-[#8A7A72]">
+              <span className="font-normal text-[var(--a-8a7a72)]">
                 — 한 줄에 &ldquo;이메일&rdquo; 또는 &ldquo;이메일 기한&rdquo;. 구글 계정이라야 합니다
               </span>
             </span>
@@ -216,14 +216,14 @@ export default function Wed100Paywall({
               rows={4}
               spellCheck={false}
               placeholder={'hong@gmail.com\nkim@gmail.com  2026-12-08'}
-              className="mt-1 w-full rounded-md border border-[#D4C7BE] bg-white px-2.5 py-1.5 font-mono text-xs outline-none focus:border-[#A63D5A]"
+              className="mt-1 w-full rounded-md border border-[var(--a-d4c7be)] bg-white px-2.5 py-1.5 font-mono text-xs outline-none focus:border-[var(--a-a63d5a)]"
             />
-            <span className="mt-1 block text-[0.6875rem] leading-relaxed text-[#8A7A72]">
+            <span className="mt-1 block text-[0.6875rem] leading-relaxed text-[var(--a-8a7a72)]">
               지금 <b>{parseMembers(members).length}명</b>
               {(() => {
                 const today = todayKST()
                 const done = parseMembers(members).filter((m) => m.until && m.until < today).length
-                return done > 0 ? <b className="text-[#A63D5A]"> (기간 지남 {done}명)</b> : null
+                return done > 0 ? <b className="text-[var(--a-a63d5a)]"> (기간 지남 {done}명)</b> : null
               })()}
               . 이 계정으로 로그인하면 잠긴 문항이 전부 열립니다.
               <br />

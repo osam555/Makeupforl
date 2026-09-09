@@ -243,7 +243,7 @@ function AdminVideos({ password, idTokenGetter }: { password: string | null; idT
               />
             </label>
           </div>
-          <Button onClick={saveChannel} disabled={busy} size="sm" className="mt-3 bg-[#F46E65] hover:bg-[#E2564C]">
+          <Button onClick={saveChannel} disabled={busy} size="sm" className="mt-3 bg-[var(--a-f46e65)] hover:bg-[var(--a-e2564c)]">
             <Save className="mr-1.5 h-4 w-4" /> 채널 저장
           </Button>
         </section>
@@ -270,7 +270,7 @@ function AdminVideos({ password, idTokenGetter }: { password: string | null; idT
                 </option>
               ))}
             </select>
-            <Button onClick={add} disabled={busy} className="bg-[#F46E65] hover:bg-[#E2564C]">
+            <Button onClick={add} disabled={busy} className="bg-[var(--a-f46e65)] hover:bg-[var(--a-e2564c)]">
               <Plus className="mr-1.5 h-4 w-4" /> 추가
             </Button>
           </div>
