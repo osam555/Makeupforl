@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
-import { Suspense } from 'react'
 import GalleryClient from '@/components/gallery/GalleryClient'
+import { getGalleryImages } from '@/lib/galleryImages'
 import SubHero from '@/components/layout/SubHero'
 import { getSiteImages } from '@/lib/siteImages'
 import { GALLERY_CATEGORIES } from '@/lib/galleryCategories'
@@ -15,6 +15,11 @@ export const metadata: Metadata = {
 }
 
 export default async function GalleryPage() {
+  // 사진을 서버에서 미리 읽어 넘긴다 — 그래야 HTML 에 실린다
+  const photos = (await getGalleryImages()).map((x, i) => ({
+    ...x,
+    order_position: x.order_position ?? i,
+  }))
   const img = await getSiteImages()
   return (
     <>
@@ -29,10 +34,13 @@ export default async function GalleryPage() {
           </p>
         </div>
       </section>
-      {/* GalleryClient 가 useSearchParams(구 ?cat= 링크 처리)를 쓰므로 Suspense 로 감싼다 */}
-      <Suspense fallback={<div className="min-h-screen bg-gray-50 py-12" />}>
-        <GalleryClient category="all" />
-      </Suspense>
+      {/*
+        Suspense 를 걷어냈다. useSearchParams 를 쓰는 부분만 GalleryClient 안에서
+        따로 떼어 놓았으므로, 사진 그리드가 서버에서 함께 그려진다.
+      */}
+      <>
+        <GalleryClient category="all" initial={photos} />
+      </>
     </>
   )
 }

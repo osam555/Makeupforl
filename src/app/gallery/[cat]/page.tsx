@@ -1,5 +1,4 @@
 import { Metadata } from 'next'
-import { Suspense } from 'react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Check, CalendarCheck, MessageCircle } from 'lucide-react'
@@ -103,9 +102,11 @@ export default async function GalleryCategoryPage({ params }: Params) {
         <div className="mfl-contain max-w-[1200px] pt-2 text-center">
           <h2 className="text-2xl font-bold text-gray-900">{c.menuName} 포트폴리오</h2>
         </div>
-        <Suspense fallback={<div className="bg-gray-50 py-12" />}>
-          <GalleryClient category={c.slug} initial={photos} />
-        </Suspense>
+        {/*
+          Suspense 를 걷어냈다. 안쪽에서 useSearchParams 를 쓰는 부분만 따로 떼어
+          그쪽에만 경계를 두었으므로, 사진 그리드는 이제 서버에서 함께 그려진다.
+        */}
+        <GalleryClient category={c.slug} initial={photos} />
       </section>
 
       {/* 예약 유도 */}

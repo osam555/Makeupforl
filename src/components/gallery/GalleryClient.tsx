@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { Suspense, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import GalleryGrid from './GalleryGrid'
@@ -19,21 +19,36 @@ type Props = {
   }[]
 }
 
-/** 분야 전환 탭 + 사진 그리드. 제목은 각 페이지가 알아서 붙인다 */
-export default function GalleryClient({ category, initial }: Props) {
+/**
+ * 예전 링크(/gallery?cat=honju, ?cat=혼주)를 새 경로로 넘긴다.
+ *
+ * 이것만 따로 떼어 낸 이유가 있다. useSearchParams 를 쓰는 컴포넌트는 Next 가
+ * 서버 렌더링을 건너뛴다. 이 훅이 사진 그리드와 같은 컴포넌트에 있는 동안에는
+ * 서버가 보내는 HTML 에 사진이 한 장도 실리지 않았다 — 자리만 비워 두고
+ * 브라우저가 그릴 때까지 기다렸다. 검색엔진에는 없는 사진이었다.
+ *
+ * 화면에 아무것도 그리지 않으므로 Suspense 안에 두어도 잃을 것이 없다.
+ */
+function LegacyQueryRedirect() {
   const router = useRouter()
-  const searchParams = useSearchParams()
-  const legacy = searchParams.get('cat')
+  const legacy = useSearchParams().get('cat')
 
-  // 예전 링크(/gallery?cat=honju, ?cat=혼주)를 새 경로로 넘긴다
   useEffect(() => {
     if (!legacy) return
     const slug = toSlug(legacy)
     if (slug !== 'all') router.replace(categoryHref(slug))
   }, [legacy, router])
 
+  return null
+}
+
+/** 분야 전환 탭 + 사진 그리드. 제목은 각 페이지가 알아서 붙인다 */
+export default function GalleryClient({ category, initial }: Props) {
   return (
     <div className="bg-gray-50 py-12">
+      <Suspense fallback={null}>
+        <LegacyQueryRedirect />
+      </Suspense>
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         {/* 탭처럼 보이지만 각자 독립 주소를 가진 링크다 */}
         <nav aria-label="업무분야" className="mb-8">
