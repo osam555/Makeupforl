@@ -570,6 +570,7 @@ function AdminWed100Editor({
               <Database className="mr-1 h-3.5 w-3.5" /> DB에 시드 넣기
             </Button>
             <Link href="/admin/dashboard" className="self-center text-xs text-[#B3A69F] hover:text-white">통계 →</Link>
+            <Link href="/admin/seo" className="self-center text-xs text-[#B3A69F] hover:text-white">검색어 목표 →</Link>
             <Link href="/admin" className="self-center text-xs text-[#B3A69F] hover:text-white">
               예약관리 →
             </Link>

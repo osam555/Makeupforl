@@ -145,6 +145,9 @@ function AdminDashboard() {
             <button onClick={load} className="flex items-center gap-1 text-xs text-[#C9BDB6] hover:text-white">
               <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} /> 새로고침
             </button>
+            <Link href="/admin/seo" className="text-xs text-[#C9BDB6] hover:text-white">
+              검색어 목표 →
+            </Link>
             <Link href="/admin/wed100" className="text-xs text-[#C9BDB6] hover:text-white">
               콘텐츠 관리 →
             </Link>
