@@ -118,7 +118,13 @@ export default function Overview({
       {/* ── 1. 한눈에 ───────────────────────────────── */}
       <section>
         <SectionTitle>한눈에</SectionTitle>
-        {/* 좁은 화면에서 두 칸씩. 하나씩 떨어지면 여섯 칸이 화면 하나를 다 먹는다 */}
+        {/*
+          좁은 화면에서 두 칸씩. 하나씩 떨어지면 일곱 칸이 화면 하나를 다 먹는다.
+
+          칸이 일곱이라 두 칸씩·네 칸씩 놓으면 마지막 하나가 홀로 남아 빈 자리가
+          생긴다. 마지막 칸을 두 칸 너비로 늘려 여덟로 맞춘다 — 남은 게 아니라
+          그렇게 둔 것으로 보인다. 한 줄에 일곱이 다 들어가는 큰 화면에서는 되돌린다.
+        */}
         <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4 sm:gap-3 lg:grid-cols-7">
           <Stat label="방문" value={a.visits.toLocaleString()} delta={delta(a.visits, b.visits)} hint="최근 7일" />
           <Stat label="조회" value={a.views.toLocaleString()} delta={delta(a.views, b.views)} hint="최근 7일" />
@@ -139,7 +145,12 @@ export default function Overview({
             hint={content.paywall ? '잠금 켜짐' : '잠금 꺼짐 — 전부 공개'}
             warn={!content.paywall}
           />
-          <Stat label="열람 회원" value={`${content.members}명`} hint="유료 열람 계정" />
+          <Stat
+            label="열람 회원"
+            value={`${content.members}명`}
+            hint="유료 열람 계정"
+            wide
+          />
         </div>
       </section>
 
@@ -373,16 +384,23 @@ function Stat({
   delta,
   hint,
   warn,
+  wide,
 }: {
   label: string
   value: string
   delta?: number | null
   hint: string
   warn?: boolean
+  /** 마지막 칸이 홀로 남지 않게 두 칸 너비로 (한 줄에 다 들어가는 화면에서는 한 칸) */
+  wide?: boolean
 }) {
   return (
     <div
-      className={`rounded-xl border bg-white p-3.5 ${warn ? 'border-[#E8C7CF]' : 'border-[#E0D6CC]'}`}
+      className={[
+        'rounded-xl border bg-white p-3.5',
+        warn ? 'border-[#E8C7CF]' : 'border-[#E0D6CC]',
+        wide ? 'col-span-2 lg:col-span-1' : '',
+      ].join(' ')}
     >
       <p className="text-[0.6875rem] font-bold tracking-wider text-[#8A7A72]">{label}</p>
       <p className="mt-1 flex items-baseline gap-1.5">

@@ -29,7 +29,7 @@ export default function AdminTabs({ active }: { active: string }) {
       뒤쪽 탭이 있는 줄을 모른다.
     */
     <nav className="relative mb-5 -mx-1 rounded-xl bg-[#2E2724] sm:mx-0">
-      <div className="flex gap-1.5 overflow-x-auto p-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:flex-wrap sm:overflow-visible">
+      <div className="flex gap-1.5 overflow-x-auto p-1.5 pr-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:flex-wrap sm:overflow-visible sm:pr-1.5">
       {TABS.map((t) => {
         const on = t.href === active
         return (
@@ -46,9 +46,17 @@ export default function AdminTabs({ active }: { active: string }) {
                 보이는 것이 기준이다. 글자를 밝히고 조금 키웠다.
               */
               'shrink-0 rounded-lg px-3.5 py-2 text-[0.8125rem] font-bold transition-colors',
+              /*
+                색 뒤에 ! 를 붙인다 (테일윈드 4 표기).
+
+                옛 PHP 에서 옮겨 온 .mfl-site a { color: inherit } 가 명시도(0,1,1)로
+                유틸리티 클래스(0,1,0)를 이긴다. 그래서 이 링크는 지정한 색 대신
+                부모의 #454545 를 물려받았고, 어두운 바 위에서 대비가 1.5:1 이었다.
+                앞서 색만 밝혔을 때 달라진 게 없던 이유가 이것이다.
+              */
               on
-                ? 'bg-white text-[#2E2724]'
-                : 'text-[#EFEAE7] hover:bg-white/15 hover:text-white',
+                ? 'bg-white text-[#2E2724]!'
+                : 'text-[#EFEAE7]! hover:bg-white/15 hover:text-white!',
             ].join(' ')}
           >
             {t.label}
@@ -56,10 +64,6 @@ export default function AdminTabs({ active }: { active: string }) {
         )
       })}
       </div>
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-y-0 right-0 w-8 rounded-r-xl bg-gradient-to-l from-[#2E2724] to-transparent sm:hidden"
-      />
     </nav>
   )
 }
