@@ -155,3 +155,78 @@ export function isStale(checkedAt: string, days = 30): boolean {
   if (Number.isNaN(t)) return true
   return Date.now() - t > days * 86400_000
 }
+
+/** 하루치 기록 — 그날의 준비도와 순위를 그대로 떠 둔다 */
+export interface SeoSnapshot {
+  /** YYYY-MM-DD (한국 시각) */
+  date: string
+  /** 검색어별 준비도 */
+  readiness: Record<string, number>
+  /** 그날 적혀 있던 순위 (없으면 null) */
+  naver: Record<string, number | null>
+  google: Record<string, number | null>
+}
+
+/** 오늘 (한국 시각). 기록의 하루 경계를 서버 위치에 맡기지 않는다 */
+export function todayKST(): string {
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Seoul',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date())
+}
+
+/**
+ * 준비도를 올리는 방법.
+ *
+ * 빠진 항목을 그냥 늘어놓으면 무엇부터 할지 알 수 없다. 점수가 큰 것부터,
+ * 그리고 "몇 점이 오르는지" 를 함께 보여 준다. 손이 덜 가는 것을 먼저 하는 게
+ * 아니라 효과가 큰 것을 먼저 하는 게 맞다.
+ */
+export interface Upgrade {
+  gain: number
+  what: string
+  how: string
+}
+
+export function upgrades(f: SeoFacts): Upgrade[] {
+  const out: Upgrade[] = []
+
+  if (f.titlePages.length === 0)
+    out.push({
+      gain: 30,
+      what: '이 말을 맡을 페이지가 없습니다',
+      how: '전용 페이지를 만들고 제목을 이 말로 시작하세요. 허브 세 장(/혼주한복·/혼주머리·/혼주메이크업)이 본보기입니다.',
+    })
+
+  if (f.titlePages.length > 1)
+    out.push({
+      gain: 20,
+      what: `${f.titlePages.length}개 페이지가 같은 말을 다툽니다`,
+      how: `${f.titlePages.join(', ')} 중 하나만 남기고 나머지 제목은 다른 말로 바꾸세요. 대신 그 페이지들에서 남긴 한 장으로 링크를 거세요 — 제목에서 빼기만 하면 그 힘이 사라집니다.`,
+    })
+
+  if (f.ownerChars < 1500)
+    out.push({
+      gain: 20,
+      what: `맡은 페이지 본문이 ${f.ownerChars.toLocaleString()}자입니다`,
+      how: '1,500자를 넘기세요. 말을 불리는 게 아니라, 그 페이지에 있어야 하는데 없는 것을 적는 편이 낫습니다 — 가격에 무엇이 포함되는지, 언제 정해야 하는지, 무엇을 미리 말해야 하는지.',
+    })
+
+  if (f.questions < 3)
+    out.push({
+      gain: 15,
+      what: `뒷받침하는 문항이 ${f.questions}개입니다`,
+      how: '100문100답에서 이 주제를 다루는 문항의 제목에 이 말을 넣으세요. 원고를 새로 쓸 필요 없이 제목만 고치면 됩니다.',
+    })
+
+  if (f.inboundLinks < 3)
+    out.push({
+      gain: 15,
+      what: `내부 링크가 ${f.inboundLinks}개입니다`,
+      how: '홈·후기·갤러리·서비스처럼 관련 있는 페이지에서 본문 안에 링크를 거세요. 메뉴에만 있는 것과 본문에서 걸리는 것은 무게가 다릅니다.',
+    })
+
+  return out.sort((a, b) => b.gain - a.gain)
+}

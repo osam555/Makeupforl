@@ -1,283 +1,58 @@
-'use client'
+import AdminTabs from '@/components/admin/AdminTabs'
+import OverviewGate from '@/components/admin/OverviewGate'
+import { getDailyStats } from '@/lib/analytics.server'
+import { HUBS } from '@/lib/hubs'
+import { collectSeoFacts } from '@/lib/seoTargets.server'
+import { estimateDuration, getPublishedWed100Items } from '@/lib/wed100'
+import { isOpen } from '@/lib/wed100Access'
+import { getWed100Access } from '@/lib/wed100Access.server'
 
-import { useState, useEffect } from 'react'
-import { getDb } from '@/lib/firebase/client'
-import AdminGate from '@/components/admin/AdminGate'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
-import { Calendar, Clock, User, Phone, Mail, MessageSquare, X } from 'lucide-react'
+export const dynamic = 'force-dynamic'
 
-interface Booking {
-  id: string
-  name: string
-  phone: string
-  email: string | null
-  service_type: string
-  booking_date: string
-  booking_time: string
-  message: string | null
-  status: string
-  created_at: string
-}
+/**
+ * 어드민 첫 화면.
+ *
+ * 전에는 /admin 이 예약 목록이었다. 예약은 일이 생겼을 때 들어가는 화면이지,
+ * 매일 열어 보는 화면이 아니다. 첫 화면에는 흐름을 보는 것들을 놓는다 —
+ * 사람이 얼마나 오는가, 올 준비는 됐는가, 팔 물건은 어떤 상태인가.
+ * 예약 목록은 /admin/bookings 로 옮겼다.
+ */
+export default async function AdminHome() {
+  const [days, facts, items, access] = await Promise.all([
+    getDailyStats(30),
+    collectSeoFacts(),
+    getPublishedWed100Items(),
+    getWed100Access(),
+  ])
 
-function AdminBookings() {
-  const isAuthenticated = true
-  const [bookings, setBookings] = useState<Booking[]>([])
-  const [loading, setLoading] = useState(false)
-  const [filter, setFilter] = useState<'all' | 'pending' | 'confirmed' | 'completed' | 'cancelled'>('all')
-
-
-
-  const loadBookings = async () => {
-    setLoading(true)
-
-    try {
-      const db = getDb()
-      if (!db) throw new Error('firebase-not-configured')
-      const { collection, getDocs, orderBy, query, where } = await import('firebase/firestore')
-      const base = collection(db, 'bookings')
-      const q =
-        filter !== 'all'
-          ? query(base, where('status', '==', filter), orderBy('created_at', 'desc'))
-          : query(base, orderBy('created_at', 'desc'))
-      const snap = await getDocs(q)
-      setBookings(snap.docs.map((d) => ({ ...(d.data() as Omit<Booking, 'id'>), id: d.id })))
-    } catch (error) {
-      console.error('Error:', error)
-    } finally {
-      setLoading(false)
-    }
+  const content = {
+    total: items.length,
+    open: items.filter((x) => isOpen(access, x.slug)).length,
+    audioMinutes: Math.round(
+      items.reduce((a, x) => a + (x.duration ?? estimateDuration(x)), 0) / 60,
+    ),
+    hubs: HUBS.length,
+    // 문항 + 허브 + 고정 페이지(홈·브랜드·서비스·상담·갤러리·예약·후기·영상 8 + 갤러리 분야 7)
+    sitemap: items.length + HUBS.length + 15,
   }
 
-  const updateBookingStatus = async (id: string, newStatus: string) => {
-    try {
-      const db = getDb()
-      if (!db) throw new Error('firebase-not-configured')
-      const { doc, updateDoc } = await import('firebase/firestore')
-      await updateDoc(doc(db, 'bookings', id), { status: newStatus })
-      loadBookings() // Reload after update
-    } catch (error) {
-      console.error('Error:', error)
-      alert('상태 업데이트 중 오류가 발생했습니다.')
-    }
-  }
+  /* 문항별 사용 현황 — 조회수는 화면에서 방문 기록과 맞춰 붙인다 */
+  const qna = items.map((x) => ({
+    slug: x.slug,
+    question: x.question,
+    part: x.part,
+    open: isOpen(access, x.slug),
+    chars: x.answer.join('').length,
+    hasAudio: !!x.audio,
+  }))
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      loadBookings()
-    }
-  }, [filter])
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'pending':
-        return 'bg-yellow-100 text-yellow-800'
-      case 'confirmed':
-        return 'bg-blue-100 text-blue-800'
-      case 'completed':
-        return 'bg-green-100 text-green-800'
-      case 'cancelled':
-        return 'bg-red-100 text-red-800'
-      default:
-        return 'bg-gray-100 text-gray-800'
-    }
-  }
-
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case 'pending':
-        return '대기중'
-      case 'confirmed':
-        return '확정'
-      case 'completed':
-        return '완료'
-      case 'cancelled':
-        return '취소'
-      default:
-        return status
-    }
-  }
-
-  // Admin Dashboard
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="text-3xl font-bold text-gray-900">예약 관리</h1>
-          </div>
-
-          {/* Filters */}
-          <div className="flex gap-2 flex-wrap">
-            {(['all', 'pending', 'confirmed', 'completed', 'cancelled'] as const).map((status) => (
-              <Button
-                key={status}
-                variant={filter === status ? 'default' : 'outline'}
-                onClick={() => setFilter(status)}
-                size="sm"
-                className={filter === status ? 'bg-[#F46E65] hover:bg-[#E2564C]' : ''}
-              >
-                {status === 'all' ? '전체' : getStatusText(status)}
-              </Button>
-            ))}
-            <Button
-              variant="outline"
-              onClick={loadBookings}
-              size="sm"
-              className="ml-auto"
-            >
-              새로고침
-            </Button>
-          </div>
-        </div>
-
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <Card>
-            <CardContent className="pt-6">
-              <div className="text-2xl font-bold text-gray-900">
-                {bookings.filter((b) => b.status === 'pending').length}
-              </div>
-              <div className="text-sm text-gray-600">대기중</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="pt-6">
-              <div className="text-2xl font-bold text-blue-600">
-                {bookings.filter((b) => b.status === 'confirmed').length}
-              </div>
-              <div className="text-sm text-gray-600">확정</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="pt-6">
-              <div className="text-2xl font-bold text-green-600">
-                {bookings.filter((b) => b.status === 'completed').length}
-              </div>
-              <div className="text-sm text-gray-600">완료</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="pt-6">
-              <div className="text-2xl font-bold text-gray-900">{bookings.length}</div>
-              <div className="text-sm text-gray-600">전체</div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Bookings List */}
-        {loading ? (
-          <div className="text-center py-12">
-            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-[#F46E65] border-r-transparent"></div>
-            <p className="mt-4 text-gray-600">로딩 중...</p>
-          </div>
-        ) : bookings.length === 0 ? (
-          <Card>
-            <CardContent className="py-12 text-center">
-              <p className="text-gray-600">예약이 없습니다.</p>
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="space-y-4">
-            {bookings.map((booking) => (
-              <Card key={booking.id} className="hover:shadow-lg transition-shadow">
-                <CardContent className="pt-6">
-                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                    {/* Booking Info */}
-                    <div className="flex-1 space-y-3">
-                      <div className="flex items-center gap-3 flex-wrap">
-                        <Badge className={getStatusColor(booking.status)}>
-                          {getStatusText(booking.status)}
-                        </Badge>
-                        <Badge variant="outline">
-                          {booking.service_type === 'shop' ? '샵 서비스' : '출장 메이크업'}
-                        </Badge>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-                        <div className="flex items-center gap-2">
-                          <User className="h-4 w-4 text-gray-400" />
-                          <span className="font-medium">{booking.name}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Phone className="h-4 w-4 text-gray-400" />
-                          <a href={`tel:${booking.phone}`} className="text-[#F46E65] hover:underline">
-                            {booking.phone}
-                          </a>
-                        </div>
-                        {booking.email && (
-                          <div className="flex items-center gap-2">
-                            <Mail className="h-4 w-4 text-gray-400" />
-                            <a href={`mailto:${booking.email}`} className="text-[#F46E65] hover:underline">
-                              {booking.email}
-                            </a>
-                          </div>
-                        )}
-                        <div className="flex items-center gap-2">
-                          <Calendar className="h-4 w-4 text-gray-400" />
-                          <span>{new Date(booking.booking_date).toLocaleDateString('ko-KR')}</span>
-                          <Clock className="h-4 w-4 text-gray-400 ml-2" />
-                          <span>{booking.booking_time}</span>
-                        </div>
-                      </div>
-
-                      {booking.message && (
-                        <div className="flex items-start gap-2 text-sm bg-gray-50 p-3 rounded-lg">
-                          <MessageSquare className="h-4 w-4 text-gray-400 mt-0.5 flex-shrink-0" />
-                          <span className="text-gray-700">{booking.message}</span>
-                        </div>
-                      )}
-
-                      <div className="text-xs text-gray-500">
-                        신청일: {new Date(booking.created_at).toLocaleString('ko-KR')}
-                      </div>
-                    </div>
-
-                    {/* Actions */}
-                    <div className="flex flex-wrap gap-2">
-                      {booking.status === 'pending' && (
-                        <Button
-                          onClick={() => updateBookingStatus(booking.id, 'confirmed')}
-                          size="sm"
-                          className="bg-blue-600 hover:bg-blue-700"
-                        >
-                          확정
-                        </Button>
-                      )}
-                      {booking.status === 'confirmed' && (
-                        <Button
-                          onClick={() => updateBookingStatus(booking.id, 'completed')}
-                          size="sm"
-                          className="bg-green-600 hover:bg-green-700"
-                        >
-                          완료
-                        </Button>
-                      )}
-                      {booking.status !== 'cancelled' && booking.status !== 'completed' && (
-                        <Button
-                          onClick={() => updateBookingStatus(booking.id, 'cancelled')}
-                          size="sm"
-                          variant="outline"
-                          className="border-red-600 text-red-600 hover:bg-red-50"
-                        >
-                          취소
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
+    <div className="min-h-screen bg-[#F4F1EE] py-8">
+      <div className="mx-auto max-w-5xl px-5">
+        <h1 className="mb-4 text-xl font-extrabold text-[#2E2724]">메이크업포엘 관리</h1>
+        <AdminTabs active="/admin" />
+        <OverviewGate days={days} facts={facts} content={content} qna={qna} />
       </div>
     </div>
   )
-}
-
-export default function AdminPage() {
-  return <AdminGate title="예약 관리">{() => <AdminBookings />}</AdminGate>
 }

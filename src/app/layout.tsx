@@ -5,6 +5,7 @@ import Footer from "@/components/layout/Footer";
 import SiteShell from "@/components/layout/SiteShell";
 import { getSiteImages } from "@/lib/siteImages";
 import { Analytics } from "@vercel/analytics/next";
+import Track from "@/components/analytics/Track";
 import { SITE_URL, SITE_NAME } from "@/lib/site";
 import { businessJsonLd, jsonLdScript } from "@/lib/seo";
 
@@ -89,6 +90,13 @@ export default async function RootLayout({
         </SiteShell>
         {/* Vercel 웹 통계 — 쿠키를 쓰지 않고 방문 수만 집계한다 */}
         <Analytics />
+        {/*
+          우리 쪽 방문 기록.
+
+          Vercel 통계는 Vercel 화면에서만 보인다. 어드민에서 검색어 준비도와 나란히
+          놓고 보려면 우리 쪽에도 있어야 한다. 사람을 식별하지 않고, 쿠키도 쓰지 않는다.
+        */}
+        <Track />
       </body>
     </html>
   );
