@@ -47,10 +47,30 @@ export default async function RootLayout({
     <html lang="ko">
       <head>
         {/*
-          글꼴 파일을 받을 곳에 연결을 미리 열어 둔다.
-          선언(@font-face)은 globals.css 안에 있으므로 스타일시트 요청은 없다.
+          글꼴 선언을 화면 그리기 뒤로 미룬다.
+
+          측정해 보니 이 사이트의 LCP 를 늦추는 것은 이미지가 아니라 CSS 한 덩이였다.
+          /혼주메이크업 은 LCP 요소가 아예 글자인데도 4.8초였고, 두 페이지 모두
+          render delay 가 1.34초로 같았다 — 같은 CSS 를 기다리고 있었다는 뜻이다.
+
+          그 CSS 48.5KB 중 12.9KB 가 글꼴 선언 92줄이었다. 글꼴은 font-display:swap
+          이라 어차피 대체 글꼴로 먼저 그려지므로, 선언까지 화면을 막고 기다릴 이유가
+          없다. preload 로 받아 두었다가 다 받은 뒤에 적용한다.
+
+          자바스크립트가 없으면 적용되지 않고 대체 글꼴로 남는다. 글을 못 읽게 되는
+          것은 아니므로 그편이 화면이 늦게 뜨는 것보다 낫다.
         */}
         <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
+        <link rel="preload" as="style" href="/pretendard.css" id="mfl-font" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "var l=document.getElementById('mfl-font');if(l){l.rel='stylesheet'}",
+          }}
+        />
+        <noscript>
+          <link rel="stylesheet" href="/pretendard.css" />
+        </noscript>
         {/*
           업체 정보. 푸터에 글자로만 있던 상호·주소·전화를 검색엔진이 읽을 수 있는
           형태로 한 번 더 내보낸다. 지역 검색("강남 혼주메이크업")에서 이 표기가 없으면

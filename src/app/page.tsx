@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 
+import { bgImage } from '@/lib/bgImage'
 import { getSiteImages } from '@/lib/siteImages'
 import { getGalleryImages } from '@/lib/galleryImages'
 import { getReviews } from '@/lib/reviewImages'
@@ -265,7 +266,9 @@ export default async function Home() {
               <Link
                 href="/services#shop"
                 className="box"
-                style={{ backgroundImage: `url(${img['sec1-bg1'] || '/mfl/images/main/sec1_bg1.jpg'})` }}
+                style={{
+                  backgroundImage: `url(${bgImage(img['sec1-bg1'] || '/mfl/images/main/sec1_bg1.jpg', 828)})`,
+                }}
               >
                 <div className="inner">
                   <div className="tit">샵서비스</div>
@@ -280,7 +283,9 @@ export default async function Home() {
               <Link
                 href="/services#visit"
                 className="box type2"
-                style={{ backgroundImage: `url(${img['sec1-bg2'] || '/mfl/images/main/sec1_bg2.jpg'})` }}
+                style={{
+                  backgroundImage: `url(${bgImage(img['sec1-bg2'] || '/mfl/images/main/sec1_bg2.jpg', 828)})`,
+                }}
               >
                 <div className="inner">
                   <div className="tit">출장메이크업</div>
@@ -392,7 +397,9 @@ export default async function Home() {
       {/* sec4 — 100% 예약제 */}
       <div
         className="sec4"
-        style={{ backgroundImage: `url(${img['btm-bg'] || '/mfl/images/main/btm_bg.jpg'})` }}
+        style={{
+          backgroundImage: `url(${bgImage(img['btm-bg'] || '/mfl/images/main/btm_bg.jpg', 1920)})`,
+        }}
       >
         <div className="mfl-contain">
           <h2 className="sec-tit2">

@@ -1,3 +1,4 @@
+import { bgImage } from '@/lib/bgImage'
 import SubTabs from './SubTabs'
 
 /**
@@ -18,7 +19,8 @@ export default function SubHero({ title, image }: { title: string; image?: strin
         <div className="sub-visual">
           <div
             className="background"
-            style={{ backgroundImage: `url(${image})` }}
+            /* 최적화 경유로 부른다 — 배경은 <Image> 를 안 타서 원본이 그대로 나간다 */
+            style={{ backgroundImage: `url(${bgImage(image, 1920)})` }}
             role="img"
             aria-label={title}
           />
