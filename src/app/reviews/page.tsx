@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import ReviewsList from '@/components/reviews/ReviewsList'
 import Link from 'next/link'
 import SubHero from '@/components/layout/SubHero'
+import reviewTexts from '@/data/reviewTexts.json'
 import { getSiteImages } from '@/lib/siteImages'
 
 export const metadata: Metadata = {
@@ -76,6 +77,44 @@ export default async function ReviewsPage() {
         </div>
 
         <ReviewsList />
+
+        {/*
+          후기 본문.
+
+          후기가 문자 캡처 사진뿐이라 검색엔진이 읽을 글이 한 줄도 없었다. 게다가
+          그 사진 목록마저 브라우저에서 그려서 서버가 보내는 HTML 에는 아예 없다.
+
+          그래서 사진 안의 글을 옮겨 여기에 싣는다. 사진과 짝지어 붙이지 않고 따로
+          모아 둔 이유는, 목록 순서가 Firestore 에서 오는 값이라 짝이 어긋날 수 있고
+          그러면 남의 후기가 남의 사진 밑에 붙기 때문이다.
+
+          옮기면서 이름은 성만 남기고, 예식장·호텔 같은 고유명사는 일반명사로 바꿨다.
+          그 외에는 말투도 오탈자도 그대로 두었다 — 다듬으면 만들어 낸 글처럼 읽힌다.
+
+          구조화 데이터(Review·AggregateRating)는 일부러 달지 않았다. 자기 업체
+          페이지에 자기 후기를 별점으로 마크업하는 것은 구글이 금지한다.
+        */}
+        <section className="mt-16">
+          <h2 className="text-2xl font-bold text-gray-900">고객님이 보내주신 후기</h2>
+          <p className="mt-2 text-[15px] text-gray-600">
+            위 사진 속 문자를 그대로 옮긴 것입니다. 이름과 예식장 이름만 가렸습니다.
+          </p>
+          <div className="mt-6 grid gap-4 md:grid-cols-2">
+            {reviewTexts.items.map((r, i) => (
+              <blockquote
+                key={i}
+                className="rounded-2xl border border-gray-200 bg-white p-6 text-left"
+              >
+                <p className="whitespace-pre-line text-[15px] leading-[1.9] text-gray-700">
+                  {r.text}
+                </p>
+                <footer className="mt-3 text-[13px] text-gray-400">
+                  {r.date.replace('-', '년 ')}월
+                </footer>
+              </blockquote>
+            ))}
+          </div>
+        </section>
       </div>
     </div>
   )
