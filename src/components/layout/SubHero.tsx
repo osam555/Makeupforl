@@ -33,7 +33,15 @@ export default function SubHero({ title, image }: { title: string; image?: strin
           <h1 className="tit">{title}</h1>
         </div>
       )}
-      {/* 사진이 없으면 그 자리를 비워둘 이유가 없어 탭 여백을 줄인다 */}
+      {/*
+        사진이 없으면 그 자리를 비워둘 이유가 없어 탭 여백을 줄인다.
+
+        다만 제목은 남겨야 한다. 사진이 있을 때만 제목을 그리다 보니 브랜드소개와
+        개인정보처리방침에는 h1 이 아예 없었다 — 검색엔진에 이 페이지가 무엇에
+        대한 것인지 말해 주는 문장이 한 줄도 없는 셈이다. 화면에는 이미 각 페이지가
+        자기 제목을 크게 쓰고 있으므로, 여기서는 읽어 주기만 하고 보이지는 않는다.
+      */}
+      {!image && <h1 className="blind">{title}</h1>}
       <SubTabs compact={!image} />
     </>
   )
