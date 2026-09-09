@@ -23,11 +23,11 @@ function slugs(v: unknown, max: number): string[] | null {
 /**
  * 홈에 노출할 100문100답 문항 설정 저장.
  *
- * POST { password?|idToken?, heroQna?: string[], sectionQna?: string[] }
+ * POST { idToken, heroQna?: string[], sectionQna?: string[] }
  */
 export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}))
-  const editor = await verifyAdmin({ password: body?.password, idToken: body?.idToken })
+  const editor = await verifyAdmin({ idToken: body?.idToken })
   if (!editor) {
     return NextResponse.json({ ok: false, error: '관리자만 사용할 수 있습니다.' }, { status: 401 })
   }

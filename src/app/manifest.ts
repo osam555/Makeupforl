@@ -11,6 +11,7 @@ import { SITE_NAME } from '@/lib/site'
  *
  * 시작 주소를 100문100답으로 두지 않고 홈으로 둔 이유: 담는 사람이 원장님일 수도
  * 손님일 수도 있어, 어느 한쪽을 미리 정하면 다른 쪽이 매번 되돌아 나와야 한다.
+ * 대신 관리자로 로그인돼 있으면 앱이 열린 뒤 관리 화면으로 옮긴다 — AdminHome.
  */
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -39,6 +40,7 @@ export default function manifest(): MetadataRoute.Manifest {
       { name: '혼주메이크업 안내', url: '/혼주메이크업' },
       { name: '100문 100답', url: '/honjoo100' },
       { name: '예약 문의', url: '/reservation' },
+      { name: '관리 화면', url: '/admin' },
     ],
   }
 }

@@ -18,7 +18,7 @@ export const maxDuration = 60
  *
  * 저장 직후에도 파일 기록 시각이 몇 초 어긋나므로 10분 여유를 둔다.
  *
- * POST { password?|idToken? } → { ok, rows:[{slug, question, reasons[], cues, sentences}] }
+ * POST { idToken } → { ok, rows:[{slug, question, reasons[], cues, sentences}] }
  */
 const SLACK_MS = 10 * 60 * 1000
 
@@ -34,7 +34,7 @@ function splitSentences(text: string) {
 
 export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}))
-  const editor = await verifyAdmin({ password: body?.password, idToken: body?.idToken })
+  const editor = await verifyAdmin({ idToken: body?.idToken })
   if (!editor) {
     return NextResponse.json({ ok: false, error: '관리자만 사용할 수 있습니다.' }, { status: 401 })
   }

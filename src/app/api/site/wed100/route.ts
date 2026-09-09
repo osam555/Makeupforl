@@ -11,11 +11,11 @@ const SLUG = /^[a-z0-9-]{2,40}$/
 /**
  * 100문100답 공개 범위 저장.
  *
- * POST { password?|idToken?, paywall?, freeQna?, storeUrl?, notice? }
+ * POST { idToken, paywall?, freeQna?, storeUrl?, notice? }
  */
 export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}))
-  const editor = await verifyAdmin({ password: body?.password, idToken: body?.idToken })
+  const editor = await verifyAdmin({ idToken: body?.idToken })
   if (!editor) {
     return NextResponse.json({ ok: false, error: '관리자만 사용할 수 있습니다.' }, { status: 401 })
   }

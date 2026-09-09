@@ -5,6 +5,7 @@ import Footer from "@/components/layout/Footer";
 import SiteShell from "@/components/layout/SiteShell";
 import { getSiteImages } from "@/lib/siteImages";
 import { Analytics } from "@vercel/analytics/next";
+import AdminHome from "@/components/analytics/AdminHome";
 import RegisterSW from "@/components/analytics/RegisterSW";
 import Track from "@/components/analytics/Track";
 import { SITE_URL, SITE_NAME } from "@/lib/site";
@@ -125,6 +126,7 @@ export default async function RootLayout({
         <Track />
         {/* 홈 화면에 담아 쓸 수 있게. 화면은 언제나 서버를 먼저 본다 */}
         <RegisterSW />
+        <AdminHome />
       </body>
     </html>
   );

@@ -10,7 +10,6 @@ const NOT_CONFIGURED =
   'FIREBASE_SERVICE_ACCOUNT 환경변수가 없어 서버에서 저장할 수 없습니다. FIREBASE_SETUP.md 를 참고해 서비스 계정 키를 등록해 주세요.'
 
 interface SaveBody {
-  password?: string
   idToken?: string
   action: 'upsert' | 'delete' | 'reorder' | 'channel' | 'resolve'
   url?: string
@@ -27,7 +26,7 @@ interface SaveBody {
   channel?: { url?: string; name?: string; channelId?: string; handle?: string }
 }
 
-/** 영상자료 어드민 저장 — 비밀번호(8888) 또는 관리자 구글 계정 */
+/** 영상자료 어드민 저장 — 관리자 구글 계정 */
 export async function POST(req: Request) {
   const body = (await req.json().catch(() => ({}))) as SaveBody
 
@@ -39,7 +38,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true, youtubeId: id, title: meta?.title ?? '', author: meta?.author ?? '' })
   }
 
-  const editor = await verifyAdmin({ password: body.password, idToken: body.idToken })
+  const editor = await verifyAdmin({ idToken: body.idToken })
   if (!editor) {
     return NextResponse.json(
       { ok: false, error: '인증 실패 — 비밀번호가 틀렸거나 관리자 계정이 아닙니다.' },

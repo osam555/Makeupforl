@@ -12,11 +12,11 @@ export const runtime = 'nodejs'
  * 순위는 밖에서 재야 아는 값이라 사람이 적어 넣는다. 잰 날짜를 함께 받는 이유는,
  * 오래된 숫자를 지금 값처럼 보는 일을 막기 위해서다.
  *
- * POST { password?|idToken?, ranks: { [검색어]: { naver, google, checkedAt, goal, note } } }
+ * POST { idToken, ranks: { [검색어]: { naver, google, checkedAt, goal, note } } }
  */
 export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}))
-  const editor = await verifyAdmin({ password: body?.password, idToken: body?.idToken })
+  const editor = await verifyAdmin({ idToken: body?.idToken })
   if (!editor) {
     return NextResponse.json({ ok: false, error: '관리자만 사용할 수 있습니다.' }, { status: 401 })
   }

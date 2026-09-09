@@ -1,31 +1,34 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
-import { KeyRound, LogIn, ShieldCheck, TriangleAlert } from 'lucide-react'
+import { LogIn, ShieldCheck } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import FontSizeToggle, { useFontSize } from '@/components/admin/FontSize'
 import { firebaseConfigured } from '@/lib/firebase/client'
 import { ADMIN_EMAILS, signInAdmin, signOutAdmin, watchAdmin } from '@/lib/firebase/auth'
 
-export type AdminMode = 'google' | 'password'
+export type AdminMode = 'google'
 export interface AdminCtx {
-  /** 구글 로그인 계정 (비밀번호 모드면 null) */
+  /** 관리자 구글 로그인 계정 */
   email: string | null
   mode: AdminMode
-  /** 비밀번호 로그인일 때 입력한 값 (서버 저장 API 인증에 사용) */
-  password: string | null
-  /** DB 쓰기 가능 여부 — 두 로그인 모두 서버 API 를 통해 저장한다 */
+  /**
+   * @deprecated 비밀번호(8888) 로그인은 제거됐다. 항상 null 이며,
+   * 서버도 더 이상 비밀번호를 받지 않는다. 호출부 정리용으로만 남겨둔다.
+   */
+  password: null
+  /** DB 쓰기 가능 여부 — 저장은 서버 API 를 통해 이뤄진다 */
   canWrite: boolean
 }
 
-const PW = process.env.NEXT_PUBLIC_WED100_ADMIN_PASSWORD ?? '8888'
-
 /**
- * 관리자 인증 게이트 — 두 가지 로그인을 병행 지원한다.
- *  1) 관리자 Google 계정 (makeupforl77@gmail.com) → 조회 + 저장 전부 가능
- *  2) 기존 비밀번호(8888)               → 화면 확인용. Firebase 연결 후에는 저장 불가
+ * 관리자 인증 게이트 — 관리자 Google 계정만 받는다.
+ *
+ * 비밀번호(8888) 로그인은 없앤다. 두 가지 이유다.
+ *  1) Firestore 규칙이 로그인한 계정만 읽기/쓰기를 허용해서, 비밀번호로 들어오면
+ *     목록이 통째로 비어 보인다 (Missing or insufficient permissions).
+ *  2) 기본값이 공개 저장소에 그대로 적힌 8888 이라, 서버 저장 API 가 그대로 뒤렸다.
  */
 export default function AdminGate({
   title,
@@ -36,11 +39,9 @@ export default function AdminGate({
 }) {
   const [font, setFont] = useFontSize()
   const [email, setEmail] = useState<string | null>(null)
-  const [pwOk, setPwOk] = useState(false)
   const [checking, setChecking] = useState(true)
   const [err, setErr] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
-  const [pw, setPw] = useState('')
 
   useEffect(() => {
     let off: (() => void) | undefined
@@ -74,44 +75,26 @@ export default function AdminGate({
     )
   }
 
-  if (email || pwOk) {
-    const mode: AdminMode = email ? 'google' : 'password'
+  if (email) {
+    const mode: AdminMode = 'google'
     const canWrite = true
     return (
       <>
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-end gap-2 px-4 pt-4 text-xs lg:px-8">
-          {mode === 'google' ? (
-            <>
-              <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
-              <span className="text-[#6B5D57]">{email}</span>
-              <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[0.625rem] font-bold text-emerald-800">
-                편집 가능
-              </span>
-              <button
-                onClick={() => {
-                  void signOutAdmin()
-                  setEmail(null)
-                }}
-                className="underline text-[#8A7B73] hover:text-[#A63D5A]"
-              >
-                로그아웃
-              </button>
-            </>
-          ) : (
-            <>
-              <TriangleAlert className="h-3.5 w-3.5 text-amber-600" />
-              <span className="text-[#6B5D57]">비밀번호 로그인</span>
-              <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[0.625rem] font-bold text-amber-800">
-                편집 가능
-              </span>
-              <button
-                onClick={() => setPwOk(false)}
-                className="underline text-[#8A7B73] hover:text-[#A63D5A]"
-              >
-                나가기
-              </button>
-            </>
-          )}
+          <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
+          <span className="text-[#6B5D57]">{email}</span>
+          <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[0.625rem] font-bold text-emerald-800">
+            편집 가능
+          </span>
+          <button
+            onClick={() => {
+              void signOutAdmin()
+              setEmail(null)
+            }}
+            className="underline text-[#8A7B73] hover:text-[#A63D5A]"
+          >
+            로그아웃
+          </button>
         </div>
         {/*
           글자 크기를 뿌리에서 키운다.
@@ -124,7 +107,7 @@ export default function AdminGate({
           <div className="mx-auto flex max-w-5xl justify-end px-5 pt-3">
             <FontSizeToggle size={font} onChange={setFont} />
           </div>
-          {children({ email, mode, password: pwOk ? pw : null, canWrite })}
+          {children({ email, mode, password: null, canWrite })}
         </div>
       </>
     )
@@ -135,9 +118,9 @@ export default function AdminGate({
       <div className="w-full max-w-sm rounded-2xl border border-[#E7DDD4] bg-white p-8 shadow">
         <h1 className="text-lg font-extrabold text-[#2E2724]">{title}</h1>
 
-        {/* 1) 관리자 구글 계정 */}
+        {/* 관리자 구글 계정만 받는다 */}
         <p className="mt-1.5 text-xs leading-relaxed text-[#8A7B73]">
-          두 가지 방법 모두 편집·저장이 가능합니다.
+          아래 관리자 계정으로만 들어올 수 있습니다.
           <br />
           <span className="text-[#6B5D57]">{ADMIN_EMAILS.join(', ')}</span>
         </p>
@@ -154,38 +137,6 @@ export default function AdminGate({
             Firebase가 아직 연결되지 않아 구글 로그인을 쓸 수 없습니다. (FIREBASE_SETUP.md 참고)
           </p>
         )}
-
-        <div className="my-5 flex items-center gap-3">
-          <span className="h-px flex-1 bg-[#E7DDD4]" />
-          <span className="text-[0.625rem] font-bold tracking-wider text-[#E5DEDA]">또는</span>
-          <span className="h-px flex-1 bg-[#E7DDD4]" />
-        </div>
-
-        {/* 2) 기존 비밀번호 (병행 유지) */}
-        <form
-          onSubmit={(e) => {
-            e.preventDefault()
-            if (pw === PW) {
-              setErr(null)
-              setPwOk(true)
-            } else {
-              setErr('비밀번호가 올바르지 않습니다.')
-              setPw('')
-            }
-          }}
-        >
-          <label className="text-xs font-bold text-[#6B5D57]">관리자 비밀번호로 로그인</label>
-          <Input
-            type="password"
-            value={pw}
-            onChange={(e) => setPw(e.target.value)}
-            className="mt-1.5"
-            placeholder="관리자 비밀번호"
-          />
-          <Button type="submit" variant="outline" className="mt-2.5 w-full">
-            <KeyRound className="mr-1.5 h-4 w-4" /> 비밀번호로 로그인
-          </Button>
-        </form>
 
         {err && <p className="mt-3 text-xs leading-relaxed text-red-600">{err}</p>}
       </div>

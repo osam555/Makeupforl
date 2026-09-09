@@ -49,10 +49,10 @@ function toRow(item: Wed100Item, editor: string) {
 }
 
 /**
- * 어드민 저장 / 시드 — 비밀번호(8888) 또는 관리자 구글 계정 둘 다 허용.
+ * 어드민 저장 / 시드 — 관리자 구글 계정만 허용.
  * 서버가 Admin SDK 로 직접 쓰므로 Firestore 보안 규칙과 무관하게 동작한다.
  *
- * POST { password?|idToken?, action: 'save'|'seed', item?, overwrite? }
+ * POST { idToken, action: 'save'|'seed', item?, overwrite? }
  */
 export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}))
@@ -62,7 +62,7 @@ export async function POST(req: Request) {
   let editor: string | null = null
   let db: Awaited<ReturnType<typeof getAdminDb>> = null
   try {
-    editor = await verifyAdmin({ password: body?.password, idToken: body?.idToken })
+    editor = await verifyAdmin({ idToken: body?.idToken })
     if (editor) db = await getAdminDb()
   } catch (e) {
     return NextResponse.json(

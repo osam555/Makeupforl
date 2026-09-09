@@ -97,7 +97,7 @@ async function mapLimit<T, R>(items: T[], limit: number, fn: (x: T, i: number) =
  * 어드민 [음성 재생성] — 질문 + 자막 큐를 다시 합성해 MP3와 타임코드를 돌려준다.
  * 업로드(Storage)와 저장(Firestore)은 로그인한 클라이언트가 수행한다.
  *
- * POST { password?|idToken?, slug?, question, cues: string[], reuseQuestion?, commit? }
+ * POST { idToken, slug?, question, cues: string[], reuseQuestion?, commit? }
  *  → { audioBase64, duration, questionAudio:{start,end}, cues:[{start,end}] }
  *
  * reuseQuestion — 질문은 새로 만들지 않고 기존 음성에서 잘라 쓴다. 원장 답변만 고쳤을 때
@@ -108,7 +108,7 @@ async function mapLimit<T, R>(items: T[], limit: number, fn: (x: T, i: number) =
  */
 export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}))
-  const editor = await verifyAdmin({ password: body?.password, idToken: body?.idToken })
+  const editor = await verifyAdmin({ idToken: body?.idToken })
   if (!editor) {
     return NextResponse.json({ ok: false, error: '관리자만 사용할 수 있습니다.' }, { status: 401 })
   }

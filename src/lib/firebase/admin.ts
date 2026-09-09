@@ -5,7 +5,7 @@ import type { Firestore } from 'firebase-admin/firestore'
  * 서버 전용 Firebase Admin SDK.
  * 서비스 계정 키(FIREBASE_SERVICE_ACCOUNT)가 설정돼 있어야 하며,
  * 보안 규칙을 우회해 서버가 직접 Firestore에 쓸 수 있다.
- * → 비밀번호(8888) 로그인으로도 저장이 가능해진다.
+ * 규칙을 우회하는 만큼 호출 전에 verifyAdmin 으로 관리자임을 반드시 확인해야 한다.
  *
  * 값 형식: 서비스 계정 JSON 전체 문자열, 또는 그것을 base64로 인코딩한 문자열
  */
@@ -61,20 +61,18 @@ const ADMIN_EMAILS = (process.env.NEXT_PUBLIC_ADMIN_EMAILS ?? 'makeupforl77@gmai
   .filter(Boolean)
 
 export interface AuthPayload {
-  password?: string
   idToken?: string
 }
 
 /**
- * 두 가지 인증을 모두 받아준다.
- *  - password : 기존 8888 방식 (서버 환경변수 WED100_ADMIN_PASSWORD 와 비교)
- *  - idToken  : 관리자 구글 로그인 토큰
+ * 관리자 구글 로그인 토큰만 받는다.
  * 반환값은 로그(수정 이력)에 남길 편집자 표시.
+ *
+ * 기존의 비밀번호(8888) 인증은 제거했다. 기본값이 소스에 그대로 적힌 8888 이어서,
+ * WED100_ADMIN_PASSWORD 를 따로 지정하지 않은 환경에서는 누구든 저장 API 에
+ * { password: '8888' } 을 보내는 것만으로 쓰기가 통했다.
  */
 export async function verifyAdmin(auth: AuthPayload): Promise<string | null> {
-  const expected = process.env.WED100_ADMIN_PASSWORD ?? '8888'
-  if (auth.password && auth.password === expected) return '비밀번호 로그인'
-
   if (auth.idToken) {
     try {
       const email = await emailFromIdToken(auth.idToken)

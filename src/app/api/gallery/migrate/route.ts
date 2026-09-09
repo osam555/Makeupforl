@@ -60,12 +60,12 @@ const MIME: Record<string, string> = {
  * 원본 홈페이지(makeupforl.co.kr) 갤러리 사진을 우리 Firebase Storage 로 이전한다.
  * 서버리스 실행시간 제한 때문에 offset/limit 으로 나눠 호출한다.
  *
- * POST { password?|idToken?, offset?, limit? }
+ * POST { idToken, offset?, limit? }
  *  → { ok, migrated, skipped, failed, nextOffset, done, total }
  */
 export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}))
-  const editor = await verifyAdmin({ password: body?.password, idToken: body?.idToken })
+  const editor = await verifyAdmin({ idToken: body?.idToken })
   if (!editor) {
     return NextResponse.json({ ok: false, error: '관리자만 사용할 수 있습니다.' }, { status: 401 })
   }

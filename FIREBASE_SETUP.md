@@ -22,7 +22,7 @@
 | `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | messagingSenderId |
 | `NEXT_PUBLIC_FIREBASE_APP_ID` | appId |
 | `NEXT_PUBLIC_ADMIN_EMAILS` | `makeupforl77@gmail.com,john.wu571@gmail.com` (쉼표로 여러 명) |
-| `WED100_ADMIN_PASSWORD` | 관리자 비밀번호 (미설정 시 `8888`) |
+| ~~`WED100_ADMIN_PASSWORD`~~ | (제거됨) 비밀번호 로그인은 더 이상 지원하지 않는다 |
 | `FIREBASE_SERVICE_ACCOUNT` | 서비스 계정 키 JSON (7단계 참고) |
 
 로컬 개발용은 `.env.local` 에 같은 키로 넣으세요.
@@ -105,7 +105,7 @@ firebase deploy --only firestore:rules,storage    # 두 규칙을 한 번에
 | 로그인 | 저장 방식 | 필요한 설정 |
 |---|---|---|
 | 관리자 구글 계정 | 서버가 ID 토큰 검증 후 저장 | 3단계(Authentication) |
-| 비밀번호(기본 8888) | 서버가 비밀번호 검증 후 저장 | **이 7단계** |
+| ~~비밀번호(기본 8888)~~ | (제거됨) 관리자 구글 계정만 저장 가능 | - |
 
 두 방식 모두 **서버(Admin SDK)가 대신 쓰기** 때문에 Firestore 보안 규칙은 잠긴 채로 둘 수 있습니다.
 
@@ -114,7 +114,7 @@ firebase deploy --only firestore:rules,storage    # 두 규칙을 한 번에
 3. 파일 내용을 그대로 복사해 Vercel 환경변수 `FIREBASE_SERVICE_ACCOUNT` 에 붙여넣기
    - 붙여넣기가 어려우면 base64 로 인코딩한 값도 인식합니다
      (`base64 -i serviceAccount.json | pbcopy`)
-4. 비밀번호를 바꾸려면 `WED100_ADMIN_PASSWORD` 도 함께 설정 → 재배포
+4. 관리자를 추가하려면 `NEXT_PUBLIC_ADMIN_EMAILS` 에 구글 계정을 더한다 → 재배포
 
 > 서비스 계정 키는 절대 GitHub에 올리지 마세요. Vercel 환경변수에만 보관합니다.
 > 키가 없으면 비밀번호 로그인은 화면 확인만 가능하고, 저장은 구글 계정으로만 됩니다.
