@@ -9,10 +9,10 @@ import { Home, Car, ShieldCheck, AlertTriangle } from 'lucide-react'
 export const metadata: Metadata = {
   // 자기 주소를 정본으로 못 박는다. 쿼리스트링이 붙은 유입도 한 주소로 모인다.
   alternates: { canonical: '/services' },
-  title: '샵 / 출장메이크업 | 메이크업포엘',
+  title: '혼주 샵 메이크업과 출장 메이크업 | 메이크업포엘',
   description:
-    '압구정역 3번출구 프라이빗 1인실 샵과, 원하는 시간·장소로 찾아가는 출장 메이크업 O2O 서비스. 국가자격증을 보유한 정식 허가 업체입니다.',
-  keywords: '강남 메이크업샵, 출장메이크업, 혼주 출장메이크업, 압구정 메이크업',
+    '혼주메이크업을 샵에서 받을지 출장으로 받을지. 압구정역 3번출구 프라이빗 1인실 샵과 원하는 장소로 찾아가는 출장 서비스, 어느 쪽이 나은지와 출장 전 반드시 확인할 것을 짚어 드립니다.',
+  keywords: '혼주 출장메이크업, 혼주 샵 메이크업, 강남 메이크업샵, 출장메이크업, 압구정 메이크업',
 }
 
 const PROCESS = [
@@ -29,7 +29,7 @@ export default async function ServicesPage() {
   const img = await getSiteImages()
   return (
     <div className="min-h-screen bg-white">
-      <SubHero title="샵 / 출장메이크업" image={img['sub-hero']} />
+      <SubHero title="혼주 샵 메이크업 · 출장 메이크업" image={img['sub-hero']} />
       <section className="bg-gradient-to-br from-[#FDF4F3] to-white py-16">
         <div className="mfl-contain max-w-[1200px] text-center">
           <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
@@ -55,7 +55,7 @@ export default async function ServicesPage() {
               <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[#FDECEA] text-[#F46E65]">
                 <Home className="h-5 w-5" />
               </span>
-              <h2 className="mt-5 text-xl font-bold text-gray-900">샵 서비스</h2>
+              <h2 className="mt-5 text-xl font-bold text-gray-900">혼주 샵 메이크업</h2>
               <p className="mt-2 text-sm font-medium text-[#F46E65]">
                 고객님 한 분 한 분의 소중한 날을 위한 프라이빗 헤어 메이크업
               </p>
@@ -69,6 +69,7 @@ export default async function ServicesPage() {
                 <li>· 프라이빗 1인실</li>
                 <li>· 압구정역 3번출구 도보 거리</li>
                 <li>· 사전 컨설팅 후 진행</li>
+                <li>· 한 분께 최소 1시간 30분</li>
               </ul>
               </div>
             </div>
@@ -85,7 +86,7 @@ export default async function ServicesPage() {
               <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[#FDECEA] text-[#F46E65]">
                 <Car className="h-5 w-5" />
               </span>
-              <h2 className="mt-5 text-xl font-bold text-gray-900">출장 메이크업</h2>
+              <h2 className="mt-5 text-xl font-bold text-gray-900">혼주 출장 메이크업</h2>
               <p className="mt-2 text-sm font-medium text-[#F46E65]">
                 Anytime, Anywhere — 고객이 원하는 시간에 원하는 장소에서
               </p>
@@ -99,10 +100,54 @@ export default async function ServicesPage() {
                 <li>· 자택·예식장·촬영장 어디든</li>
                 <li>· 전문가 팀 단위 출장 가능</li>
                 <li>· 사전 컨설팅 후 진행</li>
+                <li>· 한복 가방을 들고 움직이지 않아도 됩니다</li>
               </ul>
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/*
+        혼주에게 어느 쪽이 맞는지.
+
+        이 페이지는 샵과 출장을 나란히 소개하기만 하고 "그래서 혼주는 어느 쪽인가" 에
+        답하지 않았다. 정작 사람들이 검색하는 말은 '혼주 출장메이크업' 이고, 상위에
+        뜨는 경쟁 페이지들은 전부 이 물음에 답하고 있다.
+      */}
+      <section className="pb-14">
+        <div className="mfl-contain max-w-[1200px]">
+          <h2 className="text-2xl font-bold text-gray-900">혼주님은 어느 쪽이 나을까요</h2>
+          <div className="mt-5 grid gap-4 md:grid-cols-2">
+            <div className="rounded-2xl border border-gray-200 bg-white p-6">
+              <p className="text-base font-bold text-gray-900">샵으로 오시는 편이 나은 경우</p>
+              <p className="mt-3 text-[15px] leading-[1.85] text-gray-600">
+                예식장이 강남 안이거나 시간 여유가 있으시다면 샵이 낫습니다. 조명과 거울,
+                가발·부분 가발, 고정에 쓰는 도구가 모두 갖춰져 있어 당일에 손볼 수 있는 폭이
+                넓습니다. 정수리 숱이나 탈모처럼 미리 준비물이 필요한 경우에도 샵이 유리합니다.
+              </p>
+            </div>
+            <div className="rounded-2xl border border-gray-200 bg-white p-6">
+              <p className="text-base font-bold text-gray-900">출장이 나은 경우</p>
+              <p className="mt-3 text-[15px] leading-[1.85] text-gray-600">
+                예식장이 멀거나 이른 아침 예식이라면 출장이 낫습니다. 무거운 한복 가방을 들고
+                움직이지 않아도 되고, 익숙한 집에서 가족과 함께 준비하실 수 있습니다. 몸이
+                불편하신 분께도 마찬가지입니다.
+              </p>
+            </div>
+          </div>
+          <p className="mt-4 text-[15px] leading-[1.85] text-gray-600">
+            어느 쪽이든 <b className="text-gray-800">1:1 사전 컨설팅을 먼저</b> 합니다. 얼굴과
+            한복 색을 보고 정해야 당일에 헤매지 않습니다. 자세한 비교는{' '}
+            <Link href="/혼주메이크업" className="font-semibold text-[#E2564C] hover:underline">
+              혼주메이크업 안내
+            </Link>
+            와{' '}
+            <Link href="/honjoo100" className="font-semibold text-[#E2564C] hover:underline">
+              100문 100답
+            </Link>
+            에 적어 두었습니다.
+          </p>
         </div>
       </section>
 
