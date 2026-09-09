@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { Type } from 'lucide-react'
 
 const KEY = 'mfl:adminFont'
-export type FontSize = 'normal' | 'large'
+export type FontSize = 'normal' | 'large' | 'xlarge'
 
 /**
  * 어드민 글자 크기.
@@ -16,9 +16,10 @@ export type FontSize = 'normal' | 'large'
  * 뿌리 글자 크기를 키우면, 그에 맞춰 여백과 아이콘까지 함께 커진다 — 글자만
  * 커지고 칸은 그대로면 오히려 더 답답해진다.
  *
- * 처음에는 17.6px(1.1 배) 로 뒀는데 "충분히 크지 않다" 는 말을 들었다. 맞는 말이다.
- * 1.1 배는 눈이 좋은 사람에게나 차이다. 20px 로 올리고, 그것만으로는 작은 이름표가
- * 여전히 작아 admin-theme.css 에서 작은 글씨를 더 많이 키운다.
+ * 처음에는 두 단계(16 / 17.6px)였다. 1.1 배는 눈이 좋은 사람에게나 차이라 "충분히
+ * 크지 않다" 는 말을 들었고, 맞는 말이었다. 지금은 16 / 20 / 24px 세 단계다.
+ * 뿌리만 키우면 작은 이름표가 여전히 작아, admin-theme.css 에서 작은 글씨를
+ * 더 많이 키운다.
  *
  * 고른 값은 이 기기에 남는다. 서버에 두지 않는 이유는, 큰 화면과 휴대전화에서
  * 원하는 크기가 다르기 때문이다.
@@ -30,7 +31,7 @@ export function useFontSize(): [FontSize, (v: FontSize) => void] {
     let v: FontSize = 'large'
     try {
       const saved = localStorage.getItem(KEY)
-      if (saved === 'normal' || saved === 'large') v = saved
+      if (saved === 'normal' || saved === 'large' || saved === 'xlarge') v = saved
     } catch {
       /* 저장이 막혀 있으면 기본값으로 */
     }
@@ -64,6 +65,7 @@ export default function FontSizeToggle({
         [
           ['normal', '일반'],
           ['large', '크게'],
+          ['xlarge', '아주 크게'],
         ] as const
       ).map(([v, label]) => (
         <button
@@ -72,7 +74,7 @@ export default function FontSizeToggle({
           onClick={() => onChange(v)}
           aria-pressed={size === v}
           className={[
-            'rounded-md px-2.5 py-1 text-xs font-bold transition-colors',
+            'rounded-md px-2 py-1 text-xs font-bold transition-colors',
             size === v ? 'bg-[var(--a-2e2724)] text-white' : 'text-[var(--a-6b5d57)] hover:bg-[var(--a-f4f1ee)]',
           ].join(' ')}
         >

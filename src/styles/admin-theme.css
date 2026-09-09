@@ -194,16 +194,16 @@
 }
 
 /*
-  '크게' 는 시니어가 읽을 수 있는 크기여야 한다.
+  글자 크기 세 단계. 기본은 가운데다.
 
-  전에는 뿌리 글자를 16px 에서 17.6px 로 올리는 것이 전부였다. 1.1 배는 눈이
-  좋은 사람에게나 차이지, 이 화면을 매일 보시는 분께는 없는 것과 같았다.
+  뿌리 글자를 16 / 20 / 24px 로 올린다. 그런데 비율만 키우는 것으로는 부족하다.
+  관리 화면은 작은 글씨가 많아 — 11px 짜리 이름표가 76 곳, 10px 이 19 곳 —
+  비율대로 키워도 여전히 작다. 그래서 작은 것일수록 더 많이 키워 바닥을 올린다.
 
-  뿌리를 20px 로 올리되, 비율만 키우는 것으로는 부족하다. 관리 화면은 작은
-  글씨가 많아 — 11px 짜리 이름표가 76 곳, 10px 이 19 곳 — 비율대로 키워도
-  13px 언저리에 머문다. 그래서 작은 것일수록 더 많이 키워 바닥을 16px 로
-  끌어올린다. 큰 제목은 거의 그대로 두어, 다 같이 커져 위아래 구분이 사라지는
-  일이 없게 한다.
+  큰 제목은 반대로 눌러 둔다. 단계가 올라갈수록 제목이 휴대전화 한 줄을 넘겨
+  버리고, 제목과 본문이 같이 커지면 위아래 구분도 흐려진다. '아주 크게' 는
+  제목을 키우는 단계가 아니라 본문을 읽는 단계다 — 그래서 배율이 '크게' 보다
+  낮은 항목이 있다. 뿌리가 이미 24px 이라 곱한 결과는 여전히 더 크다.
 
   '일반' 은 손대지 않는다 — 눈이 편한 분은 한 화면에 더 많이 보는 편이 낫다.
 */
@@ -222,3 +222,19 @@
 .admin-theme[data-size='large'] .text-xl { font-size: 1.30rem; }
 .admin-theme[data-size='large'] .text-2xl { font-size: 1.50rem; }
 .admin-theme[data-size='large'] .text-3xl { font-size: 1.80rem; }
+
+.admin-theme[data-size='xlarge'] .text-\[0\.5625rem\] { font-size: 0.86rem; }
+.admin-theme[data-size='xlarge'] .text-\[0\.625rem\] { font-size: 0.86rem; }
+.admin-theme[data-size='xlarge'] .text-\[0\.6875rem\] { font-size: 0.88rem; }
+.admin-theme[data-size='xlarge'] .text-\[0\.7188rem\] { font-size: 0.90rem; }
+.admin-theme[data-size='xlarge'] .text-\[0\.75rem\] { font-size: 0.92rem; }
+.admin-theme[data-size='xlarge'] .text-\[0\.7812rem\] { font-size: 0.93rem; }
+.admin-theme[data-size='xlarge'] .text-\[0\.8125rem\] { font-size: 0.95rem; }
+.admin-theme[data-size='xlarge'] .text-\[0\.9375rem\] { font-size: 1.00rem; }
+.admin-theme[data-size='xlarge'] .text-xs { font-size: 0.92rem; }
+.admin-theme[data-size='xlarge'] .text-sm { font-size: 0.98rem; }
+.admin-theme[data-size='xlarge'] .text-base { font-size: 1.02rem; }
+.admin-theme[data-size='xlarge'] .text-lg { font-size: 1.08rem; }
+.admin-theme[data-size='xlarge'] .text-xl { font-size: 1.18rem; }
+.admin-theme[data-size='xlarge'] .text-2xl { font-size: 1.30rem; }
+.admin-theme[data-size='xlarge'] .text-3xl { font-size: 1.50rem; }

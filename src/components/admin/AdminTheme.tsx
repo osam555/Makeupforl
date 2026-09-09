@@ -14,6 +14,9 @@ type Prefs = {
 
 const Ctx = createContext<Prefs | null>(null)
 
+/** 뿌리 글자 크기. 나머지 크기는 admin-theme.css 가 이 값에 맞춰 따라온다 */
+const ROOT: Record<FontSize, string> = { normal: '16px', large: '20px', xlarge: '24px' }
+
 export function useAdminPrefs(): Prefs {
   const v = useContext(Ctx)
   if (!v) throw new Error('AdminTheme 안에서만 쓸 수 있습니다')
@@ -43,7 +46,7 @@ export default function AdminTheme({ children }: { children: React.ReactNode }) 
         className="admin-theme min-h-screen"
         data-theme={theme}
         data-size={font}
-        style={{ fontSize: font === 'large' ? '20px' : '16px' }}
+        style={{ fontSize: ROOT[font] }}
       >
         {children}
       </div>
