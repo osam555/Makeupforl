@@ -24,9 +24,12 @@ export default function AdminTabs({ active }: { active: string }) {
       좁은 화면에서는 옆으로 민다.
 
       여섯 개를 줄바꿈시키면 휴대전화에서 세 줄이 되어 화면 위쪽을 다 먹는다.
-      한 줄로 두고 손가락으로 미는 편이 익숙하다. 스크롤바는 감춘다.
+      한 줄로 두고 손가락으로 미는 편이 익숙하다. 스크롤바는 감추되, 오른쪽 끝에
+      옅은 그늘을 두어 "더 있다" 는 것이 보이게 한다 — 스크롤바도 없고 힌트도 없으면
+      뒤쪽 탭이 있는 줄을 모른다.
     */
-    <nav className="mb-5 -mx-1 flex gap-1.5 overflow-x-auto rounded-xl bg-[#2E2724] p-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:flex-wrap sm:overflow-visible">
+    <nav className="relative mb-5 -mx-1 rounded-xl bg-[#2E2724] sm:mx-0">
+      <div className="flex gap-1.5 overflow-x-auto p-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:flex-wrap sm:overflow-visible">
       {TABS.map((t) => {
         const on = t.href === active
         return (
@@ -43,6 +46,11 @@ export default function AdminTabs({ active }: { active: string }) {
           </Link>
         )
       })}
+      </div>
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-y-0 right-0 w-8 rounded-r-xl bg-gradient-to-l from-[#2E2724] to-transparent sm:hidden"
+      />
     </nav>
   )
 }

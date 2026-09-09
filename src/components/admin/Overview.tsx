@@ -102,7 +102,7 @@ export default function Overview({
   const thin = qna.filter((x) => x.chars < 300).length
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pt-1">
       {/* ── 1. 한눈에 ───────────────────────────────── */}
       <section>
         <SectionTitle>한눈에</SectionTitle>
@@ -179,20 +179,28 @@ export default function Overview({
         <div className="mb-4">
           <Bars days={days} />
         </div>
-        <div className="grid gap-5 lg:grid-cols-2">
+        {/*
+          긴 주소가 칸을 밀어내던 자리.
+
+          퍼센트로 인코딩된 한글 주소(/%ED%98%BC…)는 띄어쓰기가 없어 한 덩어리로
+          취급된다. 그리드 칸은 기본이 min-width:auto 라 그 덩어리만큼 넓어지고,
+          truncate 를 걸어 두어도 소용이 없다. 밀려난 만큼 오른쪽 숫자가 화면 밖으로
+          나가 조회수와 체류시간이 아예 안 보였다. min-w-0 을 줘야 잘린다.
+        */}
+        <div className="grid min-w-0 gap-5 lg:grid-cols-2">
           <List
             title="많이 본 페이지"
             rows={Object.entries(a.pages)
               .sort((x, y) => y[1] - x[1])
               .slice(0, 8)
               .map(([k, n]) => ({
-                left: unkey(k),
+                left: decodePath(unkey(k)),
                 mid: fmtDwell(avgDwell(a.pageDwellMs[k] ?? 0, a.pageDwellCount[k] ?? 0)),
                 right: n.toLocaleString(),
               }))}
             empty="아직 기록이 없습니다"
           />
-          <div>
+          <div className="min-w-0">
             <List
               title="어디서 왔나"
               rows={Object.entries(a.sources)
@@ -251,7 +259,7 @@ export default function Overview({
       </Panel>
 
       <Panel title="100문100답" href="/admin/wed100" hint="무엇이 읽히고 무엇이 팔리는가">
-        <div className="grid gap-5 lg:grid-cols-2">
+        <div className="grid min-w-0 gap-5 lg:grid-cols-2">
           <QnaList
             title={`무료 ${content.open}개가 읽히고 있나`}
             hint="안 읽히는 무료 문항은 맛보기 구실을 못 한다 — 바꿀 때가 된 것이다"
@@ -380,14 +388,14 @@ function List({
   empty: string
 }) {
   return (
-    <div>
+    <div className="min-w-0">
       <p className="mb-2 text-xs font-bold text-[#3A322E]">{title}</p>
       {rows.length === 0 ? (
         <p className="py-6 text-center text-xs text-[#9A8B84]">{empty}</p>
       ) : (
         <ul className="space-y-1.5">
           {rows.map((r, i) => (
-            <li key={i} className="flex items-center gap-2 text-xs">
+            <li key={i} className="flex min-w-0 items-center gap-2 text-xs">
               <span className="min-w-0 flex-1 truncate text-[#3A322E]">{r.left}</span>
               {r.mid && <span className="shrink-0 text-[11px] text-[#8A7A72]">{r.mid}</span>}
               <b className="w-12 shrink-0 text-right tabular-nums text-[#2E2724]">{r.right}</b>
@@ -417,7 +425,7 @@ function QnaList({
   const any = sorted.some((r) => viewOf(r.slug) > 0)
 
   return (
-    <div>
+    <div className="min-w-0">
       <p className="text-xs font-bold text-[#3A322E]">{title}</p>
       <p className="mt-0.5 text-[11px] leading-relaxed text-[#8A7A72]">{hint}</p>
       {sorted.length === 0 ? (
@@ -425,7 +433,7 @@ function QnaList({
       ) : (
         <ul className="mt-2.5 space-y-1.5">
           {sorted.slice(0, 8).map((r) => (
-            <li key={r.slug} className="flex items-center gap-2 text-xs">
+            <li key={r.slug} className="flex min-w-0 items-center gap-2 text-xs">
               <span className="w-8 shrink-0 text-[10px] font-extrabold text-[#8A7A72]">
                 P{r.part}
               </span>
@@ -524,4 +532,13 @@ function History({ history }: { history: SeoSnapshot[] }) {
       </div>
     </div>
   )
+}
+
+/** 퍼센트로 인코딩된 주소를 사람이 읽을 수 있게. 못 풀면 원래 것을 그대로 둔다 */
+function decodePath(p: string): string {
+  try {
+    return decodeURIComponent(p)
+  } catch {
+    return p
+  }
 }
