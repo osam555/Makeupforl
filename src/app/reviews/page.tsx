@@ -8,7 +8,8 @@ import { getSiteImages } from '@/lib/siteImages'
 export const metadata: Metadata = {
   // 자기 주소를 정본으로 못 박는다. 쿼리스트링이 붙은 유입도 한 주소로 모인다.
   alternates: { canonical: '/reviews' },
-  title: '혼주메이크업 고객후기 | 메이크업포엘',
+  // 제목에서 '혼주메이크업' 을 뺀다 — 그 말은 /혼주메이크업 이 맡는다
+  title: '고객후기 — 혼주님이 보내주신 문자 | 메이크업포엘',
   description: '혼주메이크업을 받으신 분들이 예식 후 직접 보내 주신 후기입니다. 업체를 통한 마케팅용 후기는 올리지 않습니다. 사진이 잘 나왔다, 나이 들어 보이지 않았다, 하루 종일 무너지지 않았다 — 되풀이되는 말들을 모았습니다.',
 }
 

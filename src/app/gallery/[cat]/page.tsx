@@ -20,7 +20,8 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const c = findCategory(cat)
   if (!c) return { title: '갤러리 | 메이크업포엘' }
   return {
-    title: `${c.menuName} | 메이크업포엘`,
+    // '사진' 을 붙여 역할을 가른다. 낱말 자체는 /혼주메이크업 이 맡는다
+    title: `${c.menuName} 사진 | 메이크업포엘`,
     description: c.desc,
     alternates: { canonical: `/gallery/${c.slug}` },
   }
@@ -120,6 +121,19 @@ export default async function GalleryCategoryPage({ params }: Params) {
               예약안내
             </Link>
           </div>
+          {/*
+            힘을 한 장으로 모은다.
+
+            '혼주메이크업' 을 제목에 가진 페이지가 다섯이라 서로 밀어내고 있었다.
+            낱말은 /혼주메이크업 이 맡기로 하고, 나머지는 그리로 링크를 보낸다.
+          */}
+          <p className="mt-6 text-[14px] text-gray-500">
+            가격과 예약 절차는{' '}
+            <Link href="/혼주메이크업" className="font-semibold text-[#E2564C] hover:underline">
+              혼주메이크업 안내
+            </Link>
+            에 정리해 두었습니다.
+          </p>
         </div>
       </section>
     </>
