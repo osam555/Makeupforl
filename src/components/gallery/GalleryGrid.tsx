@@ -35,8 +35,21 @@ export default function GalleryGrid({ category, initial }: GalleryGridProps) {
   const [loading, setLoading] = useState(!initial || initial.length === 0)
   const [selectedImage, setSelectedImage] = useState<number | null>(null)
 
+  /*
+    서버가 이미 사진을 주었으면 다시 읽지 않는다.
+
+    서버가 보낸 HTML 에는 제대로 된 주소가 들어 있는데, 하이드레이션 뒤 여기서
+    Firestore 를 한 번 더 읽어 그 값을 덮어쓰고 있었다. 그 컬렉션에 옛 서버
+    주소(/uploaded/…)가 남아 있는 문항이 있어서, 화면이 열린 직후에 멀쩡하던
+    사진이 전부 깨졌다. 처음 오는 사람에게는 엑스박스만 보인다.
+
+    같은 것을 두 곳에서 읽으면 언젠가 둘이 어긋나고, 그때 이긴 쪽이 나중에
+    읽은 쪽이 된다. 서버가 준 것이 있으면 그것을 쓴다.
+  */
   useEffect(() => {
+    if (initial && initial.length > 0) return
     loadImages()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category])
 
   async function loadImages() {
