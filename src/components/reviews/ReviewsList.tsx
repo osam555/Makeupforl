@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight, X } from 'lucide-react'
 
 import reviewsSeed from '@/data/reviews.json'
 import { getDb } from '@/lib/firebase/client'
+import { DUPLICATE_REVIEWS } from '@/lib/reviewDuplicates'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 
@@ -18,7 +19,9 @@ interface Review {
 
 const SEED: Review[] = (
   reviewsSeed as { items: { id: string; title: string; date: string; url: string }[] }
-).items.map((r) => ({ id: r.id, title: r.title, imageUrl: r.url, created_at: r.date }))
+)
+  .items.filter((r) => !DUPLICATE_REVIEWS.has(r.id))
+  .map((r) => ({ id: r.id, title: r.title, imageUrl: r.url, created_at: r.date }))
 
 export default function ReviewsList() {
   const [reviews, setReviews] = useState<Review[]>([])
@@ -47,7 +50,8 @@ export default function ReviewsList() {
             published: v.published !== false,
           }
         })
-        .filter((r) => r.imageUrl && r.published)
+        // 같은 사진이 두 번 올라간 것은 가린다 (reviewImages.ts 참고)
+        .filter((r) => r.imageUrl && r.published && !DUPLICATE_REVIEWS.has(r.id))
         .sort((a, b) => (b.created_at > a.created_at ? 1 : -1) || b.id.localeCompare(a.id))
       setReviews(rows.length > 0 ? rows : SEED)
     } catch {

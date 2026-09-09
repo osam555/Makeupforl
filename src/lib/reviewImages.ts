@@ -1,4 +1,5 @@
 import reviewsSeed from '@/data/reviews.json'
+import { DUPLICATE_REVIEWS } from '@/lib/reviewDuplicates'
 
 export type ReviewItem = { id: string; title: string; date: string; url: string }
 
@@ -14,9 +15,10 @@ const SEED = (reviewsSeed as { items: ReviewItem[] }).items
  * (서버 컴포넌트에서 호출)
  */
 export async function getReviews(limit = 10): Promise<ReviewItem[]> {
-  const byId = new Map(SEED.map((r) => [r.id, { ...r }]))
+  const byId = new Map(SEED.filter((r) => !DUPLICATE_REVIEWS.has(r.id)).map((r) => [r.id, { ...r }]))
 
   const apply = (id: string, url?: string, published?: boolean) => {
+    if (DUPLICATE_REVIEWS.has(id)) return
     const cur = byId.get(id)
     if (!cur) return
     if (published === false) byId.delete(id)
