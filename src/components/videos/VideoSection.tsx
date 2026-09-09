@@ -54,9 +54,14 @@ export default function VideoSection({
             <span className="relative block overflow-hidden rounded-2xl bg-[#F4F4F4]">
               <span className="block" style={{ paddingBottom: '56.25%' }} />
               {/* eslint-disable-next-line @next/next/no-img-element */}
+              {/*
+                썸네일에 영상 제목을 붙인다. 빈 alt 는 "장식이라 읽을 것 없음" 이라는
+                뜻인데, 이 사진은 이 카드가 무엇에 대한 것인지를 알려 주는 유일한
+                단서다. 화면을 못 보는 분께도, 이미지 검색에도 그렇다.
+              */}
               <img
                 src={youtubeThumb(v.youtubeId)}
-                alt=""
+                alt={v.title}
                 loading="lazy"
                 className="absolute inset-0 h-full w-full object-cover transition duration-300 group-hover:scale-[1.04]"
               />
