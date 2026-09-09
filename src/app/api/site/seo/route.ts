@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 
 import { verifyAdmin } from '@/lib/firebase/admin'
-import { SEO_TARGETS, DEFAULT_RANK, type SeoRank } from '@/lib/seoTargets'
+import { SEO_TARGETS, DEFAULT_RANK, todayKST, type SeoRank } from '@/lib/seoTargets'
 import { SEO_CONFIG_DOC } from '@/lib/seoTargets.server'
 
 export const runtime = 'nodejs'
@@ -28,6 +28,31 @@ export async function POST(req: Request) {
       { ok: false, error: '서버에서 Firestore 를 쓸 수 없습니다.' },
       { status: 503 },
     )
+  }
+
+  /*
+    하루치 기록.
+
+    문서 이름이 날짜라 하루에 몇 번을 불러도 덮어쓰기만 된다. 그래서 화면이
+    열릴 때마다 부담 없이 부를 수 있고, 어드민을 안 여는 날은 기록이 비는데
+    그건 그대로 사실이다 — 없는 날을 지어내지 않는다.
+  */
+  if (body?.action === 'snapshot') {
+    const date = todayKST()
+    await db
+      .collection('seo_snapshots')
+      .doc(date)
+      .set(
+        {
+          date,
+          readiness: body?.readiness ?? {},
+          naver: body?.naver ?? {},
+          google: body?.google ?? {},
+          at: new Date().toISOString(),
+        },
+        { merge: true },
+      )
+    return NextResponse.json({ ok: true, date })
   }
 
   const incoming = (body?.ranks ?? {}) as Record<string, Partial<SeoRank>>

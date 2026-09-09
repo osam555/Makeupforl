@@ -1,5 +1,11 @@
 import { HUBS } from '@/lib/hubs'
-import { SEO_TARGETS, type SeoConfig, type SeoFacts, DEFAULT_RANK } from '@/lib/seoTargets'
+import {
+  SEO_TARGETS,
+  type SeoConfig,
+  type SeoFacts,
+  type SeoSnapshot,
+  DEFAULT_RANK,
+} from '@/lib/seoTargets'
 import { getPublishedWed100Items } from '@/lib/wed100'
 
 export const SEO_CONFIG_DOC = { collection: 'site_config', doc: 'seo' }
@@ -76,4 +82,30 @@ export async function getSeoConfig(): Promise<SeoConfig> {
   const ranks: SeoConfig['ranks'] = {}
   for (const t of SEO_TARGETS) ranks[t.term] = { ...DEFAULT_RANK }
   return { ranks }
+}
+
+/**
+ * 준비도 기록 읽기.
+ *
+ * 어드민을 안 연 날은 기록이 없다. 없는 날을 앞뒤 값으로 메우지 않는다 —
+ * 그러면 실제로 잰 날과 지어낸 날을 구분할 수 없게 되고, 그래프가 매끄러워 보이는
+ * 만큼 덜 정직해진다.
+ */
+export async function getSeoHistory(limit = 60): Promise<SeoSnapshot[]> {
+  try {
+    const { getAdminDb } = await import('@/lib/firebase/admin')
+    const db = await getAdminDb()
+    if (!db) return []
+    const snap = await db
+      .collection('seo_snapshots')
+      .orderBy('__name__', 'desc')
+      .limit(limit)
+      .get()
+    return snap.docs
+      .map((d) => d.data() as SeoSnapshot)
+      .filter((x) => x?.date)
+      .reverse()
+  } catch {
+    return []
+  }
 }

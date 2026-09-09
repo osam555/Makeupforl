@@ -2,7 +2,7 @@ import AdminTabs from '@/components/admin/AdminTabs'
 import OverviewGate from '@/components/admin/OverviewGate'
 import { getDailyStats } from '@/lib/analytics.server'
 import { HUBS } from '@/lib/hubs'
-import { collectSeoFacts } from '@/lib/seoTargets.server'
+import { collectSeoFacts, getSeoHistory } from '@/lib/seoTargets.server'
 import { estimateDuration, getPublishedWed100Items } from '@/lib/wed100'
 import { isOpen } from '@/lib/wed100Access'
 import { getWed100Access } from '@/lib/wed100Access.server'
@@ -18,11 +18,12 @@ export const dynamic = 'force-dynamic'
  * 예약 목록은 /admin/bookings 로 옮겼다.
  */
 export default async function AdminHome() {
-  const [days, facts, items, access] = await Promise.all([
+  const [days, facts, items, access, history] = await Promise.all([
     getDailyStats(30),
     collectSeoFacts(),
     getPublishedWed100Items(),
     getWed100Access(),
+    getSeoHistory(60),
   ])
 
   const content = {
@@ -32,6 +33,8 @@ export default async function AdminHome() {
       items.reduce((a, x) => a + (x.duration ?? estimateDuration(x)), 0) / 60,
     ),
     hubs: HUBS.length,
+    members: access.members.length,
+    paywall: access.paywall,
     // 문항 + 허브 + 고정 페이지(홈·브랜드·서비스·상담·갤러리·예약·후기·영상 8 + 갤러리 분야 7)
     sitemap: items.length + HUBS.length + 15,
   }
@@ -51,7 +54,7 @@ export default async function AdminHome() {
       <div className="mx-auto max-w-5xl px-5">
         <h1 className="mb-4 text-xl font-extrabold text-[#2E2724]">메이크업포엘 관리</h1>
         <AdminTabs active="/admin" />
-        <OverviewGate days={days} facts={facts} content={content} qna={qna} />
+        <OverviewGate days={days} facts={facts} content={content} qna={qna} history={history} />
       </div>
     </div>
   )

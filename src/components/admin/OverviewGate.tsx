@@ -3,15 +3,37 @@
 import AdminGate from '@/components/admin/AdminGate'
 import Overview from '@/components/admin/Overview'
 import type { DailyStat } from '@/lib/analytics'
-import type { QnaRow } from '@/components/admin/Overview'
-import type { SeoFacts } from '@/lib/seoTargets'
+import type { Content, QnaRow } from '@/components/admin/Overview'
+import type { SeoFacts, SeoSnapshot } from '@/lib/seoTargets'
 
 /** 서버가 모은 값을 로그인 확인 뒤에 화면으로 넘긴다 */
 export default function OverviewGate(props: {
   days: DailyStat[]
   facts: Record<string, SeoFacts>
-  content: { total: number; open: number; audioMinutes: number; hubs: number; sitemap: number }
+  content: Content
   qna: QnaRow[]
+  history: SeoSnapshot[]
 }) {
-  return <AdminGate title="관리자 대시보드">{() => <Overview {...props} />}</AdminGate>
+  return (
+    <AdminGate title="관리자 대시보드">
+      {(ctx) => (
+        <Overview
+          {...props}
+          auth={async () =>
+            ctx.mode === 'google' && ctx.email
+              ? { idToken: await getIdToken() }
+              : { password: ctx.password }
+          }
+        />
+      )}
+    </AdminGate>
+  )
+}
+
+async function getIdToken(): Promise<string> {
+  const { getFirebaseApp } = await import('@/lib/firebase/client')
+  const app = getFirebaseApp()
+  if (!app) return ''
+  const { getAuth } = await import('firebase/auth')
+  return (await getAuth(app).currentUser?.getIdToken()) ?? ''
 }
