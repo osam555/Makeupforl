@@ -1,8 +1,23 @@
+import type { Role } from '@/lib/roles'
+
 /**
- * 결재 — 매니저가 안을 올리고 원장이 정한다.
+ * 결재함 — 두 사람이 일을 주고받는 곳.
  *
  * 이 파일에는 타입과 순수 함수만 둔다. Firestore 를 만지는 쪽은
  * proposals.server.ts 다 (firebase-admin 을 화면 번들에 끌고 들어가면 빌드가 깨진다).
+ *
+ * 처음에는 한 방향이었다 — 매니저가 올리고 원장이 정한다. 그런데 무엇을 고쳐야
+ * 하는지 아는 쪽은 대개 원장이다. 한 방향만 두면 원장이 시작하는 일은 카톡과
+ * 전화로 와서 시스템 밖에 남는다. 결재는 기록되는데 요청은 안 되니, 나중에
+ * "그때 그거 말했잖아" 가 어디에도 없다.
+ *
+ * 그래서 두 가지를 담는다.
+ *
+ *  - **요청**: 하고 싶은 말. 최종 문장이 없어도 된다. 올리면 상대편 앞으로 간다.
+ *  - **제안**: 승인하는 순간 그대로 쓰일 최종 문장. 요청에서 나왔으면 서로 붙어 있다.
+ *
+ * 둘을 나눈 이유가 여기 있다. 원장에게 최종 문장을 쓰게 하면 요청 자체를 안 하시게
+ * 된다. 다듬는 일은 매니저와 에이전트가 하고, 다듬은 결과가 결재로 돌아온다.
  *
  * 설계에서 가장 중요한 결정 하나 — **제안에는 바꿀 값이 통째로 들어 있다.**
  * "이 문항 제목을 좀 다듬읍시다" 같은 말이 아니라, 승인하는 순간 그대로 쓰이는
@@ -11,10 +26,17 @@
  * 아무도 못 본다.
  */
 
+export type ItemType = 'request' | 'proposal'
+
+export const TYPE_LABEL: Record<ItemType, string> = {
+  request: '요청',
+  proposal: '제안',
+}
+
 export type ProposalStatus = 'pending' | 'approved' | 'rejected'
 
 /**
- * 무엇을 바꾸자는 제안인가.
+ * 무엇을 바꾸자는 제안인가. (요청에는 없다 — 무엇을 건드릴지가 아직 안 정해졌다)
  *
  * 'wed100'·'config' 는 Firestore 에 있는 것이라 승인하면 그 자리에서 반영된다.
  * 'code' 는 허브 본문(hubs.ts)처럼 저장소에 있는 것이라 반영이 배포를 거쳐야 한다 —
@@ -30,7 +52,7 @@ export const KIND_LABEL: Record<ProposalKind, string> = {
 }
 
 /** 승인하면 시스템이 스스로 반영할 수 있는 종류인가 */
-export function canAutoApply(kind: ProposalKind): boolean {
+export function canAutoApply(kind: ProposalKind | undefined): boolean {
   return kind === 'wed100' || kind === 'config'
 }
 
@@ -60,13 +82,20 @@ export interface ProposalChange {
 
 export interface Proposal {
   id: string
+  /** 없으면 제안 — 요청이 생기기 전에 쓰인 문서를 위한 기본값이다 */
+  type?: ItemType
   createdAt: string
   createdBy: string
-  /** 원장님이 목록에서 읽을 한 줄 */
+  /** 상대가 목록에서 읽을 한 줄 */
   title: string
-  /** 왜 바꾸는가. 이게 없으면 결재가 아니라 통보다 */
+  /** 제안이면 '왜 바꾸는가', 요청이면 하고 싶은 말 그 자체 */
   reason: string
-  kind: ProposalKind
+  /** 요청이 향하는 쪽. 올린 사람의 반대편으로 저절로 정해진다 */
+  toRole?: Role
+  /** 이 제안이 나온 요청. 승인되면 그 요청도 함께 닫힌다 */
+  fromRequest?: string
+  /** 제안일 때만 */
+  kind?: ProposalKind
   /** kind==='wed100' 일 때 어느 문항인가 */
   slug?: string
   /** kind==='wed100' 일 때 어느 칸인가 */
@@ -99,21 +128,32 @@ export interface Proposal {
   ackedBy?: string
 }
 
-export const STATUS_LABEL: Record<ProposalStatus, string> = {
-  pending: '결재 대기',
-  approved: '승인됨',
-  rejected: '반려됨',
+export const typeOf = (p: Proposal): ItemType => p.type ?? 'proposal'
+
+/**
+ * 상태 이름은 종류마다 다르다.
+ *
+ * 같은 'approved' 라도 제안에서는 "승인됨" 이고 요청에서는 "처리됨" 이다.
+ * 요청을 결재하듯 승인/반려로 부르면, 원장이 요청을 올릴 때마다 심사받는 기분이 든다.
+ */
+export function statusLabel(p: Proposal): string {
+  const req = typeOf(p) === 'request'
+  if (p.status === 'pending') return req ? '처리 대기' : '결재 대기'
+  if (p.status === 'approved') return req ? '처리됨' : '승인됨'
+  return req ? '안 하기로' : '반려됨'
 }
 
 /** 새 제안을 만들 때 화면이 보내는 것 */
 export interface ProposalDraft {
+  type: ItemType
   title: string
   reason: string
-  kind: ProposalKind
+  kind?: ProposalKind
   slug?: string
   field?: 'question' | 'answer'
   configPatch?: Record<string, unknown>
-  changes: ProposalChange[]
+  changes?: ProposalChange[]
+  fromRequest?: string
 }
 
 /**
@@ -123,8 +163,16 @@ export interface ProposalDraft {
  * 부른다 — 화면의 검사는 안내이지 방어가 아니다.
  */
 export function validateDraft(d: Partial<ProposalDraft>): string | null {
-  if (!d.title?.trim()) return '제목을 적어 주세요 — 원장님이 목록에서 이것만 보고 고르십니다.'
-  if (!d.reason?.trim()) return '왜 바꾸는지 적어 주세요. 사유 없는 제안은 결재가 아니라 통보입니다.'
+  if (!d.title?.trim()) return '한 줄 제목을 적어 주세요 — 상대가 목록에서 이것만 보고 고릅니다.'
+  if (!d.reason?.trim()) {
+    return d.type === 'request'
+      ? '무엇이 필요하신지 적어 주세요.'
+      : '왜 바꾸는지 적어 주세요. 사유 없는 제안은 결재가 아니라 통보입니다.'
+  }
+
+  /* 요청은 여기까지다. 문턱을 낮게 두는 것이 요청의 존재 이유다 */
+  if (d.type === 'request') return null
+
   if (!d.kind) return '무엇을 바꾸는 제안인지 골라 주세요.'
   if (!d.changes?.length) return '바뀌는 내용이 없습니다.'
   for (const c of d.changes) {
@@ -136,9 +184,20 @@ export function validateDraft(d: Partial<ProposalDraft>): string | null {
   return null
 }
 
-/** 대기 중인 것만 (화면 여러 곳에서 센다) */
+/** 결재를 기다리는 제안 */
 export function pendingOf(list: Proposal[]): Proposal[] {
-  return list.filter((p) => p.status === 'pending')
+  return list.filter((p) => typeOf(p) === 'proposal' && p.status === 'pending')
+}
+
+/**
+ * 나에게 온 요청 중 아직 안 끝난 것.
+ *
+ * 내가 올린 요청은 세지 않는다. 내가 올린 것이 내 할 일 목록에 뜨면 그 숫자는
+ * 영영 0 이 되지 않고, 0 이 안 되는 숫자는 아무도 안 보게 된다.
+ */
+export function inboxOf(list: Proposal[], role: Role | null): Proposal[] {
+  if (!role) return []
+  return list.filter((p) => typeOf(p) === 'request' && p.status === 'pending' && p.toRole === role)
 }
 
 /**
@@ -159,7 +218,9 @@ export function unseenOf(list: Proposal[], me: string): Proposal[] {
  * 링크를 만들지 않는다 — 아무 데나 걸어 두면 열어 보고도 확인이 안 된다.
  */
 export function viewHref(p: Proposal): string | null {
-  return p.kind === 'wed100' && p.slug ? `/honjoo100/${p.slug}` : null
+  return typeOf(p) === 'proposal' && p.kind === 'wed100' && p.slug
+    ? `/honjoo100/${p.slug}`
+    : null
 }
 
 /** 반영된 값이 승인한 값과 같은가 (다르면 그 사이 누가 또 고친 것이다) */

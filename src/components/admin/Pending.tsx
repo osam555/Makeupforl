@@ -5,8 +5,8 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import { Stamp } from 'lucide-react'
 
 import { useAdminAuth } from '@/components/admin/AdminAuth'
-import { pendingOf, unseenOf, type Proposal } from '@/lib/proposals'
-import { isOwner } from '@/lib/roles'
+import { inboxOf, pendingOf, unseenOf, type Proposal } from '@/lib/proposals'
+import { isOwner, type Role } from '@/lib/roles'
 
 /**
  * 결재 대기 건수를 관리 화면 전체가 함께 본다.
@@ -29,11 +29,13 @@ interface Pending {
    * 일어나지 않고, 반려는 더 나쁘다 — 왜 안 됐는지 모른 채 기다리게 된다.
    */
   results: number
+  /** 나에게 온 요청 — 원장이 보낸 것은 매니저에게, 그 반대도 같다 */
+  inbox: number
   /** 지금 보는 사람이 결재권자인가 — 말투를 바꾸는 데 쓴다 */
   owner: boolean
 }
 
-const Ctx = createContext<Pending>({ count: 0, results: 0, owner: false })
+const Ctx = createContext<Pending>({ count: 0, results: 0, inbox: 0, owner: false })
 
 export function usePending(): Pending {
   return useContext(Ctx)
@@ -43,11 +45,13 @@ export function PendingProvider({ children }: { children: React.ReactNode }) {
   const { email } = useAdminAuth()
   const [count, setCount] = useState(0)
   const [results, setResults] = useState(0)
+  const [inbox, setInbox] = useState(0)
 
   useEffect(() => {
     if (!email) {
       setCount(0)
       setResults(0)
+      setInbox(0)
       return
     }
     let alive = true
@@ -69,6 +73,7 @@ export function PendingProvider({ children }: { children: React.ReactNode }) {
         const items = json.items as Proposal[]
         setCount(pendingOf(items).length)
         setResults(unseenOf(items, email).length)
+        setInbox(inboxOf(items, (isOwner(email) ? 'owner' : 'manager') as Role).length)
       } catch {
         /* 건수를 못 읽어도 관리 화면은 열려야 한다 */
       }
@@ -79,7 +84,7 @@ export function PendingProvider({ children }: { children: React.ReactNode }) {
   }, [email])
 
   return (
-    <Ctx.Provider value={{ count, results, owner: isOwner(email) }}>{children}</Ctx.Provider>
+    <Ctx.Provider value={{ count, results, inbox, owner: isOwner(email) }}>{children}</Ctx.Provider>
   )
 }
 
@@ -90,7 +95,7 @@ export function PendingProvider({ children }: { children: React.ReactNode }) {
  * 한쪽에는 할 일이고 다른 쪽에는 상태다.
  */
 export function PendingBanner({ active }: { active: string }) {
-  const { count, results, owner } = usePending()
+  const { count, results, inbox, owner } = usePending()
   if (active === '/admin/proposals') return null
 
   /*
@@ -109,6 +114,29 @@ export function PendingBanner({ active }: { active: string }) {
         <Stamp className="h-4 w-4 shrink-0" aria-hidden />
         <span className="min-w-0 flex-1">올리신 제안 {results}건이 결재됐습니다</span>
         <span className="shrink-0 text-xs opacity-80">확인 →</span>
+      </Link>
+    )
+  }
+
+  /*
+    받은 요청이 결재 대기보다 앞선다.
+
+    결재는 내 판단을 기다리는 일이고 요청은 상대가 나를 기다리는 일이다. 남이
+    기다리는 쪽을 먼저 보여야 한다 — 내 쪽 일은 미뤄도 나만 알지만, 상대는 답이
+    없으면 시스템이 아니라 사람을 의심하게 된다.
+  */
+  if (inbox > 0) {
+    return (
+      <Link
+        href="/admin/proposals"
+        className="flex items-center gap-2 bg-[var(--a-3c5a86)] px-3 py-2.5 text-sm font-bold text-white sm:px-5"
+        style={{ background: 'var(--a-2e2724)' }}
+      >
+        <Stamp className="h-4 w-4 shrink-0" aria-hidden />
+        <span className="min-w-0 flex-1">
+          {owner ? '매니저가 보낸' : '원장님이 보낸'} 요청 {inbox}건이 기다리고 있습니다
+        </span>
+        <span className="shrink-0 text-xs opacity-80">보기 →</span>
       </Link>
     )
   }

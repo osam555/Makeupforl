@@ -1,22 +1,36 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Check, ExternalLink, FileText, MessageSquare, Plus, Rocket, X } from 'lucide-react'
+import {
+  Check,
+  ExternalLink,
+  FileText,
+  Inbox,
+  MessageSquare,
+  Plus,
+  Rocket,
+  Wand2,
+  X,
+} from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Empty, Note, SectionTitle } from '@/components/admin/AdminUI'
 import {
   KIND_LABEL,
-  STATUS_LABEL,
+  TYPE_LABEL,
   appliedMatches,
   canAutoApply,
+  inboxOf,
   pendingOf,
+  statusLabel,
+  typeOf,
   viewHref,
   validateDraft,
   type Proposal,
   type ProposalDraft,
   type ProposalNote,
   type ProposalKind,
+  type ItemType,
 } from '@/lib/proposals'
 
 export interface QuestionRef {
@@ -85,8 +99,18 @@ export default function Proposals({
     void load()
   }, [load])
 
+  const role: 'owner' | 'manager' = owner ? 'owner' : 'manager'
+
+  /** [제안으로 만들기] 를 누른 요청 — 새 제안 폼을 이걸로 채워 연다 */
+  const [seed, setSeed] = useState<Proposal | null>(null)
+
+  const inbox = useMemo(() => (items ? inboxOf(items, role) : []), [items, role])
   const pending = useMemo(() => (items ? pendingOf(items) : []), [items])
   const done = useMemo(() => (items ? items.filter((p) => p.status !== 'pending') : []), [items])
+  const mineWaiting = useMemo(
+    () => (items ? items.filter((p) => typeOf(p) === 'request' && p.status === 'pending' && p.toRole !== role) : []),
+    [items, role],
+  )
 
   async function decide(id: string, decision: 'approved' | 'rejected', comment: string) {
     setBusy(true)
@@ -129,6 +153,19 @@ export default function Proposals({
     }
   }
 
+  async function closeReq(id: string, done: boolean) {
+    setBusy(true)
+    setError(null)
+    try {
+      await call({ action: 'closeRequest', id, done })
+      await load()
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e))
+    } finally {
+      setBusy(false)
+    }
+  }
+
   async function create(draft: ProposalDraft) {
     setBusy(true)
     setError(null)
@@ -160,9 +197,62 @@ export default function Proposals({
         <Empty>결재를 기다리는 제안이 없습니다.</Empty>
       )}
       {pending.map((p) => (
-        <Card key={p.id} p={p} owner={owner} me={me} busy={busy} onDecide={decide} onNote={note} onSimple={simple} />
+        <Card key={p.id} p={p} owner={owner} me={me} busy={busy} onDecide={decide}
+          onNote={note}
+          onSimple={simple}
+          onClose={closeReq}
+          onSeed={setSeed}
+          role={role}
+        />
       ))}
     </section>
+  )
+
+  const requests = (
+    <section className="flex flex-col gap-3">
+      <SectionTitle>
+        <Inbox className="mr-1.5 inline h-4 w-4" />
+        나에게 온 요청
+        {inbox.length > 0 && (
+          <span className="ml-2 rounded-full bg-[var(--a-a63d5a)] px-2 py-0.5 text-xs font-bold text-white">
+            {inbox.length}
+          </span>
+        )}
+      </SectionTitle>
+      {items !== null && inbox.length === 0 && <Empty>받은 요청이 없습니다.</Empty>}
+      {inbox.map((p) => (
+        <Card
+          key={p.id}
+          p={p}
+          owner={owner}
+          me={me}
+          busy={busy}
+          onDecide={decide}
+          onNote={note}
+          onSimple={simple}
+          onClose={closeReq}
+          onSeed={setSeed}
+          role={role}
+        />
+      ))}
+      {mineWaiting.length > 0 && (
+        <p className="text-xs text-[var(--a-8a7b73)]">
+          내가 보낸 요청 {mineWaiting.length}건이 상대편 답을 기다리는 중입니다.
+        </p>
+      )}
+    </section>
+  )
+
+  const form = (
+    <NewItem
+      key={seed?.id ?? 'new'}
+      questions={questions}
+      busy={busy}
+      owner={owner}
+      seed={seed}
+      onClearSeed={() => setSeed(null)}
+      onSubmit={create}
+    />
   )
 
   return (
@@ -173,9 +263,26 @@ export default function Proposals({
         </p>
       )}
 
-      {/* 온 이유가 먼저 보이게 — 원장님은 결재, 매니저는 제안 쓰기 */}
-      {owner ? decisions : <NewProposal questions={questions} busy={busy} onSubmit={create} />}
-      {owner ? <NewProposal questions={questions} busy={busy} onSubmit={create} /> : decisions}
+      {/*
+        온 이유가 먼저 보이게 순서를 바꾼다.
+
+        원장은 정하러 온다 — 결재가 맨 위. 매니저는 받은 요청을 처리하러 오거나
+        올리러 온다 — 요청함이 맨 위. 화면을 둘로 나누지 않고 순서만 바꾸는 이유는,
+        두 사람이 같은 것을 보고 이야기할 수 있어야 하기 때문이다.
+      */}
+      {owner ? (
+        <>
+          {decisions}
+          {requests}
+          {form}
+        </>
+      ) : (
+        <>
+          {requests}
+          {form}
+          {decisions}
+        </>
+      )}
 
       <section className="flex flex-col gap-3">
         <SectionTitle>지난 결재</SectionTitle>
@@ -183,7 +290,13 @@ export default function Proposals({
           <Empty>아직 결재한 제안이 없습니다.</Empty>
         ) : (
           done.map((p) => (
-            <Card key={p.id} p={p} owner={false} me={me} busy={busy} onDecide={decide} onNote={note} onSimple={simple} />
+            <Card key={p.id} p={p} owner={false} me={me} busy={busy} onDecide={decide}
+          onNote={note}
+          onSimple={simple}
+          onClose={closeReq}
+          onSeed={setSeed}
+          role={role}
+        />
           ))
         )}
       </section>
@@ -209,6 +322,9 @@ function Card({
   onDecide,
   onNote,
   onSimple,
+  onClose,
+  onSeed,
+  role,
 }: {
   p: Proposal
   owner: boolean
@@ -217,10 +333,15 @@ function Card({
   onDecide: (id: string, d: 'approved' | 'rejected', comment: string) => void
   onNote: (id: string, text: string) => Promise<boolean>
   onSimple: (action: 'ack' | 'deployed', id: string) => void
+  onClose: (id: string, done: boolean) => void
+  onSeed: (p: Proposal) => void
+  role: 'owner' | 'manager'
 }) {
   const [comment, setComment] = useState('')
   const live = p.status === 'pending'
   const notes = p.notes ?? []
+  /** 나에게 온 요청인가 — 받은 사람만 닫을 수 있다 */
+  const mineToClose = live && p.toRole === role
 
   return (
     <Board>
@@ -231,18 +352,24 @@ function Card({
               {p.title}
             </h3>
             <p className="mt-1 text-xs text-[var(--a-8a7b73)]">
-              {KIND_LABEL[p.kind]} · {p.createdBy} · {p.createdAt.slice(0, 10)}
+              {typeOf(p) === 'request'
+                ? TYPE_LABEL.request
+                : (p.kind && KIND_LABEL[p.kind]) || TYPE_LABEL.proposal}
+              {' · '}
+              {p.createdBy} · {p.createdAt.slice(0, 10)}
             </p>
           </div>
           <StatusChip p={p} />
         </div>
 
         <div className="rounded-xl bg-[var(--a-f4f1ee)] px-4 py-3">
-          <p className="text-xs font-bold tracking-wider text-[var(--a-8a7b73)]">왜 바꾸나</p>
+          <p className="text-xs font-bold tracking-wider text-[var(--a-8a7b73)]">
+            {typeOf(p) === 'request' ? '무엇이 필요한가' : '왜 바꾸나'}
+          </p>
           <p className="mt-1 text-[0.9375rem] leading-relaxed text-[var(--a-2e2724)]">{p.reason}</p>
         </div>
 
-        {p.changes.map((c, i) => (
+        {(typeOf(p) === 'request' ? [] : p.changes).map((c, i) => (
           <div key={i} className="flex flex-col gap-2">
             <p className="text-xs font-bold tracking-wider text-[var(--a-8a7b73)]">{c.label}</p>
             <div className="rounded-lg border border-[var(--a-e7ddd4)] px-3 py-2">
@@ -260,7 +387,7 @@ function Card({
           </div>
         ))}
 
-        {!canAutoApply(p.kind) && live && (
+        {typeOf(p) === 'proposal' && !canAutoApply(p.kind) && live && (
           <Note>
             이건 승인하셔도 사이트에 바로 바뀌지는 않습니다. 승인 표시가 남으면 매니저가 올립니다.
           </Note>
@@ -324,7 +451,42 @@ function Card({
               의견만 남기기 (아직 정하지 않음)
             </Button>
 
-            {owner && (
+            {/*
+              요청은 받은 사람이 닫는다. 결재와 권한이 다르다 — 원장이 매니저에게
+              보낸 요청은 매니저가 닫는다. 원장만 닫게 하면 매니저가 다 해 놓고도
+              기다려야 하고, 그 사이 목록에는 안 끝난 일로 남는다.
+            */}
+            {typeOf(p) === 'request' && mineToClose && (
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  onClick={() => onSeed(p)}
+                  disabled={busy}
+                  className="h-11 flex-1 bg-[var(--a-a63d5a)] font-bold hover:opacity-90"
+                >
+                  <Wand2 className="mr-1.5 h-4 w-4" />
+                  제안으로 만들기
+                </Button>
+                <Button
+                  onClick={() => onClose(p.id, true)}
+                  disabled={busy}
+                  variant="outline"
+                  className="h-11 border-[var(--a-e7ddd4)] font-bold text-[var(--a-6b5d57)]"
+                >
+                  <Check className="mr-1.5 h-4 w-4" />
+                  처리했습니다
+                </Button>
+                <Button
+                  onClick={() => onClose(p.id, false)}
+                  disabled={busy}
+                  variant="outline"
+                  className="h-11 border-[var(--a-e7ddd4)] font-bold text-[var(--a-8a7b73)]"
+                >
+                  안 하기로
+                </Button>
+              </div>
+            )}
+
+            {typeOf(p) === 'proposal' && owner && (
               <div className="flex flex-wrap gap-2">
                 <Button
                   onClick={() => onDecide(p.id, 'approved', comment)}
@@ -363,33 +525,53 @@ function StatusChip({ p }: { p: Proposal }) {
     p.status === 'approved' && canAutoApply(p.kind) ? (p.applied ? ' · 반영됨' : ' · 반영 안 됨') : ''
   return (
     <span className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-bold ${tone}`}>
-      {STATUS_LABEL[p.status]}
+      {statusLabel(p)}
       {extra}
     </span>
   )
 }
 
 /**
- * 새 제안.
+ * 새로 올리기 — 요청이거나 제안이거나.
  *
- * 매니저가 쓰는 곳이다. 문항을 고르면 '지금' 이 자동으로 채워진다 — 손으로 옮겨
- * 적게 하면 옮기는 사이에 틀리고, 틀린 '지금' 위에서 결재가 이뤄진다.
+ * 처음 열릴 때 무엇이 골라져 있는지가 중요하다. 원장에게는 '요청' 이 먼저다 —
+ * 최종 문장을 쓰라고 하면 아예 안 쓰시게 된다. 매니저에게는 '제안' 이 먼저다.
+ * 둘 다 반대쪽으로 바꿀 수 있지만, 기본값이 각자의 일이어야 한다.
+ *
+ * 문항을 고르면 '지금' 이 자동으로 채워진다 — 손으로 옮겨 적게 하면 옮기는 사이에
+ * 틀리고, 틀린 '지금' 위에서 결재가 이뤄진다.
  */
-function NewProposal({
+function NewItem({
   questions,
   busy,
+  owner,
+  seed,
+  onClearSeed,
   onSubmit,
 }: {
   questions: QuestionRef[]
   busy: boolean
+  owner: boolean
+  /** [제안으로 만들기] 로 넘어온 요청 */
+  seed: Proposal | null
+  onClearSeed: () => void
   onSubmit: (d: ProposalDraft) => Promise<boolean>
 }) {
-  const [open, setOpen] = useState(false)
+  /*
+    요청에서 넘어온 값은 상태로 '복사' 하지 않고 초깃값으로 받는다.
+
+    처음에는 useEffect 안에서 setState 했는데, 그건 이 저장소가 예전에 걷어낸
+    안티패턴이다(react-hooks/set-state-in-effect). 부모가 seed.id 를 key 로 주므로
+    다른 요청을 고르면 이 폼이 통째로 다시 마운트되고, 그때 아래 초깃값이 다시
+    잡힌다 — 효과도 같고 그리는 횟수는 한 번 적다.
+  */
+  const [open, setOpen] = useState(!!seed)
+  const [type, setType] = useState<ItemType>(seed ? 'proposal' : owner ? 'request' : 'proposal')
   const [kind, setKind] = useState<ProposalKind>('wed100')
   const [slug, setSlug] = useState(questions[0]?.slug ?? '')
   const [field, setField] = useState<'question' | 'answer'>('question')
-  const [title, setTitle] = useState('')
-  const [reason, setReason] = useState('')
+  const [title, setTitle] = useState(seed?.title ?? '')
+  const [reason, setReason] = useState(seed ? `${seed.createdBy} 님 요청: ${seed.reason}` : '')
   const [label, setLabel] = useState('')
   const [after, setAfter] = useState('')
   const [hint, setHint] = useState<string | null>(null)
@@ -399,11 +581,13 @@ function NewProposal({
     kind === 'wed100' ? (field === 'question' ? (picked?.question ?? '') : (picked?.answer ?? '')) : ''
 
   const draft: ProposalDraft = {
+    type,
     title,
     reason,
-    kind,
-    ...(kind === 'wed100' ? { slug, field } : {}),
-    changes: [
+    ...(seed ? { fromRequest: seed.id } : {}),
+    ...(type === 'request' ? {} : { kind }),
+    ...(type === 'proposal' && kind === 'wed100' ? { slug, field } : {}),
+    changes: type === 'request' ? [] : [
       {
         label: kind === 'wed100' ? (field === 'question' ? '제목' : '답변') : label || '바뀌는 것',
         before,
@@ -425,6 +609,7 @@ function NewProposal({
       setAfter('')
       setLabel('')
       setOpen(false)
+      onClearSeed()
     }
   }
 
@@ -435,7 +620,8 @@ function NewProposal({
         variant="outline"
         className="h-11 w-full border-dashed border-[var(--a-e7ddd4)] font-bold text-[var(--a-6b5d57)]"
       >
-        <Plus className="mr-1.5 h-4 w-4" />새 제안 올리기
+        <Plus className="mr-1.5 h-4 w-4" />
+        {owner ? '요청 올리기' : '새 제안 올리기'}
       </Button>
     )
   }
@@ -444,9 +630,29 @@ function NewProposal({
     <Board>
       <div className="flex flex-col gap-4">
         <SectionTitle>
-          <FileText className="mr-1.5 inline h-4 w-4" />새 제안
+          <FileText className="mr-1.5 inline h-4 w-4" />
+          {type === 'request' ? '요청 올리기' : '제안 올리기'}
         </SectionTitle>
 
+        {seed && (
+          <Note>
+            받은 요청에서 이어 만드는 제안입니다. 승인되면 그 요청도 함께 닫힙니다.
+          </Note>
+        )}
+
+        <Field label="어떤 것을 올리나">
+          <select
+            id="proposal-type"
+            value={type}
+            onChange={(e) => setType(e.target.value as ItemType)}
+            className="w-full rounded-lg border border-[var(--a-e7ddd4)] bg-[var(--color-white)] px-3 py-2 text-sm"
+          >
+            <option value="request">요청 — 하고 싶은 말만 적습니다 (상대가 다듬습니다)</option>
+            <option value="proposal">제안 — 바꿀 문장까지 적습니다 (원장님이 결재합니다)</option>
+          </select>
+        </Field>
+
+        {type === 'proposal' && (
         <Field label="무엇을 바꾸나">
           <select
             id="proposal-kind"
@@ -462,7 +668,9 @@ function NewProposal({
           </select>
         </Field>
 
-        {kind === 'wed100' && (
+        )}
+
+        {type === 'proposal' && kind === 'wed100' && (
           <>
             <Field label="어느 문항">
               <select
@@ -492,7 +700,7 @@ function NewProposal({
           </>
         )}
 
-        {kind !== 'wed100' && (
+        {type === 'proposal' && kind !== 'wed100' && (
           <Field label="바뀌는 것의 이름 (예: 무료 문항)">
             <input
               id="proposal-label"
@@ -503,7 +711,7 @@ function NewProposal({
           </Field>
         )}
 
-        {kind === 'wed100' && (
+        {type === 'proposal' && kind === 'wed100' && (
           <Field label="지금 (자동으로 채워집니다)">
             <p className="rounded-lg bg-[var(--a-f4f1ee)] px-3 py-2 text-sm leading-relaxed whitespace-pre-wrap text-[var(--a-6b5d57)]">
               {before || '(비어 있음)'}
@@ -511,6 +719,7 @@ function NewProposal({
           </Field>
         )}
 
+        {type === 'proposal' && (
         <Field label="이렇게 바꾸자">
           <textarea
             id="proposal-after"
@@ -521,8 +730,9 @@ function NewProposal({
             placeholder="승인하면 이 내용이 그대로 쓰입니다"
           />
         </Field>
+        )}
 
-        <Field label="원장님이 볼 한 줄">
+        <Field label={owner ? '매니저가 볼 한 줄' : '원장님이 볼 한 줄'}>
           <input
             id="proposal-title"
             value={title}
@@ -532,14 +742,18 @@ function NewProposal({
           />
         </Field>
 
-        <Field label="왜 바꾸나">
+        <Field label={type === 'request' ? '무엇이 필요하신가요' : '왜 바꾸나'}>
           <textarea
             id="proposal-reason"
             value={reason}
             onChange={(e) => setReason(e.target.value)}
             rows={3}
             className="w-full rounded-lg border border-[var(--a-e7ddd4)] bg-[var(--color-white)] px-3 py-2 text-sm leading-relaxed"
-            placeholder="예: '혼주올림머리' 로 검색하는 분이 월 1,750명인데, 그 말이 제목에 든 문항이 2개뿐이라 3개로 채웁니다. 뜻은 그대로입니다."
+            placeholder={
+              type === 'request'
+                ? '예: 머리 손질 순서 설명이 어렵다고 하시는 분이 많아요. 좀 쉽게 고쳐 주세요.'
+                : "예: '혼주올림머리' 로 검색하는 분이 월 1,750명인데, 그 말이 제목에 든 문항이 2개뿐이라 3개로 채웁니다. 뜻은 그대로입니다."
+            }
           />
         </Field>
 
@@ -556,7 +770,10 @@ function NewProposal({
             올리기
           </Button>
           <Button
-            onClick={() => setOpen(false)}
+            onClick={() => {
+              setOpen(false)
+              onClearSeed()
+            }}
             variant="outline"
             className="h-11 border-[var(--a-e7ddd4)] font-bold text-[var(--a-6b5d57)]"
           >

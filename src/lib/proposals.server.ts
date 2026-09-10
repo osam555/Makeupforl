@@ -1,7 +1,9 @@
 import { randomUUID } from 'crypto'
 
+import { type Role } from '@/lib/roles'
 import {
   canAutoApply,
+  typeOf,
   validateDraft,
   type Proposal,
   type ProposalDraft,
@@ -63,25 +65,40 @@ export async function listProposals(limit = 100): Promise<Proposal[]> {
     .slice(0, limit)
 }
 
-export async function createProposal(draft: ProposalDraft, by: string): Promise<Proposal> {
+/**
+ * 요청·제안을 올린다.
+ *
+ * 요청이 향하는 쪽은 화면이 정하지 않는다. 올린 사람의 반대편으로 서버가 정한다 —
+ * 화면이 정하게 두면 원장이 원장에게 보내는 요청 같은 것이 만들어질 수 있고,
+ * 그건 아무의 할 일 목록에도 안 뜬 채 영영 남는다.
+ */
+export async function createProposal(
+  draft: ProposalDraft,
+  by: string,
+  role: Role,
+): Promise<Proposal> {
   const bad = validateDraft(draft)
   if (bad) throw new Error(bad)
 
   const adb = await db()
-  if (!adb) throw new Error('Firestore 가 설정되지 않아 제안을 저장할 수 없습니다.')
+  if (!adb) throw new Error('Firestore 가 설정되지 않아 저장할 수 없습니다.')
 
+  const type = draft.type ?? 'proposal'
   const id = newId()
   const row: Proposal = {
     id,
+    type,
     createdAt: new Date().toISOString(),
     createdBy: by,
     title: draft.title.trim(),
     reason: draft.reason.trim(),
-    kind: draft.kind,
+    ...(type === 'request' ? { toRole: (role === 'owner' ? 'manager' : 'owner') as Role } : {}),
+    ...(draft.fromRequest ? { fromRequest: draft.fromRequest } : {}),
+    ...(draft.kind ? { kind: draft.kind } : {}),
     ...(draft.slug ? { slug: draft.slug } : {}),
     ...(draft.field ? { field: draft.field } : {}),
     ...(draft.configPatch ? { configPatch: draft.configPatch } : {}),
-    changes: draft.changes,
+    changes: draft.changes ?? [],
     status: 'pending',
   }
   // id 는 문서 이름으로 이미 있으니 본문에서는 뺀다 — 두 곳에 두면 언젠가 어긋난다
@@ -179,6 +196,28 @@ export async function decideProposal(
   }
 
   await ref.set(patch, { merge: true })
+
+  /*
+    이 제안이 요청에서 나왔다면 그 요청도 함께 닫는다.
+
+    따로 두면 요청은 "처리 대기" 인 채로 남는다. 올린 사람 눈에는 아무 일도 안
+    일어난 것처럼 보이고, 실제로는 이미 승인돼 사이트가 바뀐 뒤다.
+    반려일 때는 닫지 않는다 — 그 요청은 아직 살아 있고 다른 안이 나와야 한다.
+  */
+  if (decision === 'approved' && p.fromRequest) {
+    try {
+      await adb
+        .collection(PROPOSALS)
+        .doc(p.fromRequest)
+        .set(
+          { status: 'approved', decidedAt: at, decidedBy: by },
+          { merge: true },
+        )
+    } catch (e) {
+      console.error('[결재] 딸린 요청을 닫지 못했습니다 —', e)
+    }
+  }
+
   return {
     ...p,
     status: decision,
@@ -189,6 +228,42 @@ export async function decideProposal(
     ...(applyError ? { applyError } : {}),
     notes: [...(p.notes ?? []), ...(note ? [note] : [])],
   }
+}
+
+/**
+ * 요청을 닫는다 — 처리했거나, 안 하기로 했거나.
+ *
+ * 결재(decideProposal)와 나눠 둔 이유는 권한이 다르기 때문이다. 결재는 원장만
+ * 하지만 요청은 **받은 사람이** 닫는다. 원장이 매니저에게 보낸 요청은 매니저가
+ * 닫고, 그 반대도 같다. 요청을 원장만 닫게 하면 매니저가 다 해 놓고도 원장을
+ * 기다려야 하고, 그 사이 목록에는 안 끝난 일로 남는다.
+ */
+export async function closeRequest(
+  id: string,
+  done: boolean,
+  by: string,
+  role: Role,
+): Promise<void> {
+  const adb = await db()
+  if (!adb) throw new Error('Firestore 가 설정되지 않았습니다.')
+  const ref = adb.collection(PROPOSALS).doc(id)
+  const snap = await ref.get()
+  if (!snap.exists) throw new Error('그런 요청이 없습니다.')
+
+  const p = snap.data() as Proposal
+  if (typeOf({ ...p, id }) !== 'request') throw new Error('요청만 닫을 수 있습니다.')
+  if (p.toRole && p.toRole !== role) {
+    throw new Error('나에게 온 요청만 닫을 수 있습니다.')
+  }
+
+  await ref.set(
+    {
+      status: done ? 'approved' : 'rejected',
+      decidedAt: new Date().toISOString(),
+      decidedBy: by,
+    },
+    { merge: true },
+  )
 }
 
 /**

@@ -6,12 +6,13 @@ import { canAutoApply } from '@/lib/proposals'
 import {
   ackProposal,
   addNote,
+  closeRequest,
   createProposal,
   decideProposal,
   listProposals,
   markDeployed,
 } from '@/lib/proposals.server'
-import { isOwner } from '@/lib/roles'
+import { isOwner, type Role } from '@/lib/roles'
 
 export const runtime = 'nodejs'
 
@@ -30,7 +31,7 @@ const NOT_CONFIGURED =
  * 를 본다. 화면에서 단추를 감추는 것과 별개로 여기서 반드시 다시 본다 —
  * 매니저가 직접 이 주소로 결재를 찔러 넣을 수 있으면 결재는 없는 것과 같다.
  *
- * POST { idToken, action: 'list' | 'create' | 'note' | 'decide' | 'ack' | 'deployed', ... }
+ * POST { idToken, action: 'list'|'create'|'note'|'decide'|'ack'|'deployed'|'closeRequest', ... }
  */
 export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}))
@@ -61,6 +62,7 @@ export async function POST(req: Request) {
   }
 
   const owner = isOwner(editor)
+  const role: Role = owner ? 'owner' : 'manager'
 
   try {
     if (body?.action === 'list') {
@@ -69,7 +71,7 @@ export async function POST(req: Request) {
     }
 
     if (body?.action === 'create') {
-      const p = await createProposal(body?.draft, editor)
+      const p = await createProposal(body?.draft, editor, role)
       return NextResponse.json({ ok: true, item: p, editor, owner })
     }
 
@@ -80,6 +82,15 @@ export async function POST(req: Request) {
     if (body?.action === 'note') {
       const note = await addNote(body?.id, body?.text, editor)
       return NextResponse.json({ ok: true, note, editor, owner })
+    }
+
+    /*
+      요청 닫기 — 받은 사람이 누른다. 결재와 권한이 다르다.
+      원장이 매니저에게 보낸 요청은 매니저가 닫는다.
+    */
+    if (body?.action === 'closeRequest') {
+      await closeRequest(body?.id, body?.done !== false, editor, role)
+      return NextResponse.json({ ok: true, editor, owner })
     }
 
     /* 결재 결과를 읽었다는 표시. 올린 사람이 누른다 */
