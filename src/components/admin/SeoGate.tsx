@@ -2,7 +2,7 @@
 
 import AdminGate from '@/components/admin/AdminGate'
 import SeoMonitor from '@/components/admin/SeoMonitor'
-import type { SeoConfig, SeoFacts } from '@/lib/seoTargets'
+import type { SeoConfig, SeoFacts, SeoKeyword } from '@/lib/seoKeywords'
 
 /**
  * 인증 껍데기.
@@ -13,9 +13,11 @@ import type { SeoConfig, SeoFacts } from '@/lib/seoTargets'
 export default function SeoGate({
   facts,
   config,
+  keywords,
 }: {
   facts: Record<string, SeoFacts>
   config: SeoConfig
+  keywords: SeoKeyword[]
 }) {
   return (
     <AdminGate title="검색어 목표와 달성도">
@@ -23,6 +25,7 @@ export default function SeoGate({
         <SeoMonitor
           facts={facts}
           initial={config}
+          keywords={keywords}
           auth={async () =>
             ctx.mode === 'google' && ctx.email
               ? { idToken: await getIdToken() }

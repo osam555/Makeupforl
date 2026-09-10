@@ -14,7 +14,7 @@
  * 준비도가 100이어도 순위는 시간이 걸리고, 준비도가 낮으면 순위를 기대할 수 없다.
  */
 
-export interface SeoTarget {
+export interface SeoKeyword {
   /** 사람들이 실제로 치는 말 */
   term: string
   /** 월간 검색량 (네이버 검색광고 키워드도구, 잰 날짜는 VOLUME_MEASURED_AT) */
@@ -23,41 +23,89 @@ export interface SeoTarget {
   owner: string
   /** 왜 이 페이지가 맡는가 */
   why: string
+  /**
+   * 무엇부터 할 것인가. 1 높음 · 2 보통 · 3 낮음. 없으면 보통으로 본다.
+   *
+   * 검색량으로 대신할 수 없어서 따로 둔다. 검색량이 큰 말이 늘 먼저는 아니다 —
+   * '혼주한복' 은 가장 크지만 아직 업체를 고르기 전 단계이고, '혼주메이크업' 은
+   * 3위지만 맡길 곳을 찾는 사람이 치는 말이라 매출로 바로 이어진다. 경쟁이 센
+   * 정도와 지금 준비도도 검색량과 따로 논다. 그 판단을 적어 두는 자리다.
+   */
+  priority?: SeoPriority
+}
+
+export type SeoPriority = 1 | 2 | 3
+
+export const PRIORITY_LABEL: Record<SeoPriority, string> = {
+  1: '높음',
+  2: '보통',
+  3: '낮음',
+}
+
+export const priorityOf = (t: SeoKeyword): SeoPriority => t.priority ?? 2
+
+/**
+ * 높은 것부터, 같으면 검색량이 큰 것부터.
+ *
+ * 화면에 뜨는 순서가 곧 "무엇부터 할까" 의 답이 되게 한다. 전에는 배열에 적은
+ * 순서 그대로였고 그게 우연히 검색량 내림차순이라, 검색량 말고 다른 이유로
+ * 먼저 해야 하는 말을 앞으로 끌어올 방법이 없었다.
+ */
+export function sortKeywords(list: SeoKeyword[]): SeoKeyword[] {
+  return [...list].sort((a, b) => priorityOf(a) - priorityOf(b) || b.volume - a.volume)
 }
 
 /** 검색량을 잰 날. 오래되면 다시 재야 한다 */
 export const VOLUME_MEASURED_AT = '2026-09-08'
 
-export const SEO_TARGETS: SeoTarget[] = [
+/**
+ * 목표 검색어 — **시드**다.
+ *
+ * 이 목록은 어드민에서 고칠 수 있고 진짜 값은 Firestore(`site_config/seo` 의
+ * `targets`)에 있다. 여기 있는 것은 Firebase 가 하나도 세팅되지 않았거나 아직
+ * 한 번도 저장한 적이 없을 때 쓰이는 폴백이다 — 이 저장소의 다른 데이터와 같은
+ * 규칙이다(wed100 이 표준 구현).
+ *
+ * 그래서 여기를 고쳐도 운영에는 반영되지 않는다. 운영 값을 바꾸려면 어드민에서
+ * 고치고, 그 결과를 여기에 되돌려 적어야 폴백했을 때도 같은 것이 보인다.
+ *
+ * priority 는 처음 값이다. 실제 판단은 어드민에서 정한다.
+ */
+export const SEO_KEYWORDS: SeoKeyword[] = [
   {
     term: '혼주한복',
     volume: 16450,
     owner: '/혼주한복',
     why: '한복은 문항 39개가 받치고 있어 가장 두껍다. 다투는 페이지도 없다',
+    priority: 1,
   },
   {
     term: '혼주머리',
     volume: 5790,
     owner: '/혼주머리',
     why: '올림머리·헤어와 한 장에서 함께 받는다. 셋을 나누면 서로 잡아먹는다',
+    priority: 2,
   },
   {
     term: '혼주메이크업',
     volume: 5060,
     owner: '/혼주메이크업',
     why: '가격과 예약이 있는 유일한 장. 이 말을 치는 사람은 맡길 곳을 찾는다',
+    priority: 1,
   },
   {
     term: '혼주올림머리',
     volume: 1750,
     owner: '/혼주머리',
     why: '혼주머리와 같은 장. 제목에 함께 실었다',
+    priority: 2,
   },
   {
     term: '혼주헤어',
     volume: 810,
     owner: '/혼주머리',
     why: '혼주머리와 같은 장',
+    priority: 3,
   },
 ]
 

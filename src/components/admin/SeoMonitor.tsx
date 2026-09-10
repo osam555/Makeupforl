@@ -1,18 +1,22 @@
 'use client'
 
 import { useState } from 'react'
-import { Loader2, Save, TrendingUp } from 'lucide-react'
+import { Loader2, Plus, Save, Trash2, TrendingUp } from 'lucide-react'
 
 import {
-  SEO_TARGETS,
+  PRIORITY_LABEL,
   VOLUME_MEASURED_AT,
+  priorityOf,
+  sortKeywords,
   isStale,
   rankAchievement,
   readiness,
   type SeoConfig,
   type SeoFacts,
+  type SeoKeyword,
+  type SeoPriority,
   type SeoRank,
-} from '@/lib/seoTargets'
+} from '@/lib/seoKeywords'
 
 /**
  * 검색어 목표와 달성도.
@@ -30,13 +34,16 @@ import {
 export default function SeoMonitor({
   facts,
   initial,
+  keywords: initialKeywords,
   auth,
 }: {
   facts: Record<string, SeoFacts>
   initial: SeoConfig
+  keywords: SeoKeyword[]
   auth: () => Promise<{ idToken: string } | { password: string | null }>
 }) {
   const [ranks, setRanks] = useState<Record<string, SeoRank>>(initial.ranks)
+  const [keywords, setKeywords] = useState<SeoKeyword[]>(initialKeywords)
   const [busy, setBusy] = useState(false)
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null)
 
@@ -54,7 +61,7 @@ export default function SeoMonitor({
       })
       const j = await res.json()
       if (!j.ok) throw new Error(j.error)
-      setMsg({ ok: true, text: `저장했습니다. 검색어 ${j.saved}개` })
+      setMsg({ ok: true, text: `순위를 저장했습니다. 검색어 ${j.saved}개` })
     } catch (e) {
       setMsg({ ok: false, text: e instanceof Error ? e.message : String(e) })
     } finally {
@@ -62,10 +69,43 @@ export default function SeoMonitor({
     }
   }
 
-  const totalVolume = SEO_TARGETS.reduce((a, t) => a + t.volume, 0)
-  const avgReadiness = Math.round(
-    SEO_TARGETS.reduce((a, t) => a + readiness(facts[t.term]).score, 0) / SEO_TARGETS.length,
-  )
+  /*
+    저장된 목록에 준비도가 없는 검색어가 있을 수 있다 — 방금 어드민에서 더한 말은
+    다음 새로고침 전까지 사실이 계산돼 있지 않다. 그때 facts[term] 이 undefined 라
+    readiness 가 터진다. 빈 사실로 채워 0점으로 보이게 한다.
+  */
+  const factsOf = (term: string): SeoFacts =>
+    facts[term] ?? { ownerChars: 0, titlePages: [], questions: 0, inboundLinks: 0 }
+
+  const shown = sortKeywords(keywords)
+  const totalVolume = keywords.reduce((a, t) => a + t.volume, 0)
+  const avgReadiness = keywords.length
+    ? Math.round(
+        keywords.reduce((a, t) => a + readiness(factsOf(t.term)).score, 0) / keywords.length,
+      )
+    : 0
+
+  const saveKeywords = async () => {
+    setBusy(true)
+    setMsg(null)
+    try {
+      const res = await fetch('/api/site/seo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...(await auth()), action: 'keywords', keywords }),
+      })
+      const j = await res.json()
+      if (!j.ok) throw new Error(j.error)
+      setMsg({ ok: true, text: `목표 검색어 ${j.saved}개를 저장했습니다. 새로고침하면 준비도가 다시 계산됩니다.` })
+    } catch (e) {
+      setMsg({ ok: false, text: e instanceof Error ? e.message : String(e) })
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const setKw = (i: number, patch: Partial<SeoKeyword>) =>
+    setKeywords((k) => k.map((x, n) => (n === i ? { ...x, ...patch } : x)))
 
   return (
     <div className="space-y-5">
@@ -92,15 +132,15 @@ export default function SeoMonitor({
         <div className="rounded-xl border border-[var(--a-e0d6cc)] bg-white p-3.5 sm:p-4">
           <p className="text-[0.6875rem] font-bold tracking-wider text-[var(--a-8a7a72)]">순위 기록</p>
           <p className="mt-1 text-2xl font-extrabold text-[var(--a-2e2724)]">
-            {SEO_TARGETS.filter((t) => !isStale(ranks[t.term]?.checkedAt ?? '')).length} /{' '}
-            {SEO_TARGETS.length}
+            {keywords.filter((t) => !isStale(ranks[t.term]?.checkedAt ?? '')).length} /{' '}
+            {keywords.length}
           </p>
           <p className="mt-1 text-[0.6875rem] text-[var(--a-8a7a72)]">최근 30일 안에 재 본 검색어</p>
         </div>
       </div>
 
-      {SEO_TARGETS.map((t) => {
-        const f = facts[t.term]
+      {shown.map((t) => {
+        const f = factsOf(t.term)
         const r = ranks[t.term] ?? { naver: null, google: null, checkedAt: '', goal: 10, note: '' }
         const ready = readiness(f)
         const ach = rankAchievement(r)
@@ -112,6 +152,19 @@ export default function SeoMonitor({
               <b className="text-[0.9375rem] text-[var(--a-2e2724)]">{t.term}</b>
               <span className="text-xs font-bold text-[var(--a-a63d5a)]">
                 월 {t.volume.toLocaleString()}회
+              </span>
+              {/* 순서가 곧 '무엇부터' 라, 왜 그 자리인지가 보여야 한다 */}
+              <span
+                className={[
+                  'rounded-full px-2 py-0.5 text-[0.6875rem] font-bold',
+                  priorityOf(t) === 1
+                    ? 'bg-[var(--a-f6e9ed)] text-[var(--a-a63d5a)]'
+                    : priorityOf(t) === 3
+                      ? 'bg-[var(--a-efe7df)] text-[var(--a-8a7a72)]'
+                      : 'bg-[var(--a-dce8e0)] text-[var(--a-3f6b57)]',
+                ].join(' ')}
+              >
+                {PRIORITY_LABEL[priorityOf(t)]}
               </span>
               <span className="hidden text-xs text-[var(--a-8a7a72)] sm:inline">담당 {t.owner}</span>
               <span className="ml-auto text-xs font-bold text-[var(--a-3a322e)]">
@@ -226,6 +279,110 @@ export default function SeoMonitor({
           </div>
         )
       })}
+
+      {/*
+        목표 검색어 목록 편집.
+
+        순위 기록과 저장 단추를 따로 둔다. 하나로 묶으면 순위 한 칸을 고치려다
+        목록까지 함께 저장되고, 실수로 지운 줄이 그때 함께 사라진다.
+      */}
+      <div className="rounded-xl border border-[var(--a-e0d6cc)] bg-white p-3.5 sm:p-4">
+        <div className="flex flex-wrap items-baseline gap-2">
+          <h3 className="text-sm font-extrabold text-[var(--a-2e2724)]">목표 검색어 관리</h3>
+          <span className="text-[0.6875rem] text-[var(--a-8a7a72)]">
+            여기서 고친 것이 진짜 목록입니다. 저장하지 않으면 코드의 시드가 쓰입니다
+          </span>
+        </div>
+
+        <div className="mt-3 space-y-2">
+          {keywords.map((t, i) => (
+            <div
+              key={i}
+              className="grid grid-cols-2 gap-2 rounded-lg border border-[var(--a-e8dfd7)] bg-[var(--a-fbf8f5)] p-2.5 sm:grid-cols-12"
+            >
+              <label className="col-span-2 sm:col-span-3">
+                <span className="text-[0.6875rem] font-bold text-[var(--a-3a322e)]">검색어</span>
+                <input
+                  value={t.term}
+                  onChange={(e) => setKw(i, { term: e.target.value })}
+                  className="mt-1 h-8 w-full rounded-md border border-[var(--a-d4c7be)] bg-white px-2 text-xs outline-none focus:border-[var(--a-a63d5a)]"
+                />
+              </label>
+              <label className="sm:col-span-2">
+                <span className="text-[0.6875rem] font-bold text-[var(--a-3a322e)]">월 검색량</span>
+                <input
+                  inputMode="numeric"
+                  value={t.volume}
+                  onChange={(e) => setKw(i, { volume: Number(e.target.value) || 0 })}
+                  className="mt-1 h-8 w-full rounded-md border border-[var(--a-d4c7be)] bg-white px-2 text-xs tabular-nums outline-none focus:border-[var(--a-a63d5a)]"
+                />
+              </label>
+              <label className="sm:col-span-2">
+                <span className="text-[0.6875rem] font-bold text-[var(--a-3a322e)]">우선순위</span>
+                <select
+                  value={priorityOf(t)}
+                  onChange={(e) => setKw(i, { priority: Number(e.target.value) as SeoPriority })}
+                  className="mt-1 h-8 w-full rounded-md border border-[var(--a-d4c7be)] bg-white px-2 text-xs outline-none focus:border-[var(--a-a63d5a)]"
+                >
+                  <option value={1}>높음</option>
+                  <option value={2}>보통</option>
+                  <option value={3}>낮음</option>
+                </select>
+              </label>
+              <label className="sm:col-span-2">
+                <span className="text-[0.6875rem] font-bold text-[var(--a-3a322e)]">맡은 페이지</span>
+                <input
+                  value={t.owner}
+                  onChange={(e) => setKw(i, { owner: e.target.value })}
+                  placeholder="/혼주한복"
+                  className="mt-1 h-8 w-full rounded-md border border-[var(--a-d4c7be)] bg-white px-2 text-xs outline-none focus:border-[var(--a-a63d5a)]"
+                />
+              </label>
+              <label className="col-span-2 sm:col-span-2">
+                <span className="text-[0.6875rem] font-bold text-[var(--a-3a322e)]">왜 그 장인가</span>
+                <input
+                  value={t.why}
+                  onChange={(e) => setKw(i, { why: e.target.value })}
+                  className="mt-1 h-8 w-full rounded-md border border-[var(--a-d4c7be)] bg-white px-2 text-xs outline-none focus:border-[var(--a-a63d5a)]"
+                />
+              </label>
+              <div className="col-span-2 flex items-end justify-end sm:col-span-1">
+                <button
+                  onClick={() => setKeywords((k) => k.filter((_, n) => n !== i))}
+                  aria-label={`${t.term} 지우기`}
+                  className="inline-flex h-8 items-center gap-1 rounded-md border border-[var(--a-d4c7be)] bg-white px-2 text-[0.6875rem] font-bold text-[var(--a-8a7a72)] hover:border-[var(--a-a63d5a)] hover:text-[var(--a-a63d5a)]"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                  지우기
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          <button
+            onClick={() =>
+              setKeywords((k) => [...k, { term: '', volume: 0, owner: '', why: '', priority: 2 }])
+            }
+            className="inline-flex items-center gap-1.5 rounded-lg border border-dashed border-[var(--a-d4c7be)] px-3 py-2 text-xs font-bold text-[var(--a-6b5d57)]"
+          >
+            <Plus className="h-3.5 w-3.5" />
+            검색어 추가
+          </button>
+          <button
+            onClick={() => void saveKeywords()}
+            disabled={busy}
+            className="inline-flex items-center gap-2 rounded-lg bg-[var(--a-a63d5a)] px-4 py-2 text-xs font-bold text-white disabled:opacity-60"
+          >
+            {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
+            목표 검색어 저장
+          </button>
+          <span className="text-[0.6875rem] leading-relaxed text-[var(--a-8a7a72)]">
+            검색량은 네이버 검색광고 키워드도구에서 재 옵니다
+          </span>
+        </div>
+      </div>
 
       <div className="flex flex-wrap items-center gap-3">
         <button

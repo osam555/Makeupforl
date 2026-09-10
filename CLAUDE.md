@@ -125,8 +125,16 @@ Firestore 에서 고친 내용은 `scripts/wed100/sync_seed.py` 로 시드에 �
 - `next.config.ts` 의 redirects: 옛 PHP 사이트 76건의 301 표. 지우면 검색 순위와 유입이 함께 사라진다.
 - `src/lib/site.ts` 의 `SITE_URL` 이 metadata·sitemap·robots 의 기준이다(`NEXT_PUBLIC_SITE_URL` 로 덮어씀).
 - 루트 layout 의 `naver-site-verification` 태그는 확인이 끝나도 지우면 안 된다.
-- `src/lib/seoTargets.ts`: 검색어 목표와 "준비도" 계산(순위가 아니라 우리가 할 수 있는 것의 달성도).
+- `src/lib/seoKeywords.ts`: 검색어 목표와 "준비도" 계산(순위가 아니라 우리가 할 수 있는 것의 달성도).
   실측 순위는 사람이 재서 적고 잰 날짜를 함께 남긴다.
+  - 목록은 **어드민에서 관리한다** — Firestore `site_config/seo-keywords` 의 `items`,
+    코드의 `SEO_KEYWORDS` 는 시드 폴백이다(wed100 과 같은 규칙). 코드만 고치면 운영에 반영되지 않는다.
+  - 순위는 `site_config/seo` 의 `ranks` 로 **문서를 나눠 둔다.** 목록은 가끔 통째로 갈고
+    순위는 자주 조금씩 고쳐서, 한 문서에 두면 한쪽을 저장할 때 다른 쪽을 덮어쓴다.
+  - `priority`(1 높음 / 2 보통 / 3 낮음)가 화면 순서를 정한다. 검색량으로 대신할 수 없다 —
+    큰 말이 늘 먼저는 아니고 구매 의도·경쟁도·지금 준비도가 따로 논다.
+  - `collectSeoFacts()`·`getSeoConfig()` 는 목록을 **인자로 받는다.** 인자 없이 부르면 시드를 보게 되어
+    화면마다 다른 목록이 뜬다 — 어느 화면에서든 `getSeoKeywords()` 를 먼저 읽어 넘길 것.
 
 ### 캐싱과 재검증
 

@@ -6,12 +6,13 @@ import { useEffect, useRef } from 'react'
 import { Panel, SectionTitle, Stat } from '@/components/admin/AdminUI'
 import { SOURCE_LABEL, avgDwell, fmtDwell, sum, unkey, type DailyStat } from '@/lib/analytics'
 import {
-  SEO_TARGETS,
   readiness,
+  sortKeywords,
   upgrades,
   type SeoFacts,
+  type SeoKeyword,
   type SeoSnapshot,
-} from '@/lib/seoTargets'
+} from '@/lib/seoKeywords'
 
 export interface QnaRow {
   slug: string
@@ -46,6 +47,7 @@ export interface Content {
 export default function Overview({
   days,
   facts,
+  keywords,
   content,
   qna,
   history,
@@ -53,6 +55,8 @@ export default function Overview({
 }: {
   days: DailyStat[]
   facts: Record<string, SeoFacts>
+  /** 어드민에서 관리하는 목표 검색어. 코드 시드를 직접 읽으면 화면마다 목록이 달라진다 */
+  keywords: SeoKeyword[]
   content: Content
   qna: QnaRow[]
   history: SeoSnapshot[]
@@ -66,13 +70,14 @@ export default function Overview({
   const delta = (now: number, before: number) =>
     before === 0 ? null : Math.round(((now - before) / before) * 100)
 
+  const blank: SeoFacts = { ownerChars: 0, titlePages: [], questions: 0, inboundLinks: 0 }
   const scores = Object.fromEntries(
-    SEO_TARGETS.map((t) => [t.term, readiness(facts[t.term]).score]),
+    keywords.map((t) => [t.term, readiness(facts[t.term] ?? blank).score]),
   )
-  const avgReady = Math.round(
-    SEO_TARGETS.reduce((s, t) => s + scores[t.term], 0) / SEO_TARGETS.length,
-  )
-  const totalVolume = SEO_TARGETS.reduce((s, t) => s + t.volume, 0)
+  const avgReady = keywords.length
+    ? Math.round(keywords.reduce((s, t) => s + scores[t.term], 0) / keywords.length)
+    : 0
+  const totalVolume = keywords.reduce((s, t) => s + t.volume, 0)
 
   /* 오늘치 준비도를 하루 한 번 남긴다. 문서 이름이 날짜라 여러 번 불러도 덮어쓴다 */
   const recorded = useRef(false)
@@ -93,9 +98,8 @@ export default function Overview({
   }, [auth, scores])
 
   /* 할 일 — 검색어별로 빠진 것을 모아 효과가 큰 순서로 */
-  const todo = SEO_TARGETS.flatMap((t) =>
-    upgrades(facts[t.term]).map((u) => ({ ...u, term: t.term, volume: t.volume })),
-  )
+  const todo = keywords
+    .flatMap((t) => upgrades(facts[t.term] ?? blank).map((u) => ({ ...u, term: t.term, volume: t.volume })))
     .sort((x, y) => y.gain * y.volume - x.gain * x.volume)
     .slice(0, 5)
 
@@ -250,7 +254,7 @@ export default function Overview({
 
       <Panel title="검색" href="/admin/seo" hint="노린 말에 얼마나 준비됐는가">
         <div className="space-y-3 sm:space-y-2">
-          {SEO_TARGETS.map((t) => (
+          {sortKeywords(keywords).map((t) => (
             /*
               좁은 화면에서는 이름·검색량·점수를 한 줄에 올리고 막대를 아래로 내린다.
               한 줄에 넷을 욱여넣으면 막대가 손톱만 해져서 무엇을 보라는 것인지 모른다.

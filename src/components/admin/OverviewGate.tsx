@@ -4,12 +4,13 @@ import AdminGate from '@/components/admin/AdminGate'
 import Overview from '@/components/admin/Overview'
 import type { DailyStat } from '@/lib/analytics'
 import type { Content, QnaRow } from '@/components/admin/Overview'
-import type { SeoFacts, SeoSnapshot } from '@/lib/seoTargets'
+import type { SeoFacts, SeoKeyword, SeoSnapshot } from '@/lib/seoKeywords'
 
 /** 서버가 모은 값을 로그인 확인 뒤에 화면으로 넘긴다 */
 export default function OverviewGate(props: {
   days: DailyStat[]
   facts: Record<string, SeoFacts>
+  keywords: SeoKeyword[]
   content: Content
   qna: QnaRow[]
   history: SeoSnapshot[]

@@ -1,14 +1,55 @@
 import { HUBS } from '@/lib/hubs'
 import {
-  SEO_TARGETS,
+  SEO_KEYWORDS,
+  type SeoKeyword,
   type SeoConfig,
   type SeoFacts,
   type SeoSnapshot,
   DEFAULT_RANK,
-} from '@/lib/seoTargets'
+} from '@/lib/seoKeywords'
 import { getPublishedWed100Items } from '@/lib/wed100'
 
+/** 순위(사람이 적는 값)가 사는 곳 — 예전부터 여기 있었다 */
 export const SEO_CONFIG_DOC = { collection: 'site_config', doc: 'seo' }
+
+/**
+ * 목표 검색어 목록이 사는 곳.
+ *
+ * 순위와 한 문서에 넣지 않았다. 목록은 가끔 통째로 갈아 끼우고 순위는 자주 조금씩
+ * 고치는데, 한 문서에 두면 목록을 저장할 때 순위를, 순위를 저장할 때 목록을
+ * 실수로 덮어쓸 길이 생긴다. 바뀌는 리듬이 다른 것은 따로 둔다.
+ */
+export const SEO_KEYWORDS_DOC = { collection: 'site_config', doc: 'seo-keywords' }
+
+/**
+ * 목표 검색어 목록 — Firestore 우선, 코드 배열은 시드 폴백.
+ *
+ * 전에는 목록이 코드에만 있어서 검색어 하나를 더하려면 배포를 해야 했다. 노릴 말을
+ * 정하는 것은 코드를 고치는 일이 아니라 장사 판단이라, 그때마다 개발자를 거치게
+ * 되면 목록이 안 바뀌고 결국 안 쓰이는 표가 된다.
+ *
+ * 폴백 규칙은 이 저장소의 다른 데이터와 같다(wed100 이 표준 구현) — 저장된 것이
+ * 없거나 읽다 실패하면 시드를 쓴다. 검색어 목표는 어드민 화면 하나가 통째로
+ * 여기에 달려 있어서, 빈 목록을 돌려주면 화면이 "목표가 없다" 로 보인다.
+ * 그건 사실이 아니라 장애다.
+ */
+export async function getSeoKeywords(): Promise<SeoKeyword[]> {
+  try {
+    const { getAdminDb } = await import('@/lib/firebase/admin')
+    const adb = await getAdminDb()
+    if (adb) {
+      const snap = await adb
+        .collection(SEO_KEYWORDS_DOC.collection)
+        .doc(SEO_KEYWORDS_DOC.doc)
+        .get()
+      const rows = snap.exists ? (snap.data()?.items as SeoKeyword[] | undefined) : undefined
+      if (Array.isArray(rows) && rows.length) return rows
+    }
+  } catch (e) {
+    console.error('[seo] 목표 검색어를 읽지 못해 시드로 폴백합니다 —', e)
+  }
+  return SEO_KEYWORDS
+}
 
 /**
  * 사이트를 읽어 검색어별 사실을 모은다 (서버 전용).
@@ -19,7 +60,9 @@ export const SEO_CONFIG_DOC = { collection: 'site_config', doc: 'seo' }
  */
 const strip = (s: string) => s.replace(/\s+/g, '')
 
-export async function collectSeoFacts(): Promise<Record<string, SeoFacts>> {
+export async function collectSeoFacts(
+  keywords: SeoKeyword[] = SEO_KEYWORDS,
+): Promise<Record<string, SeoFacts>> {
   const items = await getPublishedWed100Items()
 
   // 허브는 제목과 본문 길이를 코드에서 바로 알 수 있다
@@ -42,7 +85,7 @@ export async function collectSeoFacts(): Promise<Record<string, SeoFacts>> {
   ]
 
   const out: Record<string, SeoFacts> = {}
-  for (const t of SEO_TARGETS) {
+  for (const t of keywords) {
     const key = strip(t.term)
     const owner = pages.find((p) => p.path === t.owner)
     const titlePages = [
@@ -61,7 +104,7 @@ export async function collectSeoFacts(): Promise<Record<string, SeoFacts>> {
 }
 
 /** 사람이 적어 넣은 순위. 없으면 빈 값으로 시작한다 */
-export async function getSeoConfig(): Promise<SeoConfig> {
+export async function getSeoConfig(keywords: SeoKeyword[] = SEO_KEYWORDS): Promise<SeoConfig> {
   try {
     const { getAdminDb } = await import('@/lib/firebase/admin')
     const adb = await getAdminDb()
@@ -70,7 +113,7 @@ export async function getSeoConfig(): Promise<SeoConfig> {
       if (snap.exists) {
         const d = snap.data() as Partial<SeoConfig>
         const ranks: SeoConfig['ranks'] = {}
-        for (const t of SEO_TARGETS) {
+        for (const t of keywords) {
           ranks[t.term] = { ...DEFAULT_RANK, ...(d.ranks?.[t.term] ?? {}) }
         }
         return { ranks, updatedAt: d.updatedAt }
@@ -80,7 +123,7 @@ export async function getSeoConfig(): Promise<SeoConfig> {
     /* 설정이 없어도 화면은 떠야 한다 */
   }
   const ranks: SeoConfig['ranks'] = {}
-  for (const t of SEO_TARGETS) ranks[t.term] = { ...DEFAULT_RANK }
+  for (const t of keywords) ranks[t.term] = { ...DEFAULT_RANK }
   return { ranks }
 }
 

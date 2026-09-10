@@ -2,7 +2,7 @@ import AdminShell from '@/components/admin/AdminShell'
 import OverviewGate from '@/components/admin/OverviewGate'
 import { getDailyStats } from '@/lib/analytics.server'
 import { HUBS } from '@/lib/hubs'
-import { collectSeoFacts, getSeoHistory } from '@/lib/seoTargets.server'
+import { collectSeoFacts, getSeoHistory, getSeoKeywords } from '@/lib/seoKeywords.server'
 import { estimateDuration, getPublishedWed100Items } from '@/lib/wed100'
 import { isOpen } from '@/lib/wed100Access'
 import { getWed100Access } from '@/lib/wed100Access.server'
@@ -18,9 +18,15 @@ export const dynamic = 'force-dynamic'
  * 예약 목록은 /admin/bookings 로 옮겼다.
  */
 export default async function AdminHome() {
+  /*
+    목록을 먼저 읽는다. 인자 없이 collectSeoFacts() 를 부르면 코드 시드를 보게 되어,
+    어드민에서 검색어를 더해도 이 화면에만 안 나타난다 — 화면마다 다른 목록이 뜨는
+    것이 가장 나쁜 상태다. 무엇이 맞는지 아무도 모르게 된다.
+  */
+  const keywords = await getSeoKeywords()
   const [days, facts, items, access, history] = await Promise.all([
     getDailyStats(30),
-    collectSeoFacts(),
+    collectSeoFacts(keywords),
     getPublishedWed100Items(),
     getWed100Access(),
     getSeoHistory(60),
@@ -51,7 +57,14 @@ export default async function AdminHome() {
 
   return (
     <AdminShell active="/admin" title="메이크업포엘 관리">
-      <OverviewGate days={days} facts={facts} content={content} qna={qna} history={history} />
+      <OverviewGate
+        days={days}
+        facts={facts}
+        keywords={keywords}
+        content={content}
+        qna={qna}
+        history={history}
+      />
     </AdminShell>
   )
 }
