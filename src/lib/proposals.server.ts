@@ -36,21 +36,31 @@ const newId = () => `${new Date().toISOString()}__${randomUUID().slice(0, 8)}`
 /**
  * 최근 것부터. 결재함은 오래된 것을 뒤져 볼 일이 드물다.
  *
- * 처음에 `orderBy('__name__', 'desc')` 로 짰다가 FAILED_PRECONDITION 을 맞았다.
- * Firestore 가 저절로 만들어 두는 것은 문서 이름 **오름차순** 뿐이고, 내림차순은
- * 색인을 따로 만들라고 한다. wed100Versions 가 where+orderBy 로 같은 벽에 부딪혔을
- * 때 남긴 결론이 그대로 적용된다 — 색인을 만들게 하는 것보다 색인이 필요 없게
- * 짜는 편이 낫다. 콘솔에서 만든 색인은 저장소에 안 남아서, 프로젝트를 새로 세우면
- * 아무도 모르는 채 같은 자리에서 다시 터진다.
+ * 여기서 두 번 틀렸다. 남겨 둔다 — 다음 사람이 같은 순서로 틀릴 것이기 때문이다.
  *
- * 그래서 오름차순으로 뒤에서 limit 개를 떠 온 뒤 뒤집는다. 자르는 일은 여전히
- * 서버가 하므로 문서가 아무리 쌓여도 다 읽어 오지 않는다.
+ *  1) `orderBy('__name__', 'desc')` → FAILED_PRECONDITION. Firestore 가 저절로
+ *     갖고 있는 것은 문서 이름 **오름차순** 뿐이고 내림차순은 색인을 따로 요구한다.
+ *  2) `orderBy('__name__').limitToLast(n)` → **같은 오류.** limitToLast 는 정렬을
+ *     뒤집어 실행한 뒤 결과를 되돌리는 방식이라, 속으로는 결국 내림차순 질의다.
+ *     이름만 바꾼 셈이었다.
+ *
+ * 콘솔 링크로 색인을 만들면 둘 다 지나가지만 그러지 않는다. 그 색인은 저장소에
+ * 남지 않아서 프로젝트를 새로 세우면 아무도 모르는 채 같은 자리에서 다시 터진다.
+ * wed100Versions 가 남긴 결론 그대로다 — 색인이 필요 없게 짜는 편이 낫다.
+ *
+ * 그래서 정렬을 Firestore 에 맡기지 않는다. 문서 이름이 ISO 시각으로 시작하므로
+ * 글자 순서가 곧 시간 순서고, 뒤집는 것은 자바스크립트가 한다. 결재함은 두 사람이
+ * 쓰는 목록이라 통째로 읽어도 부담이 없다 — 수천 건이 쌓일 물건이 아니다.
+ * (그렇게 될 날이 오면 문서 이름 앞자리를 잘라 달(月)로 나눠 읽으면 된다)
  */
 export async function listProposals(limit = 100): Promise<Proposal[]> {
   const adb = await db()
   if (!adb) return []
-  const snap = await adb.collection(PROPOSALS).orderBy('__name__').limitToLast(limit).get()
-  return snap.docs.map((d) => ({ ...(d.data() as Proposal), id: d.id })).reverse()
+  const snap = await adb.collection(PROPOSALS).get()
+  return snap.docs
+    .map((d) => ({ ...(d.data() as Proposal), id: d.id }))
+    .sort((a, b) => b.id.localeCompare(a.id))
+    .slice(0, limit)
 }
 
 export async function createProposal(draft: ProposalDraft, by: string): Promise<Proposal> {

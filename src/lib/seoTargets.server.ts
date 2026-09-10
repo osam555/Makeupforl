@@ -92,21 +92,27 @@ export async function getSeoConfig(): Promise<SeoConfig> {
  * 만큼 덜 정직해진다.
  *
  * 문서 이름 **내림차순**으로 읽고 있었다. Firestore 가 저절로 갖고 있는 것은
- * 오름차순뿐이라 내림차순은 색인을 따로 요구한다(FAILED_PRECONDITION). 그런데 이
- * 함수는 통째로 try/catch 안이라 그 오류가 밖으로 나오지 않고 빈 배열이 됐다 —
- * 기록이 아직 없는 것과 질의가 막힌 것이 화면에서 똑같아 보였다. 폴백은 장애 때
- * 화면이 비지 않게 하려는 것이지 고장을 감추라는 것이 아니다.
+ * 오름차순뿐이라 내림차순은 색인을 따로 요구한다(FAILED_PRECONDITION).
+ * `limitToLast` 도 같다 — 정렬을 뒤집어 실행하는 방식이라 속으로는 내림차순이다.
  *
- * 오름차순으로 뒤에서 limit 개를 떠 오면 색인이 필요 없고, 그 순서가 이미
- * 오래된 것부터라 뒤집을 일도 없다.
+ * 그런데 이 함수는 통째로 try/catch 안이라 그 오류가 밖으로 나오지 않고 빈 배열이
+ * 됐다 — 기록이 아직 없는 것과 질의가 막힌 것이 화면에서 똑같아 보였다. 폴백은
+ * 장애 때 화면이 비지 않게 하려는 것이지 고장을 감추라는 것이 아니다.
+ *
+ * 정렬은 자바스크립트가 한다. 문서 이름이 YYYY-MM-DD 라 글자 순서가 곧 날짜
+ * 순서고, 하루에 한 건이라 몇 해가 쌓여도 통째로 읽을 만하다.
  */
 export async function getSeoHistory(limit = 60): Promise<SeoSnapshot[]> {
   try {
     const { getAdminDb } = await import('@/lib/firebase/admin')
     const db = await getAdminDb()
     if (!db) return []
-    const snap = await db.collection('seo_snapshots').orderBy('__name__').limitToLast(limit).get()
-    return snap.docs.map((d) => d.data() as SeoSnapshot).filter((x) => x?.date)
+    const snap = await db.collection('seo_snapshots').get()
+    return snap.docs
+      .map((d) => d.data() as SeoSnapshot)
+      .filter((x) => x?.date)
+      .sort((a, b) => a.date.localeCompare(b.date))
+      .slice(-limit)
   } catch (e) {
     console.error('[seo] 준비도 기록을 읽지 못했습니다 —', e)
     return []
