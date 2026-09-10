@@ -32,6 +32,14 @@ export interface SeoKeyword {
    * 정도와 지금 준비도도 검색량과 따로 논다. 그 판단을 적어 두는 자리다.
    */
   priority?: SeoPriority
+  /**
+   * 이 검색어의 검색량을 잰 날. 없으면 VOLUME_MEASURED_AT 를 쓴다.
+   *
+   * 전에는 잰 날이 전역으로 하나뿐이었다. 목록이 코드에 박혀 있어 다 같은 날
+   * 쟀기 때문이다. 어드민에서 아무 때나 검색어를 더할 수 있게 되면서 그게
+   * 틀린 표시가 됐다 — 오늘 잰 값에 한 달 전 날짜가 붙는다.
+   */
+  measuredAt?: string
 }
 
 export type SeoPriority = 1 | 2 | 3
@@ -43,6 +51,9 @@ export const PRIORITY_LABEL: Record<SeoPriority, string> = {
 }
 
 export const priorityOf = (t: SeoKeyword): SeoPriority => t.priority ?? 2
+
+/** 이 검색어의 검색량을 언제 쟀나 */
+export const measuredAtOf = (t: SeoKeyword): string => t.measuredAt || VOLUME_MEASURED_AT
 
 /**
  * 높은 것부터, 같으면 검색량이 큰 것부터.
@@ -166,9 +177,21 @@ export function readiness(f: SeoFacts): Readiness {
   if (f.titlePages.length > 0) score += 30
   else todo.push('이 말을 제목에 가진 페이지가 없습니다 — 전용 페이지를 만드세요')
 
+  /*
+    본문 0자는 "짧다" 가 아니라 "그 페이지를 못 찾았다" 는 뜻이다.
+
+    전에는 0일 때 점수도 안 주고 할 일도 안 띄웠다. 어드민에서 검색어를 더할 수
+    있게 되면서 이게 실제 문제가 됐다 — owner 를 오타로 적거나 허브가 아닌 주소를
+    적으면 준비도가 80에 갇히는데 화면은 왜인지 말하지 않는다. 침묵하는 감점이
+    제일 나쁘다.
+  */
   if (f.ownerChars >= 1500) score += 20
   else if (f.ownerChars > 0)
     todo.push(`맡은 페이지 본문이 ${f.ownerChars}자입니다 — 1,500자 이상으로 채우세요`)
+  else
+    todo.push(
+      '맡은 페이지를 찾지 못했습니다 — 주소가 맞는지 확인하세요. 본문 길이를 잴 수 있는 것은 검색어 허브(/혼주한복 같은 한 칸짜리 주소)뿐입니다',
+    )
 
   if (f.titlePages.length <= 1) score += 20
   else
@@ -255,7 +278,13 @@ export function upgrades(f: SeoFacts): Upgrade[] {
       how: `${f.titlePages.join(', ')} 중 하나만 남기고 나머지 제목은 다른 말로 바꾸세요. 대신 그 페이지들에서 남긴 한 장으로 링크를 거세요 — 제목에서 빼기만 하면 그 힘이 사라집니다.`,
     })
 
-  if (f.ownerChars < 1500)
+  if (f.ownerChars === 0)
+    out.push({
+      gain: 20,
+      what: '맡은 페이지를 찾지 못했습니다',
+      how: '검색어 관리에서 이 말의 「맡은 페이지」 주소를 확인하세요. 본문 길이를 잴 수 있는 것은 검색어 허브(/혼주한복 처럼 한 칸짜리 주소)뿐입니다 — 다른 주소를 적으면 본문 점수를 영영 못 받습니다.',
+    })
+  else if (f.ownerChars < 1500)
     out.push({
       gain: 20,
       what: `맡은 페이지 본문이 ${f.ownerChars.toLocaleString()}자입니다`,

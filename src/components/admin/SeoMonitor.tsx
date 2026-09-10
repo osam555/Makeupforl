@@ -6,10 +6,12 @@ import { Loader2, Plus, Save, Trash2, TrendingUp } from 'lucide-react'
 import {
   PRIORITY_LABEL,
   VOLUME_MEASURED_AT,
+  measuredAtOf,
   priorityOf,
   sortKeywords,
   isStale,
   rankAchievement,
+  todayKST,
   readiness,
   type SeoConfig,
   type SeoFacts,
@@ -119,7 +121,12 @@ export default function SeoMonitor({
             <span className="ml-1 text-sm font-bold text-[var(--a-8a7a72)]">회/월</span>
           </p>
           <p className="mt-1 text-[0.6875rem] text-[var(--a-8a7a72)]">
-            네이버 키워드도구 {VOLUME_MEASURED_AT} 기준
+            {/* 검색어마다 잰 날이 다를 수 있다 — 가장 오래된 것을 적어 둔다 */}
+            네이버 키워드도구 · 가장 오래 된 값 {
+              keywords.length
+                ? keywords.map(measuredAtOf).sort()[0]
+                : VOLUME_MEASURED_AT
+            } 기준
           </p>
         </div>
         <div className="rounded-xl border border-[var(--a-e0d6cc)] bg-white p-3.5 sm:p-4">
@@ -298,7 +305,7 @@ export default function SeoMonitor({
           {keywords.map((t, i) => (
             <div
               key={i}
-              className="grid grid-cols-2 gap-2 rounded-lg border border-[var(--a-e8dfd7)] bg-[var(--a-fbf8f5)] p-2.5 sm:grid-cols-12"
+              className="grid grid-cols-2 gap-2 rounded-lg border border-[var(--a-e8dfd7)] bg-[var(--a-fbf8f5)] p-2.5 sm:grid-cols-14"
             >
               <label className="col-span-2 sm:col-span-3">
                 <span className="text-[0.6875rem] font-bold text-[var(--a-3a322e)]">검색어</span>
@@ -328,6 +335,15 @@ export default function SeoMonitor({
                   <option value={2}>보통</option>
                   <option value={3}>낮음</option>
                 </select>
+              </label>
+              <label className="sm:col-span-2">
+                <span className="text-[0.6875rem] font-bold text-[var(--a-3a322e)]">언제 쟀나</span>
+                <input
+                  value={t.measuredAt ?? ''}
+                  onChange={(e) => setKw(i, { measuredAt: e.target.value })}
+                  placeholder={VOLUME_MEASURED_AT}
+                  className="mt-1 h-8 w-full rounded-md border border-[var(--a-d4c7be)] bg-white px-2 text-xs tabular-nums outline-none focus:border-[var(--a-a63d5a)]"
+                />
               </label>
               <label className="sm:col-span-2">
                 <span className="text-[0.6875rem] font-bold text-[var(--a-3a322e)]">맡은 페이지</span>
@@ -363,7 +379,10 @@ export default function SeoMonitor({
         <div className="mt-3 flex flex-wrap items-center gap-2">
           <button
             onClick={() =>
-              setKeywords((k) => [...k, { term: '', volume: 0, owner: '', why: '', priority: 2 }])
+              setKeywords((k) => [
+              ...k,
+              { term: '', volume: 0, owner: '', why: '', priority: 2, measuredAt: todayKST() },
+            ])
             }
             className="inline-flex items-center gap-1.5 rounded-lg border border-dashed border-[var(--a-d4c7be)] px-3 py-2 text-xs font-bold text-[var(--a-6b5d57)]"
           >

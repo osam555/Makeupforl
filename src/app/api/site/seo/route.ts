@@ -97,12 +97,20 @@ export async function POST(req: Request) {
 
       const volume = Number(r.volume)
       const pr = Number(r.priority)
+      const measuredAt = String(r.measuredAt ?? '').trim()
+      if (measuredAt && !/^\d{4}-\d{2}-\d{2}$/.test(measuredAt)) {
+        return NextResponse.json(
+          { ok: false, error: `잰 날짜는 2026-09-11 형식으로 적어 주세요: ${term}` },
+          { status: 400 },
+        )
+      }
       items.push({
         term,
         volume: Number.isFinite(volume) && volume >= 0 ? Math.round(volume) : 0,
         owner: String(r.owner ?? '').trim(),
         why: String(r.why ?? '').trim().slice(0, 300),
         priority: ([1, 2, 3].includes(pr) ? pr : 2) as SeoPriority,
+        ...(measuredAt ? { measuredAt } : {}),
       })
     }
 

@@ -75,13 +75,37 @@ export async function collectSeoFacts(
       h.sections.reduce((a, s) => a + s.h.length + s.body.join('').length, 0),
   }))
 
-  // 허브 밖에서 같은 말을 제목에 가진 페이지 — 잠식을 보려면 이쪽도 세어야 한다
+  /*
+    허브 밖에서 같은 말을 제목에 가진 페이지 — 잠식을 보려면 이쪽도 세어야 한다.
+
+    다섯 개만 적어 두었다가 열여덟 개로 늘렸다. 목록이 코드에 박혀 있을 때는
+    다섯이면 됐다 — 노리는 말이 다섯 개로 고정이었고 그 말들이 어디에 있는지
+    사람이 알았기 때문이다. 어드민에서 아무 말이나 더할 수 있게 되면서 그 전제가
+    깨졌다. 새 검색어가 /brand 나 /gallery/hair-styling 의 제목과 부딪혀도
+    화면에는 "다투는 페이지 없음" 으로 나온다.
+
+    2026-09-11 에 운영 페이지에서 그대로 떠 온 제목이다. **페이지 제목을 고치면
+    여기도 고쳐야 한다** — 어긋나면 잠식을 못 보거나 없는 잠식을 만든다.
+    (제목을 한 곳에서만 정하게 고치는 편이 옳지만, 그건 metadata 전반을 손대는
+    일이라 여기서는 범위를 넓히는 데까지만 한다)
+  */
   const others = [
     { path: '/', title: '메이크업포엘 | 강남 논현동 혼주 전문 메이크업샵' },
     { path: '/honjoo100', title: '혼주메이크업 100문 100답 | 메이크업포엘' },
-    { path: '/reviews', title: '고객후기 — 혼주님이 보내주신 문자 | 메이크업포엘' },
+    { path: '/brand', title: '브랜드소개 | 메이크업포엘' },
     { path: '/services', title: '혼주 샵 메이크업과 출장 메이크업 | 메이크업포엘' },
+    { path: '/consultation', title: '1:1 사전컨설팅 | 메이크업포엘' },
+    { path: '/reservation', title: '예약안내 | 메이크업포엘' },
+    { path: '/reviews', title: '고객후기 — 혼주님이 보내주신 문자 | 메이크업포엘' },
+    { path: '/videos', title: '유튜브 채널 | 메이크업포엘' },
+    { path: '/gallery', title: '갤러리 | 메이크업포엘' },
     { path: '/gallery/honju', title: '혼주 메이크업 사진 | 메이크업포엘' },
+    { path: '/gallery/family-guest', title: '가족 · 하객 사진 | 메이크업포엘' },
+    { path: '/gallery/wedding', title: '웨딩 (신부) 사진 | 메이크업포엘' },
+    { path: '/gallery/hair-styling', title: '헤어 스타일링 사진 | 메이크업포엘' },
+    { path: '/gallery/men-makeup', title: '남자 메이크업 사진 | 메이크업포엘' },
+    { path: '/gallery/corporate-video', title: '기업행사 · 영상 사진 | 메이크업포엘' },
+    { path: '/gallery/photoshoot-profile', title: '화보 · 프로필 사진 | 메이크업포엘' },
   ]
 
   const out: Record<string, SeoFacts> = {}
@@ -96,7 +120,19 @@ export async function collectSeoFacts(
       ownerChars: owner?.chars ?? 0,
       titlePages,
       questions: items.filter((x) => strip(x.question).includes(key)).length,
-      // 허브로 들어오는 링크는 지금 홈·후기·갤러리·서비스 네 곳에서 건다
+      /*
+        내부 링크는 **아직 실측이 아니다.**
+
+        허브면 무조건 4로 놓는다. 그래서 다섯 검색어 모두 이 15점을 공짜로 받고
+        있고, "본문 안에서 3곳 이상 링크를 거세요" 라는 할 일은 한 번도 뜬 적이
+        없다. 준비도 100 이 실제로는 85 일 수 있다는 뜻이다.
+
+        제대로 세려면 소스에서 href 를 훑어야 하는데 서버 런타임에서는 src 를
+        읽을 수 없다. 사람이 세어 적는 값으로 바꾸는 편이 정직하지만, 그러면
+        지금까지 쌓인 seo_snapshots 의 준비도와 앞으로의 값이 서로 다른 자를
+        쓰게 된다. 어느 쪽으로 갈지는 정하고 나서 바꾼다 — 그때까지 이 주석이
+        "이 15점은 번 점수가 아니다" 를 말해 주는 유일한 자리다.
+      */
       inboundLinks: HUBS.some((h) => `/${h.slug}` === t.owner) ? 4 : 0,
     }
   }
