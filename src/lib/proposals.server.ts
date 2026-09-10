@@ -33,12 +33,24 @@ async function db() {
  */
 const newId = () => `${new Date().toISOString()}__${randomUUID().slice(0, 8)}`
 
-/** 최근 것부터. 결재함은 오래된 것을 뒤져 볼 일이 드물다 */
+/**
+ * 최근 것부터. 결재함은 오래된 것을 뒤져 볼 일이 드물다.
+ *
+ * 처음에 `orderBy('__name__', 'desc')` 로 짰다가 FAILED_PRECONDITION 을 맞았다.
+ * Firestore 가 저절로 만들어 두는 것은 문서 이름 **오름차순** 뿐이고, 내림차순은
+ * 색인을 따로 만들라고 한다. wed100Versions 가 where+orderBy 로 같은 벽에 부딪혔을
+ * 때 남긴 결론이 그대로 적용된다 — 색인을 만들게 하는 것보다 색인이 필요 없게
+ * 짜는 편이 낫다. 콘솔에서 만든 색인은 저장소에 안 남아서, 프로젝트를 새로 세우면
+ * 아무도 모르는 채 같은 자리에서 다시 터진다.
+ *
+ * 그래서 오름차순으로 뒤에서 limit 개를 떠 온 뒤 뒤집는다. 자르는 일은 여전히
+ * 서버가 하므로 문서가 아무리 쌓여도 다 읽어 오지 않는다.
+ */
 export async function listProposals(limit = 100): Promise<Proposal[]> {
   const adb = await db()
   if (!adb) return []
-  const snap = await adb.collection(PROPOSALS).orderBy('__name__', 'desc').limit(limit).get()
-  return snap.docs.map((d) => ({ ...(d.data() as Proposal), id: d.id }))
+  const snap = await adb.collection(PROPOSALS).orderBy('__name__').limitToLast(limit).get()
+  return snap.docs.map((d) => ({ ...(d.data() as Proposal), id: d.id })).reverse()
 }
 
 export async function createProposal(draft: ProposalDraft, by: string): Promise<Proposal> {
