@@ -1,15 +1,17 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Check, FileText, MessageSquare, Plus, X } from 'lucide-react'
+import { Check, ExternalLink, FileText, MessageSquare, Plus, Rocket, X } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Empty, Note, SectionTitle } from '@/components/admin/AdminUI'
 import {
   KIND_LABEL,
   STATUS_LABEL,
+  appliedMatches,
   canAutoApply,
   pendingOf,
+  viewHref,
   validateDraft,
   type Proposal,
   type ProposalDraft,
@@ -114,6 +116,19 @@ export default function Proposals({
     }
   }
 
+  async function simple(action: 'ack' | 'deployed', id: string) {
+    setBusy(true)
+    setError(null)
+    try {
+      await call({ action, id })
+      await load()
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e))
+    } finally {
+      setBusy(false)
+    }
+  }
+
   async function create(draft: ProposalDraft) {
     setBusy(true)
     setError(null)
@@ -145,7 +160,7 @@ export default function Proposals({
         <Empty>결재를 기다리는 제안이 없습니다.</Empty>
       )}
       {pending.map((p) => (
-        <Card key={p.id} p={p} owner={owner} me={me} busy={busy} onDecide={decide} onNote={note} />
+        <Card key={p.id} p={p} owner={owner} me={me} busy={busy} onDecide={decide} onNote={note} onSimple={simple} />
       ))}
     </section>
   )
@@ -168,7 +183,7 @@ export default function Proposals({
           <Empty>아직 결재한 제안이 없습니다.</Empty>
         ) : (
           done.map((p) => (
-            <Card key={p.id} p={p} owner={false} me={me} busy={busy} onDecide={decide} onNote={note} />
+            <Card key={p.id} p={p} owner={false} me={me} busy={busy} onDecide={decide} onNote={note} onSimple={simple} />
           ))
         )}
       </section>
@@ -193,6 +208,7 @@ function Card({
   busy,
   onDecide,
   onNote,
+  onSimple,
 }: {
   p: Proposal
   owner: boolean
@@ -200,6 +216,7 @@ function Card({
   busy: boolean
   onDecide: (id: string, d: 'approved' | 'rejected', comment: string) => void
   onNote: (id: string, text: string) => Promise<boolean>
+  onSimple: (action: 'ack' | 'deployed', id: string) => void
 }) {
   const [comment, setComment] = useState('')
   const live = p.status === 'pending'
@@ -254,6 +271,8 @@ function Card({
             승인은 됐지만 반영에 실패했습니다 — {p.applyError}
           </p>
         )}
+
+        <Verify p={p} me={me} busy={busy} onSimple={onSimple} />
 
         {notes.length > 0 && (
           <div className="flex flex-col gap-2 border-t border-[var(--a-e7ddd4)] pt-3">
@@ -546,6 +565,112 @@ function NewProposal({
         </div>
       </div>
     </Board>
+  )
+}
+
+/**
+ * 정말 바뀌었는지 보여 주는 자리.
+ *
+ * "승인됨" 이라는 표시는 우리가 우리에게 하는 말이다. 그 표시와 사이트가 어긋나는
+ * 길은 여럿이다 — 필드 이름이 틀렸거나, 반영 뒤 누가 또 고쳤거나, 코드 제안이라
+ * 애초에 배포가 안 됐거나. 그래서 셋을 보여 준다.
+ *  1) 반영한 뒤 Firestore 에서 되읽은 값
+ *  2) 그 값이 승인한 문장과 같은가
+ *  3) 사이트에서 직접 열어 보는 링크
+ */
+function Verify({
+  p,
+  me,
+  busy,
+  onSimple,
+}: {
+  p: Proposal
+  me: string
+  busy: boolean
+  onSimple: (action: 'ack' | 'deployed', id: string) => void
+}) {
+  if (p.status === 'pending') return null
+
+  const href = viewHref(p)
+  const match = appliedMatches(p)
+  const mine = p.createdBy === me
+  const needsDeploy = p.status === 'approved' && !canAutoApply(p.kind) && !p.applied
+
+  return (
+    <div className="flex flex-col gap-3 rounded-xl border border-[var(--a-e7ddd4)] bg-[var(--a-fbf8f5)] p-3.5">
+      <p className="text-xs font-bold tracking-wider text-[var(--a-8a7b73)]">
+        {p.status === 'approved' ? '무엇이 바뀌었나' : '결재 결과'}
+      </p>
+
+      <p className="text-[0.9375rem] leading-relaxed text-[var(--a-2e2724)]">
+        {p.decidedBy} 님이 {p.decidedAt?.slice(0, 16).replace('T', ' ')} 에{' '}
+        {p.status === 'approved' ? '승인' : '반려'}하셨습니다.
+      </p>
+
+      {p.applied && p.appliedValue != null && (
+        <div className="rounded-lg border border-[var(--a-e7ddd4)] bg-white px-3 py-2">
+          <p className="text-[0.6875rem] font-bold text-[var(--a-3f6b57)]">
+            지금 사이트에 들어 있는 내용
+          </p>
+          <p className="mt-0.5 text-[0.9375rem] leading-relaxed whitespace-pre-wrap text-[var(--a-2e2724)]">
+            {p.appliedValue}
+          </p>
+        </div>
+      )}
+
+      {match === false && (
+        <p className="rounded-lg bg-[var(--a-a63d5a)]/10 px-3 py-2 text-sm font-semibold text-[var(--a-a63d5a)]">
+          승인한 문장과 지금 들어 있는 내용이 다릅니다. 반영한 뒤에 누가 또 고쳤을 수
+          있습니다 — 위 내용을 확인해 주세요.
+        </p>
+      )}
+
+      {needsDeploy && (
+        <Note>
+          승인은 났지만 아직 사이트에는 없습니다. 이건 배포를 거쳐야 바뀝니다.
+        </Note>
+      )}
+
+      <div className="flex flex-wrap gap-2">
+        {href && (
+          <a
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--a-e7ddd4)] bg-white px-3 py-2 text-sm font-bold text-[var(--a-6b5d57)] hover:text-[var(--a-a63d5a)]"
+          >
+            <ExternalLink className="h-4 w-4" aria-hidden />
+            사이트에서 보기
+          </a>
+        )}
+        {needsDeploy && (
+          <Button
+            onClick={() => onSimple('deployed', p.id)}
+            disabled={busy}
+            variant="outline"
+            className="border-[var(--a-e7ddd4)] font-bold text-[var(--a-6b5d57)]"
+          >
+            <Rocket className="mr-1.5 h-4 w-4" />
+            올렸습니다
+          </Button>
+        )}
+        {!p.ackedAt && mine && (
+          <Button
+            onClick={() => onSimple('ack', p.id)}
+            disabled={busy}
+            className="bg-[var(--a-3f6b57)] font-bold hover:opacity-90"
+          >
+            <Check className="mr-1.5 h-4 w-4" />
+            확인했습니다
+          </Button>
+        )}
+        {p.ackedAt && (
+          <span className="self-center text-xs text-[var(--a-8a7b73)]">
+            {p.ackedBy} 확인 · {p.ackedAt.slice(0, 10)}
+          </span>
+        )}
+      </div>
+    </div>
   )
 }
 

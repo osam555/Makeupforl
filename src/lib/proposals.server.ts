@@ -122,11 +122,12 @@ export async function decideProposal(
   }
 
   let applied = false
+  let appliedValue: string | undefined
   let applyError: string | undefined
 
   if (decision === 'approved' && canAutoApply(p.kind)) {
     try {
-      await applyProposal(adb, p, by)
+      appliedValue = await applyProposal(adb, p, by)
       applied = true
     } catch (e) {
       applyError = e instanceof Error ? e.message : String(e)
@@ -139,6 +140,7 @@ export async function decideProposal(
     decidedAt: at,
     decidedBy: by,
     applied,
+    ...(appliedValue != null ? { appliedValue } : {}),
     ...(applyError ? { applyError } : {}),
   }
 
@@ -161,9 +163,46 @@ export async function decideProposal(
     decidedAt: at,
     decidedBy: by,
     applied,
+    ...(appliedValue != null ? { appliedValue } : {}),
     ...(applyError ? { applyError } : {}),
     notes: [...(p.notes ?? []), ...(note ? [note] : [])],
   }
+}
+
+/**
+ * 결재 결과를 확인했다고 표시한다.
+ *
+ * 승인이 났는데 올린 사람이 모르면 결재는 절반만 끝난 것이다. 화면을 열었다는
+ * 것만으로 확인 처리하지 않는다 — 지나가다 연 것과 읽고 납득한 것은 다르고,
+ * 특히 반려는 이유를 읽었는지가 중요하다.
+ */
+export async function ackProposal(id: string, by: string): Promise<void> {
+  const adb = await db()
+  if (!adb) throw new Error('Firestore 가 설정되지 않았습니다.')
+  const ref = adb.collection(PROPOSALS).doc(id)
+  if (!(await ref.get()).exists) throw new Error('그런 제안이 없습니다.')
+  await ref.set({ ackedAt: new Date().toISOString(), ackedBy: by }, { merge: true })
+}
+
+/**
+ * 'code' 제안을 배포했다고 표시한다.
+ *
+ * 허브 본문처럼 저장소에 있는 것은 승인만으로 사이트가 바뀌지 않는다. 그 상태를
+ * 그대로 두면 "승인됨" 인 채로 몇 주가 지나도 아무도 올렸는지 안 올렸는지 모른다.
+ * 올린 사람이 여기에 표시하면 그때부터 반영된 것이다.
+ */
+export async function markDeployed(id: string, by: string): Promise<void> {
+  const adb = await db()
+  if (!adb) throw new Error('Firestore 가 설정되지 않았습니다.')
+  const ref = adb.collection(PROPOSALS).doc(id)
+  const snap = await ref.get()
+  if (!snap.exists) throw new Error('그런 제안이 없습니다.')
+  const p = snap.data() as Proposal
+  if (p.status !== 'approved') throw new Error('승인된 제안만 반영 표시를 할 수 있습니다.')
+  await ref.set(
+    { applied: true, deployedAt: new Date().toISOString(), deployedBy: by },
+    { merge: true },
+  )
 }
 
 /**
@@ -177,7 +216,7 @@ async function applyProposal(
   adb: FirebaseFirestore.Firestore,
   p: Proposal,
   by: string,
-): Promise<void> {
+): Promise<string> {
   if (p.kind === 'wed100') {
     if (!p.slug || !p.field) throw new Error('어느 문항의 어느 칸인지가 제안에 없습니다.')
     const value = p.changes[0]?.after
@@ -197,25 +236,35 @@ async function applyProposal(
         ? value.split(/\n{2,}/).map((s) => s.trim()).filter(Boolean)
         : value
 
-    await adb
-      .collection('wed100_questions')
-      .doc(p.slug)
-      .set(
-        { [p.field]: next, updatedAt: new Date().toISOString(), updatedBy: by },
-        { merge: true },
-      )
-    return
+    const ref = adb.collection('wed100_questions').doc(p.slug)
+    await ref.set(
+      { [p.field]: next, updatedAt: new Date().toISOString(), updatedBy: by },
+      { merge: true },
+    )
+
+    /*
+      쓴 값을 그대로 돌려주지 않고 다시 읽는다.
+
+      merge 규칙이나 필드 이름이 틀려 엉뚱한 칸에 들어가도 쓰기는 성공으로 끝난다.
+      그러면 화면에는 "반영됨" 이 뜨는데 사이트는 그대로다. 되읽은 값을 보여 주면
+      그 거짓말이 불가능하다.
+    */
+    const back = (await ref.get()).data()?.[p.field]
+    return Array.isArray(back) ? back.join('\n\n') : String(back ?? '')
   }
 
   if (p.kind === 'config') {
     if (!p.configPatch || !Object.keys(p.configPatch).length) {
       throw new Error('바꿀 설정이 제안에 없습니다.')
     }
-    await adb
-      .collection('site_config')
-      .doc('wed100')
-      .set({ ...p.configPatch, updatedAt: new Date().toISOString(), updatedBy: by }, { merge: true })
-    return
+    const ref = adb.collection('site_config').doc('wed100')
+    await ref.set(
+      { ...p.configPatch, updatedAt: new Date().toISOString(), updatedBy: by },
+      { merge: true },
+    )
+    const back = (await ref.get()).data() ?? {}
+    const keys = Object.keys(p.configPatch)
+    return keys.map((k) => `${k}: ${JSON.stringify(back[k])}`).join('\n')
   }
 
   throw new Error(`'${p.kind}' 은 자동으로 반영할 수 없습니다.`)

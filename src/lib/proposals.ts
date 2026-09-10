@@ -79,10 +79,24 @@ export interface Proposal {
   decidedBy?: string
   /** 오간 의견. 결재하며 남긴 말도 여기에 함께 쌓인다 */
   notes?: ProposalNote[]
-  /** 승인 뒤 실제로 반영됐는가 (code 는 늘 false) */
+  /** 승인 뒤 실제로 반영됐는가 (code 는 사람이 배포한 뒤 표시한다) */
   applied?: boolean
+  /**
+   * 반영한 뒤 Firestore 에서 **다시 읽은** 값.
+   *
+   * 쓴 값을 그대로 되돌려 주면 확인이 아니라 메아리다. 다시 읽어야 정말로 그
+   * 문서에 그 문장이 들어갔는지 알 수 있다 — merge 규칙이나 필드 이름이 틀려서
+   * 엉뚱한 칸에 들어가도 쓰기 자체는 성공으로 끝난다.
+   */
+  appliedValue?: string
   /** 반영하려다 실패했으면 그 이유. 승인은 됐는데 안 바뀐 상태를 숨기지 않는다 */
   applyError?: string
+  /** 'code' 제안을 사람이 배포하고 표시한 시각 */
+  deployedAt?: string
+  deployedBy?: string
+  /** 결재 결과를 제안자가 확인했는가 */
+  ackedAt?: string
+  ackedBy?: string
 }
 
 export const STATUS_LABEL: Record<ProposalStatus, string> = {
@@ -125,4 +139,31 @@ export function validateDraft(d: Partial<ProposalDraft>): string | null {
 /** 대기 중인 것만 (화면 여러 곳에서 센다) */
 export function pendingOf(list: Proposal[]): Proposal[] {
   return list.filter((p) => p.status === 'pending')
+}
+
+/**
+ * 결재는 끝났는데 올린 사람이 아직 확인하지 않은 것.
+ *
+ * 원장님이 승인하셔도 매니저가 모르면 결재는 절반만 끝난 것이다. 반려는 더하다 —
+ * 왜 안 됐는지 모른 채 기다리게 된다. 확인 단추를 누르기 전까지 띠에 남긴다.
+ */
+export function unseenOf(list: Proposal[], me: string): Proposal[] {
+  return list.filter((p) => p.status !== 'pending' && !p.ackedAt && p.createdBy === me)
+}
+
+/**
+ * 사이트에서 눈으로 확인할 주소.
+ *
+ * 승인됐다는 표시를 믿는 것과 바뀐 문장을 직접 보는 것은 다르다. 문항은 주소가
+ * 정해져 있으니 바로 열어 준다. 설정·본문은 어디를 봐야 하는지가 제안마다 달라
+ * 링크를 만들지 않는다 — 아무 데나 걸어 두면 열어 보고도 확인이 안 된다.
+ */
+export function viewHref(p: Proposal): string | null {
+  return p.kind === 'wed100' && p.slug ? `/honjoo100/${p.slug}` : null
+}
+
+/** 반영된 값이 승인한 값과 같은가 (다르면 그 사이 누가 또 고친 것이다) */
+export function appliedMatches(p: Proposal): boolean | null {
+  if (!p.applied || p.appliedValue == null) return null
+  return p.appliedValue.trim() === (p.changes[0]?.after ?? '').trim()
 }
