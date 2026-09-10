@@ -110,10 +110,12 @@ export default async function RootLayout({
         />
       </head>
       <body className="antialiased">
-        <SiteShell>
-          <Header logo={img["logo"]} logoWhite={img["logo-white"]} />
-          <main>{children}</main>
-          <Footer />
+        {/* 관리 화면에서는 헤더·푸터가 빠진다 — 판단은 SiteShell 이 한다 */}
+        <SiteShell
+          header={<Header logo={img["logo"]} logoWhite={img["logo-white"]} />}
+          footer={<Footer />}
+        >
+          {children}
         </SiteShell>
         {/* Vercel 웹 통계 — 쿠키를 쓰지 않고 방문 수만 집계한다 */}
         <Analytics />

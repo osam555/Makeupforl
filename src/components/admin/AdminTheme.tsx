@@ -1,9 +1,44 @@
 'use client'
 
-import { createContext, useContext } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 
 import { useFontSize, type FontSize } from '@/components/admin/FontSize'
-import { useTheme, type Theme } from '@/components/admin/AdminToolbar'
+
+const THEME_KEY = 'mfl:adminTheme'
+export type Theme = 'light' | 'dark'
+
+/**
+ * 밝은 화면 / 어두운 화면.
+ *
+ * 원장님은 예식 전날 밤과 새벽에 이 화면을 여신다. 어두운 방에서 흰 화면은
+ * 눈이 부시다. 글자 크기와 마찬가지로 이 기기에 남긴다 — 큰 화면과 휴대전화에서
+ * 원하는 쪽이 다르다.
+ *
+ * 기본은 밝은 쪽이다. 낮에 쓰는 경우가 더 많고, 바꾸고 싶을 때 바꾸면 된다.
+ */
+export function useTheme(): [Theme, (v: Theme) => void] {
+  const [theme, setTheme] = useState<Theme>('light')
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(THEME_KEY)
+      if (saved === 'dark' || saved === 'light') setTheme(saved)
+    } catch {
+      /* 저장이 막혀 있으면 기본값으로 */
+    }
+  }, [])
+
+  const choose = (v: Theme) => {
+    setTheme(v)
+    try {
+      localStorage.setItem(THEME_KEY, v)
+    } catch {
+      /* 못 남겨도 이번 화면에는 적용된다 */
+    }
+  }
+
+  return [theme, choose]
+}
 
 type Prefs = {
   font: FontSize

@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useEffect, useRef } from 'react'
 
+import { Panel, SectionTitle, Stat } from '@/components/admin/AdminUI'
 import { SOURCE_LABEL, avgDwell, fmtDwell, sum, unkey, type DailyStat } from '@/lib/analytics'
 import {
   SEO_TARGETS,
@@ -345,77 +346,7 @@ export default function Overview({
   )
 }
 
-/* ── 조각들 ─────────────────────────────────────── */
-
-function SectionTitle({ children }: { children: React.ReactNode }) {
-  return <h2 className="mb-2.5 text-sm font-extrabold text-[var(--a-2e2724)]">{children}</h2>
-}
-
-function Panel({
-  title,
-  hint,
-  href,
-  children,
-}: {
-  title: string
-  hint: string
-  href: string
-  children: React.ReactNode
-}) {
-  return (
-    <section className="rounded-xl border border-[var(--a-e0d6cc)] bg-white p-3.5 sm:p-4">
-      <div className="mb-3 flex flex-wrap items-baseline gap-2">
-        <h2 className="text-sm font-extrabold text-[var(--a-2e2724)]">{title}</h2>
-        <span className="text-xs text-[var(--a-8a7a72)]">{hint}</span>
-        {href && (
-          <Link href={href} className="ml-auto text-xs font-bold text-[var(--a-a63d5a)]">
-            자세히 →
-          </Link>
-        )}
-      </div>
-      {children}
-    </section>
-  )
-}
-
-function Stat({
-  label,
-  value,
-  delta,
-  hint,
-  warn,
-  wide,
-}: {
-  label: string
-  value: string
-  delta?: number | null
-  hint: string
-  warn?: boolean
-  /** 마지막 칸이 홀로 남지 않게 두 칸 너비로 (한 줄에 다 들어가는 화면에서는 한 칸) */
-  wide?: boolean
-}) {
-  return (
-    <div
-      className={[
-        'rounded-xl border bg-white p-3.5',
-        warn ? 'border-[var(--a-e8c7cf)]' : 'border-[var(--a-e0d6cc)]',
-        wide ? 'col-span-2 lg:col-span-1' : '',
-      ].join(' ')}
-    >
-      <p className="text-[0.6875rem] font-bold tracking-wider text-[var(--a-8a7a72)]">{label}</p>
-      <p className="mt-1 flex items-baseline gap-1.5">
-        <span className="text-xl font-extrabold tabular-nums text-[var(--a-2e2724)]">{value}</span>
-        {delta !== null && delta !== undefined && delta !== 0 && (
-          <span className={`text-xs font-bold ${delta > 0 ? 'text-[var(--a-3f6b57)]' : 'text-[var(--a-a63d5a)]'}`}>
-            {delta > 0 ? '+' : ''}
-            {delta}%
-          </span>
-        )}
-      </p>
-      <p className={`mt-0.5 text-[0.6875rem] ${warn ? 'text-[var(--a-a63d5a)]' : 'text-[var(--a-8a7a72)]'}`}>{hint}</p>
-    </div>
-  )
-}
+/* ── 이 화면에서만 쓰는 조각들 (나머지는 AdminUI 에서 가져다 쓴다) ── */
 
 function List({
   title,

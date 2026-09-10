@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { ArrowDown, ArrowUp, Eye, EyeOff, Link2, Plus, Save, Trash2 } from 'lucide-react'
 
 import AdminGate from '@/components/admin/AdminGate'
-import AdminTabs from '@/components/admin/AdminTabs'
+import AdminShell from '@/components/admin/AdminShell'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import seedRaw from '@/data/videos.json'
@@ -175,35 +175,26 @@ function AdminVideos({ password, idTokenGetter }: { password: string | null; idT
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="mx-auto max-w-5xl px-6">
-        <AdminTabs active="/admin/videos" />
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">유튜브 채널 관리</h1>
-            <p className="mt-1 text-sm text-gray-500">
-              최신 영상은 채널 RSS 로 자동 수집됩니다. 여기서는 <b>대표·인기 영상</b>과 노출 순서를
-              정하고, 자동 수집분 중 숨길 영상을 지정합니다. ({source === 'db' ? 'DB' : '시드'} 기준)
-            </p>
-          </div>
-          <div className="flex gap-2">
-            <Link href="/videos" target="_blank">
-              <Button variant="outline" size="sm">
-                <Eye className="mr-1.5 h-4 w-4" /> 사이트 보기
-              </Button>
-            </Link>
-            <Link href="/admin/wed100">
-              <Button variant="outline" size="sm">
-                100문100답
-              </Button>
-            </Link>
-          </div>
+    <div>
+      {/* 화면 이름과 오갈 길은 윗줄(AdminShell)이 맡는다. 여기 남긴 것은 이 화면의 사정뿐이다 */}
+        <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
+          <p className="max-w-xl text-sm leading-relaxed text-[var(--a-6b5d57)]">
+            최신 영상은 채널 RSS 로 자동 수집됩니다. 여기서는 <b>대표·인기 영상</b>과 노출 순서를
+            정하고, 자동 수집분 중 숨길 영상을 지정합니다. ({source === 'db' ? 'DB' : '시드'} 기준)
+          </p>
+          <Link href="/videos" target="_blank">
+            <Button variant="outline" size="sm">
+              <Eye className="mr-1.5 h-4 w-4" /> 사이트에서 보기
+            </Button>
+          </Link>
         </div>
 
         {status && (
           <div
             className={`mb-4 rounded-lg px-4 py-3 text-sm ${
-              status.kind === 'ok' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'
+              status.kind === 'ok'
+                ? 'border border-[var(--a-dce8e0)] bg-white text-[var(--a-3f6b57)]'
+                : 'border border-[var(--a-e8c7cf)] bg-white text-[var(--a-a63d5a)]'
             }`}
           >
             {status.msg}
@@ -211,12 +202,12 @@ function AdminVideos({ password, idTokenGetter }: { password: string | null; idT
         )}
 
         {/* 채널 */}
-        <section className="mb-6 rounded-xl border border-gray-200 bg-white p-5">
-          <h2 className="mb-3 flex items-center gap-2 text-sm font-bold text-gray-900">
+        <section className="mb-6 rounded-xl border border-[var(--a-e0d6cc)] bg-white p-5">
+          <h2 className="mb-3 flex items-center gap-2 text-sm font-extrabold text-[var(--a-2e2724)]">
             <Link2 className="h-4 w-4" /> 유튜브 채널
           </h2>
           <div className="grid gap-3 sm:grid-cols-3">
-            <label className="text-xs text-gray-500">
+            <label className="text-xs text-[var(--a-8a7a72)]">
               채널 주소
               <Input
                 className="mt-1"
@@ -225,7 +216,7 @@ function AdminVideos({ password, idTokenGetter }: { password: string | null; idT
                 placeholder="https://www.youtube.com/@..."
               />
             </label>
-            <label className="text-xs text-gray-500">
+            <label className="text-xs text-[var(--a-8a7a72)]">
               채널 이름
               <Input
                 className="mt-1"
@@ -233,7 +224,7 @@ function AdminVideos({ password, idTokenGetter }: { password: string | null; idT
                 onChange={(e) => setChannel({ ...channel, name: e.target.value })}
               />
             </label>
-            <label className="text-xs text-gray-500">
+            <label className="text-xs text-[var(--a-8a7a72)]">
               채널 ID (UC… — 최신 영상 자동 수집에 사용)
               <Input
                 className="mt-1"
@@ -249,8 +240,8 @@ function AdminVideos({ password, idTokenGetter }: { password: string | null; idT
         </section>
 
         {/* 추가 */}
-        <section className="mb-6 rounded-xl border border-gray-200 bg-white p-5">
-          <h2 className="mb-3 text-sm font-bold text-gray-900">영상 추가</h2>
+        <section className="mb-6 rounded-xl border border-[var(--a-e0d6cc)] bg-white p-5">
+          <h2 className="mb-3 text-sm font-extrabold text-[var(--a-2e2724)]">영상 추가</h2>
           <div className="flex flex-wrap gap-2">
             <Input
               className="min-w-[280px] flex-1"
@@ -262,7 +253,7 @@ function AdminVideos({ password, idTokenGetter }: { password: string | null; idT
             <select
               value={cat}
               onChange={(e) => setCat(e.target.value as VideoCategory)}
-              className="h-9 rounded-md border border-gray-200 bg-white px-3 text-sm"
+              className="h-9 rounded-md border border-[var(--a-e0d6cc)] bg-white px-3 text-sm"
             >
               {videoCategories.map((c) => (
                 <option key={c.key} value={c.key}>
@@ -274,7 +265,7 @@ function AdminVideos({ password, idTokenGetter }: { password: string | null; idT
               <Plus className="mr-1.5 h-4 w-4" /> 추가
             </Button>
           </div>
-          <p className="mt-2 text-xs text-gray-500">
+          <p className="mt-2 text-xs text-[var(--a-8a7a72)]">
             제목은 유튜브에서 자동으로 가져옵니다. 필요하면 아래 목록에서 직접 고칠 수 있습니다.
           </p>
         </section>
@@ -284,11 +275,11 @@ function AdminVideos({ password, idTokenGetter }: { password: string | null; idT
           const rows = items.filter((x) => x.category === c.key).sort((a, b) => a.order - b.order)
           return (
             <section key={c.key} className="mb-6">
-              <h2 className="mb-2 text-sm font-bold text-gray-900">
-                {c.name} <span className="ml-1 font-normal text-gray-400">{rows.length}개</span>
+              <h2 className="mb-2 text-sm font-extrabold text-[var(--a-2e2724)]">
+                {c.name} <span className="ml-1 font-normal text-[var(--a-9a8b84)]">{rows.length}개</span>
               </h2>
               {rows.length === 0 ? (
-                <p className="rounded-xl border border-dashed border-gray-200 bg-white px-4 py-6 text-center text-sm text-gray-400">
+                <p className="rounded-xl border border-dashed border-[var(--a-e0d6cc)] bg-white px-4 py-6 text-center text-sm text-[var(--a-9a8b84)]">
                   등록된 영상이 없습니다.
                 </p>
               ) : (
@@ -297,7 +288,7 @@ function AdminVideos({ password, idTokenGetter }: { password: string | null; idT
                     <li
                       key={v.youtubeId}
                       className={`flex flex-wrap items-center gap-3 rounded-xl border bg-white p-3 ${
-                        v.published === false ? 'border-gray-200 opacity-55' : 'border-gray-200'
+                        v.published === false ? 'border-[var(--a-e0d6cc)] opacity-55' : 'border-[var(--a-e0d6cc)]'
                       }`}
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -323,7 +314,7 @@ function AdminVideos({ password, idTokenGetter }: { password: string | null; idT
                           href={youtubeWatch(v.youtubeId)}
                           target="_blank"
                           rel="noreferrer"
-                          className="mt-1 inline-block text-[0.6875rem] text-gray-400 underline"
+                          className="mt-1 inline-block text-[0.6875rem] text-[var(--a-9a8b84)] underline"
                         >
                           {v.youtubeId}
                         </a>
@@ -331,7 +322,7 @@ function AdminVideos({ password, idTokenGetter }: { password: string | null; idT
                       <select
                         value={v.category}
                         onChange={(e) => patch(v, { category: e.target.value as VideoCategory })}
-                        className="h-8 rounded-md border border-gray-200 bg-white px-2 text-xs"
+                        className="h-8 rounded-md border border-[var(--a-e0d6cc)] bg-white px-2 text-xs"
                       >
                         {videoCategories.map((x) => (
                           <option key={x.key} value={x.key}>
@@ -382,13 +373,13 @@ function AdminVideos({ password, idTokenGetter }: { password: string | null; idT
           )
         })}
       </div>
-    </div>
   )
 }
 
 export default function AdminVideosPage() {
   return (
-    <AdminGate title="유튜브 채널 관리">
+    <AdminShell active="/admin/videos" title="유튜브 채널 관리">
+      <AdminGate title="유튜브 채널 관리">
       {(ctx) => (
         <AdminVideos
           password={ctx.password}
@@ -405,7 +396,8 @@ export default function AdminVideosPage() {
             }
           }}
         />
-      )}
-    </AdminGate>
+        )}
+      </AdminGate>
+    </AdminShell>
   )
 }

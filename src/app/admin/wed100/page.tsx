@@ -13,7 +13,7 @@ import Wed100Paywall from '@/components/admin/Wed100Paywall'
 import { whenExact, whenText } from '@/lib/when'
 import { getDb, uploadAudio } from '@/lib/firebase/client'
 import AdminGate from '@/components/admin/AdminGate'
-import AdminTabs from '@/components/admin/AdminTabs'
+import AdminShell from '@/components/admin/AdminShell'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { splitSentences } from '@/lib/wed100-text'
@@ -48,6 +48,40 @@ function answerCharsNoSpace(answer: string[]): number {
 }
 
 type Status = { kind: 'ok' | 'err'; msg: string } | null
+
+/** 도구줄 단추. 관리 화면 어디서나 같은 모양이 되도록 한 곳에서만 정한다 */
+function Tool({
+  icon: Icon,
+  onClick,
+  disabled,
+  on,
+  children,
+}: {
+  icon: React.ComponentType<{ className?: string }>
+  onClick: () => void
+  disabled?: boolean
+  /** 눌러 놓은 상태(설정 패널이 열려 있음) */
+  on?: boolean
+  children: React.ReactNode
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      aria-pressed={on}
+      className={[
+        'inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-bold transition-colors disabled:opacity-50',
+        on
+          ? 'border-[var(--a-2e2724)] bg-[var(--a-2e2724)] text-white'
+          : 'border-[var(--a-e0d6cc)] bg-white text-[var(--a-6b5d57)] hover:text-[var(--a-a63d5a)]',
+      ].join(' ')}
+    >
+      <Icon className="h-3.5 w-3.5" />
+      {children}
+    </button>
+  )
+}
 
 /** 편집 글자 크기 (원장님 가독성용) */
 type FontSize = 'sm' | 'md' | 'lg'
@@ -513,20 +547,25 @@ function AdminWed100Editor({
 
 
   return (
-    <div className="bg-[var(--a-efe9e3)] px-4 py-6 lg:px-8">
-      <div className="mx-auto max-w-7xl">
-        <AdminTabs active="/admin/wed100" />
-        {/* 상단 바 */}
-        <div className="flex flex-wrap items-center gap-3 rounded-t-2xl bg-[var(--a-221d1b)] px-5 py-3.5 text-white">
-          <b className="text-sm">100문100답 콘텐츠 관리</b>
+    <div>
+      <div>
+        {/*
+          이 화면의 도구줄.
+
+          전에는 검은 띠였다. 이 화면이 관리 화면 중 맨 처음 만들어진 탓에 혼자
+          다른 옷을 입고 있었고, 띠 안에는 다른 화면으로 가는 링크까지 들어 있었다.
+          이제 이름과 길은 윗줄(AdminShell)이 맡는다 — 여기 남는 것은 이 화면에서만
+          할 수 있는 일뿐이다.
+        */}
+        <div className="flex flex-wrap items-center gap-2 rounded-t-2xl border border-b-0 border-[var(--a-e0d6cc)] bg-white px-4 py-3">
           <span
-            className={`rounded-full px-2.5 py-0.5 text-[0.625rem] font-bold ${
-              source === 'db' ? 'bg-emerald-800 text-emerald-100' : 'bg-amber-800 text-amber-100'
+            className={`rounded-full px-2.5 py-0.5 text-[0.6875rem] font-bold ${
+              source === 'db' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
             }`}
           >
             {source === 'db' ? 'DB 연결됨' : '시드 JSON (읽기전용 폴백)'}
           </span>
-          <span className="text-xs text-[var(--a-e5deda)]">
+          <span className="text-xs text-[var(--a-6b5d57)]">
             질문 {items.filter((x) => x.part >= 1 && x.part <= 6).length}문
             {items.some((x) => x.part === 0 || x.part === 7) &&
               ` · 프롤로그/에필로그 ${items.filter((x) => x.part === 0 || x.part === 7).length}`}
@@ -537,45 +576,19 @@ function AdminWed100Editor({
                 items.reduce((a, x) => a + answerChars(x.answer), 0) / items.length,
               ).toLocaleString()}자)`}
           </span>
-          <div className="ml-auto flex gap-2">
-            <Button
-              size="sm"
-              variant="secondary"
-              className="h-8 text-xs"
-              onClick={loadTrash}
-            >
-              <Archive className="mr-1 h-3.5 w-3.5" /> 삭제 보관함
-            </Button>
-            <Button
-              size="sm"
-              variant="secondary"
-              className="h-8 text-xs"
-              onClick={renumber}
-              disabled={saving || !canWrite}
-            >
-              <RefreshCw className="mr-1 h-3.5 w-3.5" /> 번호 다시 매기기
-            </Button>
-            <Button
-              size="sm"
-              variant="secondary"
-              className="h-8 text-xs"
-              onClick={() => setToolsOpen((v) => !v)}
-            >
-              <Volume2 className="mr-1 h-3.5 w-3.5" /> 노출·음성 설정
-            </Button>
-            <Button
-              size="sm"
-              variant="secondary"
-              className="h-8 text-xs"
-              onClick={() => seedDb(false)}
-            >
-              <Database className="mr-1 h-3.5 w-3.5" /> DB에 시드 넣기
-            </Button>
-            <Link href="/admin/dashboard" className="self-center text-xs text-[var(--a-e5deda)] hover:text-white">통계 →</Link>
-            <Link href="/admin/seo" className="self-center text-xs text-[var(--a-e5deda)] hover:text-white">검색어 목표 →</Link>
-            <Link href="/admin" className="self-center text-xs text-[var(--a-e5deda)] hover:text-white">
-              예약관리 →
-            </Link>
+          <div className="ml-auto flex flex-wrap gap-1.5">
+            <Tool onClick={loadTrash} icon={Archive}>
+              삭제 보관함
+            </Tool>
+            <Tool onClick={renumber} icon={RefreshCw} disabled={saving || !canWrite}>
+              번호 다시 매기기
+            </Tool>
+            <Tool onClick={() => setToolsOpen((v) => !v)} icon={Volume2} on={toolsOpen}>
+              노출·음성 설정
+            </Tool>
+            <Tool onClick={() => seedDb(false)} icon={Database}>
+              DB에 시드 넣기
+            </Tool>
           </div>
         </div>
 
@@ -679,7 +692,7 @@ function AdminWed100Editor({
           </div>
         )}
 
-        <div className="grid min-h-[640px] grid-cols-1 overflow-hidden rounded-b-2xl bg-white shadow lg:grid-cols-[300px_1fr]">
+        <div className="grid min-h-[640px] grid-cols-1 overflow-hidden rounded-b-2xl border border-[var(--a-e0d6cc)] bg-white lg:grid-cols-[300px_1fr]">
           {/* 좌측 리스트 */}
           <div className="flex flex-col border-r border-[var(--a-e7ddd4)] bg-[var(--a-fcfaf8)]">
             <div className="p-3">
@@ -772,7 +785,11 @@ function AdminWed100Editor({
                 auth={authPayload}
                 onReverted={() => void load()}
               />
-              <div className="sticky -top-5 z-10 -mx-5 flex flex-wrap items-center gap-2.5 border-b border-[var(--a-e7ddd4)] bg-white/95 px-5 pb-3 pt-1 backdrop-blur lg:-mx-6 lg:-top-6 lg:px-6">
+              {/* 저장 도구줄. 윗줄(AdminShell)이 붙박이라 그 높이만큼 내려 붙인다 */}
+              <div
+                className="sticky z-10 -mx-5 flex flex-wrap items-center gap-2.5 border-b border-[var(--a-e7ddd4)] bg-white/95 px-5 pb-3 pt-1 backdrop-blur lg:-mx-6 lg:px-6"
+                style={{ top: 'calc(var(--admin-top, 0px) - 1.25rem)' }}
+              >
                 <h2 className="text-lg font-extrabold text-[var(--a-2e2724)]">{itemLabel(draft)} 편집</h2>
                 <span className="rounded bg-[var(--a-efe7e1)] px-2 py-0.5 text-[0.625rem] font-bold text-[var(--a-6b5d57)]">
                   {draft.slug}
@@ -1238,10 +1255,12 @@ function AdminWed100Editor({
 
 export default function AdminWed100Page() {
   return (
-    <AdminGate title="100문100답 관리">
-      {({ email, password, canWrite }) => (
-        <AdminWed100Editor email={email} password={password} canWrite={canWrite} />
-      )}
-    </AdminGate>
+    <AdminShell active="/admin/wed100" title="100문100답 콘텐츠 관리" wide>
+      <AdminGate title="100문100답 관리">
+        {({ email, password, canWrite }) => (
+          <AdminWed100Editor email={email} password={password} canWrite={canWrite} />
+        )}
+      </AdminGate>
+    </AdminShell>
   )
 }

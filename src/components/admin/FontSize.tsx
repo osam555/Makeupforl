@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Type } from 'lucide-react'
 
 const KEY = 'mfl:adminFont'
 export type FontSize = 'normal' | 'large' | 'xlarge'
@@ -23,6 +22,9 @@ export type FontSize = 'normal' | 'large' | 'xlarge'
  *
  * 고른 값은 이 기기에 남는다. 서버에 두지 않는 이유는, 큰 화면과 휴대전화에서
  * 원하는 크기가 다르기 때문이다.
+ *
+ * 고르는 단추는 설정 패널(AdminSettings)에 있다. 화면 위에 늘 펼쳐 두던 것을
+ * 접어 넣었다 — 한 번 정하면 다시 만질 일이 드문 것이 자리를 차지하고 있었다.
  */
 export function useFontSize(): [FontSize, (v: FontSize) => void] {
   const [size, setSize] = useState<FontSize>('large')
@@ -48,39 +50,4 @@ export function useFontSize(): [FontSize, (v: FontSize) => void] {
   }
 
   return [size, choose]
-}
-
-/** 크기 고르는 단추 두 개 */
-export default function FontSizeToggle({
-  size,
-  onChange,
-}: {
-  size: FontSize
-  onChange: (v: FontSize) => void
-}) {
-  return (
-    <div className="inline-flex items-center gap-1 rounded-lg border border-[var(--a-e0d6cc)] bg-white p-1">
-      <Type className="ml-1 h-3.5 w-3.5 text-[var(--a-8a7a72)]" aria-hidden />
-      {(
-        [
-          ['normal', '일반'],
-          ['large', '크게'],
-          ['xlarge', '아주 크게'],
-        ] as const
-      ).map(([v, label]) => (
-        <button
-          key={v}
-          type="button"
-          onClick={() => onChange(v)}
-          aria-pressed={size === v}
-          className={[
-            'rounded-md px-2 py-1 text-xs font-bold transition-colors',
-            size === v ? 'bg-[var(--a-2e2724)] text-white' : 'text-[var(--a-6b5d57)] hover:bg-[var(--a-f4f1ee)]',
-          ].join(' ')}
-        >
-          {label}
-        </button>
-      ))}
-    </div>
-  )
 }

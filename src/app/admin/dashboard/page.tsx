@@ -1,15 +1,11 @@
 'use client'
 
-import Link from 'next/link'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { BarChart3, RefreshCw } from 'lucide-react'
 
 import seedRaw from '@/data/wed100.json'
 import { getDb } from '@/lib/firebase/client'
 import AdminGate from '@/components/admin/AdminGate'
-import AdminTabs from '@/components/admin/AdminTabs'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import AdminShell from '@/components/admin/AdminShell'
 import type { Wed100Data } from '@/types/wed100'
 import { PART_THEME } from '@/types/wed100'
 
@@ -124,135 +120,128 @@ function AdminDashboard() {
   ]
 
   return (
-    <div className="bg-[var(--a-efe9e3)] px-4 py-6 lg:px-8">
-      <div className="mx-auto max-w-7xl">
-        <AdminTabs active="/admin/dashboard" />
-        <div className="flex flex-wrap items-center gap-3 rounded-t-2xl bg-[var(--a-221d1b)] px-5 py-3.5 text-white">
-          <BarChart3 className="h-4 w-4" />
-          <b className="text-sm">100문100답 통계</b>
-          <div className="ml-2 flex gap-1">
-            {RANGES.map((r) => (
-              <button
-                key={r.key}
-                onClick={() => setDays(r.key)}
-                className={`rounded-full px-3 py-1 text-[0.6875rem] ${
-                  days === r.key ? 'bg-[var(--a-a63d5a)] font-bold' : 'bg-[var(--a-3a322f)] text-[var(--a-e5deda)]'
-                }`}
-              >
-                최근 {r.label}
-              </button>
-            ))}
-          </div>
-          <div className="ml-auto flex items-center gap-3">
-            <button onClick={load} className="flex items-center gap-1 text-xs text-[var(--a-e5deda)] hover:text-white">
-              <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} /> 새로고침
-            </button>
-            <Link href="/admin/seo" className="text-xs text-[var(--a-e5deda)] hover:text-white">
-              검색어 목표 →
-            </Link>
-            <Link href="/admin/wed100" className="text-xs text-[var(--a-e5deda)] hover:text-white">
-              콘텐츠 관리 →
-            </Link>
-          </div>
-        </div>
+    <div>
+      {/*
+        기간 고르기.
 
-        <div className="rounded-b-2xl bg-white p-5 shadow lg:p-6">
-          {dbError && (
-            <div className="mb-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs leading-relaxed text-amber-800">
-              이벤트 데이터를 읽지 못했습니다 ({dbError}). Firebase 프로젝트 세팅(FIREBASE_SETUP.md)
-              후 방문·재생·전환이 자동 집계됩니다. 아래 콘텐츠 커버리지는 정상 표시됩니다.
+        전에는 검은 띠 안에 기간·새로고침·다른 화면 링크가 함께 있었다. 새로고침도
+        링크도 이제 윗줄에 있으니 남는 것은 기간뿐이다 — 띠를 걷어내고 고르는
+        단추만 남긴다. 지금 무엇을 보고 있는지가 한 줄로 읽힌다.
+      */}
+      <div className="mb-4 flex flex-wrap items-center gap-2">
+        <div className="inline-flex gap-1 rounded-lg border border-[var(--a-e0d6cc)] bg-[var(--color-white)] p-1">
+          {RANGES.map((r) => (
+            <button
+              key={r.key}
+              onClick={() => setDays(r.key)}
+              aria-pressed={days === r.key}
+              className={`rounded-md px-3 py-1.5 text-xs font-bold transition-colors ${
+                days === r.key
+                  ? 'bg-[var(--a-2e2724)] text-[var(--color-white)]'
+                  : 'text-[var(--a-6b5d57)] hover:bg-[var(--a-f4f1ee)]'
+              }`}
+            >
+              최근 {r.label}
+            </button>
+          ))}
+        </div>
+        {loading && <span className="text-xs text-[var(--a-8a7a72)]">읽는 중…</span>}
+      </div>
+
+      {dbError && (
+        <div className="mb-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs leading-relaxed text-amber-800">
+          이벤트 데이터를 읽지 못했습니다 ({dbError}). Firebase 프로젝트 세팅(FIREBASE_SETUP.md)
+          후 방문·재생·전환이 자동 집계됩니다. 아래 콘텐츠 커버리지는 정상 표시됩니다.
+        </div>
+      )}
+
+      {/* KPI */}
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {kpi.map((k) => (
+          <div key={k.l} className="rounded-2xl border border-[var(--a-e7ddd4)] bg-[var(--color-white)] p-4">
+            <p className="text-[0.6875rem] font-bold text-[var(--a-6b5d57)]">{k.l}</p>
+            <p className="mt-1.5 text-2xl font-black text-[var(--a-2e2724)]">{k.v}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-4 grid gap-4 lg:grid-cols-[1.4fr_1fr]">
+        {/* TOP 질문 */}
+        <div className="rounded-2xl border border-[var(--a-e7ddd4)] bg-[var(--color-white)] p-5">
+          <h2 className="text-sm font-extrabold text-[var(--a-2e2724)]">가장 많이 본 질문 TOP 10</h2>
+          {stats.top.length === 0 ? (
+            <p className="mt-4 text-xs text-[var(--a-9c8d86)]">
+              아직 집계된 이벤트가 없습니다. 사이트 배포 후 방문이 쌓이면 여기에 표시됩니다.
+            </p>
+          ) : (
+            <div className="mt-4 space-y-2.5">
+              {stats.top.map(([slug, s]) => {
+                const item = seed.items.find((x) => x.slug === slug)
+                const max = stats.top[0][1].view + stats.top[0][1].play
+                const v = s.view + s.play
+                return (
+                  <div key={slug} className="flex items-center gap-3 text-xs">
+                    <span className="w-52 truncate text-[var(--a-4a403b)]">
+                      {item?.question ?? slug}
+                    </span>
+                    <span className="h-2 flex-1 overflow-hidden rounded-full bg-[var(--a-f2eae3)]">
+                      <span
+                        className="block h-full rounded-full bg-gradient-to-r from-[var(--a-a63d5a)] to-[var(--a-d98ba3)]"
+                        style={{ width: `${(v / max) * 100}%` }}
+                      />
+                    </span>
+                    <span className="w-14 text-right font-mono text-[0.6875rem] text-[var(--a-8a7b73)]">
+                      {v.toLocaleString()}
+                    </span>
+                  </div>
+                )
+              })}
             </div>
           )}
+        </div>
 
-          {/* KPI */}
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {kpi.map((k) => (
-              <div key={k.l} className="rounded-2xl border border-[var(--a-e7ddd4)] p-4">
-                <p className="text-[0.6875rem] font-bold text-[var(--a-6b5d57)]">{k.l}</p>
-                <p className="mt-1.5 text-2xl font-black text-[var(--a-2e2724)]">{k.v}</p>
+        {/* 커버리지 + 파트 비중 */}
+        <div className="rounded-2xl border border-[var(--a-e7ddd4)] bg-[var(--color-white)] p-5">
+          <h2 className="text-sm font-extrabold text-[var(--a-2e2724)]">콘텐츠 제작 커버리지</h2>
+          <div className="mt-3 grid grid-cols-2 gap-2.5">
+            {[
+              [`${coverage.total}`, '본문(문)'],
+              [`${coverage.withAudio}/${coverage.total}`, 'TTS 음성'],
+              [`${coverage.withEn}/${coverage.total}`, '영문 자막'],
+              [`${coverage.cueCount}`, '자막 큐'],
+            ].map(([v, l]) => (
+              <div key={l} className="rounded-xl bg-[var(--a-fcfaf8)] p-3 text-center">
+                <p className="text-lg font-black text-[var(--a-a63d5a)]">{v}</p>
+                <p className="text-[0.625rem] text-[var(--a-6b5d57)]">{l}</p>
               </div>
             ))}
           </div>
 
-          <div className="mt-4 grid gap-4 lg:grid-cols-[1.4fr_1fr]">
-            {/* TOP 질문 */}
-            <div className="rounded-2xl border border-[var(--a-e7ddd4)] p-5">
-              <h2 className="text-sm font-extrabold text-[var(--a-2e2724)]">가장 많이 본 질문 TOP 10</h2>
-              {stats.top.length === 0 ? (
-                <p className="mt-4 text-xs text-[var(--a-9c8d86)]">
-                  아직 집계된 이벤트가 없습니다. 사이트 배포 후 방문이 쌓이면 여기에 표시됩니다.
-                </p>
-              ) : (
-                <div className="mt-4 space-y-2.5">
-                  {stats.top.map(([slug, s]) => {
-                    const item = seed.items.find((x) => x.slug === slug)
-                    const max = stats.top[0][1].view + stats.top[0][1].play
-                    const v = s.view + s.play
-                    return (
-                      <div key={slug} className="flex items-center gap-3 text-xs">
-                        <span className="w-52 truncate text-[var(--a-4a403b)]">
-                          {item?.question ?? slug}
-                        </span>
-                        <span className="h-2 flex-1 overflow-hidden rounded-full bg-[var(--a-f2eae3)]">
-                          <span
-                            className="block h-full rounded-full bg-gradient-to-r from-[var(--a-a63d5a)] to-[var(--a-d98ba3)]"
-                            style={{ width: `${(v / max) * 100}%` }}
-                          />
-                        </span>
-                        <span className="w-14 text-right font-mono text-[0.6875rem] text-[var(--a-8a7b73)]">
-                          {v.toLocaleString()}
-                        </span>
-                      </div>
-                    )
-                  })}
+          <h2 className="mt-6 text-sm font-extrabold text-[var(--a-2e2724)]">파트별 소비 비중</h2>
+          <div className="mt-3 space-y-2">
+            {seed.parts.map((p) => {
+              const v = stats.perPart.get(p.part) ?? 0
+              const total = [...stats.perPart.values()].reduce((a, b) => a + b, 0) || 1
+              return (
+                <div key={p.part} className="flex items-center gap-2.5 text-xs">
+                  <span className="w-32 truncate text-[var(--a-4a403b)]">
+                    P{p.part} {p.title}
+                  </span>
+                  <span className="h-2 flex-1 overflow-hidden rounded-full bg-[var(--a-f2eae3)]">
+                    <span
+                      className="block h-full rounded-full"
+                      style={{
+                        width: `${(v / total) * 100}%`,
+                        background: PART_THEME[p.part].accent,
+                      }}
+                    />
+                  </span>
+                  <span className="w-10 text-right font-mono text-[0.625rem] text-[var(--a-8a7b73)]">
+                    {total > 1 ? `${Math.round((v / total) * 100)}%` : '—'}
+                  </span>
                 </div>
-              )}
-            </div>
-
-            {/* 커버리지 + 파트 비중 */}
-            <div className="rounded-2xl border border-[var(--a-e7ddd4)] p-5">
-              <h2 className="text-sm font-extrabold text-[var(--a-2e2724)]">콘텐츠 제작 커버리지</h2>
-              <div className="mt-3 grid grid-cols-2 gap-2.5">
-                {[
-                  [`${coverage.total}`, '본문(문)'],
-                  [`${coverage.withAudio}/${coverage.total}`, 'TTS 음성'],
-                  [`${coverage.withEn}/${coverage.total}`, '영문 자막'],
-                  [`${coverage.cueCount}`, '자막 큐'],
-                ].map(([v, l]) => (
-                  <div key={l} className="rounded-xl bg-[var(--a-fcfaf8)] p-3 text-center">
-                    <p className="text-lg font-black text-[var(--a-a63d5a)]">{v}</p>
-                    <p className="text-[0.625rem] text-[var(--a-6b5d57)]">{l}</p>
-                  </div>
-                ))}
-              </div>
-
-              <h2 className="mt-6 text-sm font-extrabold text-[var(--a-2e2724)]">파트별 소비 비중</h2>
-              <div className="mt-3 space-y-2">
-                {seed.parts.map((p) => {
-                  const v = stats.perPart.get(p.part) ?? 0
-                  const total = [...stats.perPart.values()].reduce((a, b) => a + b, 0) || 1
-                  return (
-                    <div key={p.part} className="flex items-center gap-2.5 text-xs">
-                      <span className="w-32 truncate text-[var(--a-4a403b)]">
-                        P{p.part} {p.title}
-                      </span>
-                      <span className="h-2 flex-1 overflow-hidden rounded-full bg-[var(--a-f2eae3)]">
-                        <span
-                          className="block h-full rounded-full"
-                          style={{
-                            width: `${(v / total) * 100}%`,
-                            background: PART_THEME[p.part].accent,
-                          }}
-                        />
-                      </span>
-                      <span className="w-10 text-right font-mono text-[0.625rem] text-[var(--a-8a7b73)]">
-                        {total > 1 ? `${Math.round((v / total) * 100)}%` : '—'}
-                      </span>
-                    </div>
-                  )
-                })}
-              </div>
-            </div>
+              )
+            })}
           </div>
         </div>
       </div>
@@ -261,5 +250,9 @@ function AdminDashboard() {
 }
 
 export default function AdminDashboardPage() {
-  return <AdminGate title="100문100답 통계">{() => <AdminDashboard />}</AdminGate>
+  return (
+    <AdminShell active="/admin/dashboard" title="100문100답 통계" wide>
+      <AdminGate title="100문100답 통계">{() => <AdminDashboard />}</AdminGate>
+    </AdminShell>
+  )
 }
