@@ -15,6 +15,7 @@ import { useEffect, useRef } from 'react'
  */
 export const TABS = [
   { href: '/admin', label: '대시보드' },
+  { href: '/admin/proposals', label: '결재' },
   { href: '/admin/seo', label: '검색어 목표' },
   { href: '/admin/wed100', label: '100문100답' },
   { href: '/admin/videos', label: '영상' },

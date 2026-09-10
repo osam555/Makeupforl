@@ -6,6 +6,7 @@ import { Home, RefreshCw } from 'lucide-react'
 
 import AdminSettings from '@/components/admin/AdminSettings'
 import AdminTabs from '@/components/admin/AdminTabs'
+import { PendingBanner, PendingProvider } from '@/components/admin/Pending'
 import { ADMIN_HOME_ONCE } from '@/components/analytics/AdminHome'
 
 /**
@@ -61,6 +62,7 @@ export default function AdminShell({
   }, [])
 
   return (
+    <PendingProvider>
     <div ref={root} className="min-h-screen pb-14">
       <header ref={head} className="sticky top-0 z-40 border-b border-[var(--a-e0d6cc)] bg-[var(--a-f4f1ee)]/95 backdrop-blur">
         <div className={box}>
@@ -76,10 +78,22 @@ export default function AdminShell({
             <AdminTabs active={active} />
           </div>
         </div>
+
+        {/*
+          결재 대기 띠.
+
+          윗줄은 두 줄로 줄여 놓은 자리다. 여기에 세 번째 줄을 들이는 것은 그 원칙에
+          어긋나지만, 결재할 것이 있을 때만 나타나고 결재하면 사라진다. 그리고 원장님이
+          이걸 못 보시는 것이 이 기능이 실패하는 유일한 방식이다 — 결재함에 들어와야만
+          알 수 있으면 결재함은 안 열린다. 붙박이 안에 두는 것도 같은 이유다.
+          (윗줄 높이는 ResizeObserver 가 다시 재므로 안쪽 도구줄은 알아서 따라온다)
+        */}
+        <PendingBanner active={active} />
       </header>
 
       <main className={`${box} pt-4`}>{children}</main>
     </div>
+    </PendingProvider>
   )
 }
 

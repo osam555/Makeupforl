@@ -74,6 +74,25 @@ Firestore 에서 고친 내용은 `scripts/wed100/sync_seed.py` 로 시드에 �
   `src/lib/firebase/auth.ts`·`src/lib/firebase/admin.ts` 의 기본값,
   그리고 이들을 덮어쓰는 Vercel 환경변수 `NEXT_PUBLIC_ADMIN_EMAILS`.
 
+### 결재 — 매니저가 올리고 원장이 정한다
+
+관리자는 둘이고 하는 일이 다르다. `makeupforl77@gmail.com` 이 원장(결재), `john.wu571@gmail.com`
+이 사이트 매니저(제안)다. 가르는 곳은 `src/lib/roles.ts` 의 `OWNER_EMAILS`
+(`NEXT_PUBLIC_OWNER_EMAILS` 로 덮어씀). **문을 여는 것은 여전히 `ADMIN_EMAILS` 다** —
+역할은 문 안에서만 갈린다. 그래서 보안 규칙 두 파일은 건드릴 필요가 없다.
+
+- 콘텐츠를 바꾸는 일은 `/admin/proposals` 에 제안으로 올린다. 제안에는 **승인하는 순간
+  그대로 쓰일 최종 문장**이 들어 있다 — 말로 합의한 뒤 옮겨 적으면 옮기다 달라진 것을 아무도 못 본다.
+- 승인하면 Firestore 에 있는 것(`wed100` 문항, `config`)은 그 자리에서 반영되고
+  `wed100_versions` 에 직전 내용이 남는다. 허브 본문처럼 코드에 있는 것(`code`)은
+  "올려도 좋다" 는 표시만 남고 배포는 사람이 한다 — 반영 안 되는 승인을 반영된 척 보이지 않게 한다.
+- 승인/반려 말고 **의견만 남기고 보류**할 수 있다. "좋은데 이 낱말만" 이 제일 흔한데
+  반려밖에 없으면 제안이 닫혀 처음부터 다시 올려야 한다.
+- 결재 권한은 `/api/proposals` 가 idToken 으로 다시 확인한다. 화면에서 단추를 감추는 것은
+  편의이지 보안이 아니다.
+- 결재함은 **시드 폴백이 없는 유일한 데이터**다. 손님 화면에 아무것도 그리지 않으므로,
+  Firestore 가 없으면 빈 목록이 아니라 왜 안 되는지를 말해야 한다.
+
 ### 화면 두 갈래 — 손님용과 관리용
 
 - 손님용은 `SiteShell` 이 감싸고, 옛 PHP 사이트에서 이식한 `src/styles/mfl-original.css` 가 적용된다.
