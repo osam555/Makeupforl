@@ -2,8 +2,10 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Search, Play, List, LayoutGrid, Check, History } from 'lucide-react'
+
+import { useStoredJson } from '@/lib/stored'
 
 
 export interface BrowserItem {
@@ -31,6 +33,27 @@ interface Resume {
   duration: number
 }
 
+/*
+  이어듣기 위치와 들은 문항은 이 브라우저에만 저장한다 (로그인 없이 동작).
+  쓰는 쪽은 재생기(Wed100Player)고, 여기서는 읽기만 한다.
+
+  값과 읽는 함수를 모듈 바깥에 두는 이유는 useStoredJson 이 렌더마다 값을 다시
+  물어보기 때문이다 — 그때마다 새 객체를 만들면 같은 값인지 견줄 수가 없다.
+*/
+const NO_DONE: ReadonlySet<string> = new Set()
+
+function parseDone(raw: string): ReadonlySet<string> | null {
+  const v: unknown = JSON.parse(raw)
+  return Array.isArray(v) ? new Set(v.map(String)) : null
+}
+
+function parseResume(raw: string): Resume | null {
+  const v = JSON.parse(raw) as Resume
+  if (!v?.slug) return null
+  // 거의 다 들은 건 이어듣기로 안내하지 않는다
+  return v.t > 5 && v.t < (v.duration || 0) - 10 ? v : null
+}
+
 function fmt(sec: number) {
   const s = Math.round(sec)
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
@@ -53,24 +76,8 @@ export default function Wed100Browser({
   const [part, setPart] = useState(-1)
   const [kw, setKw] = useState('')
   const [view, setView] = useState<'grid' | 'list'>('grid')
-  const [done, setDone] = useState<Set<string>>(new Set())
-  const [resume, setResume] = useState<Resume | null>(null)
-
-  // 이어듣기 위치와 들은 문항은 이 브라우저에만 저장한다 (로그인 없이 동작)
-  useEffect(() => {
-    try {
-      const d = window.localStorage.getItem(LS_DONE)
-      if (d) setDone(new Set(JSON.parse(d) as string[]))
-      const r = window.localStorage.getItem(LS_RESUME)
-      if (r) {
-        const v = JSON.parse(r) as Resume
-        // 거의 다 들은 건 이어듣기로 안내하지 않는다
-        if (v?.slug && v.t > 5 && v.t < (v.duration || 0) - 10) setResume(v)
-      }
-    } catch {
-      /* 사파리 프라이빗 모드 등 */
-    }
-  }, [])
+  const done = useStoredJson(LS_DONE, NO_DONE, parseDone)
+  const resume = useStoredJson<Resume | null>(LS_RESUME, null, parseResume)
 
   const resumeItem = useMemo(
     () => (resume ? items.find((x) => x.slug === resume.slug) ?? null : null),

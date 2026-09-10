@@ -5,8 +5,14 @@ import { usePathname, useRouter } from 'next/navigation'
 
 import { watchAdmin } from '@/lib/firebase/auth'
 
-/** 이번 실행에서 이미 보냈는지 — 앱을 닫았다 열면 다시 보낸다 */
-const ONCE = 'mfl:adminHomeSent'
+/**
+ * 이번 실행에서 이미 보냈는지 — 앱을 닫았다 열면 다시 보낸다.
+ *
+ * 관리 화면의 [나가기] 도 이 값을 세운다. 앱의 [관리 화면] 바로가기로 들어오면
+ * 여기를 거치지 않아 값이 비어 있는데, 그 상태로 손님 화면에 나가면 이 자리가
+ * 다시 관리 화면으로 되돌려 보낸다 — 나가는 문이 없어진다.
+ */
+export const ADMIN_HOME_ONCE = 'mfl:adminHomeSent'
 
 /**
  * 홈 화면 아이콘을 누르면 원장님께는 관리 화면이 열린다.
@@ -35,7 +41,7 @@ export default function AdminHome() {
     if (pathname?.startsWith('/admin')) return
 
     try {
-      if (sessionStorage.getItem(ONCE)) return
+      if (sessionStorage.getItem(ADMIN_HOME_ONCE)) return
     } catch {
       /* 저장이 막혀 있으면 이번 한 번은 옮긴다 — 안 옮기는 것보다 낫다 */
     }
@@ -44,7 +50,7 @@ export default function AdminHome() {
     void watchAdmin((email) => {
       if (!email) return
       try {
-        sessionStorage.setItem(ONCE, '1')
+        sessionStorage.setItem(ADMIN_HOME_ONCE, '1')
       } catch {
         /* 못 남겨도 옮기기는 한다 */
       }

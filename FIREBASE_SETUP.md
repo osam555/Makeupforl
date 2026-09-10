@@ -22,10 +22,23 @@
 | `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | messagingSenderId |
 | `NEXT_PUBLIC_FIREBASE_APP_ID` | appId |
 | `NEXT_PUBLIC_ADMIN_EMAILS` | `makeupforl77@gmail.com,john.wu571@gmail.com` (쉼표로 여러 명) |
-| ~~`WED100_ADMIN_PASSWORD`~~ | (제거됨) 비밀번호 로그인은 더 이상 지원하지 않는다 |
+| ~~`WED100_ADMIN_PASSWORD`~~ | (제거됨) 비밀번호 로그인은 더 이상 지원하지 않는다. Vercel 에서도 삭제했다 |
 | `FIREBASE_SERVICE_ACCOUNT` | 서비스 계정 키 JSON (7단계 참고) |
 
-로컬 개발용은 `.env.local` 에 같은 키로 넣으세요.
+### 로컬 개발용 `.env.local`
+
+`vercel env pull` 로는 못 가져온다 — 값이 Secret 타입으로 등록돼 있어 `[SENSITIVE]`
+자리표시자만 내려온다. 공개 키는 Firebase 에서 직접 받는 편이 빠르다.
+
+```bash
+firebase apps:sdkconfig WEB --project makeupforl     # apiKey·authDomain·appId 등
+```
+
+**`FIREBASE_SERVICE_ACCOUNT` 는 로컬에 두지 않는 것을 권한다.** 그 키가 있으면 로컬
+개발이 운영 Firestore 에 그대로 쓴다 — 방문 통계가 개발자의 클릭으로 오염되고 문항을
+실수로 덮어쓸 수 있다. 키 없이도 읽기는 전부 되고(공개 읽기 규칙 + 시드 폴백),
+저장 API 만 503 으로 막힌다. 이건 고장이 아니라 설계된 길이다. 저장까지 시험해야 할
+때만 잠깐 넣고 끝나면 지울 것.
 
 ## 3단계: 관리자 로그인(Authentication) 설정
 1. 빌드 → **Authentication** → 시작하기

@@ -1,25 +1,22 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import { Moon, Sun } from 'lucide-react'
 
+import { useHydrated, useStoredChoice } from '@/lib/stored'
+
 const KEY = 'wed100Theme'
+const THEMES = ['light', 'dark'] as const
 
 /** 100문100답 섹션 전용 라이트/다크 테마 래퍼 + 선택 토글 */
 export default function Wed100Shell({ children }: { children: React.ReactNode }) {
   // 기본값은 라이트. 사용자가 고른 값만 기억한다.
-  const [dark, setDark] = useState(false)
-  const [ready, setReady] = useState(false)
+  const [theme, setTheme] = useStoredChoice(KEY, 'light', THEMES)
+  const dark = theme === 'dark'
 
-  useEffect(() => {
-    setDark(window.localStorage.getItem(KEY) === 'dark')
-    setReady(true)
-  }, [])
+  // 저장된 값을 알기 전(서버가 그린 화면과 같아야 하는 동안)에는 단추를 감춰 둔다
+  const ready = useHydrated()
 
-  const choose = (v: boolean) => {
-    window.localStorage.setItem(KEY, v ? 'dark' : 'light')
-    setDark(v)
-  }
+  const choose = (v: boolean) => setTheme(v ? 'dark' : 'light')
 
   return (
     <div className={`w100 relative ${dark ? 'w100-dark' : ''}`}>

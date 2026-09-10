@@ -759,13 +759,13 @@ export default function Wed100Player(p: PlayerProps) {
         </div>
 
         <div className="flex gap-2 border-t border-[var(--w-line)] px-4 py-3">
-          <a
+          <Link
             href="/consultation"
             onClick={() => track(p.slug, 'cta_click')}
             className="flex-1 rounded-lg bg-[var(--w-rose)] px-4 py-2.5 text-center text-[13px] font-bold text-white hover:bg-[var(--w-rose-d)]"
           >
             이 내용으로 상담 예약
-          </a>
+          </Link>
           <a
             href="tel:02-323-3321"
             className="rounded-lg border border-[var(--w-line)] px-4 py-2.5 text-[13px] font-bold text-[var(--w-ink)]"

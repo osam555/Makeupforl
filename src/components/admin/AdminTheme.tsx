@@ -1,11 +1,13 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext } from 'react'
 
 import { useFontSize, type FontSize } from '@/components/admin/FontSize'
+import { useStoredChoice } from '@/lib/stored'
 
 const THEME_KEY = 'mfl:adminTheme'
 export type Theme = 'light' | 'dark'
+const THEMES: readonly Theme[] = ['light', 'dark']
 
 /**
  * 밝은 화면 / 어두운 화면.
@@ -17,27 +19,7 @@ export type Theme = 'light' | 'dark'
  * 기본은 밝은 쪽이다. 낮에 쓰는 경우가 더 많고, 바꾸고 싶을 때 바꾸면 된다.
  */
 export function useTheme(): [Theme, (v: Theme) => void] {
-  const [theme, setTheme] = useState<Theme>('light')
-
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(THEME_KEY)
-      if (saved === 'dark' || saved === 'light') setTheme(saved)
-    } catch {
-      /* 저장이 막혀 있으면 기본값으로 */
-    }
-  }, [])
-
-  const choose = (v: Theme) => {
-    setTheme(v)
-    try {
-      localStorage.setItem(THEME_KEY, v)
-    } catch {
-      /* 못 남겨도 이번 화면에는 적용된다 */
-    }
-  }
-
-  return [theme, choose]
+  return useStoredChoice(THEME_KEY, 'light', THEMES)
 }
 
 type Prefs = {

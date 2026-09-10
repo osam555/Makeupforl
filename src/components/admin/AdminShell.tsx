@@ -1,10 +1,12 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { RefreshCw } from 'lucide-react'
+import Link from 'next/link'
+import { Home, RefreshCw } from 'lucide-react'
 
 import AdminSettings from '@/components/admin/AdminSettings'
 import AdminTabs from '@/components/admin/AdminTabs'
+import { ADMIN_HOME_ONCE } from '@/components/analytics/AdminHome'
 
 /**
  * 관리 화면의 껍데기 — 어느 화면이든 위쪽은 이것 하나다.
@@ -63,6 +65,7 @@ export default function AdminShell({
       <header ref={head} className="sticky top-0 z-40 border-b border-[var(--a-e0d6cc)] bg-[var(--a-f4f1ee)]/95 backdrop-blur">
         <div className={box}>
           <div className="flex items-center gap-2 py-2">
+            <Leave />
             <h1 className="min-w-0 flex-1 truncate text-sm font-extrabold text-[var(--a-2e2724)]">
               {title}
             </h1>
@@ -77,6 +80,39 @@ export default function AdminShell({
 
       <main className={`${box} pt-4`}>{children}</main>
     </div>
+  )
+}
+
+/**
+ * 나가기 — 손님이 보는 화면으로.
+ *
+ * 관리 화면은 사이트 헤더를 벗겨 두었다(SiteShell). 그래서 한번 들어오면 탭에
+ * 적힌 여섯 곳 말고는 갈 데가 없다. 나가려면 주소를 다시 치거나, 설정 서랍을 열어
+ * [손님이 보는 사이트 열기] 를 눌러 창을 하나 더 띄워야 했다. 휴대전화 앱으로
+ * 열면 주소창이 없어 앞의 방법은 아예 쓸 수 없다.
+ *
+ * 그래서 창을 새로 띄우지 않고 이 자리에서 홈으로 간다. 서랍 안의 링크는 컴퓨터에서
+ * 관리 화면을 띄워 둔 채 사이트를 나란히 보려는 쓰임이라 그대로 둔다.
+ *
+ * 옮기기 전에 AdminHome 의 표식을 세운다 — 앱의 [관리 화면] 바로가기로 들어왔다면
+ * 그 표식이 비어 있어서, 홈에 닿는 순간 관리 화면으로 되돌려 보내진다.
+ */
+function Leave() {
+  return (
+    <Link
+      href="/"
+      onClick={() => {
+        try {
+          sessionStorage.setItem(ADMIN_HOME_ONCE, '1')
+        } catch {
+          /* 저장이 막혀 있어도 나가기는 한다 */
+        }
+      }}
+      className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--a-e0d6cc)] bg-[var(--color-white)] px-2.5 py-1.5 text-xs font-bold text-[var(--a-6b5d57)] hover:text-[var(--a-a63d5a)]"
+    >
+      <Home className="h-3.5 w-3.5" aria-hidden />
+      나가기
+    </Link>
   )
 }
 

@@ -97,6 +97,8 @@ export default async function RootLayout({
           }}
         />
         <noscript>
+          {/* 자바스크립트가 없을 때의 마지막 길 — next/font 로는 대신할 수 없다 */}
+          {/* eslint-disable-next-line @next/next/no-css-tags */}
           <link rel="stylesheet" href="/pretendard.css" />
         </noscript>
         {/*

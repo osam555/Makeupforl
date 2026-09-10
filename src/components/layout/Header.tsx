@@ -12,9 +12,18 @@ export default function Header({ logo, logoWhite }: { logo?: string; logoWhite?:
   const router = useRouter()
   const pathname = usePathname() || '/'
 
-  useEffect(() => {
+  /*
+    화면이 바뀌면 모바일 드로어를 닫는다.
+
+    효과가 아니라 렌더 도중에 맞춘다 — 효과로 하면 열린 드로어가 한 번 그려진 뒤
+    닫히고, React 19 는 그 되풀이를 경고한다. 드로어 안의 링크들은 저마다 닫고
+    있지만, 뒤로 가기나 다른 경로로 화면이 바뀌는 길도 있어 여기서 한 번 더 받는다.
+  */
+  const [shownPath, setShownPath] = useState(pathname)
+  if (shownPath !== pathname) {
+    setShownPath(pathname)
     setMenuOpen(false)
-  }, [pathname])
+  }
 
   useEffect(() => {
     document.documentElement.classList.toggle('menu-opened', menuOpen)

@@ -1,9 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useStoredChoice } from '@/lib/stored'
 
 const KEY = 'mfl:adminFont'
 export type FontSize = 'normal' | 'large' | 'xlarge'
+const SIZES: readonly FontSize[] = ['normal', 'large', 'xlarge']
 
 /**
  * 어드민 글자 크기.
@@ -27,27 +28,5 @@ export type FontSize = 'normal' | 'large' | 'xlarge'
  * 접어 넣었다 — 한 번 정하면 다시 만질 일이 드문 것이 자리를 차지하고 있었다.
  */
 export function useFontSize(): [FontSize, (v: FontSize) => void] {
-  const [size, setSize] = useState<FontSize>('large')
-
-  useEffect(() => {
-    let v: FontSize = 'large'
-    try {
-      const saved = localStorage.getItem(KEY)
-      if (saved === 'normal' || saved === 'large' || saved === 'xlarge') v = saved
-    } catch {
-      /* 저장이 막혀 있으면 기본값으로 */
-    }
-    setSize(v)
-  }, [])
-
-  const choose = (v: FontSize) => {
-    setSize(v)
-    try {
-      localStorage.setItem(KEY, v)
-    } catch {
-      /* 못 남겨도 이번 화면에는 적용된다 */
-    }
-  }
-
-  return [size, choose]
+  return useStoredChoice(KEY, 'large', SIZES)
 }
