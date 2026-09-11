@@ -12,11 +12,15 @@ import { useEffect, useRef } from 'react'
  *
  * 검색어를 앞에 둔 것은, 매일 볼 값이 그쪽이기 때문이다. 예약과 콘텐츠는
  * 일이 생겼을 때 들어가는 화면이지만 검색어와 방문은 흐름을 보는 화면이다.
+ *
+ * 결재가 붙어 일곱이 되면서 좁은 화면에 들어가는 칸이 줄었다. 항목 사이 여백을
+ * 반으로 줄인다 — 칸 사이 gap 만 줄이면 안 되고 칸 안쪽 좌우 여백도 함께 줄여야
+ * 실제로 눈에 보이는 간격이 반이 된다(두 칸 사이 = px + gap + px).
  */
 export const TABS = [
   { href: '/admin', label: '대시보드' },
   { href: '/admin/proposals', label: '결재' },
-  { href: '/admin/seo', label: '검색어 목표' },
+  { href: '/admin/seo', label: '키워드' },
   { href: '/admin/wed100', label: '100문100답' },
   { href: '/admin/videos', label: '영상' },
   { href: '/admin/dashboard', label: '문항 통계' },
@@ -54,7 +58,7 @@ export default function AdminTabs({ active }: { active: string }) {
     <nav className="relative min-w-0 flex-1" aria-label="관리 화면">
       <div
         ref={rail}
-        className="flex gap-1 overflow-x-auto rounded-xl bg-[var(--a-2e2724)] p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex gap-0.5 overflow-x-auto rounded-xl bg-[var(--a-2e2724)] p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {TABS.map((t) => {
           const on = t.href === active
@@ -72,7 +76,7 @@ export default function AdminTabs({ active }: { active: string }) {
                   글씨를 휴대전화에서 보면 그것으로는 부족했다. 숫자가 아니라 눈에
                   보이는 것이 기준이다. 글자를 밝히고 조금 키웠다.
                 */
-                'shrink-0 rounded-lg px-3 py-2 text-[0.8125rem] font-bold whitespace-nowrap transition-colors',
+                'shrink-0 rounded-lg px-1.5 py-2 text-[0.8125rem] font-bold whitespace-nowrap transition-colors',
                 on
                   ? 'bg-[var(--color-white)] text-[var(--a-2e2724)]'
                   : 'text-[var(--a-efeae7)] hover:bg-white/15',

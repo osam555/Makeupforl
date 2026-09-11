@@ -302,7 +302,7 @@ export default function SeoMonitor({
       */}
       <div className="rounded-xl border border-[var(--a-e0d6cc)] bg-white p-3.5 sm:p-4">
         <div className="flex flex-wrap items-baseline gap-2">
-          <h3 className="text-sm font-extrabold text-[var(--a-2e2724)]">목표 검색어 관리</h3>
+          <h3 className="text-sm font-extrabold text-[var(--a-2e2724)]">키워드 관리</h3>
           <span className="text-[0.6875rem] text-[var(--a-8a7a72)]">
             여기서 고친 것이 진짜 목록입니다. 저장하지 않으면 코드의 시드가 쓰입니다
           </span>
@@ -394,7 +394,7 @@ export default function SeoMonitor({
             className="inline-flex items-center gap-1.5 rounded-lg border border-dashed border-[var(--a-d4c7be)] px-3 py-2 text-xs font-bold text-[var(--a-6b5d57)]"
           >
             <Plus className="h-3.5 w-3.5" />
-            검색어 추가
+            키워드 추가
           </button>
           <button
             onClick={() => void saveKeywords()}
@@ -402,7 +402,7 @@ export default function SeoMonitor({
             className="inline-flex items-center gap-2 rounded-lg bg-[var(--a-a63d5a)] px-4 py-2 text-xs font-bold text-white disabled:opacity-60"
           >
             {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
-            목표 검색어 저장
+            키워드 저장
           </button>
           <span className="text-[0.6875rem] leading-relaxed text-[var(--a-8a7a72)]">
             검색량은 네이버 검색광고 키워드도구에서 재 옵니다

@@ -26,7 +26,7 @@ export default async function AdminSeoPage() {
   const [facts, config] = await Promise.all([collectSeoFacts(keywords), getSeoConfig(keywords)])
 
   return (
-    <AdminShell active="/admin/seo" title="검색어 목표와 달성도">
+    <AdminShell active="/admin/seo" title="키워드">
       <SeoGate facts={facts} config={config} keywords={keywords} linksCountedAt={LINKS_COUNTED_AT} />
     </AdminShell>
   )

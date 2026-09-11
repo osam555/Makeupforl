@@ -22,7 +22,7 @@ export default function SeoGate({
   linksCountedAt: string
 }) {
   return (
-    <AdminGate title="검색어 목표와 달성도">
+    <AdminGate title="키워드">
       {(ctx) => (
         <SeoMonitor
           facts={facts}
