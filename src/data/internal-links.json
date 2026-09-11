@@ -1,0 +1,129 @@
+{
+  "countedAt": "2026-09-11",
+  "links": {
+    "/": 1,
+    "/$": 2,
+    "/brand": 4,
+    "/consultation": 11,
+    "/gallery": 1,
+    "/gallery/$": 3,
+    "/honjoo100": 13,
+    "/honjoo100/$": 11,
+    "/pretendard.css": 2,
+    "/reservation": 7,
+    "/reviews": 3,
+    "/services": 5,
+    "/videos": 1,
+    "/혼주머리": 2,
+    "/혼주메이크업": 6,
+    "/혼주한복": 2
+  },
+  "where": {
+    "/": [
+      "src/app/offline/page.tsx:25"
+    ],
+    "/$": [
+      "src/app/honjoo100/page.tsx:270",
+      "src/lib/navigation.ts:46"
+    ],
+    "/brand": [
+      "src/lib/navigation.ts:26",
+      "src/lib/navigation.ts:28",
+      "src/lib/navigation.ts:29",
+      "src/lib/navigation.ts:30"
+    ],
+    "/consultation": [
+      "src/app/[topic]/page.tsx:245",
+      "src/app/brand/page.tsx:171",
+      "src/app/gallery/[cat]/page.tsx:122",
+      "src/app/gallery/page.tsx:56",
+      "src/app/honjoo100/page.tsx:142",
+      "src/app/honjoo100/page.tsx:329",
+      "src/app/page.tsx:116",
+      "src/app/services/page.tsx:212",
+      "src/components/wed100/Wed100Locked.tsx:157",
+      "src/components/wed100/Wed100Player.tsx:763",
+      "src/lib/navigation.ts:61"
+    ],
+    "/gallery": [
+      "src/lib/navigation.ts:65"
+    ],
+    "/gallery/$": [
+      "src/app/page.tsx:150",
+      "src/lib/navigation.ts:51",
+      "src/lib/navigation.ts:53"
+    ],
+    "/honjoo100": [
+      "src/app/[topic]/page.tsx:128",
+      "src/app/[topic]/page.tsx:267",
+      "src/app/brand/page.tsx:165",
+      "src/app/consultation/page.tsx:108",
+      "src/app/honjoo100/[slug]/page.tsx:195",
+      "src/app/page.tsx:125",
+      "src/app/page.tsx:366",
+      "src/app/services/page.tsx:146",
+      "src/app/videos/page.tsx:56",
+      "src/app/videos/page.tsx:135",
+      "src/components/wed100/Wed100Locked.tsx:163",
+      "src/lib/navigation.ts:42",
+      "src/lib/navigation.ts:45"
+    ],
+    "/honjoo100/$": [
+      "src/app/[topic]/page.tsx:170",
+      "src/app/api/wed100/answer/route.ts:97",
+      "src/app/honjoo100/[slug]/page.tsx:104",
+      "src/app/honjoo100/[slug]/page.tsx:277",
+      "src/app/honjoo100/page.tsx:135",
+      "src/components/home/QnaCard.tsx:12",
+      "src/components/wed100/NowPlayingRotator.tsx:56",
+      "src/components/wed100/Wed100Browser.tsx:103",
+      "src/components/wed100/Wed100Browser.tsx:180",
+      "src/components/wed100/Wed100Browser.tsx:251",
+      "src/components/wed100/Wed100Locked.tsx:182"
+    ],
+    "/pretendard.css": [
+      "src/app/layout.tsx:92",
+      "src/app/layout.tsx:102"
+    ],
+    "/reservation": [
+      "src/app/[topic]/page.tsx:251",
+      "src/app/consultation/page.tsx:102",
+      "src/app/consultation/page.tsx:170",
+      "src/app/gallery/[cat]/page.tsx:129",
+      "src/app/honjoo100/page.tsx:335",
+      "src/app/services/page.tsx:218",
+      "src/lib/navigation.ts:62"
+    ],
+    "/reviews": [
+      "src/app/page.tsx:389",
+      "src/components/home/ReviewSlide.tsx:37",
+      "src/lib/navigation.ts:66"
+    ],
+    "/services": [
+      "src/app/page.tsx:267",
+      "src/app/page.tsx:284",
+      "src/lib/navigation.ts:57",
+      "src/lib/navigation.ts:59",
+      "src/lib/navigation.ts:60"
+    ],
+    "/videos": [
+      "src/lib/navigation.ts:67"
+    ],
+    "/혼주머리": [
+      "src/app/page.tsx:338",
+      "src/app/reviews/page.tsx:72"
+    ],
+    "/혼주메이크업": [
+      "src/app/gallery/[cat]/page.tsx:144",
+      "src/app/gallery/page.tsx:60",
+      "src/app/page.tsx:330",
+      "src/app/reviews/page.tsx:64",
+      "src/app/services/page.tsx:142",
+      "src/app/videos/page.tsx:61"
+    ],
+    "/혼주한복": [
+      "src/app/page.tsx:334",
+      "src/app/reviews/page.tsx:68"
+    ]
+  }
+}

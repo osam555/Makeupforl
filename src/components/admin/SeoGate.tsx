@@ -14,10 +14,12 @@ export default function SeoGate({
   facts,
   config,
   keywords,
+  linksCountedAt,
 }: {
   facts: Record<string, SeoFacts>
   config: SeoConfig
   keywords: SeoKeyword[]
+  linksCountedAt: string
 }) {
   return (
     <AdminGate title="검색어 목표와 달성도">
@@ -26,6 +28,7 @@ export default function SeoGate({
           facts={facts}
           initial={config}
           keywords={keywords}
+          linksCountedAt={linksCountedAt}
           auth={async () =>
             ctx.mode === 'google' && ctx.email
               ? { idToken: await getIdToken() }

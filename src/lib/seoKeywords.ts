@@ -227,10 +227,24 @@ export function isStale(checkedAt: string, days = 30): boolean {
   return Date.now() - t > days * 86400_000
 }
 
+/**
+ * 준비도를 재는 자의 판.
+ *
+ * 1 — 내부 링크를 허브면 무조건 4로 놓던 때(~2026-09-10)
+ * 2 — 본문 링크를 실제로 세기 시작한 때(2026-09-11~)
+ *
+ * 기록에 함께 남긴다. 자를 바꾼 날 그래프가 꺾이는데, 그게 사이트가 나빠져서가
+ * 아니라 자가 바뀌어서라는 것을 나중에 알 방법이 이것뿐이다. 판이 다른 값끼리
+ * 견주면 "9월 11일에 무슨 일이 있었나" 를 영영 잘못 짚게 된다.
+ */
+export const READINESS_FORMULA = 2
+
 /** 하루치 기록 — 그날의 준비도와 순위를 그대로 떠 둔다 */
 export interface SeoSnapshot {
   /** YYYY-MM-DD (한국 시각) */
   date: string
+  /** 그날 쓰인 자의 판. 없으면 1 (실측 전) */
+  formula?: number
   /** 검색어별 준비도 */
   readiness: Record<string, number>
   /** 그날 적혀 있던 순위 (없으면 null) */

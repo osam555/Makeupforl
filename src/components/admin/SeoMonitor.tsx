@@ -37,11 +37,14 @@ export default function SeoMonitor({
   facts,
   initial,
   keywords: initialKeywords,
+  linksCountedAt,
   auth,
 }: {
   facts: Record<string, SeoFacts>
   initial: SeoConfig
   keywords: SeoKeyword[]
+  /** 내부 링크를 센 날. 낡았으면 scripts/count-internal-links.py 를 다시 돌려야 한다 */
+  linksCountedAt: string
   auth: () => Promise<{ idToken: string } | { password: string | null }>
 }) {
   const [ranks, setRanks] = useState<Record<string, SeoRank>>(initial.ranks)
@@ -142,7 +145,11 @@ export default function SeoMonitor({
             {keywords.filter((t) => !isStale(ranks[t.term]?.checkedAt ?? '')).length} /{' '}
             {keywords.length}
           </p>
-          <p className="mt-1 text-[0.6875rem] text-[var(--a-8a7a72)]">최근 30일 안에 재 본 검색어</p>
+          <p className="mt-1 text-[0.6875rem] leading-relaxed text-[var(--a-8a7a72)]">
+            최근 30일 안에 재 본 검색어
+            <br />
+            내부 링크는 {linksCountedAt} 에 셈
+          </p>
         </div>
       </div>
 

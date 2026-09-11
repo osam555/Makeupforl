@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server'
 import { verifyAdmin } from '@/lib/firebase/admin'
 import {
   DEFAULT_RANK,
+  READINESS_FORMULA,
   todayKST,
   type SeoKeyword,
   type SeoPriority,
@@ -53,6 +54,8 @@ export async function POST(req: Request) {
       .set(
         {
           date,
+          // 자가 바뀐 날 그래프가 꺾이는 이유를 나중에 알 수 있게 함께 남긴다
+          formula: READINESS_FORMULA,
           readiness: body?.readiness ?? {},
           naver: body?.naver ?? {},
           google: body?.google ?? {},

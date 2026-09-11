@@ -1,6 +1,11 @@
 import AdminShell from '@/components/admin/AdminShell'
 import SeoGate from '@/components/admin/SeoGate'
-import { collectSeoFacts, getSeoConfig, getSeoKeywords } from '@/lib/seoKeywords.server'
+import {
+  LINKS_COUNTED_AT,
+  collectSeoFacts,
+  getSeoConfig,
+  getSeoKeywords,
+} from '@/lib/seoKeywords.server'
 
 export const dynamic = 'force-dynamic'
 
@@ -22,7 +27,7 @@ export default async function AdminSeoPage() {
 
   return (
     <AdminShell active="/admin/seo" title="검색어 목표와 달성도">
-      <SeoGate facts={facts} config={config} keywords={keywords} />
+      <SeoGate facts={facts} config={config} keywords={keywords} linksCountedAt={LINKS_COUNTED_AT} />
     </AdminShell>
   )
 }

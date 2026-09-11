@@ -1,3 +1,4 @@
+import links from '@/data/internal-links.json'
 import { HUBS } from '@/lib/hubs'
 import {
   SEO_KEYWORDS,
@@ -20,6 +21,9 @@ export const SEO_CONFIG_DOC = { collection: 'site_config', doc: 'seo' }
  * 실수로 덮어쓸 길이 생긴다. 바뀌는 리듬이 다른 것은 따로 둔다.
  */
 export const SEO_KEYWORDS_DOC = { collection: 'site_config', doc: 'seo-keywords' }
+
+/** 내부 링크를 언제 셌나 — 스크립트가 안 돌면 이 날짜가 낡아서 티가 난다 */
+export const LINKS_COUNTED_AT: string = (links as { countedAt: string }).countedAt
 
 /**
  * 목표 검색어 목록 — Firestore 우선, 코드 배열은 시드 폴백.
@@ -121,19 +125,18 @@ export async function collectSeoFacts(
       titlePages,
       questions: items.filter((x) => strip(x.question).includes(key)).length,
       /*
-        내부 링크는 **아직 실측이 아니다.**
+        내부 링크는 이제 실측이다.
 
-        허브면 무조건 4로 놓는다. 그래서 다섯 검색어 모두 이 15점을 공짜로 받고
-        있고, "본문 안에서 3곳 이상 링크를 거세요" 라는 할 일은 한 번도 뜬 적이
-        없다. 준비도 100 이 실제로는 85 일 수 있다는 뜻이다.
+        전에는 허브면 무조건 4였다. 실제로 세어 보니 /혼주한복 2, /혼주머리 2,
+        /혼주메이크업 6 으로 셋 다 틀렸고, 덕분에 "본문에서 3곳 이상 링크를
+        거세요" 라는 할 일이 한 번도 뜬 적이 없었다.
 
-        제대로 세려면 소스에서 href 를 훑어야 하는데 서버 런타임에서는 src 를
-        읽을 수 없다. 사람이 세어 적는 값으로 바꾸는 편이 정직하지만, 그러면
-        지금까지 쌓인 seo_snapshots 의 준비도와 앞으로의 값이 서로 다른 자를
-        쓰게 된다. 어느 쪽으로 갈지는 정하고 나서 바꾼다 — 그때까지 이 주석이
-        "이 15점은 번 점수가 아니다" 를 말해 주는 유일한 자리다.
+        서버 런타임에서는 src 를 읽을 수 없어서, 빌드 전에 스크립트가 세어 둔
+        JSON 을 가져다 쓴다(scripts/count-internal-links.py). 메뉴는 빼고 본문만
+        센 값이다 — 한 번 걸면 모든 페이지에 실리는 링크를 본문 링크와 같은
+        무게로 볼 수 없다.
       */
-      inboundLinks: HUBS.some((h) => `/${h.slug}` === t.owner) ? 4 : 0,
+      inboundLinks: (links.links as Record<string, number>)[t.owner] ?? 0,
     }
   }
   return out
