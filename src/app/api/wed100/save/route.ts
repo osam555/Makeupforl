@@ -45,6 +45,19 @@ function toRow(item: Wed100Item, editor: string) {
     published: item.published ?? true,
     updatedAt: new Date().toISOString(),
     updatedBy: editor,
+    /*
+      음성 시각도 함께 실어 보낸다.
+
+      아래 저장은 .set(row) 이라 merge 없이 문서를 통째로 갈아치운다. 그래서 이
+      목록에 없는 칸은 저장할 때마다 지워졌다 — audioAt 이 그랬다. 문항 102개 중
+      100개는 값이 있는데, 어드민에서 전체 저장을 한 번이라도 거친 둘만 비어 있었다.
+
+      그 값이 없으면 화면의 isStale() 이 !audioAt 에서 바로 false 를 돌려줘서,
+      "음성이 본문보다 오래됨" 노란 배지가 영영 안 뜬다. 본문만 고치고 음성을
+      안 만든 문항을 목록에서 찾을 방법이 사라진다 — 그 배지가 있는 이유가 그건데.
+    */
+    audioAt: item.audioAt ?? null,
+    audioBy: item.audioBy ?? null,
   }
 }
 

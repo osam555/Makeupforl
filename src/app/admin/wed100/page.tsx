@@ -362,6 +362,9 @@ function AdminWed100Editor({
         d.audio = url
         d.duration = j.duration
         d.questionAudio = j.questionAudio
+        // 만든 시각을 남겨야 [저장] 뒤에도 "음성이 본문보다 오래됨" 판정이 산다.
+        // 이게 없으면 저장된 문서에 audioAt 이 비고, 그 배지는 영영 안 뜬다.
+        d.audioAt = new Date().toISOString()
         d.cues = d.cues.map((c, i) => ({ ...c, start: j.cues[i]?.start, end: j.cues[i]?.end }))
       })
       setStatus({
