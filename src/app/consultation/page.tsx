@@ -90,7 +90,11 @@ export default async function ConsultationPage() {
             </p>
             <p>
               이럴 때 많은 혼주들을 도와드린 전문가가 있다면 어떨까요? 그래서 준비했습니다.
-              혼주 화장과 혼주 헤어에 필요한 궁금증을 다 풀어드리고,{' '}
+              혼주 화장과{' '}
+              <Link href="/혼주머리" className="font-semibold text-[#E2564C] hover:underline">
+                혼주 헤어
+              </Link>
+              에 필요한 궁금증을 다 풀어드리고,{' '}
               <b className="text-[#E2564C]">
                 내게 가장 잘 어울리는 모습으로 결혼식 날의 혼주가 될 수 있도록
               </b>{' '}

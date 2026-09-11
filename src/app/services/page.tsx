@@ -137,8 +137,11 @@ export default async function ServicesPage() {
             </div>
           </div>
           <p className="mt-4 text-[15px] leading-[1.85] text-gray-600">
-            어느 쪽이든 <b className="text-gray-800">1:1 사전 컨설팅을 먼저</b> 합니다. 얼굴과
-            한복 색을 보고 정해야 당일에 헤매지 않습니다. 자세한 비교는{' '}
+            어느 쪽이든 <b className="text-gray-800">1:1 사전 컨설팅을 먼저</b> 합니다. 얼굴과{' '}
+            <Link href="/혼주한복" className="font-semibold text-[#E2564C] hover:underline">
+              혼주 한복 색
+            </Link>
+            을 보고 정해야 당일에 헤매지 않습니다. 자세한 비교는{' '}
             <Link href="/혼주메이크업" className="font-semibold text-[#E2564C] hover:underline">
               혼주메이크업 안내
             </Link>

@@ -14,9 +14,9 @@
     "/reviews": 3,
     "/services": 5,
     "/videos": 1,
-    "/혼주머리": 2,
+    "/혼주머리": 3,
     "/혼주메이크업": 6,
-    "/혼주한복": 2
+    "/혼주한복": 3
   },
   "where": {
     "/": [
@@ -40,7 +40,7 @@
       "src/app/honjoo100/page.tsx:142",
       "src/app/honjoo100/page.tsx:329",
       "src/app/page.tsx:116",
-      "src/app/services/page.tsx:212",
+      "src/app/services/page.tsx:215",
       "src/components/wed100/Wed100Locked.tsx:157",
       "src/components/wed100/Wed100Player.tsx:763",
       "src/lib/navigation.ts:61"
@@ -57,11 +57,11 @@
       "src/app/[topic]/page.tsx:128",
       "src/app/[topic]/page.tsx:267",
       "src/app/brand/page.tsx:165",
-      "src/app/consultation/page.tsx:108",
+      "src/app/consultation/page.tsx:112",
       "src/app/honjoo100/[slug]/page.tsx:195",
       "src/app/page.tsx:125",
       "src/app/page.tsx:366",
-      "src/app/services/page.tsx:146",
+      "src/app/services/page.tsx:149",
       "src/app/videos/page.tsx:56",
       "src/app/videos/page.tsx:135",
       "src/components/wed100/Wed100Locked.tsx:163",
@@ -87,11 +87,11 @@
     ],
     "/reservation": [
       "src/app/[topic]/page.tsx:251",
-      "src/app/consultation/page.tsx:102",
-      "src/app/consultation/page.tsx:170",
+      "src/app/consultation/page.tsx:106",
+      "src/app/consultation/page.tsx:174",
       "src/app/gallery/[cat]/page.tsx:129",
       "src/app/honjoo100/page.tsx:335",
-      "src/app/services/page.tsx:218",
+      "src/app/services/page.tsx:221",
       "src/lib/navigation.ts:62"
     ],
     "/reviews": [
@@ -110,6 +110,7 @@
       "src/lib/navigation.ts:67"
     ],
     "/혼주머리": [
+      "src/app/consultation/page.tsx:94",
       "src/app/page.tsx:338",
       "src/app/reviews/page.tsx:72"
     ],
@@ -118,12 +119,13 @@
       "src/app/gallery/page.tsx:60",
       "src/app/page.tsx:330",
       "src/app/reviews/page.tsx:64",
-      "src/app/services/page.tsx:142",
+      "src/app/services/page.tsx:145",
       "src/app/videos/page.tsx:61"
     ],
     "/혼주한복": [
       "src/app/page.tsx:334",
-      "src/app/reviews/page.tsx:68"
+      "src/app/reviews/page.tsx:68",
+      "src/app/services/page.tsx:141"
     ]
   }
 }
