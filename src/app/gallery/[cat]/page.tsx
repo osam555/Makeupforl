@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   if (!c) return { title: '갤러리 | 메이크업포엘' }
   return {
     // '사진' 을 붙여 역할을 가른다. 낱말 자체는 /혼주메이크업 이 맡는다
-    title: `${c.menuName} 사진 | 메이크업포엘`,
+    title: `${c.seoName ?? c.menuName} 사진 | 메이크업포엘`,
     description: c.desc,
     alternates: { canonical: `/gallery/${c.slug}` },
   }

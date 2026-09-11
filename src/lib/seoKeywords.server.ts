@@ -105,7 +105,7 @@ export async function collectSeoFacts(
     { path: '/reviews', title: '고객후기 — 혼주님이 보내주신 문자 | 메이크업포엘' },
     { path: '/videos', title: '유튜브 채널 | 메이크업포엘' },
     { path: '/gallery', title: '갤러리 | 메이크업포엘' },
-    { path: '/gallery/honju', title: '혼주 메이크업 사진 | 메이크업포엘' },
+    { path: '/gallery/honju', title: '혼주 헤어·메이크업 사진 | 메이크업포엘' },
     { path: '/gallery/family-guest', title: '가족 · 하객 사진 | 메이크업포엘' },
     { path: '/gallery/wedding', title: '웨딩 (신부) 사진 | 메이크업포엘' },
     { path: '/gallery/hair-styling', title: '헤어 스타일링 사진 | 메이크업포엘' },

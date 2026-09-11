@@ -51,7 +51,18 @@ export const metadata: Metadata = {
     apple: [{ url: '/icons/apple-touch-icon.png', sizes: '180x180' }],
   },
   verification: {
-    other: { 'naver-site-verification': 'ad1bef12e37799353f437b8223accc310feeab5b' },
+    /*
+      네이버 인증 태그가 둘인 이유 — 서치어드바이저 계정이 둘이다.
+      첫째는 원장님 계정, 둘째(2026-09-11)는 매니저 계정. 수집 요청·사이트맵 제출을
+      매니저 쪽에서도 하려면 그 계정에도 사이트가 등록돼 있어야 한다.
+      확인이 끝나도 지우면 안 된다 — 네이버가 주기적으로 다시 본다.
+    */
+    other: {
+      'naver-site-verification': [
+        'ad1bef12e37799353f437b8223accc310feeab5b',
+        'c26591b10a0c4f957b0bfaddf619e53750ac5b3f',
+      ],
+    },
   },
 };
 
