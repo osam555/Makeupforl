@@ -235,23 +235,28 @@ export default async function Home() {
       */}
       <div className="bg-white py-16 sm:py-20">
         <div className="mfl-contain max-w-[1100px]">
+          {/*
+            제목 크기는 이웃 절(.sec-tit 35px)에 맞춘다. 30px 로 두니 옆 절보다 한 단계
+            작아 보였다. 카드는 두 줄뿐이라 여백을 줄이고 글자를 키운다 — 안이 비어 보이는
+            카드는 내용이 적은 게 아니라 글자가 작은 것이다.
+          */}
           <div className="text-center">
-            <p className="text-[13px] font-semibold tracking-[0.28em] text-[#F46E65]">WHY</p>
-            <h2 className="mt-3 text-[24px] font-bold text-gray-900 sm:text-[30px]">
+            <p className="text-[14px] font-semibold tracking-[0.28em] text-[#F46E65]">WHY</p>
+            <h2 className="mt-3 text-[28px] font-semibold leading-[1.2] text-[#242424] sm:text-[35px]">
               왜 메이크업포엘인가?
             </h2>
           </div>
-          <div className="mt-10 grid gap-4 sm:grid-cols-2">
+          <div className="mt-8 grid gap-4 sm:mt-10 sm:grid-cols-2 sm:gap-5">
             {BRAND_POINTS.map((p, i) => (
               <div
                 key={p.title}
-                className="rounded-2xl border border-gray-100 bg-white p-7 shadow-sm transition-shadow hover:shadow-md"
+                className="rounded-2xl border border-gray-100 bg-white px-6 py-6 shadow-sm transition-shadow hover:shadow-md sm:px-8 sm:py-7"
               >
-                <span className="text-[13px] font-bold text-[#F46E65]">
+                <span className="text-[15px] font-bold text-[#F46E65]">
                   {String(i + 1).padStart(2, '0')}
                 </span>
-                <h3 className="mt-2 text-[17px] font-bold text-gray-900">{p.title}</h3>
-                <p className="mt-2 text-[15px] leading-[1.8] text-gray-600">{p.desc}</p>
+                <h3 className="mt-1.5 text-[20px] font-bold text-gray-900 sm:text-[22px]">{p.title}</h3>
+                <p className="mt-2 text-[16px] leading-[1.75] text-gray-600 sm:text-[17px]">{p.desc}</p>
               </div>
             ))}
           </div>
