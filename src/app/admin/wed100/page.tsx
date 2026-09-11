@@ -333,7 +333,29 @@ function AdminWed100Editor({
   const regenAudio = async () => {
     if (!draft) return
 
-    if (!confirm(`"${draft.question}"\n\n현재 자막 ${draft.cues.length}개로 음성을 다시 만듭니다. 1~2분 걸릴 수 있습니다. 계속할까요?`)) return
+    /*
+      제목만 고쳤으면 답변 소리는 그대로 쓴다.
+
+      같은 문장을 같은 목소리로 다시 만드는 일이라 결과가 같은데, 자막이 스무 개
+      넘는 문항에서는 그것만으로 1분이 넘어 타임아웃에 닿는다. 다만 질문 길이가
+      바뀌면 뒤따르는 타임코드가 전부 밀리므로, 소리만 재사용하고 타임코드는
+      서버가 다시 계산한다.
+
+      판단 기준은 저장된 자막과 지금 자막이 글자까지 같은가다. 하나라도 다르면
+      재사용을 포기하고 전부 새로 만든다 — 화면 글과 들리는 말이 어긋나는 것은
+      음성이 아예 없는 것보다 나쁘다. 서버도 같은 검사를 다시 한다.
+    */
+    const saved = items.find((x) => x.slug === draft.slug)
+    const sameAnswer =
+      !!saved &&
+      !!draft.audio &&
+      saved.cues?.length === draft.cues.length &&
+      draft.cues.every((c, i) => (saved.cues?.[i]?.ko ?? '') === c.ko)
+
+    const how = sameAnswer
+      ? '제목만 바뀌었으므로 답변 음성은 그대로 쓰고 질문만 다시 만듭니다.'
+      : `현재 자막 ${draft.cues.length}개로 음성을 다시 만듭니다. 1~2분 걸릴 수 있습니다.`
+    if (!confirm(`"${draft.question}"\n\n${how} 계속할까요?`)) return
 
     setTts(true)
     setStatus(null)
@@ -346,6 +368,7 @@ function AdminWed100Editor({
           slug: draft.slug,
           question: draft.question,
           cues: draft.cues.map((c) => c.ko),
+          reuseAnswer: sameAnswer,
         }),
       })
       const j = await res.json()
@@ -369,7 +392,10 @@ function AdminWed100Editor({
       })
       setStatus({
         kind: 'ok',
-        msg: `음성 재생성 완료 (${Math.round(j.duration)}초). [저장]을 눌러야 사이트에 반영됩니다.`,
+        msg:
+          `음성 재생성 완료 (${Math.round(j.duration)}초)` +
+          (sameAnswer ? ' — 답변은 기존 음성을 그대로 썼습니다' : '') +
+          '. [저장]을 눌러야 사이트에 반영됩니다.',
       })
     } catch (e) {
       setStatus({ kind: 'err', msg: e instanceof Error ? e.message : String(e) })
