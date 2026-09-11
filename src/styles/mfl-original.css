@@ -67,9 +67,11 @@
 .mfl-site .sec1 .con-box .wrap .box.type2 {background-image:url('/mfl/images/main/sec1_bg2.jpg');}
 .mfl-site .sec1 .con-box .wrap .box .tit {font-size:30px;font-weight:600;margin-bottom:12px;}
 .mfl-site .sec1 .con-box .wrap .box .tt {font-size:17px;margin-bottom:60px;}
-.mfl-site .sec1 .con-box .wrap .box .radi {max-width:160px;width:100%;height:50px;margin:0 auto;border-radius:25px;border:1px solid rgba(221,221,221,.4);display:flex;justify-content:center;align-items:center;}
-.mfl-site .sec1 .con-box .wrap .box .radi span {padding-right:50px;position:relative;}
-.mfl-site .sec1 .con-box .wrap .box .radi span:after {content:'';width:40px;height:10px;background:url('/mfl/images/main/sec1_arr.png')no-repeat 50% 50%/contain;position: absolute;right:0;top:8px;}
+/* 바로가기 — 얇은 선 단추는 사진 위에서 안 보였다. 흰 알약으로 */
+.mfl-site .sec1 .con-box .wrap .box .radi {max-width:170px;width:100%;height:50px;margin:0 auto;border-radius:25px;background:#fff;color:#242424;font-weight:700;font-size:16px;display:flex;justify-content:center;align-items:center;box-shadow:0 10px 30px -12px rgba(0,0,0,.45);transition:.25s;}
+.mfl-site .sec1 .con-box .wrap .box:hover .radi {background:#F46E65;color:#fff;}
+.mfl-site .sec1 .con-box .wrap .box .radi span {padding-right:18px;position:relative;}
+.mfl-site .sec1 .con-box .wrap .box .radi span:after {content:'›';position:absolute;right:0;top:-2px;font-size:20px;line-height:1;}
 .mfl-site .sec2 {background-color: #f4f4f4;padding:95px 0;}
 .mfl-site .sec2 .gal-cate {margin-bottom:30px;}
 .mfl-site .sec2 .gal-cate ul {display:flex;}
@@ -112,11 +114,12 @@
 .mfl-site .doc-review .tt-wrap .tt {line-height:1.563em;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;}
 .mfl-site .doc-review .tt-wrap .date {margin-top:10px;color: #686868;font-weight:300;}
 .mfl-site .sec3 .review-slide .slick-arrow {font-size:0;border:none;background-repeat:no-repeat;background-size:14px;background-position:50% 50%;width:60px;height:60px;border-radius:50%;background-color: #c1c1c1;position: absolute;top:50%;transform:translateY(-50%);z-index:1;transition:.3s;}
-.mfl-site .sec3 .review-slide .slick-prev {background-image:url('/mfl/images/main/review_prev.png');left:-119px;}
-.mfl-site .sec3 .review-slide .slick-next {background-image:url('/mfl/images/main/review_next.png');right:-119px;}
+/* 화살표는 카드 열 바로 바깥 — 165px 여백 끝(-119px)에 두면 카드와 따로 노는 것으로 보였다 */
+.mfl-site .sec3 .review-slide .slick-prev {background-image:url('/mfl/images/main/review_prev.png');left:-76px;}
+.mfl-site .sec3 .review-slide .slick-next {background-image:url('/mfl/images/main/review_next.png');right:-76px;}
 .mfl-site .sec3 .review-slide .slick-arrow:hover {background-color: #f46e65;}
 .mfl-site .sec4 {padding:105px 0 130px;background:url('/mfl/images/main/btm_bg.jpg')no-repeat 50% 50%/cover;color: #fff;}
-.mfl-site .sec4 .sec-tit2 {font-size:25px;width:600;line-height:1.2em;text-align:center;margin-bottom:80px;}
+.mfl-site .sec4 .sec-tit2 {font-size:27px;max-width:720px;margin:0 auto 70px;line-height:1.4em;text-align:center;font-weight:600;}
 .mfl-site .sec4 .con {display:flex;}
 .mfl-site .sec4 .con .wrap {width:50%;display:flex;justify-content:center;}
 .mfl-site .sec4 .con .wrap a {display:flex;align-items:center;}
@@ -399,8 +402,7 @@ html.menu-opened .mobile-overlay {display:block;}
 .mfl-site .sec1 .con-box .wrap .box .tit {font-size:24px;margin-bottom:10px;}
 .mfl-site .sec1 .con-box .wrap .box .tt {font-size:16px;margin-bottom:20px;}
 .mfl-site .sec1 .con-box .wrap .box .radi {max-width:140px;height:44px;border-radius:22px;}
-.mfl-site .sec1 .con-box .wrap .box .radi span {padding-right:40px;}
-.mfl-site .sec1 .con-box .wrap .box .radi span:after {height:7px;top:10px;}
+.mfl-site .sec1 .con-box .wrap .box .radi span {padding-right:16px;}
 .mfl-site .sec2 {padding:80px 0;}
 .mfl-site .sec2 .sec-tit {margin-bottom:30px;}
 .mfl-site .sec2 .gal-cate {margin-bottom:20px;}

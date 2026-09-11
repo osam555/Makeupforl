@@ -8,6 +8,7 @@ import { getGalleryImages } from '@/lib/galleryImages'
 import reviewTexts from '@/data/reviewTexts.json'
 import MainGallery from '@/components/home/MainGallery'
 import ReviewSlide from '@/components/home/ReviewSlide'
+import SectionHead from '@/components/home/SectionHead'
 import { GALLERY_CATEGORIES } from '@/lib/galleryCategories'
 import { BRAND_POINTS, BRAND_STATS } from '@/lib/brandPoints'
 import HeroQnaSlide from '@/components/home/HeroQnaSlide'
@@ -178,7 +179,12 @@ export default async function Home() {
         예전엔 크기 없는 <img> 라 화면이 한 번 튀고(CLS) 늦게 떴다.
         사진만 있고 글이 한 줄도 없어서 무엇을 하는 곳인지 스크롤해야 알 수 있었다.
       */}
-      <div className="main-visual relative">
+      {/*
+        휴대전화(640 미만)에서는 사진을 뺀다. 1920×980 사진이 390px 폭에서는 200px 높이의
+        띠가 되어 가운데 수상 그래픽이 콩알만 했고, 그만큼 첫 화면의 글과 단추가 아래로 밀렸다.
+        혼주는 대부분 휴대전화로 온다(2026-09-11 네이버 유입 24 중 19).
+      */}
+      <div className="main-visual relative max-sm:hidden">
         <div className="items">
           <div className="item">
             <div className="img">
@@ -222,10 +228,27 @@ export default async function Home() {
         </div>
       </div>
 
-      {/* 좁은 화면 — 히어로 위에 얹을 자리가 없어 사진 아래로 내린다 */}
+      {/*
+        좁은 화면 — 히어로 위에 얹을 자리가 없어 사진 아래로 내린다.
+        업무분야는 일곱 줄 목록이 아니라 한 줄 알약으로. 목록으로 두면 WHY 까지 한참
+        내려야 했고, 첫 화면에서 전화·상담 단추가 화면 밖에 있었다.
+      */}
       <div className="border-b border-gray-100 bg-white xl:hidden">
         <div className="hero-rise mfl-contain py-9">{heroCopy(false)}</div>
-        <div className="hero-rise hero-rise-2 mfl-contain border-t border-gray-100 py-7">{fieldPanel}</div>
+        <div className="hero-rise hero-rise-2 mfl-contain border-t border-gray-100 py-5">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="mr-1 text-[13px] font-bold tracking-wide text-gray-500">업무분야</span>
+            {GALLERY_CATEGORIES.map((c) => (
+              <Link
+                key={c.slug}
+                href={`/gallery/${c.slug}`}
+                className="rounded-full border border-gray-200 px-3.5 py-1.5 text-[13px] font-semibold text-gray-700 transition-colors hover:border-[#F46E65] hover:text-[#F46E65]"
+              >
+                {c.name}
+              </Link>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/*
@@ -240,12 +263,7 @@ export default async function Home() {
             작아 보였다. 카드는 두 줄뿐이라 여백을 줄이고 글자를 키운다 — 안이 비어 보이는
             카드는 내용이 적은 게 아니라 글자가 작은 것이다.
           */}
-          <div className="text-center">
-            <p className="text-[14px] font-semibold tracking-[0.28em] text-[#F46E65]">WHY</p>
-            <h2 className="mt-3 text-[28px] font-semibold leading-[1.2] text-[#242424] sm:text-[35px]">
-              왜 메이크업포엘인가?
-            </h2>
-          </div>
+          <SectionHead eyebrow="WHY" title="왜 메이크업포엘인가?" />
           <div className="mt-8 grid gap-4 sm:mt-10 sm:grid-cols-2 sm:gap-5">
             {BRAND_POINTS.map((p, i) => (
               <div
@@ -266,12 +284,12 @@ export default async function Home() {
       {/* sec1 — 서비스 소개 */}
       <div className="sec1">
         <div className="mfl-contain">
-          <div className="tit-box">
-            <h2 className="sec-tit pink">메이크업포엘의 서비스는 다릅니다!</h2>
-            <p>
-              메이크업 전 전문가의 1:1 사전 컨설팅을 통해 퍼스널컬러 진단, 어울리는 헤어스타일 점검 후
-              메이크업을 진행합니다.
-            </p>
+          <div className="mb-10 sm:mb-12">
+            <SectionHead
+              eyebrow="SERVICE"
+              title="메이크업포엘의 서비스는 다릅니다"
+              sub="메이크업 전 전문가의 1:1 사전 컨설팅으로 퍼스널컬러를 진단하고 어울리는 헤어스타일을 점검한 뒤 메이크업을 진행합니다."
+            />
           </div>
           <div className="con-box">
             <div className="wrap">
@@ -321,15 +339,11 @@ export default async function Home() {
         <div className="bg-[#FDF4F3] py-16 sm:py-20">
           <div className="mfl-contain max-w-[1000px]">
             <div className="text-center">
-              <p className="text-[13px] font-semibold tracking-[0.28em] text-[#F46E65]">
-                100 Q &amp; A
-              </p>
-              <h2 className="mt-3 text-[24px] font-bold text-gray-900 sm:text-[30px]">
-                혼주님이 가장 많이 물으신 것들
-              </h2>
-              <p className="mt-3 text-[16px] leading-[1.8] text-gray-600">
-                {qnaCount}개 문항에 원장이 직접 답했습니다.
-              </p>
+              <SectionHead
+                eyebrow="100 Q & A"
+                title="혼주님이 가장 많이 물으신 것들"
+                sub={`${qnaCount}개 문항에 원장이 직접 답했습니다.`}
+              />
               {/*
                 주제별로 묶은 세 장으로 보내는 길.
 
@@ -376,33 +390,63 @@ export default async function Home() {
             <div className="mt-9 text-center">
               <Link
                 href="/honjoo100"
-                className="inline-block rounded-full bg-[#F46E65] px-8 py-3.5 text-[15px] font-bold text-white transition-colors hover:bg-[#e15a51]"
+                className="group inline-flex items-center gap-1.5 rounded-full bg-[#F46E65] px-8 py-4 text-[16px] font-bold text-white shadow-lg shadow-[#F46E65]/25 transition-colors hover:bg-[#e15a51]"
               >
                 100문100답 전체 보기
+                <span aria-hidden className="transition-transform group-hover:translate-x-0.5">
+                  ›
+                </span>
               </Link>
             </div>
           </div>
         </div>
       )}
 
-      {/* sec2 — GALLERY */}
-      <div className="sec2">
-        <div className="mfl-contain">
-          <h2 className="sec-tit">GALLERY</h2>
+      {/* 갤러리 — 옛 sec2(탭 + 큰 사진 + 썸네일)를 버리고 혼주 사진 격자 하나로 (MainGallery 참고) */}
+      <div className="bg-[#F6F4F2] py-16 sm:py-20">
+        <div className="mfl-contain max-w-[1100px]">
+          <SectionHead
+            eyebrow="GALLERY"
+            title="혼주님들의 예식 날"
+            sub="신부 전문 샵의 곁다리가 아니라, 혼주 한 분 한 분을 위해 한 얼굴입니다."
+          />
           <MainGallery items={gallery} />
+          <div className="mt-9 text-center sm:mt-10">
+            <Link
+              href="/gallery"
+              className="group inline-flex items-center gap-1.5 rounded-full border border-gray-300 bg-white px-8 py-4 text-[16px] font-bold text-gray-800 transition-colors hover:border-[#F46E65] hover:text-[#F46E65]"
+            >
+              갤러리 더보기
+              <span aria-hidden className="transition-transform group-hover:translate-x-0.5">
+                ›
+              </span>
+            </Link>
+          </div>
         </div>
       </div>
 
       {/* sec3 — 고객후기 */}
       <div className="sec3">
         <div className="mfl-contain">
-          <div className="tit-box">
-            <h2 className="sec-tit">고객후기</h2>
-            <Link href="/reviews" className="more">
-              고객후기 더보기
-            </Link>
+          <div className="mb-9 sm:mb-11">
+            <SectionHead
+              eyebrow="REVIEW"
+              title="고객후기"
+              sub="예식을 마친 혼주님과 자녀분들이 보내 주신 문자입니다."
+            />
           </div>
           <ReviewSlide items={reviews} />
+          <div className="mt-9 text-center sm:mt-10">
+            <Link
+              href="/reviews"
+              className="group inline-flex items-center gap-1.5 rounded-full border border-gray-300 bg-white px-8 py-4 text-[16px] font-bold text-gray-800 transition-colors hover:border-[#F46E65] hover:text-[#F46E65]"
+            >
+              고객후기 더보기
+              <span aria-hidden className="transition-transform group-hover:translate-x-0.5">
+                ›
+              </span>
+            </Link>
+          </div>
         </div>
       </div>
 
@@ -414,8 +458,9 @@ export default async function Home() {
         }}
       >
         <div className="mfl-contain">
+          {/* "메이크업과 에스테틱" 은 옛 문구다 — 에스테틱은 지금 하지 않는 일 */}
           <h2 className="sec-tit2">
-            메이크업과 에스테틱의 모든 과정은 100% 예약제로 진행됩니다.
+            혼주 메이크업의 모든 과정은 1:1 사전 컨설팅 후 100% 예약제로 진행됩니다.
           </h2>
           <div className="con">
             <div className="wrap">

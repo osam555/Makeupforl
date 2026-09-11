@@ -1,95 +1,62 @@
-'use client'
-
 import Image from 'next/image'
-import { useState } from 'react'
+import Link from 'next/link'
+
 import { GALLERY_CATEGORIES } from '@/lib/galleryCategories'
 
 type Item = { id: string; url: string; alt_text: string; category: string }
 
-/** 원본 sec2 갤러리: 카테고리 탭 + 좌측 큰 이미지 / 우측 썸네일 2열 */
-/* 사이트 업무분야와 같은 목록을 쓴다. 예전에는 여기만 따로 적혀 있어 헤어변형이 빠지고
-   사진이 한 장도 없는 패션쇼가 남아 있었다 */
-const CATEGORIES = GALLERY_CATEGORIES.map((c) => ({ key: c.slug, name: c.name }))
-
+/**
+ * 홈 갤러리 — 혼주 사진 여덟 장을 격자로.
+ *
+ * 전에는 옛 사이트 그대로 "분야 탭 일곱 + 큰 사진 하나 + 썸네일 여덟" 이었다.
+ * 세로 사진이 가로 상자에 들어가 좌우로 흰 띠가 컸고, 썸네일은 손톱만 했고, 휴대전화에서는
+ * 탭이 잘렸다. 홈은 "얼마나 예쁘게 되는가" 를 3초 안에 보여 주는 자리라 사진만 크게 둔다.
+ * 분야 나누기는 갤러리 페이지가 한다 — 여기서는 분야로 가는 길만 아래에 둔다.
+ *
+ * 격자는 3:4 세로 칸이다. 혼주 사진은 거의 다 상반신 세로라 이 비율에서 얼굴이 안 잘린다.
+ * 첫 장은 두 칸을 차지해 시선이 시작할 자리를 만든다. 다섯 장인 이유 — 큰 한 장(2×2) +
+ * 작은 넉 장이 넉 줄 격자의 두 줄을 딱 채운다. 일곱 장으로 두니 셋째 줄에 두 장만 남아
+ * 오른쪽이 비었다. 휴대전화(두 줄 격자)에서도 큰 한 장 + 두 줄로 떨어진다.
+ */
 export default function MainGallery({ items }: { items: Item[] }) {
-  const [cat, setCat] = useState('honju')
-  const [idx, setIdx] = useState(0)
-
-  const list = items.filter((i) => i.category === cat).slice(0, 8)
-  const current = list[Math.min(idx, Math.max(list.length - 1, 0))]
+  const photos = items.filter((i) => i.category === 'honju').slice(0, 5)
+  if (photos.length === 0) return null
 
   return (
     <>
-      <div className="mfl-gal-cate">
-        <div className="gal-cate">
-          <ul>
-            {CATEGORIES.map((c) => (
-              <li key={c.key} className={c.key === cat ? 'active' : undefined}>
-                <a
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    setCat(c.key)
-                    setIdx(0)
-                  }}
-                >
-                  {c.name}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
+      <ul className="mt-9 grid grid-cols-2 gap-2.5 sm:mt-11 sm:grid-cols-4 sm:gap-3">
+        {photos.map((p, i) => (
+          <li
+            key={p.id}
+            className={[
+              'relative overflow-hidden rounded-2xl bg-gray-100',
+              i === 0 ? 'col-span-2 row-span-2 aspect-[3/4]' : 'aspect-[3/4]',
+            ].join(' ')}
+          >
+            <Link href="/gallery/honju" className="group block h-full w-full">
+              <Image
+                src={p.url}
+                alt={p.alt_text}
+                fill
+                sizes={i === 0 ? '(max-width: 640px) 100vw, 50vw' : '(max-width: 640px) 50vw, 25vw'}
+                className="object-cover object-top transition-transform duration-500 group-hover:scale-[1.04]"
+              />
+            </Link>
+          </li>
+        ))}
+      </ul>
 
-      <div className="gal-cnt">
-        <div className="gal-list">
-          <div className="tab-contents">
-            <div className="tab-content">
-              <div className="img-box">
-                <div className="pic">
-                  {current && (
-                    /*
-                      원본을 그대로 부르면 안 된다. Storage 에 올라간 갤러리 사진은
-                      한 장이 3MB 를 넘는다. 홈에서만 이 자리와 아래 썸네일로 8MB 가
-                      넘게 나가고 있었다. next/image 를 태우면 화면 크기에 맞춰
-                      줄이고 WebP 로 바꿔 내려준다.
-
-                      .pic 이 position:relative + padding-bottom 으로 비율을 잡고 있어
-                      fill 이 그대로 들어맞는다 (mfl-original.css 82~83행).
-                    */
-                    <Image
-                      src={current.url}
-                      alt={current.alt_text}
-                      fill
-                      sizes="(max-width: 1024px) 100vw, 60vw"
-                    />
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="tab-area">
-            <div className="tab-menu">
-              <ul className="tabs">
-                {list.map((it, i) => (
-                  <li key={it.id} className={i === idx ? 'active' : undefined}>
-                    <button type="button" onClick={() => setIdx(i)} className="block w-full">
-                      <span className="pic">
-                        {/* 썸네일은 실제로 185px 남짓으로 그려진다. 원본을 받을 이유가 없다 */}
-                        <Image
-                          src={it.url}
-                          alt={it.alt_text}
-                          fill
-                          sizes="(max-width: 1024px) 50vw, 190px"
-                        />
-                      </span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
+      {/* 분야로 가는 길 — 탭이 아니라 링크다. 홈에서 갈아 끼울 게 아니라 그 장으로 가면 된다 */}
+      <div className="mt-7 flex flex-wrap justify-center gap-2 sm:mt-8">
+        {GALLERY_CATEGORIES.map((c) => (
+          <Link
+            key={c.slug}
+            href={`/gallery/${c.slug}`}
+            className="rounded-full border border-gray-200 bg-white px-4 py-2 text-[14px] font-semibold text-gray-700 transition-colors hover:border-[#F46E65] hover:text-[#F46E65]"
+          >
+            {c.name}
+          </Link>
+        ))}
       </div>
     </>
   )

@@ -17,12 +17,13 @@ export default function Footer() {
             <p>이메일 : makeupforl@naver.com</p>
           </address>
           <p className="copy">
-            <span>COPYRIGHT 2022 MAKEUPFORL. ALL RIGHTS RESERVED.</span>
+            {/* 연도를 박아 두면 해가 바뀔 때마다 낡는다 */}
+            <span>COPYRIGHT {new Date().getFullYear()} MAKEUPFORL. ALL RIGHTS RESERVED.</span>
           </p>
         </div>
 
         <div className="foot-contact area">
-          <div className="tit">Contact Us</div>
+          <div className="tit">전화 상담</div>
           <p className="num">
             <a href="tel:02-323-3321">02-323-3321</a>
           </p>
@@ -30,7 +31,7 @@ export default function Footer() {
         </div>
 
         <div className="foot-menu area">
-          <div className="tit">Privacy</div>
+          <div className="tit">개인정보</div>
           <ul>
             <li>
               <Link href="/privacy">개인정보처리방침</Link>
