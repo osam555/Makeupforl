@@ -98,11 +98,11 @@
 .mfl-site .sec3 .tit-box .more:after {content:'';width:40px;height:10px;background:url('/mfl/images/main/review_more.png')no-repeat 50% 50%/contain;position: absolute;right:0;top:10px;}
 .mfl-site .sec3 .review-slide .items {margin:0 -16px;}
 .mfl-site .sec3 .review-slide .items .item {padding:0 16px;}
-/* 글 후기 카드 — 사진 카드(.img/.tt-wrap)를 대신한다. 다섯 줄에서 자르고 카드 높이를 맞춘다 */
-.mfl-site .doc-review.quote {display:flex;flex-direction:column;height:100%;min-height:230px;padding:26px 26px 22px;border-radius:24px;background:#FDF4F3;color:#242424;}
+/* 글 후기 카드 — 사진 카드(.img/.tt-wrap)를 대신한다. 여섯 줄에서 자르고 카드 높이를 맞춘다 */
+.mfl-site .doc-review.quote {display:flex;flex-direction:column;height:100%;min-height:256px;padding:26px 26px 22px;border-radius:24px;background:#FDF4F3;color:#242424;}
 .mfl-site .doc-review.quote blockquote {margin:0;flex:1;position:relative;padding-top:26px;}
 .mfl-site .doc-review.quote blockquote:before {content:'\201C';position:absolute;left:-2px;top:-14px;font-size:54px;line-height:1;color:#F46E65;opacity:.55;font-family:Georgia,serif;}
-.mfl-site .doc-review.quote blockquote p {font-size:15.5px;line-height:1.75em;white-space:pre-line;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;}
+.mfl-site .doc-review.quote blockquote p {font-size:15.5px;line-height:1.75em;white-space:pre-line;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:6;-webkit-box-orient:vertical;}
 .mfl-site .doc-review.quote .date {margin-top:16px;font-size:14px;color:#8a8a8a;font-weight:400;}
 .mfl-site .doc-review.quote:hover {background:#FBEAE8;}
 .mfl-site .doc-review .img {position:relative; height:0; padding-bottom:69.506%; overflow:hidden;}

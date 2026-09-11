@@ -87,16 +87,17 @@ export default function ReviewsList() {
             <div className="relative aspect-[3/4] bg-gray-50">
               <Image
                 src={r.imageUrl}
-                alt={r.title}
+                alt="고객님이 보내주신 문자"
                 fill
                 sizes="(max-width:640px) 50vw, (max-width:1024px) 33vw, 25vw"
                 className="object-cover object-top transition group-hover:scale-[1.03]"
               />
             </div>
-            <div className="flex items-center justify-between px-3.5 py-3">
-              <span className="text-sm font-semibold text-gray-900">{r.title}</span>
-              <span className="text-[13px] text-gray-600">{r.created_at}</span>
-            </div>
+            {/*
+              사진 밑에 제목과 날짜를 달았었다. 옛 게시판의 글 제목("고객문자")과 올린
+              날짜(2023.10.10)라 스물다섯 장이 거의 다 같은 글자였다 — 아무 말도 안 하는
+              줄은 없는 편이 낫다. 문자를 보낸 달은 아래 옮겨 적은 글에 있다.
+            */}
           </button>
         ))}
       </div>
@@ -136,7 +137,7 @@ export default function ReviewsList() {
               <div className="relative h-full w-full p-10">
                 <Image
                   src={reviews[sel].imageUrl}
-                  alt={reviews[sel].title}
+                  alt="고객님이 보내주신 문자"
                   fill
                   sizes="100vw"
                   priority
@@ -144,7 +145,7 @@ export default function ReviewsList() {
                 />
               </div>
               <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-black/60 px-4 py-2 text-sm text-white">
-                {reviews[sel].title} · {reviews[sel].created_at} ({sel + 1}/{reviews.length})
+                고객님이 보내주신 문자 · {sel + 1}/{reviews.length}
               </div>
             </div>
           )}
