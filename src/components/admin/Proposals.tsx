@@ -573,12 +573,25 @@ function NewItem({
   const [title, setTitle] = useState(seed?.title ?? '')
   const [reason, setReason] = useState(seed ? `${seed.createdBy} 님 요청: ${seed.reason}` : '')
   const [label, setLabel] = useState('')
+  /*
+    문항이 아닌 제안('사이트 본문'·'공개 설정')의 '지금' 값.
+
+    문항은 고르면 저절로 채워지지만 그 밖의 것은 채워 줄 데가 없어서 빈칸으로
+    두었다가, 첫 사이트 본문 제안을 올리려다 막혔다 — 카드에 "지금: (비어 있음)"
+    만 뜨고 원장님은 무엇이 어떻게 바뀌는지 볼 수 없다. 전/후를 나란히 놓는 것이
+    이 화면의 전부인데 한쪽이 없으면 결재가 아니라 통보가 된다.
+  */
+  const [before0, setBefore0] = useState('')
   const [after, setAfter] = useState('')
   const [hint, setHint] = useState<string | null>(null)
 
   const picked = questions.find((q) => q.slug === slug)
   const before =
-    kind === 'wed100' ? (field === 'question' ? (picked?.question ?? '') : (picked?.answer ?? '')) : ''
+    type === 'proposal' && kind === 'wed100'
+      ? field === 'question'
+        ? (picked?.question ?? '')
+        : (picked?.answer ?? '')
+      : before0
 
   const draft: ProposalDraft = {
     type,
@@ -608,6 +621,7 @@ function NewItem({
       setReason('')
       setAfter('')
       setLabel('')
+      setBefore0('')
       setOpen(false)
       onClearSeed()
     }
@@ -701,14 +715,26 @@ function NewItem({
         )}
 
         {type === 'proposal' && kind !== 'wed100' && (
-          <Field label="바뀌는 것의 이름 (예: 무료 문항)">
-            <input
-              id="proposal-label"
-              value={label}
-              onChange={(e) => setLabel(e.target.value)}
-              className="w-full rounded-lg border border-[var(--a-e7ddd4)] bg-[var(--color-white)] px-3 py-2 text-sm"
-            />
-          </Field>
+          <>
+            <Field label="바뀌는 것의 이름 (예: /services 안내 문단)">
+              <input
+                id="proposal-label"
+                value={label}
+                onChange={(e) => setLabel(e.target.value)}
+                className="w-full rounded-lg border border-[var(--a-e7ddd4)] bg-[var(--color-white)] px-3 py-2 text-sm"
+              />
+            </Field>
+            <Field label="지금 뭐라고 되어 있나">
+              <textarea
+                id="proposal-before"
+                value={before0}
+                onChange={(e) => setBefore0(e.target.value)}
+                rows={3}
+                className="w-full rounded-lg border border-[var(--a-e7ddd4)] bg-[var(--color-white)] px-3 py-2 text-sm leading-relaxed"
+                placeholder="지금 화면에 있는 문장을 그대로 옮겨 적어 주세요 — 원장님은 이것과 아래를 견주어 정하십니다"
+              />
+            </Field>
+          </>
         )}
 
         {type === 'proposal' && kind === 'wed100' && (
