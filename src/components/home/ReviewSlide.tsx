@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
-type Item = { id: string; text: string; date: string }
+type Item = { id: string; text: string }
 
 /**
  * 홈 고객후기 슬라이드 (원본 sec3 · 4장 노출 · 좌우 원형 화살표).
@@ -42,7 +42,13 @@ export default function ReviewSlide({ items }: { items: Item[] }) {
                 <blockquote>
                   <p>{r.text}</p>
                 </blockquote>
-                <p className="date">{fmtMonth(r.date)} · 고객님 문자</p>
+                {/*
+                  달을 붙였다가 뺐다. 그 날짜는 손님이 보낸 날이 아니라 옛 게시판에 캡처를
+                  올린 날(2023-03-31 열다섯 장, 2023-10-10 아홉 장)이라, 앞 일곱 장이 전부
+                  "2023년 10월" 로 나와 2년 전 후기가 마지막인 것처럼 읽혔다. 보낸 날은
+                  기록이 없다 — 없는 날짜를 지어 넣지 않는다.
+                */}
+                <p className="date">고객님이 보내주신 문자</p>
               </Link>
             </div>
           ))}
@@ -66,8 +72,3 @@ export default function ReviewSlide({ items }: { items: Item[] }) {
   )
 }
 
-/** "2023-10" → "2023년 10월" */
-function fmtMonth(d: string): string {
-  const [y, m] = d.split('-')
-  return m ? `${y}년 ${Number(m)}월` : y
-}

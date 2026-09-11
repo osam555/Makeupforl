@@ -58,7 +58,7 @@ export default async function Home() {
     사진 밑에 있어 괜찮지만 카드 첫 줄로 오면 깨진 글로 읽힌다.
   */
   const reviews = reviewTexts.items
-    .map((r, i) => ({ id: `t${i}`, ...r }))
+    .map((r, i) => ({ id: `t${i}`, text: r.text }))
     .filter((r) => /^[가-힣A-Za-z“"(]/.test(r.text) && !/^(시고|고|며) /.test(r.text))
     .slice(0, 10)
 

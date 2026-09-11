@@ -109,9 +109,7 @@ export default async function ReviewsPage() {
                 <p className="whitespace-pre-line text-[15px] leading-[1.9] text-gray-700">
                   {r.text}
                 </p>
-                <footer className="mt-3 text-[13px] text-gray-400">
-                  {r.date.replace('-', '년 ')}월
-                </footer>
+                {/* 달은 붙이지 않는다 — 시드의 date 는 옛 게시판에 올린 달이지 보낸 달이 아니다 (ReviewSlide 참고) */}
               </blockquote>
             ))}
           </div>
