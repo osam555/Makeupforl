@@ -6,6 +6,7 @@ import {
   type SeoConfig,
   type SeoFacts,
   type SeoSnapshot,
+  type SeoTodo,
   DEFAULT_RANK,
 } from '@/lib/seoKeywords'
 import { getPublishedWed100Items } from '@/lib/wed100'
@@ -212,5 +213,26 @@ export async function getSeoHistory(limit = 60): Promise<SeoSnapshot[]> {
   } catch (e) {
     console.error('[seo] 준비도 기록을 읽지 못했습니다 —', e)
     return []
+  }
+}
+
+/** 할 일 목록이 사는 곳. 순위·검색어 목록과 같은 이유로 문서를 따로 둔다 */
+export const SEO_TODOS_DOC = { collection: 'site_config', doc: 'seo-todos' }
+
+/**
+ * SEO 할 일 읽기. 시드 폴백이 없다 — 손님 화면에 그리지 않는 관리 데이터라
+ * 결재함과 같은 규칙이다. 못 읽으면 null 을 돌려주고 화면이 왜 안 되는지 말한다.
+ */
+export async function getSeoTodos(): Promise<SeoTodo[] | null> {
+  try {
+    const { getAdminDb } = await import('@/lib/firebase/admin')
+    const adb = await getAdminDb()
+    if (!adb) return null
+    const snap = await adb.collection(SEO_TODOS_DOC.collection).doc(SEO_TODOS_DOC.doc).get()
+    const items = snap.exists ? (snap.data()?.items as SeoTodo[] | undefined) : undefined
+    return Array.isArray(items) ? items : []
+  } catch (e) {
+    console.error('[seo] 할 일을 읽지 못했습니다 —', e)
+    return null
   }
 }

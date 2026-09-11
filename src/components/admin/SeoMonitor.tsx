@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Loader2, Plus, Save, Trash2, TrendingUp } from 'lucide-react'
 
 import RankTrend, { type TrendWeeks } from '@/components/admin/RankTrend'
+import SeoTodos from '@/components/admin/SeoTodos'
 
 import {
   PRIORITY_LABEL,
@@ -21,6 +22,7 @@ import {
   type SeoPriority,
   type SeoRank,
   type SeoSnapshot,
+  type SeoTodo,
 } from '@/lib/seoKeywords'
 
 /**
@@ -41,6 +43,7 @@ export default function SeoMonitor({
   initial,
   keywords: initialKeywords,
   history: initialHistory,
+  todos,
   linksCountedAt,
   auth,
 }: {
@@ -49,6 +52,7 @@ export default function SeoMonitor({
   keywords: SeoKeyword[]
   /** 날짜별 순위 기록 — 저장할 때 잰 날 자리에 쌓인다 */
   history: SeoSnapshot[]
+  todos: SeoTodo[] | null
   /** 내부 링크를 센 날. 낡았으면 scripts/count-internal-links.py 를 다시 돌려야 한다 */
   linksCountedAt: string
   auth: () => Promise<{ idToken: string } | { password: string | null }>
@@ -332,6 +336,8 @@ export default function SeoMonitor({
           </div>
         )
       })}
+
+      <SeoTodos initial={todos} auth={auth} />
 
       {/*
         목표 검색어 목록 편집.

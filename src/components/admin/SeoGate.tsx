@@ -2,7 +2,7 @@
 
 import AdminGate from '@/components/admin/AdminGate'
 import SeoMonitor from '@/components/admin/SeoMonitor'
-import type { SeoConfig, SeoFacts, SeoKeyword, SeoSnapshot } from '@/lib/seoKeywords'
+import type { SeoConfig, SeoFacts, SeoKeyword, SeoSnapshot, SeoTodo } from '@/lib/seoKeywords'
 
 /**
  * 인증 껍데기.
@@ -15,12 +15,15 @@ export default function SeoGate({
   config,
   keywords,
   history,
+  todos,
   linksCountedAt,
 }: {
   facts: Record<string, SeoFacts>
   config: SeoConfig
   keywords: SeoKeyword[]
   history: SeoSnapshot[]
+  /** null 이면 Firestore 를 못 읽은 것 — 빈 목록과 다르다 */
+  todos: SeoTodo[] | null
   linksCountedAt: string
 }) {
   return (
@@ -31,6 +34,7 @@ export default function SeoGate({
           initial={config}
           keywords={keywords}
           history={history}
+          todos={todos}
           linksCountedAt={linksCountedAt}
           auth={async () =>
             ctx.mode === 'google' && ctx.email

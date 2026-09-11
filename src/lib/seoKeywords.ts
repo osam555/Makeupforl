@@ -320,3 +320,24 @@ export function upgrades(f: SeoFacts): Upgrade[] {
 
   return out.sort((a, b) => b.gain - a.gain)
 }
+
+/**
+ * SEO 할 일 — 코드가 못 재는 것들.
+ *
+ * 준비도의 할 일은 사이트를 읽어 계산한 것뿐이다. 그런데 순위를 정하는 일의 절반은
+ * 사이트 밖에 있다 — 옛 호스팅에 남은 사이트를 닫아 달라고 연락하기, 네 주 뒤 순위를
+ * 다시 재기, 무료 문항을 더 열지 정하기. 카톡과 머릿속에 두면 사라져서 여기 둔다.
+ *
+ * 결재함에 넣지 않은 이유: 결재는 "이 문장으로 바꿀까요" 이고 이건 "언제까지 누가" 다.
+ */
+export interface SeoTodo {
+  id: string
+  text: string
+  /** 언제까지 (YYYY-MM-DD). 없으면 기한 없음 */
+  due?: string
+  /** 누가 — 원장님 / 매니저 / 월드웹 같은 바깥 */
+  who?: string
+  done: boolean
+  doneAt?: string
+  note?: string
+}

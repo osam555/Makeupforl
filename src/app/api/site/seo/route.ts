@@ -8,8 +8,14 @@ import {
   type SeoKeyword,
   type SeoPriority,
   type SeoRank,
+  type SeoTodo,
 } from '@/lib/seoKeywords'
-import { SEO_CONFIG_DOC, SEO_KEYWORDS_DOC, getSeoKeywords } from '@/lib/seoKeywords.server'
+import {
+  SEO_CONFIG_DOC,
+  SEO_KEYWORDS_DOC,
+  SEO_TODOS_DOC,
+  getSeoKeywords,
+} from '@/lib/seoKeywords.server'
 
 export const runtime = 'nodejs'
 
@@ -22,6 +28,7 @@ export const runtime = 'nodejs'
  * POST { idToken, ranks: { [검색어]: { naver, google, checkedAt, goal, note } } }
  * POST { idToken, action: 'keywords', keywords: SeoKeyword[] }
  * POST { idToken, action: 'snapshot', readiness, naver, google }
+ * POST { idToken, action: 'todos', todos: SeoTodo[] }
  */
 export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}))
@@ -70,6 +77,38 @@ export async function POST(req: Request) {
         { merge: true },
       )
     return NextResponse.json({ ok: true, date })
+  }
+
+  /* SEO 할 일 — 목록을 통째로 받아 통째로 쓴다. 몇 줄 안 되고 두 사람이 동시에 고칠 일이 없다 */
+  if (body?.action === 'todos') {
+    const rows = Array.isArray(body?.todos) ? (body.todos as Partial<SeoTodo>[]) : null
+    if (!rows) return NextResponse.json({ ok: false, error: '할 일 목록이 없습니다.' }, { status: 400 })
+    const items: SeoTodo[] = []
+    for (const r of rows) {
+      const text = String(r.text ?? '').trim().slice(0, 300)
+      if (!text) continue
+      const due = String(r.due ?? '').trim()
+      if (due && !/^\d{4}-\d{2}-\d{2}$/.test(due)) {
+        return NextResponse.json(
+          { ok: false, error: `기한은 2026-10-02 형식으로 적어 주세요: ${text.slice(0, 20)}` },
+          { status: 400 },
+        )
+      }
+      items.push({
+        id: String(r.id ?? '').trim() || Math.random().toString(36).slice(2, 10),
+        text,
+        ...(due ? { due } : {}),
+        ...(r.who ? { who: String(r.who).trim().slice(0, 40) } : {}),
+        done: r.done === true,
+        ...(r.done === true ? { doneAt: String(r.doneAt ?? '').trim() || todayKST() } : {}),
+        ...(r.note ? { note: String(r.note).trim().slice(0, 300) } : {}),
+      })
+    }
+    await db
+      .collection(SEO_TODOS_DOC.collection)
+      .doc(SEO_TODOS_DOC.doc)
+      .set({ items, updatedAt: new Date().toISOString(), updatedBy: editor }, { merge: true })
+    return NextResponse.json({ ok: true, saved: items.length, editor })
   }
 
   /*

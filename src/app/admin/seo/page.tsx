@@ -6,6 +6,7 @@ import {
   getSeoConfig,
   getSeoHistory,
   getSeoKeywords,
+  getSeoTodos,
 } from '@/lib/seoKeywords.server'
 
 export const dynamic = 'force-dynamic'
@@ -25,10 +26,11 @@ export default async function AdminSeoPage() {
   */
   const keywords = await getSeoKeywords()
   // 추세는 길어야 4주라 60일치면 넉넉하다
-  const [facts, config, history] = await Promise.all([
+  const [facts, config, history, todos] = await Promise.all([
     collectSeoFacts(keywords),
     getSeoConfig(keywords),
     getSeoHistory(60),
+    getSeoTodos(),
   ])
 
   return (
@@ -38,6 +40,7 @@ export default async function AdminSeoPage() {
         config={config}
         keywords={keywords}
         history={history}
+        todos={todos}
         linksCountedAt={LINKS_COUNTED_AT}
       />
     </AdminShell>
