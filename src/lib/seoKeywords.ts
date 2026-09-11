@@ -1,3 +1,5 @@
+import seed from '@/data/seo-keywords.json'
+
 /**
  * 검색어 목표와 달성도.
  *
@@ -72,53 +74,22 @@ export const VOLUME_MEASURED_AT = '2026-09-08'
 /**
  * 목표 검색어 — **시드**다.
  *
- * 이 목록은 어드민에서 고칠 수 있고 진짜 값은 Firestore(`site_config/seo` 의
- * `targets`)에 있다. 여기 있는 것은 Firebase 가 하나도 세팅되지 않았거나 아직
+ * 이 목록은 어드민에서 고칠 수 있고 진짜 값은 Firestore(`site_config/seo-keywords`
+ * 의 `items`)에 있다. 여기 있는 것은 Firebase 가 하나도 세팅되지 않았거나 아직
  * 한 번도 저장한 적이 없을 때 쓰이는 폴백이다 — 이 저장소의 다른 데이터와 같은
  * 규칙이다(wed100 이 표준 구현).
  *
- * 그래서 여기를 고쳐도 운영에는 반영되지 않는다. 운영 값을 바꾸려면 어드민에서
- * 고치고, 그 결과를 여기에 되돌려 적어야 폴백했을 때도 같은 것이 보인다.
+ * 값은 `src/data/seo-keywords.json` 에 있다. 코드 안 배열이 아니라 JSON 으로 뺀 이유는
+ * 되돌림 스크립트 때문이다 — 어드민에서 고친 것을 시드에 되돌려 넣으려면 무언가가
+ * 이 목록을 다시 써야 하는데, TypeScript 배열을 글자로 고쳐 쓰는 것보다 JSON 을
+ * 통째로 바꾸는 편이 훨씬 안전하다. wed100.json 과 같은 모양이다.
  *
- * priority 는 처음 값이다. 실제 판단은 어드민에서 정한다.
+ *   GOOGLE_APPLICATION_CREDENTIALS=<키> python3 scripts/sync-seo-keywords.py
+ *
+ * 이걸 안 돌리면 어드민에서 고친 목록과 여기가 어긋난 채로 남고, Firestore 가
+ * 잠깐이라도 안 되는 순간 사이트는 옛 목록으로 조용히 되돌아간다.
  */
-export const SEO_KEYWORDS: SeoKeyword[] = [
-  {
-    term: '혼주한복',
-    volume: 16450,
-    owner: '/혼주한복',
-    why: '한복은 문항 39개가 받치고 있어 가장 두껍다. 다투는 페이지도 없다',
-    priority: 1,
-  },
-  {
-    term: '혼주머리',
-    volume: 5790,
-    owner: '/혼주머리',
-    why: '올림머리·헤어와 한 장에서 함께 받는다. 셋을 나누면 서로 잡아먹는다',
-    priority: 2,
-  },
-  {
-    term: '혼주메이크업',
-    volume: 5060,
-    owner: '/혼주메이크업',
-    why: '가격과 예약이 있는 유일한 장. 이 말을 치는 사람은 맡길 곳을 찾는다',
-    priority: 1,
-  },
-  {
-    term: '혼주올림머리',
-    volume: 1750,
-    owner: '/혼주머리',
-    why: '혼주머리와 같은 장. 제목에 함께 실었다',
-    priority: 2,
-  },
-  {
-    term: '혼주헤어',
-    volume: 810,
-    owner: '/혼주머리',
-    why: '혼주머리와 같은 장',
-    priority: 3,
-  },
-]
+export const SEO_KEYWORDS = seed as SeoKeyword[]
 
 /** 사람이 적어 넣는 값 */
 export interface SeoRank {

@@ -133,7 +133,10 @@ Firestore 에서 고친 내용은 `scripts/wed100/sync_seed.py` 로 시드에 �
 - `src/lib/seoKeywords.ts`: 검색어 목표와 "준비도" 계산(순위가 아니라 우리가 할 수 있는 것의 달성도).
   실측 순위는 사람이 재서 적고 잰 날짜를 함께 남긴다.
   - 목록은 **어드민에서 관리한다** — Firestore `site_config/seo-keywords` 의 `items`,
-    코드의 `SEO_KEYWORDS` 는 시드 폴백이다(wed100 과 같은 규칙). 코드만 고치면 운영에 반영되지 않는다.
+    `src/data/seo-keywords.json` 이 시드 폴백이다(wed100 과 같은 규칙). 코드만 고치면 운영에 반영되지 않는다.
+    어드민에서 고쳤으면 **푸시 전에 시드로 되돌릴 것** — 안 하면 Firestore 가 잠깐 안 되는 순간
+    사이트가 옛 목록으로 조용히 되돌아간다:
+    `GOOGLE_APPLICATION_CREDENTIALS=<키> python3 scripts/sync-seo-keywords.py`
   - 순위는 `site_config/seo` 의 `ranks` 로 **문서를 나눠 둔다.** 목록은 가끔 통째로 갈고
     순위는 자주 조금씩 고쳐서, 한 문서에 두면 한쪽을 저장할 때 다른 쪽을 덮어쓴다.
   - `priority`(1 높음 / 2 보통 / 3 낮음)가 화면 순서를 정한다. 검색량으로 대신할 수 없다 —
