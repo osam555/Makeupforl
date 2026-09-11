@@ -94,3 +94,53 @@ export const SOURCE_LABEL: Record<string, string> = {
   youtube: '유튜브',
   internal: '사이트 내부',
 }
+
+/** 기간 단위 — 일간은 날짜, 주간은 월요일 날짜, 월간은 YYYY-MM */
+export type Grain = 'day' | 'week' | 'month'
+
+export const GRAIN_LABEL: Record<Grain, string> = { day: '일간', week: '주간', month: '월간' }
+
+/**
+ * 날짜별 기록을 주·월로 묶는다.
+ *
+ * 주는 월요일에 시작한다(한국 달력). 문서 이름이 YYYY-MM-DD 라 UTC 정오로 읽어
+ * 요일을 구하면 시간대 때문에 하루가 밀리지 않는다.
+ * 묶은 결과도 DailyStat 모양 그대로다 — 화면이 일·주·월을 같은 코드로 그린다.
+ * date 칸에는 묶음의 첫날(주) 또는 YYYY-MM(월)이 들어간다.
+ */
+export function groupDays(days: DailyStat[], grain: Grain): DailyStat[] {
+  if (grain === 'day') return days
+  const keyOf = (date: string) => {
+    if (grain === 'month') return date.slice(0, 7)
+    const t = new Date(`${date}T12:00:00Z`)
+    const dow = (t.getUTCDay() + 6) % 7 // 월=0
+    t.setUTCDate(t.getUTCDate() - dow)
+    return t.toISOString().slice(0, 10)
+  }
+  const buckets = new Map<string, DailyStat[]>()
+  for (const d of days) {
+    const k = keyOf(d.date)
+    ;(buckets.get(k) ?? buckets.set(k, []).get(k)!).push(d)
+  }
+  return [...buckets.entries()].map(([date, rows]) => ({ date, ...sum(rows) }))
+}
+
+/**
+ * 출처 색. 네이버 계열은 초록, 구글은 장미, 직접은 회색 — 표와 막대가 같은 색을 쓴다.
+ * 목록에 없는 출처(다른 사이트)는 갈색 한 가지로 뭉친다.
+ */
+export const SOURCE_COLOR: Record<string, string> = {
+  'naver-m': '#2DB400',
+  'naver-pc': '#1E8A00',
+  'naver-place': '#59C6A0',
+  'naver-blog': '#9BD27A',
+  'naver-cafe': '#C4E3A4',
+  naver: '#7FBF5F',
+  google: '#A63D5A',
+  direct: '#B8ADA5',
+  youtube: '#E0483B',
+  sns: '#8E5BA6',
+  daum: '#3D6BD8',
+  internal: '#DDD3CB',
+}
+export const SOURCE_COLOR_OTHER = '#C8A27A'

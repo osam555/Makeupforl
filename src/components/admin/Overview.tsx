@@ -208,7 +208,7 @@ export default function Overview({
       </section>
 
       {/* ── 3. 섹션별 ───────────────────────────────── */}
-      <Panel title="방문" href="" hint="사람이 얼마나, 어디서 오는가">
+      <Panel title="방문" href="/admin/visits" hint="사람이 얼마나, 어디서 오는가">
         <div className="mb-4">
           <Bars days={days} />
         </div>

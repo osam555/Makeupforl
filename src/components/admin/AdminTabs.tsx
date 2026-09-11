@@ -21,6 +21,7 @@ export const TABS = [
   { href: '/admin', label: '대시보드' },
   { href: '/admin/proposals', label: '결재' },
   { href: '/admin/seo', label: '키워드' },
+  { href: '/admin/visits', label: '방문' },
   { href: '/admin/wed100', label: '100문100답' },
   { href: '/admin/videos', label: '영상' },
   { href: '/admin/dashboard', label: '문항 통계' },
