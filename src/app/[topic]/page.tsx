@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation'
 
 import { HUBS, findHub } from '@/lib/hubs'
 import { breadcrumbJsonLd, jsonLdScript } from '@/lib/seo'
-import { SITE_URL } from '@/lib/site'
+import { OG_IMAGE, SITE_URL } from '@/lib/site'
 import { getPublishedWed100Items } from '@/lib/wed100'
 import { isOpen } from '@/lib/wed100Access'
 import { getWed100Access } from '@/lib/wed100Access.server'
@@ -41,6 +41,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
       description: hub.description,
       url: `/${hub.slug}`,
       type: 'article',
+      images: [OG_IMAGE],
     },
   }
 }

@@ -9,6 +9,7 @@ import reviewTexts from '@/data/reviewTexts.json'
 import MainGallery from '@/components/home/MainGallery'
 import ReviewSlide from '@/components/home/ReviewSlide'
 import SectionHead from '@/components/home/SectionHead'
+import { OG_IMAGE } from '@/lib/site'
 import { GALLERY_CATEGORIES } from '@/lib/galleryCategories'
 import { BRAND_POINTS, BRAND_STATS } from '@/lib/brandPoints'
 import HeroQnaSlide from '@/components/home/HeroQnaSlide'
@@ -46,6 +47,8 @@ export const metadata: Metadata = {
       '25년간 1만 명의 혼주님을 만난 대표원장이 1:1 사전 컨설팅 후 직접 담당합니다.',
     url: '/',
     type: 'website',
+
+    images: [OG_IMAGE],
   },
 }
 

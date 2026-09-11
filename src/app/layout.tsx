@@ -8,7 +8,7 @@ import { Analytics } from "@vercel/analytics/next";
 import AdminHome from "@/components/analytics/AdminHome";
 import RegisterSW from "@/components/analytics/RegisterSW";
 import Track from "@/components/analytics/Track";
-import { SITE_URL, SITE_NAME } from "@/lib/site";
+import { SITE_URL, SITE_NAME, OG_IMAGE } from "@/lib/site";
 import { businessJsonLd, jsonLdScript } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -25,6 +25,8 @@ export const metadata: Metadata = {
     url: SITE_URL,
     locale: "ko_KR",
     type: "website",
+
+    images: [OG_IMAGE],
   },
   // 검색결과에 뜰 사이트 이름을 고정한다. 없으면 도메인이 그대로 노출된다.
   applicationName: SITE_NAME,

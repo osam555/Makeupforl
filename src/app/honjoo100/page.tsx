@@ -19,7 +19,7 @@ import { getSiteImages } from '@/lib/siteImages'
 import { isOpen } from '@/lib/wed100Access'
 import { getWed100Access } from '@/lib/wed100Access.server'
 import { breadcrumbJsonLd, jsonLdScript } from '@/lib/seo'
-import { SITE_URL } from '@/lib/site'
+import { OG_IMAGE, SITE_URL } from '@/lib/site'
 
 export const metadata: Metadata = {
   // 자기 주소를 정본으로 못 박는다. 쿼리스트링이 붙은 유입도 한 주소로 모인다.
@@ -33,6 +33,7 @@ export const metadata: Metadata = {
     title: '혼주메이크업 100문 100답 | 메이크업포엘',
     description: '결혼식 날, 후회하면 늦습니다. 혼주님이 가장 많이 묻는 질문에 원장이 직접 답합니다.',
     type: 'article',
+    images: [OG_IMAGE],
   },
 }
 
