@@ -155,7 +155,17 @@ export async function getSeoConfig(keywords: SeoKeyword[] = SEO_KEYWORDS): Promi
         for (const t of keywords) {
           ranks[t.term] = { ...DEFAULT_RANK, ...(d.ranks?.[t.term] ?? {}) }
         }
-        return { ranks, updatedAt: d.updatedAt }
+        /*
+          문자열이 아니면 버린다.
+
+          이 값은 서버에서 읽어 화면 컴포넌트로 넘어간다. Firestore 타임스탬프처럼
+          클래스 인스턴스가 들어 있으면 Next 가 직렬화하지 못해 **화면 전체가 죽는다** —
+          순위를 스크립트로 넣다가 serverTimestamp() 를 써서 실제로 그렇게 만들었다.
+          날짜 하나 때문에 키워드 화면이 통째로 안 뜨는 것은 어느 쪽으로 봐도 손해라,
+          모양이 아니면 없는 셈 친다.
+        */
+        const updatedAt = typeof d.updatedAt === 'string' ? d.updatedAt : undefined
+        return { ranks, updatedAt }
       }
     }
   } catch {
