@@ -54,7 +54,9 @@
 .mfl-site .main-visual .slick-dots li {margin-right:10px;}
 .mfl-site .main-visual .slick-dots li:last-child {margin-right:0;}
 .mfl-site .main-visual .slick-dots li button {font-size:0;border:none;width:30px;height:3px;background-color:#fff;}
-.mfl-site .sec1 {padding:145px 0;}
+/* 원본은 145px — 메인 비주얼 바로 아래라 그만큼 띄웠다. 지금은 위에 WHY(py-20=80px)가
+   끼어 있어 145 를 두면 위아래로 225px 이 비어 보인다. 이웃 블록과 같은 80 으로 */
+.mfl-site .sec1 {padding:80px 0;}
 .mfl-site .sec-tit {font-size:35px;font-weight:600;line-height:1.2em;color: #242424;margin-bottom:25px;text-align:center;}
 .mfl-site .sec1 .tit-box {margin-bottom:55px;text-align:center;}
 .mfl-site .sec1 .tit-box .sec-tit {margin-bottom:13px;}
