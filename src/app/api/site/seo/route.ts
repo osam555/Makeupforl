@@ -57,8 +57,14 @@ export async function POST(req: Request) {
           // 자가 바뀐 날 그래프가 꺾이는 이유를 나중에 알 수 있게 함께 남긴다
           formula: READINESS_FORMULA,
           readiness: body?.readiness ?? {},
-          naver: body?.naver ?? {},
-          google: body?.google ?? {},
+          /*
+            순위는 안 보냈으면 안 건드린다.
+
+            첫 화면은 준비도만 보내는데, 여기서 naver: {} 를 같이 쓰고 있었다.
+            그날 순위 저장이 남긴 값이 그 빈 맵에 가려질 길이라, 있는 것만 적는다.
+          */
+          ...(hasKeys(body?.naver) ? { naver: body.naver } : {}),
+          ...(hasKeys(body?.google) ? { google: body.google } : {}),
           at: new Date().toISOString(),
         },
         { merge: true },
@@ -169,5 +175,34 @@ export async function POST(req: Request) {
     .doc(SEO_CONFIG_DOC.doc)
     .set({ ranks, updatedAt: new Date().toISOString(), updatedBy: editor }, { merge: true })
 
+  /*
+    순위 추이.
+
+    site_config/seo 는 "지금 몇 위인가" 하나만 들고 있어서, 다음에 재서 덮어쓰면
+    지난 값은 사라졌다. 잰 날(checkedAt) 이름의 기록 문서에 검색어별 순위를 함께
+    남긴다 — 저장한 날이 아니라 **잰 날**이다. 아침에 재고 저녁에 적어도 아침 값이고,
+    지난주 것을 이제야 옮겨 적어도 지난주 자리에 들어간다.
+
+    잰 날이 없는 검색어는 남기지 않는다. 날짜 없는 순위는 추이에 놓을 자리가 없다.
+    못 찾음(null)은 남긴다 — 3페이지까지 봤는데 없었다는 것도 그날의 사실이다.
+    merge 라 같은 날 다른 검색어의 값이나 준비도 기록은 건드리지 않는다.
+  */
+  const byDate: Record<string, { naver: Record<string, number | null>; google: Record<string, number | null> }> = {}
+  for (const [term, r] of Object.entries(ranks)) {
+    if (!r.checkedAt) continue
+    const d = (byDate[r.checkedAt] ??= { naver: {}, google: {} })
+    d.naver[term] = r.naver
+    d.google[term] = r.google
+  }
+  const ranksAt = new Date().toISOString()
+  await Promise.all(
+    Object.entries(byDate).map(([date, d]) =>
+      db.collection('seo_snapshots').doc(date).set({ date, ...d, ranksAt }, { merge: true }),
+    ),
+  )
+
   return NextResponse.json({ ok: true, saved: Object.keys(ranks).length, editor })
 }
+
+const hasKeys = (v: unknown): v is Record<string, unknown> =>
+  !!v && typeof v === 'object' && Object.keys(v as object).length > 0

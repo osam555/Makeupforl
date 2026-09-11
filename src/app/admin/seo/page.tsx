@@ -4,6 +4,7 @@ import {
   LINKS_COUNTED_AT,
   collectSeoFacts,
   getSeoConfig,
+  getSeoHistory,
   getSeoKeywords,
 } from '@/lib/seoKeywords.server'
 
@@ -23,11 +24,22 @@ export default async function AdminSeoPage() {
     읽으면 어드민에서 방금 더한 검색어가 이 화면에서만 빠져 보인다.
   */
   const keywords = await getSeoKeywords()
-  const [facts, config] = await Promise.all([collectSeoFacts(keywords), getSeoConfig(keywords)])
+  // 추세는 길어야 4주라 60일치면 넉넉하다
+  const [facts, config, history] = await Promise.all([
+    collectSeoFacts(keywords),
+    getSeoConfig(keywords),
+    getSeoHistory(60),
+  ])
 
   return (
     <AdminShell active="/admin/seo" title="키워드">
-      <SeoGate facts={facts} config={config} keywords={keywords} linksCountedAt={LINKS_COUNTED_AT} />
+      <SeoGate
+        facts={facts}
+        config={config}
+        keywords={keywords}
+        history={history}
+        linksCountedAt={LINKS_COUNTED_AT}
+      />
     </AdminShell>
   )
 }

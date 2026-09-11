@@ -2,7 +2,7 @@
 
 import AdminGate from '@/components/admin/AdminGate'
 import SeoMonitor from '@/components/admin/SeoMonitor'
-import type { SeoConfig, SeoFacts, SeoKeyword } from '@/lib/seoKeywords'
+import type { SeoConfig, SeoFacts, SeoKeyword, SeoSnapshot } from '@/lib/seoKeywords'
 
 /**
  * 인증 껍데기.
@@ -14,11 +14,13 @@ export default function SeoGate({
   facts,
   config,
   keywords,
+  history,
   linksCountedAt,
 }: {
   facts: Record<string, SeoFacts>
   config: SeoConfig
   keywords: SeoKeyword[]
+  history: SeoSnapshot[]
   linksCountedAt: string
 }) {
   return (
@@ -28,6 +30,7 @@ export default function SeoGate({
           facts={facts}
           initial={config}
           keywords={keywords}
+          history={history}
           linksCountedAt={linksCountedAt}
           auth={async () =>
             ctx.mode === 'google' && ctx.email

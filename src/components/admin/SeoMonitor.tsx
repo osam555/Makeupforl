@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import { Loader2, Plus, Save, Trash2, TrendingUp } from 'lucide-react'
 
+import RankTrend, { type TrendWeeks } from '@/components/admin/RankTrend'
+
 import {
   PRIORITY_LABEL,
   VOLUME_MEASURED_AT,
@@ -18,6 +20,7 @@ import {
   type SeoKeyword,
   type SeoPriority,
   type SeoRank,
+  type SeoSnapshot,
 } from '@/lib/seoKeywords'
 
 /**
@@ -37,18 +40,23 @@ export default function SeoMonitor({
   facts,
   initial,
   keywords: initialKeywords,
+  history: initialHistory,
   linksCountedAt,
   auth,
 }: {
   facts: Record<string, SeoFacts>
   initial: SeoConfig
   keywords: SeoKeyword[]
+  /** 날짜별 순위 기록 — 저장할 때 잰 날 자리에 쌓인다 */
+  history: SeoSnapshot[]
   /** 내부 링크를 센 날. 낡았으면 scripts/count-internal-links.py 를 다시 돌려야 한다 */
   linksCountedAt: string
   auth: () => Promise<{ idToken: string } | { password: string | null }>
 }) {
   const [ranks, setRanks] = useState<Record<string, SeoRank>>(initial.ranks)
   const [keywords, setKeywords] = useState<SeoKeyword[]>(initialKeywords)
+  const [history, setHistory] = useState<SeoSnapshot[]>(initialHistory)
+  const [weeks, setWeeks] = useState<TrendWeeks>(4)
   const [busy, setBusy] = useState(false)
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null)
 
@@ -67,6 +75,11 @@ export default function SeoMonitor({
       const j = await res.json()
       if (!j.ok) throw new Error(j.error)
       setMsg({ ok: true, text: `순위를 저장했습니다. 검색어 ${j.saved}개` })
+      /*
+        서버가 잰 날 자리에 남긴 것을 화면에도 그대로 반영한다. 새로고침 전까지
+        그래프가 옛 모양이면 "저장이 안 됐나" 하고 한 번 더 누르게 된다.
+      */
+      setHistory((h) => mergeRanks(h, ranks))
     } catch (e) {
       setMsg({ ok: false, text: e instanceof Error ? e.message : String(e) })
     } finally {
@@ -151,6 +164,26 @@ export default function SeoMonitor({
             내부 링크는 {linksCountedAt} 에 셈
           </p>
         </div>
+      </div>
+
+      {/* 추세 창 — 검색어마다 따로 고르게 하면 서로 다른 기간을 견주게 된다 */}
+      <div className="flex flex-wrap items-center gap-2 text-[0.6875rem] text-[var(--a-8a7a72)]">
+        <span className="font-bold text-[var(--a-3a322e)]">순위 추세</span>
+        {([1, 2, 4] as TrendWeeks[]).map((w) => (
+          <button
+            key={w}
+            onClick={() => setWeeks(w)}
+            className={[
+              'rounded-full border px-2.5 py-1 font-bold',
+              weeks === w
+                ? 'border-[var(--a-2e2724)] bg-[var(--a-2e2724)] text-white'
+                : 'border-[var(--a-d4c7be)] bg-white text-[var(--a-6b5d57)]',
+            ].join(' ')}
+          >
+            {w}주
+          </button>
+        ))}
+        <span>잰 날에만 점이 찍힙니다. 안 잰 날은 비워 둡니다</span>
       </div>
 
       {shown.map((t) => {
@@ -272,6 +305,8 @@ export default function SeoMonitor({
                 />
               </label>
             </div>
+
+            <RankTrend term={t.term} history={history} weeks={weeks} goal={r.goal} />
 
             {/* 달성 방안 — 준비도에서 빠진 것이 그대로 할 일이 된다 */}
             {ready.todo.length > 0 && (
@@ -431,4 +466,17 @@ export default function SeoMonitor({
       </div>
     </div>
   )
+}
+
+/** 방금 저장한 순위를 잰 날 자리에 끼워 넣는다 — 서버가 seo_snapshots 에 하는 일과 같은 모양 */
+function mergeRanks(history: SeoSnapshot[], ranks: Record<string, SeoRank>): SeoSnapshot[] {
+  const byDate = new Map(history.map((s) => [s.date, { ...s, naver: { ...s.naver }, google: { ...s.google } }]))
+  for (const [term, r] of Object.entries(ranks)) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(r.checkedAt)) continue
+    const s = byDate.get(r.checkedAt) ?? { date: r.checkedAt, readiness: {}, naver: {}, google: {} }
+    s.naver[term] = r.naver
+    s.google[term] = r.google
+    byDate.set(r.checkedAt, s)
+  }
+  return [...byDate.values()].sort((a, b) => a.date.localeCompare(b.date))
 }
