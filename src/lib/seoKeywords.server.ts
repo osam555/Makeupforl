@@ -9,6 +9,8 @@ import {
   DEFAULT_RANK,
 } from '@/lib/seoKeywords'
 import { getPublishedWed100Items } from '@/lib/wed100'
+import { isOpen } from '@/lib/wed100Access'
+import { getWed100Access } from '@/lib/wed100Access.server'
 
 /** 순위(사람이 적는 값)가 사는 곳 — 예전부터 여기 있었다 */
 export const SEO_CONFIG_DOC = { collection: 'site_config', doc: 'seo' }
@@ -67,7 +69,7 @@ const strip = (s: string) => s.replace(/\s+/g, '')
 export async function collectSeoFacts(
   keywords: SeoKeyword[] = SEO_KEYWORDS,
 ): Promise<Record<string, SeoFacts>> {
-  const items = await getPublishedWed100Items()
+  const [items, access] = await Promise.all([getPublishedWed100Items(), getWed100Access()])
 
   // 허브는 제목과 본문 길이를 코드에서 바로 알 수 있다
   const pages = HUBS.map((h) => ({
@@ -124,6 +126,8 @@ export async function collectSeoFacts(
       ownerChars: owner?.chars ?? 0,
       titlePages,
       questions: items.filter((x) => strip(x.question).includes(key)).length,
+      openQuestions: items.filter((x) => strip(x.question).includes(key) && isOpen(access, x.slug))
+        .length,
       /*
         내부 링크는 이제 실측이다.
 

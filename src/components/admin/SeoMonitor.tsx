@@ -93,7 +93,7 @@ export default function SeoMonitor({
     readiness 가 터진다. 빈 사실로 채워 0점으로 보이게 한다.
   */
   const factsOf = (term: string): SeoFacts =>
-    facts[term] ?? { ownerChars: 0, titlePages: [], questions: 0, inboundLinks: 0 }
+    facts[term] ?? { ownerChars: 0, titlePages: [], questions: 0, openQuestions: 0, inboundLinks: 0 }
 
   const shown = sortKeywords(keywords)
   const totalVolume = keywords.reduce((a, t) => a + t.volume, 0)
@@ -239,6 +239,10 @@ export default function SeoMonitor({
               </span>
               <span>
                 뒷받침 문항 <b className="text-[var(--a-2e2724)]">{f.questions}개</b>
+                {/* 잠긴 문항은 검색에 거의 안 나간다 — 셋을 채워도 열린 게 없으면 빨갛게 */}
+                <span className={f.questions > 0 && f.openQuestions === 0 ? 'text-[var(--a-a63d5a)]' : ''}>
+                  {' '}· 무료 {f.openQuestions}개
+                </span>
               </span>
               <span>
                 내부 링크 <b className="text-[var(--a-2e2724)]">{f.inboundLinks}개</b>

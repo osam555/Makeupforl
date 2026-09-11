@@ -125,6 +125,14 @@ export interface SeoFacts {
   titlePages: string[]
   /** 제목에 이 말이 든 100문100답 문항 수 */
   questions: number
+  /**
+   * 그중 무료로 열린 문항 수.
+   *
+   * 잠긴 문항은 크롤러에게 제목과 미리보기 한두 줄만 보여 준다. 그래서 제목에
+   * 말을 넣어도 검색에는 거의 안 잡힌다(2026-09-11 실측: 문항 102개 중 구글 색인
+   * 15개, 네이버 0개). 본문까지 검색에 나가는 것은 무료 문항뿐이라 따로 센다.
+   */
+  openQuestions: number
   /** 맡은 페이지로 들어오는 내부 링크 수 */
   inboundLinks: number
 }
@@ -170,8 +178,20 @@ export function readiness(f: SeoFacts): Readiness {
       `${f.titlePages.length}개 페이지가 제목에 이 말을 갖고 있습니다 (${f.titlePages.join(', ')}) — 하나만 남기고 나머지는 역할을 가르세요`,
     )
 
-  if (f.questions >= 3) score += 15
-  else todo.push(`뒷받침하는 문항이 ${f.questions}개입니다 — 제목에 이 말이 든 문항을 3개 이상으로`)
+  /*
+    뒷받침 문항은 셋 이상이되 **하나는 열려 있어야** 한다.
+
+    전에는 제목에 든 개수만 봤다. 그랬더니 혼주올림머리·혼주헤어가 셋씩 채워
+    만점인데 그 여섯 문항이 전부 잠겨 있어 검색엔진에는 하나도 안 보였다 —
+    잣대는 찼는데 뒷받침은 0 인 상태를 잣대가 못 봤다.
+  */
+  if (f.questions >= 3 && f.openQuestions >= 1) score += 15
+  else if (f.questions < 3)
+    todo.push(`뒷받침하는 문항이 ${f.questions}개입니다 — 제목에 이 말이 든 문항을 3개 이상으로`)
+  else
+    todo.push(
+      `제목에 이 말이 든 문항 ${f.questions}개가 전부 잠겨 있습니다 — 하나는 무료로 열어야 본문이 검색에 나갑니다`,
+    )
 
   if (f.inboundLinks >= 3) score += 15
   else todo.push(`내부 링크가 ${f.inboundLinks}개입니다 — 다른 페이지에서 3곳 이상 걸어 주세요`)
@@ -202,13 +222,15 @@ export function isStale(checkedAt: string, days = 30): boolean {
  * 준비도를 재는 자의 판.
  *
  * 1 — 내부 링크를 허브면 무조건 4로 놓던 때(~2026-09-10)
- * 2 — 본문 링크를 실제로 세기 시작한 때(2026-09-11~)
+ * 2 — 본문 링크를 실제로 세기 시작한 때(2026-09-11)
+ * 3 — 뒷받침 문항에 "하나는 무료" 조건을 더한 때(2026-09-11 저녁~).
+ *     혼주올림머리·혼주헤어가 이날 100 → 85 로 떨어지는데 사이트가 나빠진 게 아니다
  *
  * 기록에 함께 남긴다. 자를 바꾼 날 그래프가 꺾이는데, 그게 사이트가 나빠져서가
  * 아니라 자가 바뀌어서라는 것을 나중에 알 방법이 이것뿐이다. 판이 다른 값끼리
  * 견주면 "9월 11일에 무슨 일이 있었나" 를 영영 잘못 짚게 된다.
  */
-export const READINESS_FORMULA = 2
+export const READINESS_FORMULA = 3
 
 /** 하루치 기록 — 그날의 준비도와 순위를 그대로 떠 둔다 */
 export interface SeoSnapshot {
@@ -281,6 +303,12 @@ export function upgrades(f: SeoFacts): Upgrade[] {
       gain: 15,
       what: `뒷받침하는 문항이 ${f.questions}개입니다`,
       how: '100문100답에서 이 주제를 다루는 문항의 제목에 이 말을 넣으세요. 원고를 새로 쓸 필요 없이 제목만 고치면 됩니다.',
+    })
+  else if (f.openQuestions === 0)
+    out.push({
+      gain: 15,
+      what: `제목에 이 말이 든 문항 ${f.questions}개가 전부 잠겨 있습니다`,
+      how: '그중 하나를 무료 문항(site_config/wed100 의 freeQna)으로 여세요. 잠긴 문항은 제목과 미리보기만 검색에 나가서, 제목에 말을 넣어도 거의 안 잡힙니다. 무료 문항 수를 늘리기 싫으면 이 말이 없는 무료 문항과 바꾸세요.',
     })
 
   if (f.inboundLinks < 3)

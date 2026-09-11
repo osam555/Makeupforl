@@ -70,7 +70,7 @@ export default function Overview({
   const delta = (now: number, before: number) =>
     before === 0 ? null : Math.round(((now - before) / before) * 100)
 
-  const blank: SeoFacts = { ownerChars: 0, titlePages: [], questions: 0, inboundLinks: 0 }
+  const blank: SeoFacts = { ownerChars: 0, titlePages: [], questions: 0, openQuestions: 0, inboundLinks: 0 }
   const scores = Object.fromEntries(
     keywords.map((t) => [t.term, readiness(facts[t.term] ?? blank).score]),
   )
