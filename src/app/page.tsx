@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { bgImage } from '@/lib/bgImage'
 import { getSiteImages } from '@/lib/siteImages'
 import { getGalleryImages } from '@/lib/galleryImages'
-import { getReviews } from '@/lib/reviewImages'
+import reviewTexts from '@/data/reviewTexts.json'
 import MainGallery from '@/components/home/MainGallery'
 import ReviewSlide from '@/components/home/ReviewSlide'
 import { GALLERY_CATEGORIES } from '@/lib/galleryCategories'
@@ -52,8 +52,15 @@ export const metadata: Metadata = {
 export default async function Home() {
   const img = await getSiteImages()
 
-  // Firestore 에 옮겨진 Storage 사본을 쓴다. 시드를 그대로 넘기면 옛 서버 주소로 불러온다
-  const reviews = await getReviews(10)
+  /*
+    후기 슬라이드는 사진이 아니라 옮겨 적은 글을 보여 준다 (ReviewSlide 참고).
+    문자 캡처가 중간부터 잘린 것("…시고 이어 저의 마음까지")은 뺀다 — 후기 페이지에서는
+    사진 밑에 있어 괜찮지만 카드 첫 줄로 오면 깨진 글로 읽힌다.
+  */
+  const reviews = reviewTexts.items
+    .map((r, i) => ({ id: `t${i}`, ...r }))
+    .filter((r) => /^[가-힣A-Za-z“"(]/.test(r.text) && !/^(시고|고|며) /.test(r.text))
+    .slice(0, 10)
 
   // 갤러리도 같은 이유로 Firestore 를 먼저 본다
   const gallery = await getGalleryImages()

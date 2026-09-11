@@ -1,17 +1,21 @@
 'use client'
 
-import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 
-type Item = { id: string; title: string; date: string; url: string }
+type Item = { id: string; text: string; date: string }
 
-/** 원본 sec3 후기 슬라이드 (slick 4장 노출 · 좌우 원형 화살표) */
+/**
+ * 홈 고객후기 슬라이드 (원본 sec3 · 4장 노출 · 좌우 원형 화살표).
+ *
+ * 전에는 문자 캡처 사진을 넣고 밑에 게시판 제목("고객문자")과 올린 날짜("2023.10.10")를
+ * 달았다. 사진은 세로가 제각각이라 잘리고, 제목과 날짜는 넉 장이 다 똑같아 아무 말도
+ * 하지 않았다. 사진 안의 글을 옮겨 둔 것(reviewTexts)이 이미 있어 그것을 보여 준다 —
+ * 읽히고, 검색엔진도 읽고, 잘릴 것이 없다. 사진 원본은 /reviews 에 그대로 있다.
+ */
 export default function ReviewSlide({ items }: { items: Item[] }) {
   const [per, setPer] = useState(4)
   const [start, setStart] = useState(0)
-  const wrapRef = useRef<HTMLDivElement>(null)
-
   useEffect(() => {
     const calc = () => {
       const w = window.innerWidth
@@ -27,31 +31,18 @@ export default function ReviewSlide({ items }: { items: Item[] }) {
 
   return (
     <div className="review-slide">
-      <div className="items-viewport" ref={wrapRef}>
+      <div className="items-viewport">
         <div
           className="items"
           style={{ transform: `translateX(-${(start * 100) / per}%)` }}
         >
           {items.map((r) => (
             <div className="item" key={r.id} style={{ width: `${100 / per}%` }}>
-              <Link href="/reviews" className="doc-review">
-                <div className="img">
-                  {/*
-                    후기 이미지도 원본 직결이었다. 한 화면에 넉 장이 보이므로
-                    실제로 필요한 너비는 화면의 1/4 정도다.
-                  */}
-                  <Image
-                    src={r.url}
-                    alt={r.title}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 900px) 50vw, (max-width: 1230px) 33vw, 25vw"
-                  />
-                </div>
-                <div className="tt-wrap">
-                  <div className="tit">{r.title}</div>
-                  <p className="tt"></p>
-                  <p className="date">{r.date.replace(/-/g, '.')}</p>
-                </div>
+              <Link href="/reviews" className="doc-review quote">
+                <blockquote>
+                  <p>{r.text}</p>
+                </blockquote>
+                <p className="date">{fmtMonth(r.date)} · 고객님 문자</p>
               </Link>
             </div>
           ))}
@@ -73,4 +64,10 @@ export default function ReviewSlide({ items }: { items: Item[] }) {
       />
     </div>
   )
+}
+
+/** "2023-10" → "2023년 10월" */
+function fmtMonth(d: string): string {
+  const [y, m] = d.split('-')
+  return m ? `${y}년 ${Number(m)}월` : y
 }
