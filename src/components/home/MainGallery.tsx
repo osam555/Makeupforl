@@ -6,7 +6,7 @@ import { GALLERY_CATEGORIES } from '@/lib/galleryCategories'
 type Item = { id: string; url: string; alt_text: string; category: string }
 
 /**
- * 홈 갤러리 — 혼주 사진 여덟 장을 격자로.
+ * 홈 갤러리 — 혼주 사진 다섯 장을 격자로.
  *
  * 전에는 옛 사이트 그대로 "분야 탭 일곱 + 큰 사진 하나 + 썸네일 여덟" 이었다.
  * 세로 사진이 가로 상자에 들어가 좌우로 흰 띠가 컸고, 썸네일은 손톱만 했고, 휴대전화에서는
