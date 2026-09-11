@@ -31,13 +31,28 @@ const DAY = () =>
 /** Firestore 필드 이름에 쓸 수 없는 글자를 바꾼다 (/ 는 경로 구분자로 해석된다) */
 const key = (p: string) => p.replace(/[~*/[\].]/g, '_').slice(0, 120) || '_'
 
-/** 어디서 왔나 — 도메인만 남긴다. 전체 주소에는 검색어가 붙어 오기도 한다 */
+/**
+ * 어디서 왔나 — 도메인만 남긴다. 전체 주소에는 검색어가 붙어 오기도 한다.
+ *
+ * 네이버는 한 덩어리로 세지 않는다. 2026-09-11 하루에 네이버가 4 → 24 로 뛰었는데
+ * "네이버" 하나로는 모바일 검색인지 PC 검색인지 플레이스(지도)인지 원장님 블로그인지
+ * 알 길이 없었다 — Vercel 통계는 나눠 보여 주는데 우리 것만 뭉쳐 있었다. 혼주는
+ * 대부분 휴대전화로 찾고, 플레이스 유입은 검색 순위가 아니라 스마트플레이스가 한 일이라
+ * 같은 칸에 두면 무엇이 효과를 낸 건지 못 본다.
+ */
 function refSource(ref: string): string {
   if (!ref) return 'direct'
   try {
     const h = new URL(ref).hostname.replace(/^www\./, '')
     if (h.endsWith('makeupforl.co.kr')) return 'internal'
-    if (/naver/.test(h)) return 'naver'
+    if (/naver/.test(h)) {
+      if (/place/.test(h)) return 'naver-place'
+      if (/blog/.test(h)) return 'naver-blog'
+      if (/cafe/.test(h)) return 'naver-cafe'
+      if (/^m\./.test(h)) return 'naver-m'
+      if (/search/.test(h)) return 'naver-pc'
+      return 'naver'
+    }
     if (/google/.test(h)) return 'google'
     if (/daum|kakao/.test(h)) return 'daum'
     if (/instagram|facebook/.test(h)) return 'sns'
@@ -74,8 +89,20 @@ export async function POST(req: Request) {
           views: FieldValue.increment(1),
           ...(isNewSession ? { visits: FieldValue.increment(1) } : {}),
           pages: { [k]: FieldValue.increment(1) },
+          /*
+            출처와 함께 **어느 페이지로 들어왔는지**도 쌓는다.
+
+            출처 합계와 페이지 합계를 따로만 두면 "네이버가 늘었다" 까지는 보여도
+            네이버가 어느 페이지를 보여 줘서 늘었는지는 영영 모른다. 첫 방문 한 번만
+            세므로 출처 × 페이지 조합은 몇십 개를 넘지 않는다.
+          */
           ...(isNewSession
-            ? { sources: { [key(refSource(String(body?.ref ?? '')))]: FieldValue.increment(1) } }
+            ? {
+                sources: { [key(refSource(String(body?.ref ?? '')))]: FieldValue.increment(1) },
+                landings: {
+                  [`${key(refSource(String(body?.ref ?? '')))}__${k}`]: FieldValue.increment(1),
+                },
+              }
             : {}),
         },
         { merge: true },

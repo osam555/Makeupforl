@@ -244,6 +244,8 @@ export default function Overview({
                 }))}
               empty="아직 기록이 없습니다"
             />
+            <SourceDays days={last7} />
+            <Landings landings={a.landings} />
             <p className="mt-3 text-[0.6875rem] leading-relaxed text-[var(--a-8a7a72)]">
               사람을 식별하지 않습니다. 쿠키를 쓰지 않고 IP·기기 정보도 저장하지 않으며,
               관리자 화면은 세지 않습니다.
@@ -460,6 +462,90 @@ function Bars({ days }: { days: DailyStat[] }) {
         <span>일별 조회 · 최대 {max.toLocaleString()}회</span>
         <span>{days[days.length - 1]?.date.slice(5)}</span>
       </div>
+    </div>
+  )
+}
+
+/**
+ * 날짜 × 출처 표.
+ *
+ * 7일 합계만 있으면 "네이버가 늘었다" 는 보여도 언제 늘었는지는 안 보인다.
+ * 하루에 두 배가 뛴 날을 짚으려면 날짜가 행이어야 한다. 출처는 합계 큰 순으로
+ * 다섯까지만 — 열이 많아지면 휴대전화에서 표가 옆으로 새어 나간다.
+ */
+function SourceDays({ days }: { days: DailyStat[] }) {
+  const total: Record<string, number> = {}
+  for (const d of days) for (const [k, v] of Object.entries(d.sources ?? {})) total[k] = (total[k] ?? 0) + v
+  const cols = Object.entries(total)
+    .sort((x, y) => y[1] - x[1])
+    .slice(0, 5)
+    .map(([k]) => k)
+  if (cols.length === 0) return null
+
+  return (
+    <div className="mt-3 overflow-x-auto">
+      <table className="w-full text-[0.6875rem] tabular-nums">
+        <thead>
+          <tr className="text-[var(--a-8a7a72)]">
+            <th className="py-1 text-left font-bold">날짜</th>
+            <th className="py-1 text-right font-bold">방문</th>
+            {cols.map((k) => (
+              <th key={k} className="py-1 pl-2 text-right font-bold">
+                {SOURCE_LABEL[k] ?? unkey(k)}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {days.map((d) => (
+            <tr key={d.date} className="border-t border-[var(--a-efe7df)] text-[var(--a-3a322e)]">
+              <td className="py-1">{d.date.slice(5)}</td>
+              <td className="py-1 text-right font-bold">{d.visits}</td>
+              {cols.map((k) => (
+                <td key={k} className="py-1 pl-2 text-right">
+                  {d.sources?.[k] ?? '·'}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+/**
+ * 출처별로 어느 페이지에 들어왔나 — 출처 셋, 페이지 둘씩.
+ *
+ * 출처 표와 페이지 표가 따로면 "네이버가 어느 페이지를 보여 줘서 왔나" 를 알 수 없다.
+ * 열쇠는 "출처__페이지" 라 앞뒤로 가른다. 페이지 열쇠 안에도 _ 가 있어 첫 "__" 로만 가른다.
+ */
+function Landings({ landings }: { landings: Record<string, number> }) {
+  const bySource: Record<string, [string, number][]> = {}
+  for (const [k, n] of Object.entries(landings)) {
+    const i = k.indexOf('__')
+    if (i < 0) continue
+    ;(bySource[k.slice(0, i)] ??= []).push([k.slice(i + 2), n])
+  }
+  const top = Object.entries(bySource)
+    .map(([src, rows]) => ({ src, total: rows.reduce((a, [, n]) => a + n, 0), rows: rows.sort((x, y) => y[1] - x[1]).slice(0, 2) }))
+    .sort((x, y) => y.total - x.total)
+    .slice(0, 3)
+  if (top.length === 0) return null
+
+  return (
+    <div className="mt-3">
+      <p className="mb-1 text-[0.6875rem] font-bold text-[var(--a-3a322e)]">어느 페이지로 들어왔나</p>
+      <ul className="space-y-1 text-[0.6875rem]">
+        {top.map(({ src, rows }) => (
+          <li key={src} className="flex min-w-0 gap-2">
+            <span className="w-28 shrink-0 truncate text-[var(--a-8a7a72)]">{SOURCE_LABEL[src] ?? unkey(src)}</span>
+            <span className="min-w-0 flex-1 truncate text-[var(--a-3a322e)]">
+              {rows.map(([p, n]) => `${decodePath(unkey(p))} ${n}`).join(' · ')}
+            </span>
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }
