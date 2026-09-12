@@ -134,7 +134,9 @@ export default function Wed100Player(p: PlayerProps) {
   const [playing, setPlaying] = useState(false)
   const [t, setT] = useState(0)
   const [rate, setRate] = useState(1)
-  const [lang, setLang] = useState<SubtitleLang>('both')
+  // 기본은 한글만. 손님이 50~60대라 영어 줄이 끼면 글자가 작아지고 읽을 것이 두 배가 된다.
+  // 한+영은 고르면 기억된다(LS_LANG).
+  const [lang, setLang] = useState<SubtitleLang>('ko')
   const [loop, setLoop] = useState(false)
   const [autoNext, setAutoNext] = useState(true)
   const [font, setFont] = useState<FontKey>('md')
