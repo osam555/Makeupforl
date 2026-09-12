@@ -85,7 +85,7 @@ export default async function RootLayout({
 }>) {
   const img = await getSiteImages();
   return (
-    <html lang="ko">
+    <html lang="ko" suppressHydrationWarning>
       <head>
         {/*
           글꼴 선언을 화면 그리기 뒤로 미룬다.
@@ -101,6 +101,17 @@ export default async function RootLayout({
           자바스크립트가 없으면 적용되지 않고 대체 글꼴로 남는다. 글을 못 읽게 되는
           것은 아니므로 그편이 화면이 늦게 뜨는 것보다 낫다.
         */}
+        {/*
+          어두운 테마를 첫 그림 전에 건다. React 가 켜진 뒤에 걸면 밝게 떴다가 어두워지는
+          깜빡임이 생긴다. 키는 ThemeToggle 과 같다(mfl:siteTheme). 관리 화면은 자기 테마가
+          따로 있어 여기 값을 안 본다.
+        */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{if(localStorage.getItem('mfl:siteTheme')==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}",
+          }}
+        />
         <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
         <link rel="preload" as="style" href="/pretendard.css" id="mfl-font" />
         <script

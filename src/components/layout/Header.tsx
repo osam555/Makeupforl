@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { navigation, isNavActive, type NavItem } from '@/lib/navigation'
+import ThemeToggle from '@/components/layout/ThemeToggle'
 
 
 export default function Header({ logo, logoWhite }: { logo?: string; logoWhite?: string }) {
@@ -95,6 +96,7 @@ export default function Header({ logo, logoWhite }: { logo?: string; logoWhite?:
             </ul>
           </div>
 
+          <ThemeToggle />
           <button
             type="button"
             className="btn-m-menu"

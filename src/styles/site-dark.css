@@ -1,0 +1,221 @@
+/*
+  손님용 화면의 어두운 테마.
+
+  옛 PHP 에서 옮겨 온 CSS(mfl-original.css)와 그 위에 얹은 Tailwind 유틸리티가 색을
+  글자 그대로 박아 두고 있다(#fff, #242424, bg-white, text-gray-600 …). 변수로 바꾸면
+  1,400줄을 다시 쓰는 일이라, 대신 **같은 이름을 어두운 값으로 덮는다.** 이 파일은
+  레이어 밖이라 Tailwind 유틸리티(레이어 안)를 이기고, mfl-original.css 보다 뒤에
+  불려 명시도가 같아도 이긴다.
+
+  켜는 것은 html[data-theme="dark"] — ThemeToggle 이 걸고, layout 의 인라인 스크립트가
+  첫 그림 전에 건다. 관리 화면(/admin)은 .mfl-site 밖이라 영향이 없고, 100문100답은
+  자기 테마(.w100-dark)가 있어 여기서는 건드리지 않는다.
+
+  값은 100문100답 다크(globals.css .w100-dark)와 같은 계열이다 — 두 곳을 오갈 때
+  다른 사이트로 보이지 않게.
+*/
+html[data-theme="dark"] {
+  color-scheme: dark;
+  background: #191412;
+}
+html[data-theme="dark"] .mfl-site {
+  --d-bg: #191412;
+  --d-card: #221C18;
+  --d-raise: #2B2420;
+  --d-line: #3A322C;
+  --d-ink: #EDE6E0;
+  --d-ink2: #C9BFB8;
+  --d-mut: #9C918A;
+  --d-rose: #F46E65;
+  --d-rose-t: #FF8A80;
+  --d-rose-l: #3A2422;
+  background: var(--d-bg);
+  color: var(--d-ink2);
+}
+
+/* ── 헤더 ─────────────────────────────────────────── */
+html[data-theme="dark"] .mfl-site .mfl-sub .mfl-header,
+html[data-theme="dark"] .mfl-site .mfl-main .mfl-header:hover { background-color: var(--d-card); }
+html[data-theme="dark"] .mfl-site .mfl-header:hover:after { background-color: var(--d-line); }
+/* 서브 페이지도 흰 로고를 쓴다 — 진한 글자 로고는 어두운 바탕에서 안 보인다 */
+html[data-theme="dark"] .mfl-site .mfl-sub .mfl-header .sitelogo a img.on { display: none; }
+html[data-theme="dark"] .mfl-site .mfl-sub .mfl-header .sitelogo a img.off { display: block; }
+html[data-theme="dark"] .mfl-site .mfl-main .mfl-header:hover .sitelogo a img.on { display: none; }
+html[data-theme="dark"] .mfl-site .mfl-main .mfl-header:hover .sitelogo a img.off { display: block; }
+html[data-theme="dark"] .mfl-site .mfl-sub .mfl-gnb > ul > li > a,
+html[data-theme="dark"] .mfl-site .mfl-main .mfl-header:hover .mfl-gnb > ul > li > a { color: var(--d-ink); }
+html[data-theme="dark"] .mfl-site .mfl-gnb .submenu,
+html[data-theme="dark"] .mfl-site .submenu-bg { background-color: var(--d-card); }
+html[data-theme="dark"] .mfl-site .mfl-gnb .submenu a { color: var(--d-ink2); }
+html[data-theme="dark"] .mfl-site .mfl-sub .mfl-header .btn-m-menu span,
+html[data-theme="dark"] .mfl-site .mfl-sub .mfl-header .btn-m-menu span:before,
+html[data-theme="dark"] .mfl-site .mfl-sub .mfl-header .btn-m-menu span:after,
+html[data-theme="dark"] .mfl-site .mfl-main .mfl-header:hover .btn-m-menu span,
+html[data-theme="dark"] .mfl-site .mfl-main .mfl-header:hover .btn-m-menu span:before,
+html[data-theme="dark"] .mfl-site .mfl-main .mfl-header:hover .btn-m-menu span:after { background-color: var(--d-ink); }
+/* 휴대전화 서랍 메뉴 */
+html[data-theme="dark"] .mfl-site .mfl-menu { background-color: var(--d-card); color: var(--d-ink); }
+html[data-theme="dark"] .mfl-site .mfl-menu a { color: var(--d-ink); }
+html[data-theme="dark"] .mfl-site .mfl-menu li,
+html[data-theme="dark"] .mfl-site .mfl-menu ul { border-color: var(--d-line); }
+
+/* 테마 단추 — 햄버거 왼쪽. 넓은 화면(햄버거 없음)에서는 맨 오른쪽 */
+.mfl-site .btn-theme {
+  position: absolute; top: 50%; right: 72px; z-index: 99; transform: translateY(-50%);
+  display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.35); background: rgba(255,255,255,.12); color: #fff;
+  transition: opacity .2s, background .2s;
+}
+.mfl-site .mfl-sub .btn-theme,
+.mfl-site .mfl-main .mfl-header:hover .btn-theme { border-color: #ddd; background: #fff; color: #242424; }
+html[data-theme="dark"] .mfl-site .btn-theme,
+html[data-theme="dark"] .mfl-site .mfl-sub .btn-theme,
+html[data-theme="dark"] .mfl-site .mfl-main .mfl-header:hover .btn-theme { border-color: var(--d-line); background: var(--d-raise); color: var(--d-ink); }
+@media (max-width: 1230px) { .mfl-site .btn-theme { right: 58px; } }
+/* 넓은 화면 — 메뉴가 오른쪽 끝까지 오므로 단추 자리만큼 메뉴를 왼쪽으로 민다 */
+@media (min-width: 1231px) {
+  .mfl-site .btn-theme { right: 30px; }
+  .mfl-site .mfl-header .mfl-gnb { margin-right: 56px; }
+}
+
+/* ── 옛 CSS 절들 ─────────────────────────────────── */
+html[data-theme="dark"] .mfl-site .sec-tit,
+html[data-theme="dark"] .mfl-site .sec1 .tit-box p { color: var(--d-ink); }
+html[data-theme="dark"] .mfl-site .sec2 { background-color: var(--d-card); }
+html[data-theme="dark"] .mfl-site .doc-review.quote { background: var(--d-raise); color: var(--d-ink); }
+html[data-theme="dark"] .mfl-site .doc-review.quote:hover { background: #33291F; }
+html[data-theme="dark"] .mfl-site .doc-review.quote .date { color: var(--d-mut); }
+html[data-theme="dark"] .mfl-site .sec3 .review-slide .slick-arrow { background-color: #4A403A; }
+html[data-theme="dark"] .mfl-site .sec1 .con-box .wrap .box .radi { background: var(--d-raise); color: var(--d-ink); }
+/* 서브 페이지의 글·표·선 */
+html[data-theme="dark"] .mfl-site h1, html[data-theme="dark"] .mfl-site h2,
+html[data-theme="dark"] .mfl-site h3, html[data-theme="dark"] .mfl-site h4,
+html[data-theme="dark"] .mfl-site strong, html[data-theme="dark"] .mfl-site b { color: inherit; }
+html[data-theme="dark"] .mfl-site table, html[data-theme="dark"] .mfl-site th, html[data-theme="dark"] .mfl-site td { border-color: var(--d-line); }
+html[data-theme="dark"] .mfl-site th { background-color: var(--d-raise); color: var(--d-ink); }
+html[data-theme="dark"] .mfl-site hr { border-color: var(--d-line); }
+html[data-theme="dark"] .mfl-site input,
+html[data-theme="dark"] .mfl-site textarea,
+html[data-theme="dark"] .mfl-site select { background-color: var(--d-raise); color: var(--d-ink); border-color: var(--d-line); }
+
+/* ── Tailwind 유틸리티 덮기 ───────────────────────── */
+html[data-theme="dark"] .mfl-site .bg-white,
+html[data-theme="dark"] .mfl-site .bg-gray-50,
+html[data-theme="dark"] .mfl-site .bg-\[\#FDF4F3\],
+html[data-theme="dark"] .mfl-site .bg-\[\#F6F4F2\],
+html[data-theme="dark"] .mfl-site .bg-\[\#F4F4F4\],
+html[data-theme="dark"] .mfl-site .bg-\[\#FDECEA\],
+html[data-theme="dark"] .mfl-site .bg-\[\#eee\] { background-color: var(--d-card); }
+html[data-theme="dark"] .mfl-site .bg-gray-100,
+html[data-theme="dark"] .mfl-site .bg-gray-200,
+html[data-theme="dark"] .mfl-site .bg-\[\#E8D2CF\],
+html[data-theme="dark"] .mfl-site .bg-\[\#D9BAB6\] { background-color: var(--d-raise); }
+html[data-theme="dark"] .mfl-site .from-\[\#FDF4F3\] { --tw-gradient-from: var(--d-card); }
+html[data-theme="dark"] .mfl-site .to-white { --tw-gradient-to: var(--d-bg); }
+html[data-theme="dark"] .mfl-site .text-gray-900,
+html[data-theme="dark"] .mfl-site .text-gray-800,
+html[data-theme="dark"] .mfl-site .text-\[\#242424\] { color: var(--d-ink); }
+html[data-theme="dark"] .mfl-site .text-gray-700,
+html[data-theme="dark"] .mfl-site .text-gray-600,
+html[data-theme="dark"] .mfl-site .text-\[\#454545\],
+html[data-theme="dark"] .mfl-site .text-\[\#686868\] { color: var(--d-ink2); }
+html[data-theme="dark"] .mfl-site .text-gray-500,
+html[data-theme="dark"] .mfl-site .text-gray-400,
+html[data-theme="dark"] .mfl-site .text-gray-300 { color: var(--d-mut); }
+html[data-theme="dark"] .mfl-site .text-\[\#E2564C\] { color: var(--d-rose-t); }
+html[data-theme="dark"] .mfl-site .border-gray-100,
+html[data-theme="dark"] .mfl-site .border-gray-200,
+html[data-theme="dark"] .mfl-site .border-gray-300,
+html[data-theme="dark"] .mfl-site .border-\[\#E5E5E5\],
+html[data-theme="dark"] .mfl-site .border-\[\#FADEDC\],
+html[data-theme="dark"] .mfl-site .border-\[\#F8C3BF\],
+html[data-theme="dark"] .mfl-site .divide-gray-100 > :not([hidden]) ~ :not([hidden]),
+html[data-theme="dark"] .mfl-site .divide-gray-200 > :not([hidden]) ~ :not([hidden]) { border-color: var(--d-line); }
+html[data-theme="dark"] .mfl-site .shadow-sm,
+html[data-theme="dark"] .mfl-site .shadow-md,
+html[data-theme="dark"] .mfl-site .shadow-lg { --tw-shadow-color: rgba(0,0,0,.5); }
+/* 히어로 카드 — 흰 반투명이 어두운 사진 위에서 회색으로 뜬다 */
+html[data-theme="dark"] .mfl-site .bg-white\/92 { background-color: rgba(34,28,24,.92); }
+html[data-theme="dark"] .mfl-site .bg-white\/95 { background-color: rgba(34,28,24,.95); }
+
+/*
+  검색어 허브(/혼주한복 …)는 100문100답의 색 변수(.w100)를 쓰지만 자기 테마 단추가 없다.
+  사이트가 어두우면 허브도 같이 어두워야 한다 — 값은 globals.css 의 .w100-dark 와 같다.
+  100문100답 페이지는 자기 껍데기(Wed100Shell)가 wed100Theme 를 읽어 스스로 정한다.
+*/
+html[data-theme="dark"] .w100:not(.w100-dark) {
+  --w-bg: #191412;
+  --w-bg1: #1E1816;
+  --w-bg2: #14100E;
+  --w-glow: #2B1F24;
+  --w-card: #231D1A;
+  --w-card2: #2A2320;
+  --w-ink: #F0E8E3;
+  --w-ink2: #C7B9B1;
+  --w-body: #D8CCC5;
+  --w-mut: #A3948C;
+  --w-mut2: #8F7F76;
+  --w-line: #3A322D;
+  --w-line2: #322A26;
+  --w-hover: #2A2320;
+  --w-thumb-bg: #2A2320;
+  --w-rose: #C25A75;
+  --w-rose-d: #A63D5A;
+  --w-rose-l: #3D2830;
+  --w-rose-t: #E8A9BA;
+  --wp-bg: #231D1A;
+  --wp-bg2: #1B1614;
+  --wp-line: #362E29;
+  --wp-ink: #F0E8E3;
+  --wp-ink2: #BDAEA6;
+  --wp-btn-line: #4A413B;
+  --wp-btn-on-bg: #3D2C31;
+  --wp-btn-on-line: #7A5A64;
+  --wp-btn-on-ink: #F5E7EB;
+  --wp-accent: #E8B98A;
+  --wp-scrim: 28, 20, 22;
+  --wp-cue-q: #8FD6FF;
+  --wp-cue-a: #FFD08A;
+  --w-gold: #CBAD79;
+  --w-cta-bg: #231D1A;
+  --w-p1: #D9768F;
+  --w-p2: #B187BE;
+  --w-p3: #DB7F90;
+  --w-p4: #83B29B;
+  --w-p5: #CDA95F;
+  --w-p6: #82A3D0;
+  --w-p0: #B3A396;
+  --w-p7: #B3A396;
+  color-scheme: dark;
+  background: var(--w-bg);
+  color: var(--w-ink);
+}
+
+/* 갤러리 페이지의 분야 탭·회색 상자 */
+html[data-theme="dark"] .mfl-site .sec2 .gal-cate ul li a { background-color: var(--d-card); color: var(--d-ink); }
+html[data-theme="dark"] .mfl-site .sec2 .gal-cate ul li a:after { border-color: var(--d-line); }
+html[data-theme="dark"] .mfl-site .gal-pg .bg-con { background-color: var(--d-card); }
+html[data-theme="dark"] .mfl-site .gal-pg .slide .origin .items .item .pic { background: var(--d-raise); }
+
+/* 휴대전화·태블릿(1024 이하)에서는 홈 헤더도 흰 띠라 — 어둡게, 로고는 흰 것으로 */
+html[data-theme="dark"] .mfl-site .mfl-main .mfl-header { background-color: var(--d-card); }
+html[data-theme="dark"] .mfl-site .mfl-main .mfl-header .sitelogo a img.on { display: none; }
+html[data-theme="dark"] .mfl-site .mfl-main .mfl-header .sitelogo a img.off { display: block; }
+html[data-theme="dark"] .mfl-site .mfl-main .mfl-header .btn-m-menu span,
+html[data-theme="dark"] .mfl-site .mfl-main .mfl-header .btn-m-menu span:before,
+html[data-theme="dark"] .mfl-site .mfl-main .mfl-header .btn-m-menu span:after { background-color: var(--d-ink); }
+html[data-theme="dark"] .mfl-site .mfl-main .mfl-header .mfl-gnb > ul > li > a { color: var(--d-ink); }
+@media (min-width: 1025px) {
+  /* 넓은 화면의 홈은 사진 위에 투명 헤더 — 원래대로 */
+  html[data-theme="dark"] .mfl-site .mfl-main .mfl-header { background-color: transparent; }
+  html[data-theme="dark"] .mfl-site .mfl-main .mfl-header:hover { background-color: var(--d-card); }
+}
+/* 서랍 메뉴의 글자 — 원본 규칙(#454545)이 더 구체적이라 같은 자리로 다시 적는다 */
+html[data-theme="dark"] .mfl-site .mobile-navigation { background: var(--d-card); }
+html[data-theme="dark"] .mfl-site .mobile-navigation .nav-menu > ul > li > a,
+html[data-theme="dark"] .mfl-site .mobile-navigation .nav-menu .submenu > ul > li > a { color: var(--d-ink); }
+html[data-theme="dark"] .mfl-site .mobile-navigation .nav-menu > ul > li > a:after { border-color: var(--d-mut); }
+html[data-theme="dark"] .mfl-site .mobile-navigation .nav-menu > ul > li { border-color: var(--d-line); }
+html[data-theme="dark"] .mfl-site .mobile-navigation .close:before,
+html[data-theme="dark"] .mfl-site .mobile-navigation .close:after { background-color: var(--d-ink); }
+html[data-theme="dark"] .mfl-site .mobile-navigation .submenu { background: var(--d-raise); }
