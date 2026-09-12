@@ -240,7 +240,7 @@ export default function Wed100Browser({
                     */}
                     {x.locked
                       ? `🔒 유료 공개 · 🎧 ${fmt(x.duration)}`
-                      : `🎧 ${fmt(x.duration)} · 자막 한/영${x.hasAudio ? '' : ' · 음성 준비중'}`}
+                      : `🎧 ${fmt(x.duration)} · 자막 한글+English${x.hasAudio ? '' : ' · 음성 준비중'}`}
                   </p>
                 </div>
               </Link>

@@ -169,7 +169,7 @@ export default async function Wed100Page() {
               [String(items.filter((x) => x.part >= 1 && x.part <= 6).length), '질문'],
               [String(wed100Parts.filter((p) => p.part >= 1 && p.part <= 6).length), '파트'],
               [`약 ${Math.round(totalSec / 60)}분`, '오디오'],
-              ['한 / EN', '자막'],
+              ['한글 + English', '자막'],
             ].map(([v, l]) => (
               <div key={l}>
                 <dt className="text-2xl font-black text-[var(--w-rose)]">{v}</dt>
