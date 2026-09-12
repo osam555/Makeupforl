@@ -538,6 +538,8 @@ html.menu-opened .mobile-overlay {display:block;}
 .mfl-site .mfl-footer .foot-contact .tit {margin-bottom:5px;}
 .mfl-site .mfl-footer .foot-contact .num {font-size:18px;}
 .mfl-site .mfl-footer .foot-menu {max-width:100%;order:1;text-align:center;margin-bottom:20px;}
+/* 개인정보는 전화 상담(order 2) 다음, 업체 정보(order 3) 앞 */
+.mfl-site .mfl-footer .foot-privacy {order:2;}
 .mfl-site .mfl-footer .foot-menu .tit {margin-bottom:5px;}
 .mfl-site .mfl-footer .foot-menu ul {display:flex;flex-wrap:wrap;row-gap:4px;margin:0 -10px;justify-content:center;}
 .mfl-site .mfl-footer .foot-menu ul li {padding:0 10px;}

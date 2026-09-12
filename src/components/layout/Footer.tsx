@@ -45,7 +45,8 @@ export default function Footer() {
           </ul>
         </div>
 
-        <div className="foot-menu area">
+        {/* 휴대전화에서 전화 상담 아래로 — CSS 의 order 는 .foot-menu 가 1, .foot-contact 가 2 */}
+        <div className="foot-menu foot-privacy area">
           <div className="tit">개인정보</div>
           <ul>
             <li>
