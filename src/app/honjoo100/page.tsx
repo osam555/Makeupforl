@@ -4,8 +4,8 @@ import Link from 'next/link'
 
 import Wed100Account from '@/components/wed100/Wed100Account'
 import Wed100Browser from '@/components/wed100/Wed100Browser'
-import NowPlayingRotator from '@/components/wed100/NowPlayingRotator'
-import { HOME_HERO_QNA_SLUGS } from '@/lib/brandPoints'
+import FreePicks from '@/components/wed100/FreePicks'
+import PartPicker from '@/components/wed100/PartPicker'
 import { HUBS } from '@/lib/hubs'
 import {
   editionLabel,
@@ -41,14 +41,24 @@ export default async function Wed100Page() {
   const items = await getPublishedWed100Items()
   const img = await getSiteImages()
   const access = await getWed100Access()
-  // 히어로 카드에 돌려 보여줄 대표 문항. 지정한 것 우선, 모자라면 앞에서부터 채운다
-  const heroPicks = [
-    ...HOME_HERO_QNA_SLUGS.map((sl) => items.find((x) => x.slug === sl)),
-    ...items.filter((x) => x.part >= 1 && x.part <= 6),
-  ]
-    .filter((x): x is (typeof items)[number] => Boolean(x))
-    .filter((x, n, a) => a.findIndex((y) => y.slug === x.slug) === n)
-    .slice(0, 5)
+  /*
+    첫 화면 카드에는 무료로 열린 문항을 전부 적는다.
+
+    전에는 대표 문항 다섯을 4초마다 돌려 보였다(NowPlayingRotator). 읽으려는 순간
+    넘어가고, 그게 공짜인지 아닌지도 알 수 없었다. 무료 문항이 곧 이 상품의 맛보기라,
+    돌리지 않고 무엇이 공짜인지 그대로 보인다. 프롤로그·에필로그는 뒤로 보낸다.
+  */
+  const dur = (x: (typeof items)[number]) =>
+    x.duration ?? x.cues.reduce((b, c) => b + c.ko.length, 0) / 5.2 + 6
+  // 잠금이 꺼져 있으면(전부 열림) "무료 공개" 라는 말 자체가 없다 — 카드를 안 그린다
+  const freePicks = (access.paywall ? items : [])
+    .filter((x) => isOpen(access, x.slug))
+    .sort((a, b) => {
+      const ka = a.part >= 1 && a.part <= 6 ? 0 : 1
+      const kb = b.part >= 1 && b.part <= 6 ? 0 : 1
+      return ka - kb || a.part - b.part || a.n - b.n
+    })
+    .map((x) => ({ slug: x.slug, question: x.question, part: x.part, duration: dur(x) }))
 
   const counts = new Map<number, number>()
   items.forEach((x) => counts.set(x.part, (counts.get(x.part) ?? 0) + 1))
@@ -155,13 +165,7 @@ export default async function Wed100Page() {
 
           {/* 좁은 화면 — 오른쪽 비주얼(원장 사진 + 카드)이 lg 이상에서만 보여서
               아이패드·모바일에서는 문항 회전이 아예 안 보였다. 본문 흐름에 넣어준다 */}
-          <div className="mt-8 lg:hidden">
-            <NowPlayingRotator
-              items={heroPicks.map((x) => ({ slug: x.slug, question: x.question, part: x.part }))}
-              totalMinutes={Math.round(totalSec / 60)}
-              className="w-full max-w-[360px]"
-            />
-          </div>
+
 
           <dl className="mt-8 flex flex-wrap gap-x-10 gap-y-4">
             {[
@@ -198,14 +202,14 @@ export default async function Wed100Page() {
               priority
               className="absolute bottom-0 right-0 h-[400px] w-[327px] object-contain object-bottom"
             />
-            {/* 홈 히어로에 있던 문항 회전을 여기로 옮겼다 — 혼주 질문은 이 페이지의 것이다 */}
-            <NowPlayingRotator
-              items={heroPicks.map((x) => ({ slug: x.slug, question: x.question, part: x.part }))}
-              totalMinutes={Math.round(totalSec / 60)}
-            />
           </div>
         </div>
       </section>
+
+      {/* 무료 문항 — 히어로 바로 아래, 로그인 안내보다 먼저. 공짜부터 보여 주고 값을 말한다 */}
+      <div className="mx-auto max-w-7xl px-6 pt-6 lg:px-8">
+        <FreePicks items={freePicks} />
+      </div>
 
       {/*
         전체 열람 로그인.
@@ -224,29 +228,19 @@ export default async function Wed100Page() {
           <p className="mt-2 text-sm text-[var(--w-ink2)]">
             준비 순서 그대로 {wed100Parts.filter((p) => p.part >= 1 && p.part <= 6).length}개 파트로 나눴습니다.
           </p>
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {wed100Parts.filter((p) => p.part >= 1 && p.part <= 6).map((p) => {
-              return (
-                <a
-                  key={p.part}
-                  href={`#part-${p.part}`}
-                  className="rounded-2xl border border-[var(--w-line)] bg-[var(--w-card)] p-5 transition hover:-translate-y-0.5 hover:shadow-lg"
-                  style={{ borderTopColor: `var(--w-p${p.part})`, borderTopWidth: 3 }}
-                >
-                  <p className="text-[13px] font-extrabold tracking-[0.22em]" style={{ color: `var(--w-p${p.part})` }}>
-                    PART {p.part}
-                  </p>
-                  <h3 className="mt-2 text-base font-bold text-[var(--w-ink)]">{p.title}</h3>
-                  <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-[var(--w-ink2)]">
-                    {p.intro[0] ?? ''}
-                  </p>
-                  <p className="mt-3 text-xs font-bold" style={{ color: `var(--w-p${p.part})` }}>
-                    {counts.get(p.part) ?? 0}개 질문 →
-                  </p>
-                </a>
-              )
-            })}
-          </div>
+          <PartPicker
+            parts={wed100Parts
+              .filter((p) => p.part >= 1 && p.part <= 6)
+              .map((p) => ({ part: p.part, title: p.title, intro: p.intro[0] ?? '', count: counts.get(p.part) ?? 0 }))}
+            items={items.map((x) => ({
+              slug: x.slug,
+              part: x.part,
+              n: x.n,
+              question: x.question,
+              duration: dur(x),
+              locked: !isOpen(access, x.slug),
+            }))}
+          />
 
           {/*
             주제별 글로 가는 길.
