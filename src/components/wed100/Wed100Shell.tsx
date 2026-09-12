@@ -34,9 +34,16 @@ export default function Wed100Shell({ children }: { children: React.ReactNode })
 
   return (
     <div className={`w100 relative ${dark ? 'w100-dark' : ''}`} style={{ zoom: ZOOM[size] }}>
-      {/* 글자 크기·테마 — 한 줄을 통째로 쓰지 않도록 우측 상단에 겹쳐 놓는다 */}
+      {/*
+        글자 크기·테마 — 스크롤해도 화면 위에 붙어 있게 sticky.
+
+        처음에는 absolute 로 첫 화면 구석에만 있었다. 100문답은 한 화면이 길어서 중간에
+        글자를 키우고 싶어도 맨 위로 돌아가야 했다. 높이 0 짜리 sticky 띠에 단추만 얹어
+        본문 흐름을 밀지 않는다. 이 껍데기(.w100)가 페이지 끝까지라 끝까지 따라온다.
+      */}
+      <div className="pointer-events-none sticky top-2 z-40 flex h-0 items-start justify-end pr-3 lg:pr-5">
       <div
-        className="absolute right-3 top-2 z-40 flex items-center gap-1.5 lg:right-5 lg:top-3"
+        className="pointer-events-auto flex items-center gap-1.5"
         style={{ opacity: ready ? 1 : 0, transition: 'opacity .2s' }}
       >
         <div
@@ -70,6 +77,7 @@ export default function Wed100Shell({ children }: { children: React.ReactNode })
         >
           {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
         </button>
+      </div>
       </div>
 
       {children}

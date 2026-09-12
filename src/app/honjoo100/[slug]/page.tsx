@@ -223,7 +223,8 @@ export default async function Wed100DetailPage({
               n: item.n,
               keywords: item.keywords,
               heroImage: item.heroImage ?? `/wed100/img/${item.slug}-hero.svg`,
-              teaser: teaser(item.answer),
+              // 2026-09-13 95자 → 190자. 검색으로 들어온 분이 답의 핵심 한 문장은 받고 가게 (원장님 결정)
+              teaser: teaser(item.answer, 190),
               storeUrl: access.storeUrl,
               notice: access.notice,
               freeSample: all
