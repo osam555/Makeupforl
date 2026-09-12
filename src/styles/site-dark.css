@@ -219,3 +219,13 @@ html[data-theme="dark"] .mfl-site .mobile-navigation .nav-menu > ul > li { borde
 html[data-theme="dark"] .mfl-site .mobile-navigation .close:before,
 html[data-theme="dark"] .mfl-site .mobile-navigation .close:after { background-color: var(--d-ink); }
 html[data-theme="dark"] .mfl-site .mobile-navigation .submenu { background: var(--d-raise); }
+
+/* ── 글자 크기 (html[data-size]) — 100문100답(.mfl-nosize)은 자기 zoom 을 쓴다 ── */
+html[data-size="large"] .mfl-site:not(.mfl-nosize) { zoom: 1.15; }
+html[data-size="xlarge"] .mfl-site:not(.mfl-nosize) { zoom: 1.3; }
+
+/* 스크롤 뒤에 뜨는 글자 크기·테마 알약 */
+.mfl-site .site-controls-pill { border: 1px solid #ddd; background: rgba(255,255,255,.92); color: #454545; backdrop-filter: blur(6px); box-shadow: 0 6px 20px -10px rgba(0,0,0,.35); }
+.mfl-site .site-controls-pill button.is-on { background: #F46E65; color: #fff; }
+html[data-theme="dark"] .mfl-site .site-controls-pill { border-color: var(--d-line); background: rgba(43,36,32,.92); color: var(--d-ink); }
+html[data-theme="dark"] .mfl-site .site-controls-pill button.is-on { background: var(--d-rose); color: #fff; }

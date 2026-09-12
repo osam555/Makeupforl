@@ -109,7 +109,7 @@ export default async function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "try{if(localStorage.getItem('mfl:siteTheme')==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}",
+              "try{if(localStorage.getItem('mfl:siteTheme')==='dark')document.documentElement.setAttribute('data-theme','dark');var s=localStorage.getItem('mfl:siteSize');if(s==='large'||s==='xlarge')document.documentElement.setAttribute('data-size',s)}catch(e){}",
           }}
         />
         <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />

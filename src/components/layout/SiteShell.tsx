@@ -2,6 +2,8 @@
 
 import { usePathname } from 'next/navigation'
 
+import SiteControls from '@/components/layout/SiteControls'
+
 /**
  * 원본 사이트의 body#main / body#sub 구분을 재현한다.
  * - 메인(/)  : 헤더가 메인 비주얼 위에 투명하게 얹힘 (흰 로고/흰 메뉴)
@@ -31,11 +33,14 @@ export default function SiteShell({
   if (pathname === '/admin' || pathname.startsWith('/admin/')) return <>{children}</>
 
   const isMain = pathname === '/'
+  // 100문100답은 자기 글자 크기 단추와 zoom 이 있다 — 겹치면 두 번 커진다
+  const ownSize = pathname === '/honjoo100' || pathname.startsWith('/honjoo100/')
   return (
-    <div className="mfl-site">
+    <div className={ownSize ? 'mfl-site mfl-nosize' : 'mfl-site'}>
       {/* 원본은 body#main / body#sub — 포팅된 CSS 가 후손 셀렉터라 한 단계 더 감싼다 */}
       <div className={isMain ? 'mfl-main' : 'mfl-sub'}>
         <div className="mfl-wrapper">
+          {!ownSize && <SiteControls />}
           {header}
           <main>{children}</main>
           {footer}
