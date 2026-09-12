@@ -46,18 +46,15 @@ export default async function Wed100Page() {
 
     전에는 대표 문항 다섯을 4초마다 돌려 보였다(NowPlayingRotator). 읽으려는 순간
     넘어가고, 그게 공짜인지 아닌지도 알 수 없었다. 무료 문항이 곧 이 상품의 맛보기라,
-    돌리지 않고 무엇이 공짜인지 그대로 보인다. 프롤로그·에필로그는 뒤로 보낸다.
+    돌리지 않고 무엇이 공짜인지 그대로 보인다. 프롤로그가 맨 앞 — "왜 만들었나" 부터
+    듣는 게 순서다. 에필로그는 맨 뒤.
   */
   const dur = (x: (typeof items)[number]) =>
     x.duration ?? x.cues.reduce((b, c) => b + c.ko.length, 0) / 5.2 + 6
   // 잠금이 꺼져 있으면(전부 열림) "무료 공개" 라는 말 자체가 없다 — 카드를 안 그린다
   const freePicks = (access.paywall ? items : [])
     .filter((x) => isOpen(access, x.slug))
-    .sort((a, b) => {
-      const ka = a.part >= 1 && a.part <= 6 ? 0 : 1
-      const kb = b.part >= 1 && b.part <= 6 ? 0 : 1
-      return ka - kb || a.part - b.part || a.n - b.n
-    })
+    .sort((a, b) => a.part - b.part || a.n - b.n)
     .map((x) => ({ slug: x.slug, question: x.question, part: x.part, duration: dur(x) }))
 
   const counts = new Map<number, number>()
