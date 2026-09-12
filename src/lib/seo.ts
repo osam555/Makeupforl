@@ -31,6 +31,21 @@ export const BUSINESS = {
   ],
 } as const
 
+/**
+ * 같은 업체의 다른 계정들.
+ *
+ * 인스타·유튜브·블로그·카카오채널·네이버 플레이스가 따로 놀고 있었다 — 사이트 어디에도
+ * 인스타 링크가 없었고 구조화 데이터에 sameAs 도 없었다. 묶어 두면 검색엔진이
+ * "이 계정들이 한 업체" 라고 알아 각각의 신뢰가 한 곳에 모인다. 푸터 링크도 이 표를 쓴다.
+ */
+export const PROFILES = [
+  { key: 'instagram', label: '인스타그램', url: 'https://www.instagram.com/makeupforl/' },
+  { key: 'youtube', label: '유튜브', url: 'https://www.youtube.com/@혼주메이크업전문' },
+  { key: 'blog', label: '네이버 블로그', url: 'https://blog.naver.com/makeupstar77' },
+  { key: 'kakao', label: '카카오톡 채널', url: 'https://pf.kakao.com/_lXVVxb' },
+  { key: 'place', label: '네이버 플레이스', url: 'https://m.place.naver.com/hairshop/1863938818/home' },
+] as const
+
 /** 사이트 전체에 한 번만 싣는 업체 정보. 홈이 아니라 루트 레이아웃에 둔다. */
 export function businessJsonLd() {
   return {
@@ -58,6 +73,7 @@ export function businessJsonLd() {
       closes: h.close,
     })),
     areaServed: { '@type': 'City', name: '서울' },
+    sameAs: PROFILES.map((p) => p.url),
     knowsAbout: ['혼주메이크업', '혼주화장', '혼주헤어', '웨딩 메이크업', '퍼스널컬러', '출장 메이크업'],
   }
 }

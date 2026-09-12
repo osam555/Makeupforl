@@ -532,7 +532,7 @@ html.menu-opened .mobile-overlay {display:block;}
 .mfl-site .mfl-footer .foot-contact .num {font-size:18px;}
 .mfl-site .mfl-footer .foot-menu {max-width:100%;order:1;text-align:center;margin-bottom:20px;}
 .mfl-site .mfl-footer .foot-menu .tit {margin-bottom:5px;}
-.mfl-site .mfl-footer .foot-menu ul {display:flex;margin:0 -10px;justify-content:center;}
+.mfl-site .mfl-footer .foot-menu ul {display:flex;flex-wrap:wrap;row-gap:4px;margin:0 -10px;justify-content:center;}
 .mfl-site .mfl-footer .foot-menu ul li {padding:0 10px;}
 .mfl-site .sub-visual {height:250px;}
 .mfl-site .sub-visual .tit {font-size:26px;}

@@ -1,5 +1,7 @@
 import Link from 'next/link'
 
+import { PROFILES } from '@/lib/seo'
+
 /** 원본 #footer 구조/치수 그대로 (contain max-width 1720, padding 52/55) */
 export default function Footer() {
   return (
@@ -28,6 +30,19 @@ export default function Footer() {
             <a href="tel:02-323-3321">02-323-3321</a>
           </p>
           <p className="tt">평&nbsp;일 09:00 ~ 18:00 / 토·일요일 06:00 ~ 18:00</p>
+        </div>
+
+        <div className="foot-menu area">
+          <div className="tit">채널</div>
+          <ul>
+            {PROFILES.map((p) => (
+              <li key={p.key}>
+                <a href={p.url} target="_blank" rel="noreferrer">
+                  {p.label}
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
 
         <div className="foot-menu area">
