@@ -28,6 +28,13 @@ export interface Wed100Member {
 /** 구매 후 열람 기간 */
 export const MEMBER_MONTHS = 3
 
+/**
+ * 이용권 값 (원). 2026-09-12 원장님이 정함.
+ * 잠긴 화면·목록 안내가 같은 숫자를 봐야 한다 — 값이 두 곳에 적히면 한 곳만 바뀐다.
+ */
+export const MEMBER_PRICE = 55_000
+export const MEMBER_PRICE_LABEL = `${MEMBER_PRICE.toLocaleString('ko-KR')}원`
+
 /** 오늘 (한국 시각). 서버가 어디서 돌든 기준이 흔들리면 안 된다 */
 export function todayKST(): string {
   return new Intl.DateTimeFormat('en-CA', {

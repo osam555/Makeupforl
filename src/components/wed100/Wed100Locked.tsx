@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import Image from 'next/image'
 
+import { MEMBER_MONTHS, MEMBER_PRICE_LABEL } from '@/lib/wed100Access'
+
 /**
  * 잠긴 문항 화면.
  *
@@ -104,16 +106,19 @@ export default function Wed100Locked({
           클래스 이름을 바꾸려면 페이지의 JSON-LD 도 같이 고쳐야 한다.
         */}
         <div className="paywall mt-7 rounded-2xl border border-[var(--w-line)] bg-[var(--w-bg)] p-6 sm:p-8">
-          <p className="text-[15px] font-bold text-[var(--w-ink)]">
-            유료 회원에게 공개되는 답변입니다
-          </p>
+          {/*
+            "유료 회원에게 공개" 는 벽처럼 읽혔다. 검색으로 막 들어온 분(오늘 유입의 절반)이
+            20초 만에 나가는 자리라, 여기까지가 무료고 나머지는 얼마에 얼마 동안인지를
+            첫 줄에서 말한다. 값은 wed100Access 의 상수 하나에서 온다.
+          */}
+          <p className="text-[15px] font-bold text-[var(--w-ink)]">여기까지가 미리보기입니다</p>
           <p className="mt-2 text-[14px] leading-[1.8] text-[var(--w-ink2)]">
             {notice ||
-              '25년간 1만 명의 혼주님을 만난 대표원장 김성희가 가장 많이 받은 질문에 하나씩 답했습니다. 검색으로는 나오지 않는, 상담실에서만 드리던 이야기입니다. 이용권을 구매하시면 3개월 동안 전부 보실 수 있습니다.'}
+              `나머지 답과 원장 음성은 ${MEMBER_MONTHS}개월 이용권(${MEMBER_PRICE_LABEL})으로 전부 보실 수 있습니다. 25년간 1만 명의 혼주님을 만난 대표원장 김성희가 가장 많이 받은 질문에 하나씩 답했습니다 — 검색으로는 나오지 않는, 상담실에서만 드리던 이야기입니다.`}
           </p>
 
           {/* 무엇을 받게 되는지 — 말보다 숫자가 낫다 */}
-          <dl className="mt-5 grid grid-cols-3 gap-3 border-y border-[var(--w-line2)] py-4">
+          <dl className="mt-5 grid grid-cols-2 gap-3 border-y border-[var(--w-line2)] py-4 sm:grid-cols-4">
             <div>
               <dt className="text-[11px] font-bold tracking-wider text-[var(--w-mut)]">문항</dt>
               <dd className="mt-0.5 text-[19px] font-extrabold text-[var(--w-ink)]">
@@ -132,6 +137,10 @@ export default function Wed100Locked({
                 {Math.round(totals.chars / 1000)}천 자
               </dd>
             </div>
+            <div>
+              <dt className="text-[11px] font-bold tracking-wider text-[var(--w-mut)]">{MEMBER_MONTHS}개월 이용권</dt>
+              <dd className="mt-0.5 text-[19px] font-extrabold text-[var(--w-rose)]">{MEMBER_PRICE_LABEL}</dd>
+            </div>
           </dl>
 
           <div className="mt-5 flex flex-wrap gap-2">
@@ -142,7 +151,7 @@ export default function Wed100Locked({
                 rel="noopener noreferrer"
                 className="inline-flex items-center rounded-full bg-[var(--w-rose)] px-6 py-3 text-[14px] font-bold text-white transition-opacity hover:opacity-90"
               >
-                전체 보기 신청
+                이용권 구매 {MEMBER_PRICE_LABEL}
               </a>
             ) : (
               /* 판매 주소가 아직 없으면 이 집이 실제로 상담받는 창구로 보낸다 */
@@ -150,7 +159,7 @@ export default function Wed100Locked({
                 href="tel:02-323-3321"
                 className="inline-flex items-center rounded-full bg-[var(--w-rose)] px-6 py-3 text-[14px] font-bold text-white transition-opacity hover:opacity-90"
               >
-                전화로 문의 02-323-3321
+                이용권 신청 · 전화 02-323-3321
               </a>
             )}
             <Link
