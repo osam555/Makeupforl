@@ -94,16 +94,16 @@ export default async function Home() {
     같은 내용이 두 번 그려지므로 h1 은 앞의 하나에만 준다. 둘 다 h1 이면 이 페이지가
     무엇에 대한 것인지 도리어 흐려진다.
 
-    제목에 "혼주메이크업" 을 넣은 것은 이 집이 실제로 그것을 파는 집이기 때문이다.
-    이 낱말을 노리는 페이지가 홈·100문100답 목록·문항 열둘로 이미 여럿이라, 검색어를
-    가장 잘 받아야 할 홈이 정작 제목에 그 말을 안 갖고 있으면 안 된다.
+    2026-09-13 "혼주메이크업 25년" → "메이크업 25년". 25년은 메이크업 경력이지 혼주만 한
+    햇수가 아니라서(원장님). 검색어 '혼주메이크업' 은 바로 아래 줄("혼주 메이크업을
+    중심으로")과 <title>·설명이 갖고 있고, 낱말 자체는 /혼주메이크업 허브가 맡는다.
   */
   const heroCopy = (asH1: boolean) => (
     <>
       <p className="text-[13px] font-bold tracking-[0.28em] text-[#F46E65]">MAKEUP FOR L</p>
       {(() => {
         const cls = 'mt-3 text-[27px] font-bold leading-[1.3] text-gray-900 sm:text-[33px]'
-        const text = '혼주메이크업 25년, 1만 명의 얼굴'
+        const text = '메이크업 25년, 1만 명의 얼굴'
         return asH1 ? <h1 className={cls}>{text}</h1> : <h2 className={cls}>{text}</h2>
       })()}
       <p className="mt-3 text-[15px] leading-[1.75] text-gray-600">
