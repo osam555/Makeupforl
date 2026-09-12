@@ -4,7 +4,16 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { ChevronDown, Lock } from 'lucide-react'
 
-export type PartRow = { slug: string; part: number; n: number; question: string; duration: number; locked: boolean }
+export type PartRow = {
+  slug: string
+  part: number
+  n: number
+  question: string
+  duration: number
+  locked: boolean
+  /** 잠긴 문항의 맛보기 한 줄 — 제목만으로는 무엇이 궁금해질지 모른다 */
+  teaser?: string
+}
 export type PartInfo = { part: number; title: string; intro: string; count: number }
 
 function fmt(sec: number) {
@@ -85,8 +94,11 @@ export default function PartPicker({ parts, items }: { parts: PartInfo[]; items:
                   >
                     {String(x.n).padStart(2, '0')}
                   </span>
-                  <span className="min-w-0 flex-1 text-[16px] font-medium leading-snug text-[var(--w-ink)]">
-                    {x.question}
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-[16px] font-medium leading-snug text-[var(--w-ink)]">{x.question}</span>
+                    {x.teaser && (
+                      <span className="mt-0.5 line-clamp-1 block text-[13px] text-[var(--w-mut)]">{x.teaser}</span>
+                    )}
                   </span>
                   <span className="flex shrink-0 items-center gap-1.5 text-[13px] tabular-nums text-[var(--w-mut)]">
                     {x.locked && <Lock className="h-3.5 w-3.5" />}

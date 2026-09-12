@@ -239,6 +239,7 @@ export default async function Wed100Page() {
               question: x.question,
               duration: dur(x),
               locked: !isOpen(access, x.slug),
+              teaser: isOpen(access, x.slug) ? undefined : teaser(x.answer, 60),
             }))}
           />
 

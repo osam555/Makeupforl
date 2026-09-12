@@ -75,7 +75,11 @@ export default function Wed100Browser({
 }) {
   const [part, setPart] = useState(-1)
   const [kw, setKw] = useState('')
-  const [view, setView] = useState<'grid' | 'list'>('grid')
+  /*
+    기본을 목록으로. 사진 카드 102장은 휴대전화에서 6만 픽셀이 넘어, 위 파트 목록에서
+    내려온 사람이 어디에 있는지도 몰랐다. 사진이 보고 싶으면 [카드로] 를 누른다.
+  */
+  const [view, setView] = useState<'grid' | 'list'>('list')
   const done = useStoredJson(LS_DONE, NO_DONE, parseDone)
   const resume = useStoredJson<Resume | null>(LS_RESUME, null, parseResume)
 
