@@ -88,31 +88,23 @@ export default function PartPicker({ parts, items }: { parts: PartInfo[]; items:
                     <li key={x.slug} className="border-b border-[var(--w-line2)] last:border-0">
                       <Link
                         href={`/honjoo100/${x.slug}`}
-                        className="flex items-center gap-3 px-5 py-3.5 transition hover:bg-[var(--w-hover)]"
+                        className="block px-5 py-3.5 transition hover:bg-[var(--w-hover)]"
                       >
-                        <span
-                          className="w-8 shrink-0 text-[14px] font-extrabold tabular-nums"
-                          style={{ color: `var(--w-p${x.part})` }}
-                        >
-                          {String(x.n).padStart(2, '0')}
-                        </span>
                         {/*
-                          자물쇠·길이는 질문 밑 줄에 둔다. 오른쪽에 세우면 휴대전화에서 질문이
-                          좁은 칸에 갇혀 석 줄로 꺾이고, 그 옆은 비었다.
+                          번호·질문·맛보기·자물쇠·길이를 한 흐름으로 이어 쓴다. 번호를 왼쪽 칸에,
+                          길이를 오른쪽 칸에 세우면 휴대전화에서 가운데 질문만 좁게 접히고 양옆이 빈다.
                         */}
-                        <span className="min-w-0 flex-1">
-                          <span className="block text-[16px] font-medium leading-snug text-[var(--w-ink)]">{x.question}</span>
-                          <span className="mt-1 flex min-w-0 items-center gap-1.5 text-[13px] text-[var(--w-mut)]">
-                            <span className="inline-flex shrink-0 items-center gap-1 tabular-nums">
-                              {x.locked && <Lock className="h-3.5 w-3.5" />}
-                              🎧 {fmt(x.duration)}
-                            </span>
-                            {x.teaser && (
-                              <>
-                                <span aria-hidden>·</span>
-                                <span className="line-clamp-1 min-w-0">{x.teaser}</span>
-                              </>
-                            )}
+                        <span className="block text-[16px] font-medium leading-snug text-[var(--w-ink)]">
+                          <span className="mr-1.5 font-extrabold tabular-nums" style={{ color: `var(--w-p${x.part})` }}>
+                            {String(x.n).padStart(2, '0')}
+                          </span>
+                          {x.question}
+                        </span>
+                        <span className="mt-1 block text-[13px] leading-relaxed text-[var(--w-mut)]">
+                          {x.teaser && <>{x.teaser} </>}
+                          <span className="inline-flex items-center gap-1 whitespace-nowrap tabular-nums align-baseline">
+                            {x.locked && <Lock className="inline h-3.5 w-3.5" />}
+                            🎧 {fmt(x.duration)}
                           </span>
                         </span>
                       </Link>
