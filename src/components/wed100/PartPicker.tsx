@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 import { ChevronDown, Lock } from 'lucide-react'
 
 export type PartRow = {
@@ -34,14 +34,21 @@ export default function PartPicker({ parts, items }: { parts: PartInfo[]; items:
   const cur = parts.find((p) => p.part === open) ?? null
   const rows = open === null ? [] : items.filter((x) => x.part === open).sort((a, b) => a.n - b.n)
 
+  /*
+    펼친 목록은 누른 카드 바로 다음에 그린다.
+
+    처음에는 격자 아래에 따로 그렸다. 휴대전화(한 줄 격자)에서는 PART 1 을 눌러도
+    목록이 PART 6 밑에 나와 "눌렀는데 아무 일도 없다" 로 보였다. 격자 안에서 카드 다음
+    칸에 전체 폭으로 끼우면 어느 화면이든 그 카드 밑에 온다 — 넓은 화면은 그 줄 밑,
+    좁은 화면은 바로 밑.
+  */
   return (
-    <div>
-      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {parts.map((p) => {
-          const on = p.part === open
-          return (
+    <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {parts.map((p) => {
+        const on = p.part === open
+        return (
+          <Fragment key={p.part}>
             <button
-              key={p.part}
               type="button"
               onClick={() => setOpen(on ? null : p.part)}
               aria-expanded={on}
@@ -61,55 +68,62 @@ export default function PartPicker({ parts, items }: { parts: PartInfo[]; items:
                 <ChevronDown className={`h-4 w-4 transition-transform ${on ? 'rotate-180' : ''}`} />
               </p>
             </button>
-          )
-        })}
-      </div>
 
-      {cur && (
-        <div className="mt-4 overflow-hidden rounded-2xl border border-[var(--w-line)] bg-[var(--w-card)]">
-          <div
-            className="flex flex-wrap items-baseline justify-between gap-2 border-b border-[var(--w-line2)] px-5 py-3.5"
-            style={{ borderTopColor: `var(--w-p${cur.part})`, borderTopWidth: 3 }}
-          >
-            <p className="text-[16px] font-extrabold text-[var(--w-ink)]">
-              <span className="mr-2 tracking-[0.18em]" style={{ color: `var(--w-p${cur.part})` }}>
-                PART {cur.part}
-              </span>
-              {cur.title}
-            </p>
-            <p className="text-[13px] text-[var(--w-mut)]">
-              {rows.length}개 · 🔒 는 이용권 문항
-            </p>
-          </div>
-          <ol>
-            {rows.map((x) => (
-              <li key={x.slug} className="border-b border-[var(--w-line2)] last:border-0">
-                <Link
-                  href={`/honjoo100/${x.slug}`}
-                  className="flex items-center gap-3 px-5 py-3.5 transition hover:bg-[var(--w-hover)]"
+            {on && cur && (
+              <div className="col-span-full overflow-hidden rounded-2xl border border-[var(--w-line)] bg-[var(--w-card)]">
+                <div
+                  className="flex flex-wrap items-baseline justify-between gap-2 border-b border-[var(--w-line2)] px-5 py-3.5"
+                  style={{ borderTopColor: `var(--w-p${cur.part})`, borderTopWidth: 3 }}
                 >
-                  <span
-                    className="w-8 shrink-0 text-[14px] font-extrabold tabular-nums"
-                    style={{ color: `var(--w-p${x.part})` }}
+                  <p className="text-[16px] font-extrabold text-[var(--w-ink)]">
+                    <span className="mr-2 tracking-[0.18em]" style={{ color: `var(--w-p${cur.part})` }}>
+                      PART {cur.part}
+                    </span>
+                    {cur.title}
+                  </p>
+                  <p className="text-[13px] text-[var(--w-mut)]">{rows.length}개 · 🔒 는 이용권 문항</p>
+                </div>
+                <ol>
+                  {rows.map((x) => (
+                    <li key={x.slug} className="border-b border-[var(--w-line2)] last:border-0">
+                      <Link
+                        href={`/honjoo100/${x.slug}`}
+                        className="flex items-center gap-3 px-5 py-3.5 transition hover:bg-[var(--w-hover)]"
+                      >
+                        <span
+                          className="w-8 shrink-0 text-[14px] font-extrabold tabular-nums"
+                          style={{ color: `var(--w-p${x.part})` }}
+                        >
+                          {String(x.n).padStart(2, '0')}
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="block text-[16px] font-medium leading-snug text-[var(--w-ink)]">{x.question}</span>
+                          {x.teaser && (
+                            <span className="mt-0.5 line-clamp-1 block text-[13px] text-[var(--w-mut)]">{x.teaser}</span>
+                          )}
+                        </span>
+                        <span className="flex shrink-0 items-center gap-1.5 text-[13px] tabular-nums text-[var(--w-mut)]">
+                          {x.locked && <Lock className="h-3.5 w-3.5" />}
+                          🎧 {fmt(x.duration)}
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ol>
+                <div className="border-t border-[var(--w-line2)] px-5 py-2.5 text-right">
+                  <button
+                    type="button"
+                    onClick={() => setOpen(null)}
+                    className="text-[13px] font-bold text-[var(--w-mut)] hover:text-[var(--w-rose)]"
                   >
-                    {String(x.n).padStart(2, '0')}
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block text-[16px] font-medium leading-snug text-[var(--w-ink)]">{x.question}</span>
-                    {x.teaser && (
-                      <span className="mt-0.5 line-clamp-1 block text-[13px] text-[var(--w-mut)]">{x.teaser}</span>
-                    )}
-                  </span>
-                  <span className="flex shrink-0 items-center gap-1.5 text-[13px] tabular-nums text-[var(--w-mut)]">
-                    {x.locked && <Lock className="h-3.5 w-3.5" />}
-                    🎧 {fmt(x.duration)}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ol>
-        </div>
-      )}
+                    접기 ↑
+                  </button>
+                </div>
+              </div>
+            )}
+          </Fragment>
+        )
+      })}
     </div>
   )
 }
