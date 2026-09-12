@@ -93,3 +93,57 @@ export async function watchUser(
     void u.getIdToken().then((idToken) => cb({ email: u.email ?? '', idToken }))
   })
 }
+
+/*
+  ── 이메일 링크 로그인 ─────────────────────────────────────────
+  구글 계정만 받으면 네이버 메일을 쓰는 손님(대부분 50~60대)이 못 들어온다.
+  비밀번호를 만들게 하지 않는다 — 한 번 볼 3개월짜리 이용권에 비밀번호는 잊히기만 한다.
+  이메일로 온 링크를 누르면 그 자리에서 로그인되고, 서버는 그 이메일이 명단에 있는지만 본다.
+
+  링크를 다른 브라우저(메일 앱 안의 브라우저)에서 열면 처음 적은 이메일을 모르므로
+  다시 묻는다. 그래서 보낼 때 이메일을 localStorage 에 남긴다.
+*/
+const EMAIL_KEY = 'mfl:signin-email'
+
+export async function sendEmailLink(email: string, url: string): Promise<void> {
+  const app = getFirebaseApp()
+  if (!app) throw new Error('로그인을 준비하지 못했습니다. 잠시 후 다시 시도해 주세요.')
+  const { getAuth, sendSignInLinkToEmail } = await import('firebase/auth')
+  await sendSignInLinkToEmail(getAuth(app), email, { url, handleCodeInApp: true })
+  try {
+    localStorage.setItem(EMAIL_KEY, email)
+  } catch {
+    /* 저장이 막혀 있으면 링크를 열 때 이메일을 다시 묻는다 */
+  }
+}
+
+/** 주소창에 로그인 링크가 들어 있으면 마무리한다. 아니면 null */
+export async function completeEmailLink(): Promise<{ email: string } | null> {
+  const app = getFirebaseApp()
+  if (!app || typeof window === 'undefined') return null
+  const { getAuth, isSignInWithEmailLink, signInWithEmailLink } = await import('firebase/auth')
+  const auth = getAuth(app)
+  const href = window.location.href
+  if (!isSignInWithEmailLink(auth, href)) return null
+
+  let email = ''
+  try {
+    email = localStorage.getItem(EMAIL_KEY) ?? ''
+  } catch {
+    /* 아래에서 묻는다 */
+  }
+  if (!email) email = window.prompt('로그인 링크를 받으신 이메일 주소를 적어 주세요.') ?? ''
+  if (!email) return null
+
+  const cred = await signInWithEmailLink(auth, email.trim().toLowerCase(), href)
+  try {
+    localStorage.removeItem(EMAIL_KEY)
+  } catch {
+    /* 무시 */
+  }
+  // 주소창의 일회용 코드는 지운다 — 새로고침하면 "이미 쓴 링크" 오류가 뜬다
+  const clean = new URL(href)
+  for (const k of ['apiKey', 'oobCode', 'mode', 'lang', 'continueUrl']) clean.searchParams.delete(k)
+  window.history.replaceState(null, '', clean.toString())
+  return { email: cred.user.email ?? email }
+}

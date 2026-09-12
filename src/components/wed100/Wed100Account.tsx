@@ -5,6 +5,8 @@ import { Loader2, LogOut } from 'lucide-react'
 
 import { signInUser, signOutUser, watchUser } from '@/lib/firebase/auth'
 
+import EmailLinkSignIn from './EmailLinkSignIn'
+
 type Me = { email: string; allowed: boolean; until: string | null; expired: boolean }
 
 /**
@@ -107,7 +109,7 @@ export default function Wed100Account() {
         </p>
       ) : (
         <p className="text-[13.5px] leading-relaxed text-[var(--w-ink2)]">
-          전체 보기를 신청하셨나요? <b className="text-[var(--w-ink)]">신청하신 구글 계정</b>으로
+          전체 보기를 신청하셨나요? <b className="text-[var(--w-ink)]">신청하신 계정</b>으로
           로그인하시면 100문 100답이 전부 열립니다.
         </p>
       )}
@@ -135,6 +137,13 @@ export default function Wed100Account() {
       </div>
 
       {err && <p className="mt-2 text-[13px] text-[var(--w-rose-t)]">{err}</p>}
+
+      {!me && (
+        <div className="mx-auto mt-4 max-w-[440px] text-left">
+          <EmailLinkSignIn compact />
+          <p className="mt-1.5 text-[12px] text-[var(--w-mut)]">구글 계정이 없으시면 신청하신 이메일로 로그인 링크를 받으세요.</p>
+        </div>
+      )}
     </div>
   )
 }

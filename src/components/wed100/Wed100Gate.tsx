@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Loader2, LogOut } from 'lucide-react'
 
+import EmailLinkSignIn from './EmailLinkSignIn'
 import Wed100Locked from './Wed100Locked'
 import Wed100Player, { type PlayerProps } from './Wed100Player'
 import { signInUser, signOutUser, watchUser } from '@/lib/firebase/auth'
@@ -141,7 +142,7 @@ export default function Wed100Gate({
           ) : (
             <>
               <p className="text-[13px] leading-relaxed text-[var(--w-ink2)]">
-                이미 전체 보기를 신청하셨다면, 신청하신 구글 계정으로 로그인하시면 바로 열립니다.
+                이미 전체 보기를 신청하셨다면, 신청하신 계정으로 로그인하시면 바로 열립니다.
               </p>
               <button
                 type="button"
@@ -152,6 +153,10 @@ export default function Wed100Gate({
                 {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
                 구글 계정으로 로그인
               </button>
+              {/* 구글 계정이 없는 손님 — 네이버 메일 등 아무 이메일로 링크 로그인 */}
+              <div className="mt-4">
+                <EmailLinkSignIn />
+              </div>
             </>
           )}
 
