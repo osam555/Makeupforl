@@ -95,7 +95,7 @@ export default function EmailLinkSignIn({ compact = false }: { compact?: boolean
           e.preventDefault()
           void send()
         }}
-        className="mt-2 flex max-w-[420px] flex-wrap gap-2"
+        className="mt-2 flex max-w-[460px] flex-wrap gap-2"
       >
         <input
           type="email"
@@ -104,7 +104,7 @@ export default function EmailLinkSignIn({ compact = false }: { compact?: boolean
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="이메일 주소 (naver.com 도 됩니다)"
-          className="h-11 min-w-0 flex-1 rounded-full border border-[var(--w-line)] bg-[var(--w-card)] px-4 text-[14px] text-[var(--w-ink)] outline-none placeholder:text-[var(--w-mut)] focus:border-[var(--w-rose)]"
+          className="h-11 min-w-0 basis-full rounded-full border sm:basis-0 sm:flex-1 border-[var(--w-line)] bg-[var(--w-card)] px-4 text-[14px] text-[var(--w-ink)] outline-none placeholder:text-[var(--w-mut)] focus:border-[var(--w-rose)]"
         />
         <button
           type="submit"
