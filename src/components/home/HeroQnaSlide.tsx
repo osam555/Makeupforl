@@ -55,7 +55,7 @@ export default function HeroQnaSlide({ items }: { items: Q[] }) {
     >
       <div className="flex items-center gap-2 px-3 pb-2 pt-1">
         <span className="text-[12px] font-semibold tracking-[0.16em] text-[#F46E65]">
-          100 Q &amp; A
+          100 Q &amp; A · 무료 공개 {items.length}
         </span>
         {items.length > 1 && (
           <button

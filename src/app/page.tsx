@@ -16,6 +16,8 @@ import HeroQnaSlide from '@/components/home/HeroQnaSlide'
 import QnaCard from '@/components/home/QnaCard'
 import { getHomeConfig } from '@/lib/homeConfig'
 import wed100 from '@/data/wed100.json'
+import { isOpen } from '@/lib/wed100Access'
+import { getWed100Access } from '@/lib/wed100Access.server'
 
 export const revalidate = 3600
 
@@ -82,7 +84,20 @@ export default async function Home() {
   // 어느 문항을 앞에 세울지는 어드민에서 고른다 (설정이 없으면 코드의 기본값)
   const homeConfig = await getHomeConfig()
   const qna = pickQna(homeConfig.sectionQna)
-  const heroQna = pickQna(homeConfig.heroQna)
+  /*
+    히어로 슬라이드는 어드민이 고른 다섯이 아니라 **무료로 열린 문항**을 돈다(2026-09-13).
+    홈에서 눌렀는데 잠긴 화면이 나오면 첫 인상이 벽이다. 열린 것만 보여 주면 누르는 것마다
+    답이 나온다. 프롤로그가 먼저 — "왜 만들었나" 부터. 잠금이 꺼져 있으면 예전대로 고른 것.
+  */
+  const access = await getWed100Access()
+  const heroQna = access.paywall
+    ? pickQna(
+        [...wedItems]
+          .filter((i) => isOpen(access, i.slug))
+          .sort((a, b) => partOf(a.slug) - partOf(b.slug) || a.slug.localeCompare(b.slug))
+          .map((i) => i.slug),
+      )
+    : pickQna(homeConfig.heroQna)
   // 하드코딩된 '102개' 대신 원고에서 센다. 음성 보유 수도 함께 본다
   const published = wedItems.filter((i) => i.published && i.question)
   const qnaCount = published.length
@@ -499,4 +514,12 @@ export default async function Home() {
       </div>
     </div>
   )
+}
+
+/** slug 에서 파트 번호 — 프롤로그 0, 에필로그 7, p3-12 → 3 */
+function partOf(slug: string): number {
+  if (slug === 'prologue') return 0
+  if (slug === 'epilogue') return 7
+  const m = /^p(\d)-/.exec(slug)
+  return m ? Number(m[1]) : 8
 }
