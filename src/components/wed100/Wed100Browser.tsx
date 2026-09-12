@@ -261,11 +261,14 @@ export default function Wed100Browser({
               >
                 {x.part === 0 ? '프롤로그' : x.part === 7 ? '에필로그' : `P${x.part}·${String(x.n).padStart(2, '0')}`}
               </span>
-              <span className="flex-1">
-                <span className="block font-medium text-[var(--w-ink)]">{x.question}</span>
-                <span className="mt-0.5 block text-[13px] text-[var(--w-ink2)]">{x.question_en}</span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-[15px] font-medium text-[var(--w-ink)]">{x.question}</span>
+                <span className="mt-0.5 block text-[13px] text-[var(--w-ink2)]">
+                  <span className="tabular-nums">{x.locked ? '🔒 ' : ''}🎧 {fmt(x.duration)}</span>
+                  <span className="mx-1.5" aria-hidden>·</span>
+                  {x.question_en}
+                </span>
               </span>
-              <span className="shrink-0 text-[13px] text-[var(--w-ink2)]">🎧 {fmt(x.duration)}</span>
             </Link>
           ))}
         </div>

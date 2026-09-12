@@ -42,14 +42,17 @@ export default function FreePicks({ items, className = '' }: { items: FreePick[]
                 ▶
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block text-[12px] font-extrabold tracking-[0.12em]" style={{ color: `var(--w-p${x.part})` }}>
-                  {partLabel(x.part)}
+                <span className="flex items-baseline gap-2">
+                  <span className="text-[12px] font-extrabold tracking-[0.12em]" style={{ color: `var(--w-p${x.part})` }}>
+                    {partLabel(x.part)}
+                  </span>
+                  {/* 길이는 파트 표시 옆 — 오른쪽에 따로 세우면 질문 칸이 좁아진다 */}
+                  <span className="text-[12px] tabular-nums text-[var(--w-mut)]">🎧 {fmt(x.duration)}</span>
                 </span>
                 <span className="line-clamp-2 block text-[15px] font-bold leading-snug text-[var(--w-ink)]">
                   {x.question}
                 </span>
               </span>
-              <span className="shrink-0 text-[13px] tabular-nums text-[var(--w-mut)]">🎧 {fmt(x.duration)}</span>
             </Link>
           </li>
         ))}

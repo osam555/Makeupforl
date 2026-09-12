@@ -96,15 +96,24 @@ export default function PartPicker({ parts, items }: { parts: PartInfo[]; items:
                         >
                           {String(x.n).padStart(2, '0')}
                         </span>
+                        {/*
+                          자물쇠·길이는 질문 밑 줄에 둔다. 오른쪽에 세우면 휴대전화에서 질문이
+                          좁은 칸에 갇혀 석 줄로 꺾이고, 그 옆은 비었다.
+                        */}
                         <span className="min-w-0 flex-1">
                           <span className="block text-[16px] font-medium leading-snug text-[var(--w-ink)]">{x.question}</span>
-                          {x.teaser && (
-                            <span className="mt-0.5 line-clamp-1 block text-[13px] text-[var(--w-mut)]">{x.teaser}</span>
-                          )}
-                        </span>
-                        <span className="flex shrink-0 items-center gap-1.5 text-[13px] tabular-nums text-[var(--w-mut)]">
-                          {x.locked && <Lock className="h-3.5 w-3.5" />}
-                          🎧 {fmt(x.duration)}
+                          <span className="mt-1 flex min-w-0 items-center gap-1.5 text-[13px] text-[var(--w-mut)]">
+                            <span className="inline-flex shrink-0 items-center gap-1 tabular-nums">
+                              {x.locked && <Lock className="h-3.5 w-3.5" />}
+                              🎧 {fmt(x.duration)}
+                            </span>
+                            {x.teaser && (
+                              <>
+                                <span aria-hidden>·</span>
+                                <span className="line-clamp-1 min-w-0">{x.teaser}</span>
+                              </>
+                            )}
+                          </span>
                         </span>
                       </Link>
                     </li>
