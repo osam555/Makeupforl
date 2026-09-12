@@ -162,6 +162,19 @@ export default function Wed100Locked({
                 이용권 신청 · 전화 02-323-3321
               </a>
             )}
+            {/* 카카오톡 — 전화가 부담스러운 분(특히 밤에 검색으로 온 분)의 문. 노란색은 카카오 규정색 */}
+            <a
+              href="https://pf.kakao.com/_lXVVxb"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-full bg-[#FEE500] px-6 py-3 text-[14px] font-bold text-[#191919] transition-opacity hover:opacity-90"
+              style={{ color: '#191919' }}
+            >
+              <span aria-hidden className="grid h-5 w-5 place-items-center rounded-full bg-[#191919] text-[10px] font-black text-[#FEE500]">
+                k
+              </span>
+              카카오 채널로 문의
+            </a>
             <Link
               href="/consultation"
               className="inline-flex items-center rounded-full border border-[var(--w-line)] px-6 py-3 text-[14px] font-bold text-[var(--w-ink)] transition-colors hover:border-[var(--w-rose)] hover:text-[var(--w-rose)]"

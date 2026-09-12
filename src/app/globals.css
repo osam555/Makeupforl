@@ -250,6 +250,13 @@
 }
 .mfl-site img { max-width: 100%; vertical-align: top; }
 .mfl-site a { color: inherit; text-decoration: none; }
+/*
+  글자색 유틸리티가 위 규칙에 진다. 위 줄은 레이어 밖이고 Tailwind 유틸리티는 레이어 안이라,
+  <a class="text-white"> 가 본문색을 물려받아 장미색 단추 위에 검은 글씨가 됐다
+  (잠긴 문항의 "이용권 신청 · 전화"). 자주 쓰는 둘만 같은 자리에서 되살린다.
+*/
+.mfl-site a.text-white { color: #fff; }
+.mfl-site a.text-\[\#F46E65\] { color: #F46E65; }
 .mfl-site ul, .mfl-site ol { list-style: none; margin: 0; padding: 0; }
 /*
   제목 초기화는 base 레이어에 둔다.
