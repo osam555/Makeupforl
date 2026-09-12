@@ -134,7 +134,10 @@ export default function Wed100Locked({
             <div>
               <dt className="text-[11px] font-bold tracking-wider text-[var(--w-mut)]">본문</dt>
               <dd className="mt-0.5 text-[19px] font-extrabold text-[var(--w-ink)]">
-                {Math.round(totals.chars / 1000)}천 자
+                {/* "50천 자" 는 우리말이 아니다 — 만 단위로 */}
+                {totals.chars >= 10000
+                  ? `${(totals.chars / 10000).toFixed(totals.chars % 10000 >= 1000 ? 1 : 0).replace(/\.0$/, '')}만 자`
+                  : `${Math.round(totals.chars / 1000)}천 자`}
               </dd>
             </div>
             <div>
