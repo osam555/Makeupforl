@@ -236,7 +236,7 @@ export default async function Wed100Page() {
               question: x.question,
               duration: dur(x),
               locked: !isOpen(access, x.slug),
-              teaser: isOpen(access, x.slug) ? undefined : teaser(x.answer, 60),
+              teaser: isOpen(access, x.slug) ? undefined : teaser(x.answer, 190),
             }))}
           />
 
@@ -298,7 +298,7 @@ export default async function Wed100Page() {
               넣었더니 넘치는 만큼이 잘려 나가 문장이 도막났다. 한 문장이면
               대개 두 줄에 맞으므로 40자에서 끊는다.
             */
-            teaser: isOpen(access, x.slug) ? undefined : teaser(x.answer, 40),
+            teaser: isOpen(access, x.slug) ? undefined : teaser(x.answer, 190),
           }))}
           parts={wed100Parts
             .filter((p) => (p.part >= 1 && p.part <= 6) || (counts.get(p.part) ?? 0) > 0)
