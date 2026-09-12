@@ -1,7 +1,10 @@
 /* 원본 makeupforl.co.kr 스타일 이식본 (layout/doc/responsive/board). 셀렉터는 .mfl-site 로 스코프. */
 
 /* ===== layout.css ===== */
-.mfl-site .mfl-wrapper {position:relative;overflow:hidden;}
+/* hidden → clip. hidden 은 스크롤 컨테이너를 만들어 안쪽의 position:sticky 를 죽인다
+   (100문답의 글자 크기·테마 단추가 스크롤을 따라오지 못했다). clip 은 넘치는 것만 자르고
+   sticky 는 창 기준으로 붙는다. */
+.mfl-site .mfl-wrapper {position:relative;overflow:clip;}
 .mfl-site .mfl-skip a {z-index:100000;position:absolute;top:0;left:0;width:1px;height:1px;font-size:0;line-height:0;overflow:hidden}
 .mfl-site .mfl-skip a:focus,
 .mfl-site .mfl-skip a:active {width:200px;height:50px;background:#21272e;color:#fff;font-size:14px;font-weight:bold;text-align:center;text-decoration:none;line-height:50px}
