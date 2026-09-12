@@ -121,7 +121,11 @@
 .mfl-site .sec3 .review-slide .slick-prev {background-image:url('/mfl/images/main/review_prev.png');left:-76px;}
 .mfl-site .sec3 .review-slide .slick-next {background-image:url('/mfl/images/main/review_next.png');right:-76px;}
 .mfl-site .sec3 .review-slide .slick-arrow:hover {background-color: #f46e65;}
-.mfl-site .sec4 {padding:105px 0 130px;background:url('/mfl/images/main/btm_bg.jpg')no-repeat 50% 50%/cover;color: #fff;}
+/* 사진 위 흰 글씨가 밝은 부분에서 묻혔다 — 어두운 막을 한 겹 깔고 글은 그 위에 */
+.mfl-site .sec4 {position:relative;padding:105px 0 130px;background:url('/mfl/images/main/btm_bg.jpg')no-repeat 50% 50%/cover;color: #fff;}
+.mfl-site .sec4:before {content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,12,10,.55) 0%,rgba(20,12,10,.62) 100%);}
+.mfl-site .sec4 > .mfl-contain {position:relative;z-index:1;}
+.mfl-site .sec4 .sec-tit2, .mfl-site .sec4 .con .wrap a .tt-wrap .tt, .mfl-site .sec4 .con .wrap a .tt-wrap .tt2 {text-shadow:0 1px 8px rgba(0,0,0,.45);}
 .mfl-site .sec4 .sec-tit2 {font-size:27px;max-width:720px;margin:0 auto 70px;line-height:1.4em;text-align:center;font-weight:600;}
 .mfl-site .sec4 .con {display:flex;}
 .mfl-site .sec4 .con .wrap {width:50%;display:flex;justify-content:center;}
