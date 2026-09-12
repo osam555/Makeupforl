@@ -100,7 +100,8 @@ export default async function Home() {
     : pickQna(homeConfig.heroQna)
   // 하드코딩된 '102개' 대신 원고에서 센다. 음성 보유 수도 함께 본다
   const published = wedItems.filter((i) => i.published && i.question)
-  const qnaCount = published.length
+  // 프롤로그·에필로그를 뺀 문항 수 — 100문 100답이라면서 102 라고 적혀 있었다
+  const qnaCount = published.filter((i) => /^p[1-6]-/.test(i.slug)).length
   const audioCount = published.filter((i) => (i as { audio?: string }).audio).length
 
   /*

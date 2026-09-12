@@ -232,7 +232,8 @@ export default async function Wed100DetailPage({
                 .slice(0, 5)
                 .map((x) => ({ slug: x.slug, question: x.question })),
               totals: {
-                count: all.length,
+                // 프롤로그·에필로그는 문항이 아니다 — "100문 100답" 인데 102개라고 적혀 있었다
+                count: all.filter((x) => x.part >= 1 && x.part <= 6).length,
                 minutes: Math.round(
                   all.reduce((a, x) => a + (x.duration ?? estimateDuration(x)), 0) / 60,
                 ),
