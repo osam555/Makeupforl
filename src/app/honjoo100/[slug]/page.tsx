@@ -16,7 +16,7 @@ import {
   paragraphStarts,
   teaser,
 } from '@/lib/wed100'
-import { isOpen } from '@/lib/wed100Access'
+import { isFreeQuestion, isOpen } from '@/lib/wed100Access'
 import { getWed100Access } from '@/lib/wed100Access.server'
 import { BUSINESS, breadcrumbJsonLd, jsonLdScript } from '@/lib/seo'
 import { SITE_URL } from '@/lib/site'
@@ -228,9 +228,11 @@ export default async function Wed100DetailPage({
               teaser: teaser(item.answer),
               storeUrl: access.storeUrl,
               notice: access.notice,
+              // 프롤로그·에필로그는 빼고 무료 문항 다섯 — 프롤로그가 다섯 중 한 자리를 먹어
+              // 실제 문항은 넷만 보이고 있었다(2026-09-13)
               freeSample: all
-                .filter((x) => access.freeQna.includes(x.slug))
-                .slice(0, 5)
+                .filter((x) => isFreeQuestion(access, x.slug))
+                .sort((a, b) => a.part - b.part || a.n - b.n)
                 .map((x) => ({ slug: x.slug, question: x.question })),
               totals: {
                 // 프롤로그·에필로그는 문항이 아니다 — "100문 100답" 인데 102개라고 적혀 있었다
