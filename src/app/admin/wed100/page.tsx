@@ -1,5 +1,6 @@
 import Wed100Admin, { type QnaHit } from '@/app/admin/wed100/Wed100Admin'
 import { getDailyStats } from '@/lib/analytics.server'
+import { getWed100Access } from '@/lib/wed100Access.server'
 
 export const dynamic = 'force-dynamic'
 
@@ -11,7 +12,7 @@ export const dynamic = 'force-dynamic'
  * 하루 한 문서라 1년치를 읽어도 가볍다.
  */
 export default async function AdminWed100Page() {
-  const days = await getDailyStats(366)
+  const [days, access] = await Promise.all([getDailyStats(366), getWed100Access()])
   const hits: Record<string, QnaHit> = {}
   for (const d of days) {
     for (const [k, n] of Object.entries(d.pages)) {
@@ -24,5 +25,6 @@ export default async function AdminWed100Page() {
       if (!h.last || d.date > h.last) h.last = d.date
     }
   }
-  return <Wed100Admin hits={hits} />
+  // 잠금이 꺼져 있으면 전부 열린 것이라 "무료" 를 따로 세울 이유가 없다
+  return <Wed100Admin hits={hits} free={access.paywall ? access.freeQna : []} />
 }

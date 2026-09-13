@@ -99,11 +99,14 @@ function AdminWed100Editor({
   password,
   canWrite,
   hits,
+  free,
 }: {
   email: string | null
   password: string | null
   canWrite: boolean
   hits: Record<string, QnaHit>
+  /** 로그인 없이 열린 문항(프롤로그·에필로그 포함) — 목록 맨 위에 세운다 */
+  free: string[]
 }) {
   const authed = true
 
@@ -201,15 +204,23 @@ function AdminWed100Editor({
     }
   }, [sel, items])
 
-  const rows = useMemo(
-    () =>
-      items.filter(
+  /*
+    무료로 열린 문항을 맨 위에(2026-09-13). 맛보기라 가장 자주 들여다보는 문항인데
+    파트 순서로 흩어져 있으면 일곱을 찾으러 목록을 오르내려야 했다. 그 안에서는
+    원래 순서(파트·번호)를 지킨다.
+  */
+  const rows = useMemo(() => {
+    const isFree = (slug: string) => free.includes(slug)
+    return items
+      .filter(
         (x) =>
           (part === -1 || x.part === part) &&
           (!kw || x.question.includes(kw) || x.slug.includes(kw)),
-      ),
-    [items, part, kw],
-  )
+      )
+      .map((x, i) => ({ x, i }))
+      .sort((a, b) => Number(isFree(b.x.slug)) - Number(isFree(a.x.slug)) || a.i - b.i)
+      .map(({ x }) => x)
+  }, [items, part, kw, free])
 
   /** 어드민에서 올린 사진 — 저장소 카탈로그와 합쳐서 고르게 한다 */
   const [toolsOpen, setToolsOpen] = useState(false)
@@ -771,6 +782,9 @@ function AdminWed100Editor({
                     style={{ color: PART_THEME[x.part].accent }}
                   >
                     {itemLabel(x)}
+                    {free.includes(x.slug) && (
+                      <span className="mt-0.5 block text-[0.5625rem] font-bold text-emerald-700">무료</span>
+                    )}
                   </span>
                   <span className="flex-1">
                     <span className="block text-[var(--a-2e2724)]">{x.question}</span>
@@ -1305,12 +1319,12 @@ function AdminWed100Editor({
   )
 }
 
-export default function Wed100Admin({ hits }: { hits: Record<string, QnaHit> }) {
+export default function Wed100Admin({ hits, free }: { hits: Record<string, QnaHit>; free: string[] }) {
   return (
     <AdminShell active="/admin/wed100" title="100문100답 콘텐츠 관리" wide>
       <AdminGate title="100문100답 관리">
         {({ email, password, canWrite }) => (
-          <AdminWed100Editor email={email} password={password} canWrite={canWrite} hits={hits} />
+          <AdminWed100Editor email={email} password={password} canWrite={canWrite} hits={hits} free={free} />
         )}
       </AdminGate>
     </AdminShell>
