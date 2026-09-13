@@ -263,10 +263,6 @@ export default function Wed100Browser({
               </span>
               <span className="min-w-0 flex-1">
                 <span className="block text-[15px] font-medium text-[var(--w-ink)]">{x.question}</span>
-                {/* 잠긴 문항은 맛보기(190자)를 여기서도 보인다 — 제목만으로는 무엇이 궁금해질지 모른다 */}
-                {x.locked && x.teaser && (
-                  <span className="mt-1 block text-[13px] leading-relaxed text-[var(--w-mut)]">{x.teaser}</span>
-                )}
                 <span className="mt-0.5 block text-[13px] text-[var(--w-ink2)]">
                   <span className="tabular-nums">{x.locked ? '🔒 ' : ''}🎧 {fmt(x.duration)}</span>
                   <span className="mx-1.5" aria-hidden>·</span>

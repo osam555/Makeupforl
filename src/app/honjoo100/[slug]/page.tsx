@@ -223,8 +223,9 @@ export default async function Wed100DetailPage({
               n: item.n,
               keywords: item.keywords,
               heroImage: item.heroImage ?? `/wed100/img/${item.slug}-hero.svg`,
-              // 2026-09-13 95자 → 190자. 검색으로 들어온 분이 답의 핵심 한 문장은 받고 가게 (원장님 결정)
-              teaser: teaser(item.answer, 190),
+              // 2026-09-13 아침에 190자로 늘렸다가 같은 날 95자로 되돌렸다 — 잠긴 95문항의
+              // 공개 분량은 여기서 정해진다. 많이 열면 파는 물건이 없어진다(teaser() 주석).
+              teaser: teaser(item.answer),
               storeUrl: access.storeUrl,
               notice: access.notice,
               freeSample: all
