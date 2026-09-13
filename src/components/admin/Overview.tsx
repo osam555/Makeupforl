@@ -1,9 +1,9 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useSyncExternalStore } from 'react'
 
-import { Panel, SectionTitle, Stat } from '@/components/admin/AdminUI'
+import { Chips, Panel, SectionTitle, Stat } from '@/components/admin/AdminUI'
 import { SOURCE_LABEL, avgDwell, fmtDwell, sum, unkey, type DailyStat } from '@/lib/analytics'
 import {
   readiness,
@@ -44,6 +44,53 @@ export interface Content {
  *
  * 숫자만 늘어놓으면 보고 나서 무엇을 해야 할지 모른다. 그래서 2층을 가운데 둔다.
  */
+/**
+ * 첫 화면의 서브 탭.
+ *
+ * 판이 여섯이라 휴대전화에서는 '100문100답' 을 보려면 화면 다섯 장을 넘겨야 했다.
+ * 탭으로 하나씩 본다 — '전체' 는 예전처럼 다 펼친다. '한눈에' 일곱 칸은 어느 탭에서나
+ * 위에 남는다.
+ *
+ * 고른 탭은 이 브라우저에만 기억한다. useState + useEffect 로 읽으면 첫 그림 뒤에
+ * 한 번 더 그리게 되어(lint 도 막는다) useSyncExternalStore 로 읽는다 — 서버는 '전체',
+ * 브라우저는 저장된 값.
+ */
+const TABS = [
+  ['all', '전체'],
+  ['visits', '방문'],
+  ['sources', '어디서 왔나'],
+  ['days', '날짜 방문'],
+  ['qna', '100문100답'],
+  ['seo', '검색'],
+  ['todo', '할 일'],
+  ['site', '사이트'],
+] as const
+type Tab = (typeof TABS)[number][0]
+const TAB_KEY = 'admin-overview-tab'
+const tabListeners = new Set<() => void>()
+function readTab(): Tab {
+  try {
+    const v = localStorage.getItem(TAB_KEY)
+    return TABS.some(([k]) => k === v) ? (v as Tab) : 'all'
+  } catch {
+    return 'all'
+  }
+}
+function subscribeTab(cb: () => void) {
+  tabListeners.add(cb)
+  return () => {
+    tabListeners.delete(cb)
+  }
+}
+function writeTab(v: Tab) {
+  try {
+    localStorage.setItem(TAB_KEY, v)
+  } catch {
+    /* 못 남겨도 화면은 바뀐다 — 아래에서 알린다 */
+  }
+  tabListeners.forEach((cb) => cb())
+}
+
 export default function Overview({
   days,
   facts,
@@ -62,6 +109,9 @@ export default function Overview({
   history: SeoSnapshot[]
   auth: () => Promise<{ idToken: string } | { password: string | null }>
 }) {
+  const tab = useSyncExternalStore(subscribeTab, readTab, () => 'all' as Tab)
+  const show = (k: Exclude<Tab, 'all'>) => tab === 'all' || tab === k
+
   const last7 = days.slice(-7)
   const prev7 = days.slice(-14, -7)
   const a = sum(last7)
@@ -159,7 +209,13 @@ export default function Overview({
         </div>
       </section>
 
+      {/* ── 서브 탭 ───────────────────────────────── */}
+      <div className="overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <Chips value={tab} onChange={writeTab} options={TABS} />
+      </div>
+
       {/* ── 2. 할 일 ───────────────────────────────── */}
+      {show('todo') && (
       <section>
         <SectionTitle>
           지금 할 일
@@ -206,9 +262,11 @@ export default function Overview({
           </p>
         )}
       </section>
+      )}
 
       {/* ── 3. 섹션별 ───────────────────────────────── */}
-      <Panel title="방문" href="/admin/visits" hint="사람이 얼마나, 어디서 오는가">
+      {show('visits') && (
+      <Panel title="방문" href="/admin/visits" hint="사람이 얼마나, 얼마나 오래 · 최근 7일">
         <div className="mb-4">
           <Bars days={days} />
         </div>
@@ -220,7 +278,7 @@ export default function Overview({
           truncate 를 걸어 두어도 소용이 없다. 밀려난 만큼 오른쪽 숫자가 화면 밖으로
           나가 조회수와 체류시간이 아예 안 보였다. min-w-0 을 줘야 잘린다.
         */}
-        <div className="grid min-w-0 gap-5 lg:grid-cols-2">
+        <div className="min-w-0">
           <List
             title="많이 본 페이지"
             rows={Object.entries(a.pages)
@@ -233,27 +291,44 @@ export default function Overview({
               }))}
             empty="아직 기록이 없습니다"
           />
-          <div className="min-w-0">
-            <List
-              title="어디서 왔나"
-              rows={Object.entries(a.sources)
-                .sort((x, y) => y[1] - x[1])
-                .map(([k, n]) => ({
-                  left: SOURCE_LABEL[k] ?? unkey(k),
-                  right: n.toLocaleString(),
-                }))}
-              empty="아직 기록이 없습니다"
-            />
-            <SourceDays days={last7} />
-            <Landings landings={a.landings} />
-            <p className="mt-3 text-[0.6875rem] leading-relaxed text-[var(--a-8a7a72)]">
-              사람을 식별하지 않습니다. 쿠키를 쓰지 않고 IP·기기 정보도 저장하지 않으며,
-              관리자 화면은 세지 않습니다.
-            </p>
-          </div>
         </div>
       </Panel>
+      )}
 
+      {/*
+        '어디서 왔나' 와 '날짜 방문' 을 방문 판에서 떼어 제 판으로(2026-09-13).
+        출처와 첫 페이지는 "어느 길로 들어와 어디에 내렸나", 날짜 표는 "언제 뛰었나" —
+        묻는 것이 달라 따로 본다.
+      */}
+      {show('sources') && (
+      <Panel title="어디서 왔나" href="/admin/visits" hint="어느 길로 들어와 어디에 내렸나 · 최근 7일">
+        <div className="min-w-0">
+          <List
+            title="출처"
+            rows={Object.entries(a.sources)
+              .sort((x, y) => y[1] - x[1])
+              .map(([k, n]) => ({
+                left: SOURCE_LABEL[k] ?? unkey(k),
+                right: n.toLocaleString(),
+              }))}
+            empty="아직 기록이 없습니다"
+          />
+          <Landings landings={a.landings} />
+          <p className="mt-3 text-[0.6875rem] leading-relaxed text-[var(--a-8a7a72)]">
+            사람을 식별하지 않습니다. 쿠키를 쓰지 않고 IP·기기 정보도 저장하지 않으며,
+            관리자 화면은 세지 않습니다.
+          </p>
+        </div>
+      </Panel>
+      )}
+
+      {show('days') && (
+      <Panel title="날짜 방문" href="/admin/visits" hint="날짜별 방문과 출처 · 최근 30일, 최신이 위">
+        <SourceDays days={[...days].reverse()} />
+      </Panel>
+      )}
+
+      {show('seo') && (
       <Panel title="검색" href="/admin/seo" hint="노린 말에 얼마나 준비됐는가">
         <div className="space-y-3 sm:space-y-2">
           {sortKeywords(keywords).map((t) => (
@@ -292,7 +367,9 @@ export default function Overview({
           <History history={history} />
         </div>
       </Panel>
+      )}
 
+      {show('qna') && (
       <Panel
         title="100문100답"
         href="/admin/wed100"
@@ -335,7 +412,9 @@ export default function Overview({
           </span>
         </div>
       </Panel>
+      )}
 
+      {show('site') && (
       <Panel title="사이트" href="" hint="검색엔진이 볼 수 있는 것">
         <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3">
           <Stat label="색인 대상" value={`${content.sitemap}`} hint="사이트맵 등록 주소" />
@@ -348,6 +427,7 @@ export default function Overview({
           />
         </div>
       </Panel>
+      )}
     </div>
   )
 }
@@ -483,7 +563,7 @@ function SourceDays({ days }: { days: DailyStat[] }) {
   if (cols.length === 0) return null
 
   return (
-    <div className="mt-3 overflow-x-auto">
+    <div className="overflow-x-auto">
       <table className="w-full text-[0.6875rem] tabular-nums">
         <thead>
           <tr className="text-[var(--a-8a7a72)]">
