@@ -98,6 +98,14 @@ Firestore 에서 고친 내용은 `scripts/wed100/sync_seed.py` 로 시드에 �
 - 결재함은 **시드 폴백이 없는 유일한 데이터**다. 손님 화면에 아무것도 그리지 않으므로,
   Firestore 가 없으면 빈 목록이 아니라 왜 안 되는지를 말해야 한다.
 
+### 업무일지 — 한 일은 커밋과 함께 `/admin/worklog` 에 남긴다
+
+원장님이 "무슨 일을 했나" 를 보는 곳. 시드는 `src/data/worklog.json`, 쓰는 도구는
+`scripts/worklog.py`. **일을 커밋한 뒤** `python3 scripts/worklog.py pending` 으로 아직 안 적힌
+커밋을 보고 `add --title … --item … --since-last`(또는 `--commits a,b`) 로 한 묶음 적은 다음
+"업무일지 …" 로 시작하는 커밋으로 따로 올린다(그 제목은 pending 에서 빠진다). 항목 글은
+원장님이 읽는 것이라 파일 이름 대신 화면에서 보이는 말로 쓴다.
+
 ### 화면 두 갈래 — 손님용과 관리용
 
 - 손님용은 `SiteShell` 이 감싸고, 옛 PHP 사이트에서 이식한 `src/styles/mfl-original.css` 가 적용된다.
