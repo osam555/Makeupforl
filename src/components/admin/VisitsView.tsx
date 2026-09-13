@@ -142,7 +142,8 @@ export default function VisitsView({ days }: { days: DailyStat[] }) {
               </tr>
             </thead>
             <tbody>
-              {rows.map((d) => {
+              {/* 최신이 위 — 매일 보는 값은 오늘·어제다. 옛날부터 내려오면 30줄을 넘겨야 오늘이 나온다 (2026-09-13) */}
+              {[...rows].reverse().map((d) => {
                 const noData = grain === 'day' && d.date < SINCE
                 return (
                   <tr key={d.date} className="border-t border-[var(--a-efe7df)] text-[var(--a-3a322e)]">
