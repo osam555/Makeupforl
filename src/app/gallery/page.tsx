@@ -60,7 +60,11 @@ export default async function GalleryPage() {
               <Link href="/혼주메이크업" className="font-semibold text-[#E2564C] hover:underline">
                 혼주메이크업 안내
               </Link>
-              에 정리해 두었습니다.
+              에 정리해 두었습니다. 예식 당일 아침에 찍은 사진과 그때그때 적은 글은{' '}
+              <Link href="/instagram" className="font-semibold text-[#E2564C] hover:underline">
+                인스타그램
+              </Link>
+              에 옮겨 두었습니다.
             </p>
             <p className="mt-4">
               분야를 나눈 기준은 <b className="text-gray-800">누가 받는가</b>입니다. 혼주와

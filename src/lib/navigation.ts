@@ -64,13 +64,26 @@ export const navigation: NavItem[] = [
   },
   { name: '갤러리', href: '/gallery', match: { exact: '/gallery' } },
   { name: '고객후기', href: '/reviews' },
-  { name: '유튜브 채널', href: '/videos' },
+  /*
+    유튜브와 인스타를 한 항목으로 묶는다. 인스타는 검색엔진에 닫힌 곳이라 사이트에
+    사본(/instagram)을 두었는데, 메뉴에 없으면 그 사본에도 링크가 하나도 안 걸린다.
+  */
+  {
+    name: '유튜브 · 인스타',
+    href: '/videos',
+    sub: [
+      { name: '유튜브 채널', href: '/videos' },
+      { name: '인스타그램', href: '/instagram' },
+    ],
+  },
 ]
 
 export function isNavActive(item: NavItem, pathname: string) {
   if (item.match?.exact) return pathname === item.match.exact
   if (item.match?.prefix) return pathname.startsWith(item.match.prefix)
-  return item.href === '/' ? pathname === '/' : pathname.startsWith(item.href.split('#')[0])
+  if (item.href !== '/' && pathname.startsWith(item.href.split('#')[0])) return true
+  // 하위 항목 경로도 본다 — /consultation, /instagram, 허브(/혼주머리)는 최상위 href 와 다르다
+  return item.sub?.some((s) => navPath(s.href) !== '/' && pathname.startsWith(navPath(s.href))) ?? false
 }
 
 export function navPath(href: string) {

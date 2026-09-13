@@ -42,6 +42,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: '/reservation', priority: 0.7, freq: 'monthly' },
     { path: '/reviews', priority: 0.7, freq: 'weekly' },
     { path: '/videos', priority: 0.6, freq: 'weekly' },
+    { path: '/instagram', priority: 0.6, freq: 'monthly' },
   ]
 
   return [
