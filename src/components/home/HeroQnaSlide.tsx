@@ -54,8 +54,13 @@ export default function HeroQnaSlide({ items }: { items: Q[] }) {
       onBlurCapture={() => (hold.current = false)}
     >
       <div className="flex items-center gap-2 px-3 pb-2 pt-1">
-        <span className="text-[12px] font-semibold tracking-[0.16em] text-[#F46E65]">
-          100 Q &amp; A · 무료 공개 {items.length}
+        {/*
+          '100 Q & A · 무료 공개 7' 이었다. 영문 약자와 자간 넓힌 12px 은 장식이지 읽을
+          글이 아니었고, 휴대전화에서 원장님이 먼저 "안 보인다" 고 하셨다. 우리말로,
+          단위를 붙여, 더 크게.
+        */}
+        <span className="text-[15px] font-bold text-[#F46E65] sm:text-[14px]">
+          100문 100답 무료공개 {items.length}건
         </span>
         {items.length > 1 && (
           <button

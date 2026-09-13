@@ -16,7 +16,7 @@ import HeroQnaSlide from '@/components/home/HeroQnaSlide'
 import QnaCard from '@/components/home/QnaCard'
 import { getHomeConfig } from '@/lib/homeConfig'
 import wed100 from '@/data/wed100.json'
-import { isOpen } from '@/lib/wed100Access'
+import { isFreeQuestion } from '@/lib/wed100Access'
 import { getWed100Access } from '@/lib/wed100Access.server'
 
 export const revalidate = 3600
@@ -87,13 +87,14 @@ export default async function Home() {
   /*
     히어로 슬라이드는 어드민이 고른 다섯이 아니라 **무료로 열린 문항**을 돈다(2026-09-13).
     홈에서 눌렀는데 잠긴 화면이 나오면 첫 인상이 벽이다. 열린 것만 보여 주면 누르는 것마다
-    답이 나온다. 프롤로그가 먼저 — "왜 만들었나" 부터. 잠금이 꺼져 있으면 예전대로 고른 것.
+    답이 나온다. 프롤로그·에필로그는 열려 있어도 문항이 아니라 여기 넣지 않는다(2026-09-13).
+    잠금이 꺼져 있으면 예전대로 고른 것.
   */
   const access = await getWed100Access()
   const heroQna = access.paywall
     ? pickQna(
         [...wedItems]
-          .filter((i) => isOpen(access, i.slug))
+          .filter((i) => isFreeQuestion(access, i.slug))
           .sort((a, b) => partOf(a.slug) - partOf(b.slug) || a.slug.localeCompare(b.slug))
           .map((i) => i.slug),
       )
