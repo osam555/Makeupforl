@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next'
+import { getPublishedColumns } from '@/lib/columns'
 import { GALLERY_CATEGORIES } from '@/lib/galleryCategories'
 import { HUBS } from '@/lib/hubs'
 import { SITE_URL } from '@/lib/site'
@@ -16,6 +17,7 @@ import { getWed100Access } from '@/lib/wed100Access.server'
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const items = await getPublishedWed100Items()
   const access = await getWed100Access()
+  const columns = await getPublishedColumns()
 
   /*
     lastmod 는 실제로 고친 날이어야 한다.
@@ -74,6 +76,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       ...(x.updatedAt ? { lastModified: new Date(x.updatedAt) } : {}),
       changeFrequency: 'monthly' as const,
       priority: isOpen(access, x.slug) ? 0.7 : 0.5,
+    })),
+    /*
+      CEO 칼럼. 전부 무료로 열린 글이라 본문까지 색인된다 — 롱테일 유입을 받는
+      공개 콘텐츠라 목록을 조금 높게, 개별 글은 그 아래로 준다.
+    */
+    {
+      url: `${SITE_URL}/column`,
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    },
+    ...columns.map((x) => ({
+      url: `${SITE_URL}/column/${x.slug}`,
+      ...(x.updatedAt || x.publishedAt
+        ? { lastModified: new Date(x.updatedAt ?? x.publishedAt) }
+        : {}),
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
     })),
   ]
 }

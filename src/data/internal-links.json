@@ -1,18 +1,20 @@
 {
-  "countedAt": "2026-09-13",
+  "countedAt": "2026-09-15",
   "links": {
     "/": 1,
-    "/$": 2,
+    "/$": 3,
     "/brand": 4,
-    "/consultation": 11,
+    "/column": 3,
+    "/column/$": 1,
+    "/consultation": 13,
     "/gallery": 3,
     "/gallery/$": 5,
     "/gallery/honju": 1,
-    "/honjoo100": 14,
-    "/honjoo100/$": 13,
+    "/honjoo100": 16,
+    "/honjoo100/$": 14,
     "/instagram": 2,
     "/pretendard.css": 2,
-    "/reservation": 7,
+    "/reservation": 8,
     "/reviews": 3,
     "/services": 5,
     "/videos": 2,
@@ -25,39 +27,50 @@
       "src/app/offline/page.tsx:25"
     ],
     "/$": [
-      "src/app/honjoo100/page.tsx:263",
-      "src/lib/navigation.ts:46"
+      "src/app/column/[slug]/page.tsx:132",
+      "src/app/honjoo100/page.tsx:264",
+      "src/lib/navigation.ts:52"
     ],
     "/brand": [
-      "src/lib/navigation.ts:26",
-      "src/lib/navigation.ts:28",
       "src/lib/navigation.ts:29",
-      "src/lib/navigation.ts:30"
+      "src/lib/navigation.ts:31",
+      "src/lib/navigation.ts:32",
+      "src/lib/navigation.ts:33"
+    ],
+    "/column": [
+      "src/app/column/[slug]/page.tsx:96",
+      "src/app/column/[slug]/page.tsx:188",
+      "src/lib/navigation.ts:36"
+    ],
+    "/column/$": [
+      "src/app/column/page.tsx:92"
     ],
     "/consultation": [
       "src/app/[topic]/page.tsx:246",
       "src/app/brand/page.tsx:171",
+      "src/app/column/[slug]/page.tsx:173",
+      "src/app/column/page.tsx:133",
       "src/app/gallery/[cat]/page.tsx:122",
       "src/app/gallery/page.tsx:56",
       "src/app/honjoo100/page.tsx:150",
-      "src/app/honjoo100/page.tsx:322",
-      "src/app/page.tsx:143",
+      "src/app/honjoo100/page.tsx:323",
+      "src/app/page.tsx:144",
       "src/app/services/page.tsx:215",
       "src/components/wed100/Wed100Locked.tsx:182",
       "src/components/wed100/Wed100Player.tsx:765",
-      "src/lib/navigation.ts:61"
+      "src/lib/navigation.ts:67"
     ],
     "/gallery": [
       "src/app/instagram/page.tsx:120",
-      "src/app/page.tsx:435",
-      "src/lib/navigation.ts:65"
+      "src/app/page.tsx:436",
+      "src/lib/navigation.ts:71"
     ],
     "/gallery/$": [
-      "src/app/page.tsx:177",
-      "src/app/page.tsx:263",
+      "src/app/page.tsx:178",
+      "src/app/page.tsx:264",
       "src/components/home/MainGallery.tsx:54",
-      "src/lib/navigation.ts:51",
-      "src/lib/navigation.ts:53"
+      "src/lib/navigation.ts:57",
+      "src/lib/navigation.ts:59"
     ],
     "/gallery/honju": [
       "src/components/home/MainGallery.tsx:36"
@@ -66,23 +79,26 @@
       "src/app/[topic]/page.tsx:129",
       "src/app/[topic]/page.tsx:268",
       "src/app/brand/page.tsx:165",
+      "src/app/column/page.tsx:120",
+      "src/app/column/page.tsx:127",
       "src/app/consultation/page.tsx:112",
       "src/app/honjoo100/[slug]/page.tsx:195",
       "src/app/instagram/page.tsx:81",
-      "src/app/page.tsx:152",
-      "src/app/page.tsx:411",
+      "src/app/page.tsx:153",
+      "src/app/page.tsx:412",
       "src/app/services/page.tsx:149",
       "src/app/videos/page.tsx:56",
       "src/app/videos/page.tsx:135",
       "src/components/wed100/Wed100Locked.tsx:188",
-      "src/lib/navigation.ts:42",
-      "src/lib/navigation.ts:45"
+      "src/lib/navigation.ts:48",
+      "src/lib/navigation.ts:51"
     ],
     "/honjoo100/$": [
       "src/app/[topic]/page.tsx:171",
       "src/app/api/wed100/answer/route.ts:97",
+      "src/app/column/[slug]/page.tsx:146",
       "src/app/honjoo100/[slug]/page.tsx:104",
-      "src/app/honjoo100/[slug]/page.tsx:279",
+      "src/app/honjoo100/[slug]/page.tsx:282",
       "src/app/honjoo100/page.tsx:143",
       "src/components/home/QnaCard.tsx:12",
       "src/components/wed100/FreePicks.tsx:38",
@@ -95,7 +111,7 @@
     ],
     "/instagram": [
       "src/app/gallery/page.tsx:64",
-      "src/lib/navigation.ts:76"
+      "src/lib/navigation.ts:82"
     ],
     "/pretendard.css": [
       "src/app/layout.tsx:116",
@@ -103,46 +119,47 @@
     ],
     "/reservation": [
       "src/app/[topic]/page.tsx:252",
+      "src/app/column/[slug]/page.tsx:179",
       "src/app/consultation/page.tsx:106",
       "src/app/consultation/page.tsx:174",
       "src/app/gallery/[cat]/page.tsx:129",
-      "src/app/honjoo100/page.tsx:328",
+      "src/app/honjoo100/page.tsx:329",
       "src/app/services/page.tsx:221",
-      "src/lib/navigation.ts:62"
+      "src/lib/navigation.ts:68"
     ],
     "/reviews": [
-      "src/app/page.tsx:460",
+      "src/app/page.tsx:461",
       "src/components/home/ReviewSlide.tsx:41",
-      "src/lib/navigation.ts:66"
+      "src/lib/navigation.ts:72"
     ],
     "/services": [
-      "src/app/page.tsx:316",
-      "src/app/page.tsx:333",
-      "src/lib/navigation.ts:57",
-      "src/lib/navigation.ts:59",
-      "src/lib/navigation.ts:60"
+      "src/app/page.tsx:317",
+      "src/app/page.tsx:334",
+      "src/lib/navigation.ts:63",
+      "src/lib/navigation.ts:65",
+      "src/lib/navigation.ts:66"
     ],
     "/videos": [
-      "src/lib/navigation.ts:73",
-      "src/lib/navigation.ts:75"
+      "src/lib/navigation.ts:79",
+      "src/lib/navigation.ts:81"
     ],
     "/혼주머리": [
       "src/app/consultation/page.tsx:94",
       "src/app/instagram/page.tsx:73",
-      "src/app/page.tsx:383",
+      "src/app/page.tsx:384",
       "src/app/reviews/page.tsx:72"
     ],
     "/혼주메이크업": [
       "src/app/gallery/[cat]/page.tsx:144",
       "src/app/gallery/page.tsx:60",
-      "src/app/page.tsx:375",
+      "src/app/page.tsx:376",
       "src/app/reviews/page.tsx:64",
       "src/app/services/page.tsx:145",
       "src/app/videos/page.tsx:61"
     ],
     "/혼주한복": [
       "src/app/instagram/page.tsx:77",
-      "src/app/page.tsx:379",
+      "src/app/page.tsx:380",
       "src/app/reviews/page.tsx:68",
       "src/app/services/page.tsx:141"
     ]
