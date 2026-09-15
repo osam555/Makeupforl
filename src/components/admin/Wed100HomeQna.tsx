@@ -7,7 +7,6 @@ import QuestionPicker from './QuestionPicker'
 import { getDb } from '@/lib/firebase/client'
 import type { Wed100Item } from '@/types/wed100'
 
-const HERO_MAX = 8
 const SECTION_MAX = 12
 
 /**
@@ -23,7 +22,6 @@ export default function Wed100HomeQna({
   items: Wed100Item[]
   auth: () => Promise<{ idToken: string } | { password: string | null }>
 }) {
-  const [hero, setHero] = useState<string[]>([])
   const [section, setSection] = useState<string[]>([])
   const [loaded, setLoaded] = useState(false)
   const [busy, setBusy] = useState(false)
@@ -36,8 +34,7 @@ export default function Wed100HomeQna({
         if (db) {
           const { doc, getDoc } = await import('firebase/firestore')
           const snap = await getDoc(doc(db, 'site_config', 'home'))
-          const d = snap.data() as { heroQna?: string[]; sectionQna?: string[] } | undefined
-          if (d?.heroQna) setHero(d.heroQna)
+          const d = snap.data() as { sectionQna?: string[] } | undefined
           if (d?.sectionQna) setSection(d.sectionQna)
         }
       } catch {
@@ -55,7 +52,7 @@ export default function Wed100HomeQna({
       const res = await fetch('/api/site/home', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...(await auth()), heroQna: hero, sectionQna: section }),
+        body: JSON.stringify({ ...(await auth()), sectionQna: section }),
       })
       const j = await res.json()
       if (!j.ok) throw new Error(j.error)
@@ -90,21 +87,25 @@ export default function Wed100HomeQna({
       {!loaded ? (
         <p className="mt-3 text-xs text-[var(--a-8a7a72)]">불러오는 중…</p>
       ) : (
-        <div className="mt-3 grid gap-4 lg:grid-cols-2">
-          <div>
-            <p className="mb-1.5 text-xs font-bold text-[var(--a-3a322e)]">
-              첫 화면 좌측 슬라이드{' '}
-              <span className="font-normal text-[var(--a-8a7a72)]">— 고른 순서대로 5초마다 돌아갑니다</span>
-            </p>
-            <QuestionPicker items={items} value={hero} onChange={setHero} max={HERO_MAX} ordered />
+        <div className="mt-3">
+          {/*
+            첫 화면 슬라이드 선택 칸은 없앴다(2026-09-15).
+
+            "무료로 열 문항" 과 따로 골라야 해서 두 목록이 어긋났다 — 홈 첫 화면에
+            잠긴 문항이 뜨거나, 무료로 바꾼 문항이 홈에 안 뜨거나. 이제 첫 화면
+            슬라이드는 무료 문항을 그대로 따르므로, 고르는 곳은 아래 "공개 범위 →
+            무료로 열 문항" 한 곳이다.
+          */}
+          <div className="mb-3 rounded-lg border border-[var(--a-e8dfd7)] bg-white px-3 py-2.5 text-xs leading-relaxed text-[var(--a-6b5d57)]">
+            <b className="text-[var(--a-3a322e)]">첫 화면 좌측 슬라이드</b>는 아래{' '}
+            <b className="text-[var(--a-a63d5a)]">공개 범위 → 무료로 열 문항</b>을 그대로 따라 돕니다.
+            여기서 따로 고르지 않아도 됩니다 — 무료 문항을 바꾸면 홈 첫 화면도 함께 바뀝니다.
           </div>
-          <div>
-            <p className="mb-1.5 text-xs font-bold text-[var(--a-3a322e)]">
-              홈 아래 100문100답 섹션{' '}
-              <span className="font-normal text-[var(--a-8a7a72)]">— 카드로 한 번에 펼쳐집니다</span>
-            </p>
-            <QuestionPicker items={items} value={section} onChange={setSection} max={SECTION_MAX} ordered />
-          </div>
+          <p className="mb-1.5 text-xs font-bold text-[var(--a-3a322e)]">
+            홈 아래 100문100답 섹션{' '}
+            <span className="font-normal text-[var(--a-8a7a72)]">— 카드로 한 번에 펼쳐집니다</span>
+          </p>
+          <QuestionPicker items={items} value={section} onChange={setSection} max={SECTION_MAX} ordered />
         </div>
       )}
     </div>

@@ -38,8 +38,12 @@ export const BRAND_POINTS: BrandPoint[] = [
  * 히어로는 한 개씩 돌아가며 보여주고, 아래 섹션은 두 칸 격자로 편다.
  * 서로 겹치지 않게 다섯을 셋과 둘로 나눴다 — 셋을 아래로 내리면 격자에
  * 한 칸이 혼자 남는다.
+ *
+ * 2026-09-15: 히어로는 이제 이 상수가 아니라 무료 문항(freeQna)을 그대로 돈다
+ * (page.tsx). 이 목록은 잠금이 없던 시절의 기본값으로만 남는다 — 무료 문항과
+ * 어긋나지 않게 같은 다섯으로 맞춰 둔다.
  */
-export const HOME_HERO_QNA_SLUGS = ['p3-14', 'p4-07', 'p5-11']
+export const HOME_HERO_QNA_SLUGS = ['p3-15', 'p4-07', 'p5-13']
 export const HOME_QNA_SLUGS = ['p1-06', 'p2-05']
 
 /**

@@ -165,7 +165,8 @@ export default function Wed100Paywall({
             <p className="mb-1.5 text-xs font-bold text-[var(--a-3a322e)]">
               무료로 열 문항{' '}
               <span className="font-normal text-[var(--a-8a7a72)]">
-                — 잠긴 문항 화면에 &ldquo;지금 보실 수 있는 문항&rdquo;으로 앞의 5개가 함께 나옵니다
+                — 여기서 고른 문항이 <b className="text-[var(--a-a63d5a)]">홈 첫 화면 슬라이드</b>에도 그대로 뜨고,
+                잠긴 문항 화면엔 &ldquo;지금 보실 수 있는 문항&rdquo;으로 함께 나옵니다
               </span>
             </p>
             <QuestionPicker items={items} value={free} onChange={setFree} ordered />

@@ -97,6 +97,15 @@ export async function POST(req: Request) {
 
   // 공개 범위가 바뀌면 문항 페이지가 전부 달라진다
   revalidatePath('/honjoo100', 'layout')
+  /*
+    개별 문항 상세는 따로 뚫어야 한다.
+
+    상세는 generateStaticParams 로 미리 구운 동적 페이지(/honjoo100/[slug])다.
+    상위 layout 재검증만으로는 이 하위 정적 페이지들이 확실히 안 갈리므로,
+    무료로 막 바꾼 문항은 잠긴 채, 막 잠근 문항은 열린 채 남아 "목록은 바뀌었는데
+    눌러 들어가면 그대로" 인 부분 반영이 났다. 페이지 패턴으로 전부 재검증한다.
+  */
+  revalidatePath('/honjoo100/[slug]', 'page')
   revalidatePath('/')
   revalidatePath('/sitemap.xml')
   // 검색어 허브도 문항이 무료인지에 따라 표시가 달라진다

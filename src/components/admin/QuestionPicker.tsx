@@ -6,6 +6,22 @@ import { ChevronDown, ChevronUp, Search, X } from 'lucide-react'
 import type { Wed100Item } from '@/types/wed100'
 
 /**
+ * 화면에 보이는 번호. 나머지 어드민·손님 화면과 똑같이 표시 순번(n)을 쓴다.
+ *
+ * slug 의 숫자(p5-13)와 표시 순번(n=11)은 다르다 — 문항을 지우면 slug 번호는
+ * 비워 두고 순번만 1부터 다시 매기기 때문이다. 예전엔 이 고르기 화면만 slug 를
+ * 그대로 보여 줘서, 같은 문항이 목록엔 "P5·11", 여기선 "p5-13" 으로 떠 원장님이
+ * "번호가 두 개" 라고 하셨다. 번호는 한 가지(P{파트}·{순번})로 통일하고, slug 는
+ * 내부 코드라 마우스 올렸을 때(title)만 보이게 남긴다.
+ */
+function itemLabel(it?: { part?: number; n?: number } | null): string {
+  if (!it || it.part == null || it.n == null) return ''
+  if (it.part === 0) return '프롤로그'
+  if (it.part === 7) return '에필로그'
+  return `P${it.part}·${String(it.n).padStart(2, '0')}`
+}
+
+/**
  * 문항 고르기.
  *
  * 홈에 띄울 문항과 무료로 열 문항을 같은 방식으로 고른다. 102개를 훑어야 하므로
@@ -43,7 +59,9 @@ export default function QuestionPicker({
         (x) =>
           !needle ||
           (x.question ?? '').toLowerCase().includes(needle) ||
-          x.slug.toLowerCase().includes(needle),
+          x.slug.toLowerCase().includes(needle) ||
+          // 화면에 보이는 번호(P5·11)로도 찾게 한다 — slug 는 이제 안 보이므로
+          itemLabel(x).toLowerCase().includes(needle),
       )
       .sort((a, b) => a.slug.localeCompare(b.slug))
   }, [items, q, part])
@@ -75,12 +93,12 @@ export default function QuestionPicker({
             {value.map((slug, i) => {
               const it = byslug.get(slug)
               return (
-                <li key={slug} className="flex items-center gap-1.5 rounded bg-[var(--a-fbf8f5)] px-2 py-1.5">
+                <li key={slug} title={slug} className="flex items-center gap-1.5 rounded bg-[var(--a-fbf8f5)] px-2 py-1.5">
                   <span className="w-5 shrink-0 text-center text-[0.6875rem] font-bold text-[var(--a-a63d5a)]">
                     {i + 1}
                   </span>
                   <span className="min-w-0 flex-1 truncate text-xs text-[var(--a-3a322e)]">
-                    <span className="text-[var(--a-8a7a72)]">{slug}</span>
+                    <span className="text-[var(--a-8a7a72)]">{it ? itemLabel(it) : slug}</span>
                     {it ? ` · ${it.question}` : ' · (없는 문항)'}
                   </span>
                   {ordered && (
@@ -127,7 +145,7 @@ export default function QuestionPicker({
           <input
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="질문 검색"
+            placeholder="질문·번호 검색"
             className="h-8 w-44 rounded-md border border-[var(--a-d4c7be)] bg-white pl-7 pr-2 text-xs outline-none focus:border-[var(--a-a63d5a)]"
           />
         </span>
@@ -166,6 +184,7 @@ export default function QuestionPicker({
           return (
             <label
               key={x.slug}
+              title={x.slug}
               className={`flex cursor-pointer items-start gap-2 border-b border-[var(--a-f0eae4)] px-3 py-1.5 last:border-0 hover:bg-[var(--a-fbf8f5)] ${
                 !on && full ? 'opacity-40' : ''
               }`}
@@ -178,7 +197,7 @@ export default function QuestionPicker({
                 className="mt-0.5"
               />
               <span className="min-w-0 flex-1 truncate text-xs text-[var(--a-3a322e)]">
-                <span className="text-[var(--a-8a7a72)]">{x.slug}</span> · {x.question}
+                <span className="text-[var(--a-8a7a72)]">{itemLabel(x)}</span> · {x.question}
               </span>
             </label>
           )
