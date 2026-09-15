@@ -16,7 +16,6 @@ import HeroQnaSlide from '@/components/home/HeroQnaSlide'
 import QnaCard from '@/components/home/QnaCard'
 import { getHomeConfig } from '@/lib/homeConfig'
 import wed100 from '@/data/wed100.json'
-import { isFreeQuestion } from '@/lib/wed100Access'
 import { getWed100Access } from '@/lib/wed100Access.server'
 
 export const revalidate = 3600
@@ -81,24 +80,25 @@ export default async function Home() {
       )
       .map((i) => ({ slug: i.slug, question: i.question }))
 
-  // 어느 문항을 앞에 세울지는 어드민에서 고른다 (설정이 없으면 코드의 기본값)
+  // 홈 아래 100문100답 섹션은 어드민에서 따로 고른다 (설정이 없으면 코드 기본값)
   const homeConfig = await getHomeConfig()
   const qna = pickQna(homeConfig.sectionQna)
   /*
-    히어로 슬라이드는 어드민이 고른 다섯이 아니라 **무료로 열린 문항**을 돈다(2026-09-13).
-    홈에서 눌렀는데 잠긴 화면이 나오면 첫 인상이 벽이다. 열린 것만 보여 주면 누르는 것마다
-    답이 나온다. 프롤로그·에필로그는 열려 있어도 문항이 아니라 여기 넣지 않는다(2026-09-13).
-    잠금이 꺼져 있으면 예전대로 고른 것.
+    첫 화면 슬라이드 = 무료로 연 문항 그대로 (2026-09-15).
+
+    전에는 "홈에 띄울 문항(heroQna)" 을 무료 문항과 따로 골랐다. 두 곳을 각각
+    관리하니 어긋났다 — 홈에 잠긴 문항이 떠 첫인상이 벽이 되거나, 무료로 바꾼
+    문항이 홈엔 안 떴다. 원장님 지적대로 고르는 곳을 하나(무료 문항)로 합친다.
+    잠금이 꺼져 있어도 같은 목록을 보여 줘 켜고 끄든 홈이 일관된다. 프롤로그·
+    에필로그는 열려 있어도 문항이 아니라 뺀다. heroQna 설정은 더는 읽지 않는다.
   */
   const access = await getWed100Access()
-  const heroQna = access.paywall
-    ? pickQna(
-        [...wedItems]
-          .filter((i) => isFreeQuestion(access, i.slug))
-          .sort((a, b) => partOf(a.slug) - partOf(b.slug) || a.slug.localeCompare(b.slug))
-          .map((i) => i.slug),
-      )
-    : pickQna(homeConfig.heroQna)
+  const heroQna = pickQna(
+    [...wedItems]
+      .filter((i) => access.freeQna.includes(i.slug) && /^p[1-6]-/.test(i.slug))
+      .sort((a, b) => partOf(a.slug) - partOf(b.slug) || a.slug.localeCompare(b.slug))
+      .map((i) => i.slug),
+  )
   // 하드코딩된 '102개' 대신 원고에서 센다. 음성 보유 수도 함께 본다
   const published = wedItems.filter((i) => i.published && i.question)
   // 프롤로그·에필로그를 뺀 문항 수 — 100문 100답이라면서 102 라고 적혀 있었다
