@@ -24,6 +24,7 @@ export const TABS = [
   { href: '/admin/seo', label: '키워드' },
   { href: '/admin/visits', label: '방문' },
   { href: '/admin/wed100', label: '100문100답' },
+  { href: '/admin/column', label: 'CEO 칼럼' },
   { href: '/admin/videos', label: '영상' },
   { href: '/admin/dashboard', label: '문항 통계' },
   { href: '/admin/bookings', label: '예약' },

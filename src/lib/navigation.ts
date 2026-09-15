@@ -22,12 +22,18 @@ export type NavItem = {
  */
 export const navigation: NavItem[] = [
   {
+    // 옛 사이트의 CEO컬럼이 브랜드소개(sub01_03) 아래 있었으므로 같은 그룹에 둔다.
+    // match 를 따로 주지 않는다 — isNavActive 가 하위 경로(/column)까지 보므로,
+    // 칼럼을 볼 때도 이 메뉴가 활성으로 잡힌다.
     name: '브랜드소개',
     href: '/brand',
     sub: [
       { name: '대표인사말', href: '/brand' },
       { name: '회사소개', href: '/brand#company' },
       { name: '오시는 길', href: '/brand#location' },
+      // CEO 칼럼 — 대표원장이 직접 쓰는 무료 글. 메뉴에 걸려야 사람도 찾고
+      // 검색엔진도 내부 링크로 이 섹션을 중요하게 본다
+      { name: 'CEO 칼럼', href: '/column' },
     ],
   },
   /*

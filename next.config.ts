@@ -48,8 +48,8 @@ const nextConfig: NextConfig = {
       // 브랜드소개 — 회사소개·오시는 길은 같은 페이지 안의 섹션이다
       { source: '/sub/sub01_01.php', destination: '/brand', statusCode: 301 },
       { source: '/sub/sub01_02.php', destination: '/brand#company', statusCode: 301 },
-      // CEO컬럼은 옮겨온 페이지가 없어 브랜드소개로 보낸다
-      { source: '/sub/sub01_03.php', destination: '/brand', statusCode: 301 },
+      // 옛 CEO컬럼 — 이제 대표원장 칼럼 섹션(/column)으로 되살렸다
+      { source: '/sub/sub01_03.php', destination: '/column', statusCode: 301 },
       { source: '/sub/sub01_04.php', destination: '/brand#location', statusCode: 301 },
 
       { source: '/sub/sub02_01.php', destination: '/services', statusCode: 301 },
