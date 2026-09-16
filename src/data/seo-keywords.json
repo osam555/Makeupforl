@@ -54,5 +54,26 @@
     "owner": "/column/honju-updo-hanbok-dress",
     "why": "혼주머리 허브가 소유한 '혼주올림머리'와 겹치지 않는 롱테일. 칼럼이 소유하고 허브로 링크. 실검색량 미측정",
     "priority": 3
+  },
+  {
+    "term": "양가 혼주한복 색",
+    "volume": 0,
+    "owner": "/column/yangga-hanbok-color-match",
+    "why": "최대 검색량 혼주한복을 롱테일로 받침. '양가 색 맞춤'은 허브가 안 다루는 의도. 실검색량 미측정",
+    "priority": 2
+  },
+  {
+    "term": "결혼 전 피부관리",
+    "volume": 0,
+    "owner": "/column/skin-before-wedding",
+    "why": "혼주메이크업(전환) 앞단 정보성 롱테일. 실검색량 미측정",
+    "priority": 2
+  },
+  {
+    "term": "출장 혼주메이크업",
+    "volume": 0,
+    "owner": "/column/visit-vs-shop-makeup",
+    "why": "'맡길 곳 찾는' 전환 의도 롱테일. 상담·예약으로 직결. 실검색량 미측정",
+    "priority": 2
   }
 ]
