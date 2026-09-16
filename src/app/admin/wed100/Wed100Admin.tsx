@@ -7,7 +7,6 @@ import { Search, Save, Eye, RefreshCw, Database, CheckCircle2, XCircle, Volume2,
 
 import seedRaw from '@/data/wed100.json'
 import Wed100BatchAudio from '@/components/admin/Wed100BatchAudio'
-import Wed100HomeQna from '@/components/admin/Wed100HomeQna'
 import Wed100History from '@/components/admin/Wed100History'
 import Wed100Paywall from '@/components/admin/Wed100Paywall'
 import { whenExact, whenText } from '@/lib/when'
@@ -638,10 +637,11 @@ function AdminWed100Editor({
 
         {toolsOpen && (
           <div className="border-x border-[var(--a-e0d6cc)] bg-white px-5 py-4">
-            <Wed100HomeQna items={items} auth={authPayload} />
-            <div className="mt-4">
-              <Wed100Paywall items={items} auth={authPayload} />
-            </div>
+            {/*
+              '홈에 띄울 문항' 항목은 없앴다(2026-09-16). 홈 화면(슬라이드·하단 격자)은
+              아래 '공개 범위 → 무료로 열 문항' 을 그대로 따른다 — 고르는 곳을 하나로.
+            */}
+            <Wed100Paywall items={items} auth={authPayload} />
             <div className="mt-4">
               <Wed100BatchAudio auth={authPayload} onDone={() => void load()} />
             </div>
