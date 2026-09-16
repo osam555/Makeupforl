@@ -75,5 +75,19 @@
     "owner": "/column/visit-vs-shop-makeup",
     "why": "'맡길 곳 찾는' 전환 의도 롱테일. 상담·예약으로 직결. 실검색량 미측정",
     "priority": 2
+  },
+  {
+    "term": "혼주 퍼스널컬러",
+    "volume": 0,
+    "owner": "/column/honju-personal-color",
+    "why": "혼주한복(최대 검색량) 앞단 정보성 롱테일. 실검색량 미측정",
+    "priority": 2
+  },
+  {
+    "term": "혼주메이크업 실패",
+    "volume": 0,
+    "owner": "/column/three-common-mistakes",
+    "why": "'후기·실패' 탐색 의도를 신뢰 콘텐츠(E-E-A-T)로 받아 100문100답·상담으로. 실검색량 미측정",
+    "priority": 3
   }
 ]
