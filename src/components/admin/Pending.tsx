@@ -5,7 +5,7 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import { Stamp } from 'lucide-react'
 
 import { useAdminAuth } from '@/components/admin/AdminAuth'
-import { inboxOf, pendingOf, unseenOf, type Proposal } from '@/lib/proposals'
+import { actionableResultsOf, inboxOf, pendingOf, type Proposal } from '@/lib/proposals'
 import { isOwner, type Role } from '@/lib/roles'
 
 /**
@@ -23,10 +23,11 @@ interface Pending {
   /** 결재를 기다리는 제안 */
   count: number
   /**
-   * 결재가 끝났는데 내가 아직 확인하지 않은 것.
+   * 결재가 끝났고 아직 내가 손봐야 할 것 (actionableResultsOf).
    *
-   * 대기 건수만 세면 반쪽이다. 원장님이 승인하셔도 올린 사람이 모르면 아무 일도
-   * 일어나지 않고, 반려는 더 나쁘다 — 왜 안 됐는지 모른 채 기다리게 된다.
+   * 대기 건수만 세면 반쪽이다 — 원장님이 승인하셔도 올린 사람이 모르면 아무 일도
+   * 일어나지 않고, 반려는 더 나쁘다. 다만 승인·반영까지 이상 없이 끝난 것은 띠에서
+   * 자동으로 뺀다(2026-09-16). 반려·미배포·반영 실패·값 불일치처럼 조치가 남은 것만 센다.
    */
   results: number
   /** 나에게 온 요청 — 원장이 보낸 것은 매니저에게, 그 반대도 같다 */
@@ -72,7 +73,7 @@ export function PendingProvider({ children }: { children: React.ReactNode }) {
         if (!alive || !json?.ok) return
         const items = json.items as Proposal[]
         setCount(pendingOf(items).length)
-        setResults(unseenOf(items, email).length)
+        setResults(actionableResultsOf(items, email).length)
         setInbox(inboxOf(items, (isOwner(email) ? 'owner' : 'manager') as Role).length)
       } catch {
         /* 건수를 못 읽어도 관리 화면은 열려야 한다 */
@@ -112,7 +113,7 @@ export function PendingBanner({ active }: { active: string }) {
         className="flex items-center gap-2 bg-[var(--a-3f6b57)] px-3 py-2.5 text-sm font-bold text-white sm:px-5"
       >
         <Stamp className="h-4 w-4 shrink-0" aria-hidden />
-        <span className="min-w-0 flex-1">올리신 제안 {results}건이 결재됐습니다</span>
+        <span className="min-w-0 flex-1">올리신 제안 {results}건, 확인이 필요합니다</span>
         <span className="shrink-0 text-xs opacity-80">확인 →</span>
       </Link>
     )

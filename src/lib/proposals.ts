@@ -211,6 +211,30 @@ export function unseenOf(list: Proposal[], me: string): Proposal[] {
 }
 
 /**
+ * 결재는 끝났는데 아직 **내가 손봐야 할** 것.
+ *
+ * unseenOf 는 '확인했습니다' 를 누르기 전까지 결과를 다 남겼다. 그런데 승인·반영
+ * 까지 이상 없이 끝난 것도 확인을 누르기 전엔 띠에 남아, 어드민 어느 화면에나
+ * 붙박여 계속 떴다(원장님 지적, 2026-09-16 — "필요한 경우만 표시"). 그래서 띠에는
+ * **아직 조치가 필요한 것만** 센다:
+ *   - 반려됨 — 왜 안 됐는지 보고 다시 올릴지 정해야 한다
+ *   - 승인됐지만 아직 배포 안 함(code) — 사람이 올려야 반영된다
+ *   - 반영하려다 실패(applyError) — 승인은 났는데 안 바뀐 상태를 숨기지 않는다
+ *   - 승인값과 지금 값이 다름 — 반영 뒤 누가 또 고쳤다
+ * 승인+반영까지 이상 없이 끝난 것은 확인을 안 눌러도 자동으로 뺀다. 제안자가
+ * 굳이 확인하고 싶으면 결재함의 '확인했습니다' 는 그대로 남아 있다.
+ */
+export function actionableResultsOf(list: Proposal[], me: string): Proposal[] {
+  return unseenOf(list, me).filter((p) => {
+    if (p.status === 'rejected') return true
+    if (!canAutoApply(p.kind) && !p.applied) return true // 승인됐지만 아직 배포 안 함
+    if (p.applyError) return true // 반영 실패
+    if (appliedMatches(p) === false) return true // 승인값과 지금 값이 다름
+    return false // 승인+반영까지 끝나 더 할 일 없음 → 자동으로 감춘다
+  })
+}
+
+/**
  * 사이트에서 눈으로 확인할 주소.
  *
  * 승인됐다는 표시를 믿는 것과 바뀐 문장을 직접 보는 것은 다르다. 문항은 주소가
