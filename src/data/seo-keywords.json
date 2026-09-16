@@ -33,5 +33,26 @@
     "owner": "/혼주머리",
     "why": "혼주머리와 같은 장",
     "priority": 3
+  },
+  {
+    "term": "신랑어머니 메이크업",
+    "volume": 0,
+    "owner": "/column/mother-of-groom-vs-bride",
+    "why": "혼주메이크업(유료·전환) 검색어를 롱테일로 받쳐 칼럼이 소유. 실검색량 미측정 — 네이버에서 재서 채울 것",
+    "priority": 2
+  },
+  {
+    "term": "결혼식 사진 화장",
+    "volume": 0,
+    "owner": "/column/wedding-photo-makeup",
+    "why": "'사진 잘 나오는 화장' 정보성 롱테일. 칼럼이 소유하고 혼주메이크업 허브로 링크. 실검색량 미측정",
+    "priority": 2
+  },
+  {
+    "term": "혼주 드레스 머리",
+    "volume": 0,
+    "owner": "/column/honju-updo-hanbok-dress",
+    "why": "혼주머리 허브가 소유한 '혼주올림머리'와 겹치지 않는 롱테일. 칼럼이 소유하고 허브로 링크. 실검색량 미측정",
+    "priority": 3
   }
 ]
