@@ -31,6 +31,14 @@ export const metadata: Metadata = {
   // 검색결과에 뜰 사이트 이름을 고정한다. 없으면 도메인이 그대로 노출된다.
   applicationName: SITE_NAME,
   /*
+    RSS 피드를 사이트 전역 <head> 에 건다 — 네이버·리더가 어느 페이지에서든 찾게.
+    canonical 은 페이지마다 다르므로 여기 두지 않는다(자식이 alternates 를 통째로
+    덮으면 사라지지만, 피드는 홈·목록에만 있어도 충분하다).
+  */
+  alternates: {
+    types: { 'application/rss+xml': [{ url: '/feed.xml', title: `${SITE_NAME} — CEO 칼럼` }] },
+  },
+  /*
     검색엔진 소유확인.
 
     네이버 웹마스터도구는 이 태그가 <head> 에 있어야 사이트를 인정한다.
