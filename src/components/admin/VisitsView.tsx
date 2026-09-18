@@ -59,11 +59,21 @@ export default function VisitsView({ days }: { days: DailyStat[] }) {
   const label = (k: string) => SOURCE_LABEL[k] ?? unkey(k)
   const color = (k: string) => SOURCE_COLOR[k] ?? SOURCE_COLOR_OTHER
 
-  /* 지난 같은 기간과 견준다 — 열두 달 중 앞 절반은 대개 비어 있어, 비면 표시하지 않는다 */
-  const half = Math.floor(rows.length / 2)
-  const recent = sum(rows.slice(-half))
-  const before = sum(rows.slice(-half * 2, -half))
+  /*
+    요약 카드는 **누른 단위의 가장 최근 것**(오늘·이번 주·이번 달)이고, 바로 앞 것(어제·지난주·
+    지난달)과 견준다.
+
+    처음엔 기간 전체 합계를 보였는데, 기록이 열흘치뿐이라 "최근 30일" 도 "최근 12주" 도
+    "최근 12달" 도 같은 647 이 나왔다 — 일간을 눌러도 주간 숫자가 그대로 있는 것처럼 보여
+    단추가 안 먹는 줄 알았다(2026-09-18). 전체 합계는 표 맨 아래 합계 줄에 이미 있다.
+    오늘·이번 주·이번 달은 아직 안 끝난 값이라 카드 이름에 그걸 적는다.
+  */
+  const cur = rows[rows.length - 1] ?? sum([])
+  const prev = rows[rows.length - 2] ?? sum([])
   const delta = (a: number, b: number) => (b === 0 ? null : Math.round(((a - b) / b) * 100))
+  const [curName, prevName] =
+    grain === 'day' ? ['오늘', '어제'] : grain === 'week' ? ['이번 주', '지난주'] : ['이번 달', '지난달']
+  const curTop = Object.entries(cur.sources ?? {}).sort((x, y) => y[1] - x[1])[0]
 
   return (
     <div className="space-y-5">
@@ -89,21 +99,26 @@ export default function VisitsView({ days }: { days: DailyStat[] }) {
 
       <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4 sm:gap-3">
         <Stat
-          label="방문"
-          value={total.visits.toLocaleString()}
-          delta={delta(recent.visits, before.visits)}
-          hint={`뒤 절반 ${recent.visits} · 앞 절반 ${before.visits}`}
-        />
-        <Stat label="조회" value={total.views.toLocaleString()} delta={delta(recent.views, before.views)} />
-        <Stat
-          label="평균 체류"
-          value={fmtDwell(avgDwell(total.dwellMs, total.dwellCount))}
-          hint={`${total.dwellCount.toLocaleString()}회 측정`}
+          label={`${curName} 방문`}
+          value={cur.visits.toLocaleString()}
+          delta={delta(cur.visits, prev.visits)}
+          hint={`${prevName} ${prev.visits.toLocaleString()}`}
         />
         <Stat
-          label="가장 큰 출처"
-          value={cols[0] ? label(cols[0]) : '—'}
-          hint={cols[0] ? `${total.sources[cols[0]]}회 · ${Math.round((total.sources[cols[0]] / Math.max(1, total.visits)) * 100)}%` : undefined}
+          label={`${curName} 조회`}
+          value={cur.views.toLocaleString()}
+          delta={delta(cur.views, prev.views)}
+          hint={`${prevName} ${prev.views.toLocaleString()}`}
+        />
+        <Stat
+          label={`${curName} 평균 체류`}
+          value={fmtDwell(avgDwell(cur.dwellMs, cur.dwellCount))}
+          hint={`${prevName} ${fmtDwell(avgDwell(prev.dwellMs, prev.dwellCount))} · ${cur.dwellCount.toLocaleString()}회 측정`}
+        />
+        <Stat
+          label={`${curName} 가장 큰 출처`}
+          value={curTop ? label(curTop[0]) : '—'}
+          hint={curTop ? `${curTop[1]}회 · ${Math.round((curTop[1] / Math.max(1, cur.visits)) * 100)}%` : undefined}
         />
       </div>
 
