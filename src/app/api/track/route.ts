@@ -28,6 +28,23 @@ const DAY = () =>
     day: '2-digit',
   }).format(new Date())
 
+/**
+ * 봇은 세지 않는다.
+ *
+ * 2026-09-17 하루에 '직접 방문' 이 126 으로 뛰었는데(평소 8~34), 착지 페이지가 갤러리·문항
+ * 수십 개에 1~4건씩 흩어져 있고 방문당 조회가 1.1쪽이었다 — 사이트맵을 순서대로 밟는
+ * JS 실행 크롤러다. Vercel 통계는 봇 UA 를 걸러 그날 ~90 이었고 우리만 159 였다.
+ * 두 화면 숫자가 다르면 어느 쪽을 믿나가 매번 문제가 되고, 직접 방문 칸에 카톡 링크로
+ * 온 손님과 봇이 섞이면 뛰어도 왜 뛰었는지 모른다.
+ *
+ * UA 는 **판별에만 쓰고 저장하지 않는다** — 개인정보처리방침의 "식별 정보를 남기지 않는다"
+ * 는 그대로다. 패턴은 보수적으로 잡는다: 네이버 앱(`NAVER(inapp`)·카카오톡 인앱 브라우저는
+ * 손님이라 걸리면 안 된다. 브라우저인 척하는 봇은 못 잡지만 Vercel 도 마찬가지다.
+ */
+const BOT_UA =
+  /bot|crawl|spider|scrap|slurp|headless|lighthouse|pagespeed|yeti|daumoa|googleother|bingpreview|facebookexternalhit|fetch|curl|python|wget|phantom|selenium|puppeteer|playwright/i
+const isBot = (ua: string | null) => !ua || BOT_UA.test(ua)
+
 /** Firestore 필드 이름에 쓸 수 없는 글자를 바꾼다 (/ 는 경로 구분자로 해석된다) */
 const key = (p: string) => p.replace(/[~*/[\].]/g, '_').slice(0, 120) || '_'
 
@@ -69,6 +86,9 @@ export async function POST(req: Request) {
   const kind = body?.kind === 'leave' ? 'leave' : 'view'
   if (!PATH.test(path) || path.startsWith('/admin') || path.startsWith('/api')) {
     // 관리자 화면은 세지 않는다. 우리가 들여다본 것이 숫자에 섞이면 안 된다
+    return NextResponse.json({ ok: true, skipped: true })
+  }
+  if (isBot(req.headers.get('user-agent'))) {
     return NextResponse.json({ ok: true, skipped: true })
   }
 
