@@ -1,5 +1,5 @@
 {
-  "countedAt": "2026-09-16",
+  "countedAt": "2026-09-18",
   "links": {
     "/": 1,
     "/$": 3,
@@ -54,7 +54,7 @@
       "src/app/gallery/page.tsx:56",
       "src/app/honjoo100/page.tsx:150",
       "src/app/honjoo100/page.tsx:323",
-      "src/app/page.tsx:144",
+      "src/app/page.tsx:143",
       "src/app/services/page.tsx:215",
       "src/components/wed100/Wed100Locked.tsx:182",
       "src/components/wed100/Wed100Player.tsx:765",
@@ -62,12 +62,12 @@
     ],
     "/gallery": [
       "src/app/instagram/page.tsx:120",
-      "src/app/page.tsx:436",
+      "src/app/page.tsx:435",
       "src/lib/navigation.ts:71"
     ],
     "/gallery/$": [
-      "src/app/page.tsx:178",
-      "src/app/page.tsx:264",
+      "src/app/page.tsx:177",
+      "src/app/page.tsx:263",
       "src/components/home/MainGallery.tsx:54",
       "src/lib/navigation.ts:57",
       "src/lib/navigation.ts:59"
@@ -84,8 +84,8 @@
       "src/app/consultation/page.tsx:112",
       "src/app/honjoo100/[slug]/page.tsx:195",
       "src/app/instagram/page.tsx:81",
-      "src/app/page.tsx:153",
-      "src/app/page.tsx:412",
+      "src/app/page.tsx:152",
+      "src/app/page.tsx:411",
       "src/app/services/page.tsx:149",
       "src/app/videos/page.tsx:56",
       "src/app/videos/page.tsx:135",
@@ -128,13 +128,13 @@
       "src/lib/navigation.ts:68"
     ],
     "/reviews": [
-      "src/app/page.tsx:461",
+      "src/app/page.tsx:460",
       "src/components/home/ReviewSlide.tsx:41",
       "src/lib/navigation.ts:72"
     ],
     "/services": [
-      "src/app/page.tsx:317",
-      "src/app/page.tsx:334",
+      "src/app/page.tsx:316",
+      "src/app/page.tsx:333",
       "src/lib/navigation.ts:63",
       "src/lib/navigation.ts:65",
       "src/lib/navigation.ts:66"
@@ -146,20 +146,20 @@
     "/혼주머리": [
       "src/app/consultation/page.tsx:94",
       "src/app/instagram/page.tsx:73",
-      "src/app/page.tsx:384",
+      "src/app/page.tsx:383",
       "src/app/reviews/page.tsx:72"
     ],
     "/혼주메이크업": [
       "src/app/gallery/[cat]/page.tsx:144",
       "src/app/gallery/page.tsx:60",
-      "src/app/page.tsx:376",
+      "src/app/page.tsx:375",
       "src/app/reviews/page.tsx:64",
       "src/app/services/page.tsx:145",
       "src/app/videos/page.tsx:61"
     ],
     "/혼주한복": [
       "src/app/instagram/page.tsx:77",
-      "src/app/page.tsx:380",
+      "src/app/page.tsx:379",
       "src/app/reviews/page.tsx:68",
       "src/app/services/page.tsx:141"
     ]

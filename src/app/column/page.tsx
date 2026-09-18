@@ -9,7 +9,11 @@ export const revalidate = 3600
 
 export const metadata: Metadata = {
   // 자기 주소를 정본으로 못 박는다 — 쿼리 붙은 유입도 한 주소로 모인다
-  alternates: { canonical: '/column' },
+  alternates: {
+    canonical: '/column',
+    // RSS 를 <head> 에 걸어 준다 — 네이버·브라우저·리더가 피드를 스스로 찾게
+    types: { 'application/rss+xml': [{ url: '/feed.xml', title: 'CEO 칼럼 RSS' }] },
+  },
   title: 'CEO 칼럼 | 메이크업포엘',
   description:
     '25년간 1만 명의 혼주를 만난 대표원장 김성희가 직접 쓰는 글. 상견례부터 예식 당일까지, 혼주 메이크업·한복·헤어를 준비하며 알아 두면 좋은 이야기.',
