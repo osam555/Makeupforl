@@ -24,6 +24,7 @@ export default function Wed100Locked({
   totals,
   unlock,
   teaser,
+  intro,
 }: {
   question: string
   questionEn?: string
@@ -41,6 +42,15 @@ export default function Wed100Locked({
   unlock?: React.ReactNode
   /** 답변 첫머리 두 줄. 제목만 있으면 읽고 싶어지지 않는다 */
   teaser?: string
+  /**
+   * 이 문항이 속한 파트의 소개글(wed100.json parts[].intro).
+   *
+   * 잠긴 페이지는 제목·미리보기 95자·95장 똑같은 결제 안내뿐이라 검색엔진 눈에
+   * "내용 없는 중복 페이지" 로 보이기 쉬웠다. 파트 소개는 답이 아니라 그 파트가
+   * 무엇을 다루는지 알리는 글(목록 화면에도 이미 공개)이라, 답을 안 내주고도
+   * 페이지에 관련 글을 더 실을 수 있다. 결제 안내 아래에 둬 CTA 를 밀지 않는다.
+   */
+  intro?: string[]
 }) {
   return (
     <article className="overflow-hidden rounded-3xl border border-[var(--w-line)] bg-[var(--w-card)]">
@@ -194,6 +204,19 @@ export default function Wed100Locked({
 
           {unlock}
         </div>
+
+        {intro && intro.length > 0 && (
+          <div className="mt-8">
+            <h2 className="text-[15px] font-bold text-[var(--w-ink)]">
+              이 파트에서 다루는 것 — {partTitle}
+            </h2>
+            {intro.map((p, i) => (
+              <p key={i} className="mt-2 text-[15px] leading-[1.85] text-[var(--w-ink2)]">
+                {p}
+              </p>
+            ))}
+          </div>
+        )}
 
         {freeSample.length > 0 && (
           <div className="mt-8">

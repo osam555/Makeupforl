@@ -71,11 +71,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly' as const,
       priority: 0.8,
     })),
+    /*
+      잠긴 문항도 열린 문항 못지않게 크롤되게 한다(2026-09-19).
+
+      전에는 잠긴 문항을 0.5 로 낮춰 두었다. 그런데 잠긴 95개가 곧 검색 랜딩
+      페이지다 — '혼주메이크업' 1페이지에 뜬 것도 잠긴 문항들이었다. 제목이
+      검색에 걸려야 사람이 오는데, 우선순위를 반으로 깎아 두는 건 그 길을 스스로
+      좁히는 것이라 열린 것과 거의 같게 둔다.
+    */
     ...items.map((x) => ({
       url: `${SITE_URL}/honjoo100/${x.slug}`,
       ...(x.updatedAt ? { lastModified: new Date(x.updatedAt) } : {}),
       changeFrequency: 'monthly' as const,
-      priority: isOpen(access, x.slug) ? 0.7 : 0.5,
+      priority: isOpen(access, x.slug) ? 0.8 : 0.7,
     })),
     /*
       CEO 칼럼. 전부 무료로 열린 글이라 본문까지 색인된다 — 롱테일 유입을 받는
