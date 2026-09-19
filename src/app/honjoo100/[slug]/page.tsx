@@ -17,6 +17,7 @@ import {
   teaser,
   wed100Parts,
 } from '@/lib/wed100'
+import { getPublishedColumns } from '@/lib/columns'
 import { isFreeQuestion, isOpen } from '@/lib/wed100Access'
 import { getWed100Access } from '@/lib/wed100Access.server'
 import { BUSINESS, breadcrumbJsonLd, jsonLdScript } from '@/lib/seo'
@@ -129,6 +130,18 @@ export default async function Wed100DetailPage({
   const partIndex = samePart.findIndex((x) => x.slug === item.slug) + 1
   // 잠긴 페이지에 실을 파트 소개 — 답이 아니라 파트가 무엇을 다루는지 알리는 공개 글
   const partIntro = wed100Parts.find((p) => p.part === item.part)?.intro ?? []
+
+  /*
+    이 문항을 가리키는 칼럼 — 문항에서 칼럼으로 가는 역링크 (2026-09-19).
+
+    칼럼은 relatedQna 로 문항을 가리키는데 반대 방향이 없었다. 그래서 '혼주메이크업출장'
+    처럼 잠긴 문항이 먼저 뜨는 검색어에서, 정작 답을 다 읽을 수 있는 칼럼으로 갈 길이
+    없었다. 잠긴 문항에 닿은 사람에게 열린 글을 내주는 것이 이탈을 줄이고, 크롤러에도
+    칼럼과 문항이 한 주제라고 알린다.
+  */
+  const columnsHere = (await getPublishedColumns()).filter((c) =>
+    (c.relatedQna ?? []).includes(slug),
+  )
 
   /*
     저자와 갱신 시각.
@@ -317,6 +330,32 @@ export default async function Wed100DetailPage({
               ))}
             </div>
           </div>
+        </section>
+      )}
+
+      {columnsHere.length > 0 && (
+        <section className="mx-auto max-w-7xl px-6 pt-10 lg:px-8">
+          <h2 className="text-base font-extrabold text-[var(--w-ink)]">
+            이 주제를 다룬 글{' '}
+            <span className="ml-1 text-sm font-bold text-[var(--w-p4)]">무료</span>
+          </h2>
+          <ul className="mt-4 space-y-2.5">
+            {columnsHere.map((c) => (
+              <li key={c.slug}>
+                <Link
+                  href={`/column/${c.slug}`}
+                  className="group block rounded-xl border border-[var(--w-line)] px-4 py-3 transition-colors hover:border-[var(--w-rose)]"
+                >
+                  <span className="block text-[15px] font-bold leading-snug text-[var(--w-ink)] group-hover:text-[var(--w-rose)]">
+                    {c.title}
+                  </span>
+                  <span className="mt-1 block text-[13px] leading-snug text-[var(--w-ink2)]">
+                    {c.description}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </section>
       )}
 

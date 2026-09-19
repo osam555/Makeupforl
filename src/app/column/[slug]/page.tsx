@@ -113,10 +113,31 @@ export default async function ColumnDetailPage({ params }: Params) {
 
       {/* 본문 */}
       <article className="mx-auto max-w-3xl px-6 py-12 lg:px-8">
+        {/*
+          본문 문단 — '## ' 로 시작하는 줄은 소제목(H2)으로 그린다 (2026-09-19).
+
+          전에는 전부 <p> 라, 긴 글이 평평한 문단 더미가 됐다. 검색엔진은 소제목으로
+          나뉜 글을 앞세우고(구글은 소제목을 '주요 구간' 으로도 뽑는다), 사람도 훑어
+          읽을 자리가 있어야 끝까지 내려간다. 칼럼을 1,500자대로 늘리려면 먼저 이게
+          있어야 했다.
+
+          마크다운을 통째로 받지 않은 이유. 본문은 문단 배열(Column.body)이고 문항의
+          answer[] 와 같은 모양을 지켜야 렌더러를 나눠 쓸 수 있다. 어드민에서 문단 앞에
+          '## ' 만 붙이면 되므로 원장님이 새로 배울 것도 없다.
+        */}
         <div className="space-y-5 text-[17px] leading-[1.9] text-[var(--w-body)]">
-          {item.body.map((p, i) => (
-            <p key={i}>{p}</p>
-          ))}
+          {item.body.map((p, i) =>
+            p.startsWith('## ') ? (
+              <h2
+                key={i}
+                className="!mt-10 text-[21px] font-extrabold leading-snug text-[var(--w-ink)] sm:text-[23px]"
+              >
+                {p.slice(3).trim()}
+              </h2>
+            ) : (
+              <p key={i}>{p}</p>
+            ),
+          )}
         </div>
 
         {/* 이어 읽기 — 허브(무료 글)와 문항(유료 답)으로 보낸다 */}
