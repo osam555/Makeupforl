@@ -5,7 +5,7 @@
     "/$": 3,
     "/brand": 4,
     "/column": 3,
-    "/column/$": 2,
+    "/column/$": 3,
     "/consultation": 13,
     "/gallery": 3,
     "/gallery/$": 5,
@@ -43,11 +43,12 @@
       "src/lib/navigation.ts:36"
     ],
     "/column/$": [
+      "src/app/[topic]/page.tsx:218",
       "src/app/column/page.tsx:92",
       "src/app/honjoo100/[slug]/page.tsx:346"
     ],
     "/consultation": [
-      "src/app/[topic]/page.tsx:246",
+      "src/app/[topic]/page.tsx:282",
       "src/app/brand/page.tsx:171",
       "src/app/column/[slug]/page.tsx:194",
       "src/app/column/page.tsx:133",
@@ -77,8 +78,8 @@
       "src/components/home/MainGallery.tsx:36"
     ],
     "/honjoo100": [
-      "src/app/[topic]/page.tsx:129",
-      "src/app/[topic]/page.tsx:268",
+      "src/app/[topic]/page.tsx:142",
+      "src/app/[topic]/page.tsx:304",
       "src/app/brand/page.tsx:165",
       "src/app/column/page.tsx:120",
       "src/app/column/page.tsx:127",
@@ -95,7 +96,7 @@
       "src/lib/navigation.ts:51"
     ],
     "/honjoo100/$": [
-      "src/app/[topic]/page.tsx:171",
+      "src/app/[topic]/page.tsx:184",
       "src/app/api/wed100/answer/route.ts:97",
       "src/app/column/[slug]/page.tsx:167",
       "src/app/honjoo100/[slug]/page.tsx:106",
@@ -120,7 +121,7 @@
       "src/app/layout.tsx:126"
     ],
     "/reservation": [
-      "src/app/[topic]/page.tsx:252",
+      "src/app/[topic]/page.tsx:288",
       "src/app/column/[slug]/page.tsx:200",
       "src/app/consultation/page.tsx:106",
       "src/app/consultation/page.tsx:174",
