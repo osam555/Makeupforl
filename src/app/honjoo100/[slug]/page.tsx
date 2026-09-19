@@ -15,6 +15,7 @@ import {
   getWed100Neighbors,
   paragraphStarts,
   teaser,
+  wed100Parts,
 } from '@/lib/wed100'
 import { isFreeQuestion, isOpen } from '@/lib/wed100Access'
 import { getWed100Access } from '@/lib/wed100Access.server'
@@ -126,6 +127,8 @@ export default async function Wed100DetailPage({
   // 파트 안에서의 위치
   const samePart = all.filter((x) => x.part === item.part)
   const partIndex = samePart.findIndex((x) => x.slug === item.slug) + 1
+  // 잠긴 페이지에 실을 파트 소개 — 답이 아니라 파트가 무엇을 다루는지 알리는 공개 글
+  const partIntro = wed100Parts.find((p) => p.part === item.part)?.intro ?? []
 
   /*
     저자와 갱신 시각.
@@ -226,6 +229,7 @@ export default async function Wed100DetailPage({
               // 2026-09-13 아침에 190자로 늘렸다가 같은 날 95자로 되돌렸다 — 잠긴 95문항의
               // 공개 분량은 여기서 정해진다. 많이 열면 파는 물건이 없어진다(teaser() 주석).
               teaser: teaser(item.answer),
+              intro: partIntro,
               storeUrl: access.storeUrl,
               notice: access.notice,
               // 프롤로그·에필로그는 빼고 무료 문항 다섯 — 프롤로그가 다섯 중 한 자리를 먹어
@@ -313,6 +317,39 @@ export default async function Wed100DetailPage({
               ))}
             </div>
           </div>
+        </section>
+      )}
+
+      {/*
+        같은 파트의 다른 질문 — 문항끼리 잇는 내부링크 (2026-09-19).
+
+        잠긴 95개 문항은 각각이 검색 랜딩인데, 서로를 잇는 링크가 위의 '함께 보면
+        좋은 질문' 넷뿐이라 크롤러가 나머지에 닿기 어려웠다. 한 파트 전체를 글자
+        링크로 걸어 두면 어느 문항으로 들어와도 같은 파트 나머지로 길이 난다.
+        맨 아래라 잠긴 화면의 결제 안내를 밀어내지 않는다.
+      */}
+      {samePart.length > 1 && (
+        <section className="mx-auto max-w-7xl px-6 py-10 lg:px-8">
+          <h2 className="text-base font-extrabold text-[var(--w-ink)]">
+            PART {item.part} · {item.partTitle} 의 다른 질문
+          </h2>
+          <ul className="mt-4 grid gap-x-8 gap-y-2 sm:grid-cols-2">
+            {samePart
+              .filter((x) => x.slug !== item.slug)
+              .map((x) => (
+                <li key={x.slug}>
+                  <Link
+                    href={`/honjoo100/${x.slug}`}
+                    className="text-[15px] leading-snug text-[var(--w-ink2)] hover:text-[var(--w-rose)]"
+                  >
+                    <span className="mr-2 text-[12px] font-bold tabular-nums text-[var(--w-mut)]">
+                      {String(x.n).padStart(2, '0')}
+                    </span>
+                    {x.question}
+                  </Link>
+                </li>
+              ))}
+          </ul>
         </section>
       )}
     </div>
