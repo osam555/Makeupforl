@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
+import { getPublishedColumns } from '@/lib/columns'
 import { HUBS, findHub } from '@/lib/hubs'
 import { breadcrumbJsonLd, jsonLdScript } from '@/lib/seo'
 import { OG_IMAGE, SITE_URL } from '@/lib/site'
@@ -54,6 +55,18 @@ export default async function HubPage({ params }: Params) {
   const items = await getPublishedWed100Items()
   const access = await getWed100Access()
   const bySlug = new Map(items.map((x) => [x.slug, x]))
+
+  /*
+    이 허브를 다룬 칼럼.
+
+    허브는 sitemap 우선순위가 가장 높은데(0.9) 칼럼으로 나가는 길이 한 줄도
+    없었다. 칼럼은 본문까지 색인되는 몇 안 되는 공개 글이라, 가장 힘이 센
+    페이지에서 그쪽으로 한 번 짚어 주는 편이 낫다. 칼럼 쪽 relatedHubs 를
+    그대로 뒤집어 쓰므로 목록을 따로 관리하지 않는다.
+  */
+  const columnsHere = (await getPublishedColumns()).filter((c) =>
+    (c.relatedHubs ?? []).includes(hub.slug),
+  )
 
   // 절마다 실제로 존재하는 문항만 남긴다. 원고에서 문항이 빠져도 화면이 깨지지 않게.
   const sections = hub.sections.map((s) => ({
@@ -194,6 +207,29 @@ export default async function HubPage({ params }: Params) {
             </section>
           ))}
         </div>
+
+        {columnsHere.length > 0 && (
+          <section className="mt-14">
+            <h2 className="text-2xl font-extrabold text-[var(--w-ink)]">이 주제를 다룬 글 (무료)</h2>
+            <ul className="mt-5 space-y-3">
+              {columnsHere.map((c) => (
+                <li key={c.slug}>
+                  <Link
+                    href={`/column/${c.slug}`}
+                    className="block rounded-xl border border-[var(--w-line)] bg-[var(--w-card)] px-5 py-4 transition-colors hover:border-[var(--w-rose)]"
+                  >
+                    <span className="block font-bold text-[var(--w-ink)]">{c.title}</span>
+                    {c.lead && (
+                      <span className="mt-1 block text-[14px] leading-relaxed text-[var(--w-ink2)]">
+                        {c.lead}
+                      </span>
+                    )}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         {/*
           가격.

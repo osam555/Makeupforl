@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Eye, EyeOff, FileText, Plus, Save, Trash2, Upload } from 'lucide-react'
 
 import AdminGate from '@/components/admin/AdminGate'
@@ -9,7 +9,6 @@ import AdminShell from '@/components/admin/AdminShell'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import seedRaw from '@/data/columns.json'
-import { getDb } from '@/lib/firebase/client'
 import type { Column, ColumnData } from '@/types/column'
 
 const SEED = seedRaw as unknown as ColumnData
@@ -63,37 +62,32 @@ function AdminColumn({
   idTokenGetter: () => Promise<string | null>
 }) {
   const [items, setItems] = useState<Column[]>(SEED.items)
-  const [source, setSource] = useState<'db' | 'seed'>('seed')
+  /*
+    무엇을 보고 있는지.
+
+    'unknown' 이 있어야 한다. 전에는 'db' | 'seed' 뿐이라 읽기에 실패해도
+    "시드 기준" 이라고 떠서, Firestore 에 옛 칼럼이 남아 있어도 화면은
+    아무 일 없다는 얼굴을 했다. 모르면 모른다고 말해야 한다.
+  */
+  const [source, setSource] = useState<'db' | 'seed' | 'unknown'>('unknown')
   const [draft, setDraft] = useState<Draft | null>(null)
   const [busy, setBusy] = useState(false)
   const [status, setStatus] = useState<Status>(null)
 
-  const load = useCallback(async () => {
-    try {
-      const db = getDb()
-      if (!db) return
-      const { collection, getDocs } = await import('firebase/firestore')
-      const snap = await getDocs(collection(db, 'columns'))
-      if (!snap.empty) {
-        setItems(
-          snap.docs
-            .map((d) => d.data() as Column)
-            .sort((a, b) => (b.publishedAt ?? '').localeCompare(a.publishedAt ?? '')),
-        )
-        setSource('db')
-      }
-    } catch {
-      /* 규칙상 읽기가 막혀 있으면 시드 유지 */
-    }
-  }, [])
+  /*
+    토큰 가져오는 함수를 ref 로 받아 둔다.
 
-  useEffect(() => {
-    void load()
-  }, [load])
+    부모가 이 함수를 렌더마다 새로 만들어 넘긴다. 이것을 useCallback 의
+    의존성에 그대로 두면 call → load → useEffect 가 렌더마다 새 것이 되어
+    목록 읽기가 끝없이 되돌고 화면이 멈춘다. 값은 늘 최신이면 되고 신원은
+    고정이어야 하므로 ref 가 맞다.
+  */
+  const tokenRef = useRef(idTokenGetter)
+  tokenRef.current = idTokenGetter
 
   const call = useCallback(
     async (payload: Record<string, unknown>) => {
-      const idToken = await idTokenGetter()
+      const idToken = await tokenRef.current()
       const res = await fetch('/api/columns', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
@@ -103,8 +97,40 @@ function AdminColumn({
       if (!j.ok) throw new Error(j.error ?? '저장 실패')
       return j
     },
-    [idTokenGetter],
+    [],
   )
+
+  /*
+    목록 읽기 — 클라이언트 SDK 가 아니라 저장과 같은 API(Admin SDK)로 간다.
+
+    전에는 브라우저에서 firestore 를 직접 읽었는데, 보안 규칙에 columns 항목이
+    아예 없어서(기본값은 거부) 이 읽기는 언제나 실패했다. 그래서 Firestore 에
+    칼럼이 있든 없든 화면은 늘 시드를 보여 주었다. 공개 사이트는 서버에서
+    Admin SDK 로 읽어 규칙을 지나치므로, 사이트와 어드민이 서로 다른 것을
+    보면서 아무도 그 사실을 모르는 상태가 된다. 저장이 지나는 길로 읽어야
+    화면이 실제로 반영될 내용을 보여 준다.
+  */
+  const load = useCallback(async () => {
+    try {
+      const j = (await call({ action: 'list' })) as { rows?: Column[] }
+      const rows = j.rows ?? []
+      if (rows.length > 0) {
+        setItems([...rows].sort((a, b) => (b.publishedAt ?? '').localeCompare(a.publishedAt ?? '')))
+        setSource('db')
+      } else {
+        // Firestore 가 비었다 — 사이트도 시드를 본다
+        setItems(SEED.items)
+        setSource('seed')
+      }
+    } catch {
+      /* 로그인 전이거나 서비스 계정이 없다 — 무엇이 뜨는지 알 수 없다 */
+      setSource('unknown')
+    }
+  }, [call])
+
+  useEffect(() => {
+    void load()
+  }, [load])
 
   const set = (patch: Partial<Draft>) => setDraft((d) => (d ? { ...d, ...patch } : d))
 
@@ -157,13 +183,33 @@ function AdminColumn({
     }
   }
 
-  const seed = async () => {
-    if (!window.confirm('리포 시드의 칼럼을 Firestore 로 올릴까요? (이미 있는 주소는 건너뜁니다)')) return
+  /*
+    시드 반영.
+
+    덮어쓰기를 고를 수 있어야 한다. 건너뛰기만 있으면 리포에서 고친 칼럼이
+    Firestore 에 이미 있을 때 영영 반영되지 않는다 — 배포는 됐는데 사이트는
+    옛 글을 보여 주고, 어느 쪽이 맞는지 화면으로는 알 수 없었다.
+    되돌릴 수 없는 쪽이라 확인을 두 번 받는다.
+  */
+  const seed = async (overwrite: boolean) => {
+    const msg = overwrite
+      ? '리포 시드의 칼럼으로 Firestore 를 덮어쓸까요?\n\n어드민에서만 고치고 시드에 되돌리지 않은 내용은 사라집니다.'
+      : '리포 시드의 칼럼을 Firestore 로 올릴까요? (이미 있는 주소는 건너뜁니다)'
+    if (!window.confirm(msg)) return
+    if (overwrite && !window.confirm('되돌릴 수 없습니다. 정말 덮어쓸까요?')) return
     setBusy(true)
     try {
-      const j = (await call({ action: 'seed' })) as { upserted?: number; skipped?: number }
+      const j = (await call({ action: 'seed', overwrite })) as {
+        upserted?: number
+        skipped?: number
+      }
       await load()
-      setStatus({ kind: 'ok', msg: `시드 반영 — 새로 ${j.upserted ?? 0}건, 건너뜀 ${j.skipped ?? 0}건` })
+      setStatus({
+        kind: 'ok',
+        msg: overwrite
+          ? `시드로 덮어썼습니다 — ${j.upserted ?? 0}건`
+          : `시드 반영 — 새로 ${j.upserted ?? 0}건, 건너뜀 ${j.skipped ?? 0}건`,
+      })
     } catch (e) {
       setStatus({ kind: 'err', msg: e instanceof Error ? e.message : '시드 실패' })
     } finally {
@@ -180,9 +226,15 @@ function AdminColumn({
     <div>
       <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
         <p className="max-w-xl text-sm leading-relaxed text-[var(--a-6b5d57)]">
-          대표원장 칼럼을 올리고 고칩니다. 저장하면 배포 없이 바로 반영됩니다. ({source === 'db' ? 'DB' : '시드'} 기준)
+          대표원장 칼럼을 올리고 고칩니다. 저장하면 배포 없이 바로 반영됩니다.
           <br />
           <span className="text-[var(--a-8a7a72)]">
+            {source === 'db'
+              ? '지금 사이트에 뜨는 것은 아래 목록(Firestore)입니다. 리포에서 고친 칼럼은 [시드로 덮어쓰기] 를 눌러야 반영됩니다.'
+              : source === 'seed'
+                ? 'Firestore 에 칼럼이 없어 리포 시드가 그대로 사이트에 뜹니다.'
+                : '목록을 읽지 못했습니다 — 로그인 전이거나 서비스 계정이 없습니다. 사이트에 무엇이 뜨는지 이 화면으로는 알 수 없습니다.'}
+            <br />
             푸시 전에는 <code>scripts/sync-columns-seed.py</code> 로 시드에 되돌려 두세요 — 폴백 때 옛 글이 뜨지 않게.
           </span>
         </p>
@@ -192,8 +244,11 @@ function AdminColumn({
               <Eye className="mr-1.5 h-4 w-4" /> 사이트에서 보기
             </Button>
           </Link>
-          <Button variant="outline" size="sm" disabled={busy} onClick={seed}>
+          <Button variant="outline" size="sm" disabled={busy} onClick={() => void seed(false)}>
             <Upload className="mr-1.5 h-4 w-4" /> 시드 반영
+          </Button>
+          <Button variant="outline" size="sm" disabled={busy} onClick={() => void seed(true)}>
+            <Upload className="mr-1.5 h-4 w-4" /> 시드로 덮어쓰기
           </Button>
           <Button
             size="sm"
