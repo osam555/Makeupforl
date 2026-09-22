@@ -117,6 +117,8 @@ export interface PlayerProps {
   /** 파트 안에서의 위치 (1부터) */
   partIndex: number
   partTotal: number
+  /** 답변 끝에 이어 붙일 블로그 글 (맛보기 문항에만 넘어온다) */
+  blog?: { url: string; title: string } | null
 }
 
 function fmt(sec: number) {
@@ -745,6 +747,31 @@ export default function Wed100Player(p: PlayerProps) {
               )}
             </button>
           ))}
+
+          {/*
+            답이 끝나는 바로 그 자리에 블로그 글을 잇는다 (2026-09-22).
+
+            처음에는 플레이어 아래 별도 칸으로 뒀는데, 자막은 이 상자 안에서 스크롤되므로
+            마지막 문장을 읽은 사람은 상자 밖으로 눈을 돌리지 않는다. 글 제목을 그대로
+            적는다 — 무엇이 기다리는지 보여야 누른다.
+          */}
+          {p.blog && (
+            <div className="mt-5 px-3">
+              <a
+                href={p.blog.url}
+                target="_blank"
+                rel="noreferrer"
+                className="group block rounded-lg border border-[var(--w-line)] bg-[var(--w-card2)] px-4 py-3 transition hover:border-[var(--w-rose)]"
+              >
+                <span className="block text-[12px] font-extrabold tracking-[0.13em] text-[var(--w-rose)]">
+                  원장 블로그에서 이어 읽기
+                </span>
+                <span className="mt-1 block text-[15px] font-bold leading-snug text-[var(--w-ink)] group-hover:text-[var(--w-rose)]">
+                  {p.blog.title} <span aria-hidden>↗</span>
+                </span>
+              </a>
+            </div>
+          )}
 
           {!!p.keywords?.length && (
             <div className="mt-5 flex flex-wrap gap-2 px-3 pb-1">
