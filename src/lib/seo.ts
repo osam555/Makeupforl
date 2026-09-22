@@ -115,6 +115,16 @@ export function breadcrumbJsonLd(trail: { name: string; path: string }[]) {
   }
 }
 
+/**
+ * 날짜 문자열에 KST 타임존을 붙인다.
+ * "2026-09-19" → "2026-09-19T00:00:00+09:00"
+ * 이미 T 가 들어 있으면 그대로 돌려준다 — Search Console 이
+ * "datePublished is missing a timezone" 를 잡지 않게.
+ */
+export function toKstIso(d: string): string {
+  return d.includes('T') ? d : `${d}T00:00:00+09:00`
+}
+
 /** 여러 덩어리를 한 태그로 묶어 내보낸다. 스크립트가 늘어나면 관리가 어렵다. */
 export function jsonLdScript(...blocks: unknown[]) {
   return JSON.stringify(blocks.length === 1 ? blocks[0] : blocks)

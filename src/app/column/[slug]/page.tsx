@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation'
 
 import { columnDateLabel, getColumn, getPublishedColumns } from '@/lib/columns'
 import { findHub } from '@/lib/hubs'
-import { BUSINESS, breadcrumbJsonLd, jsonLdScript } from '@/lib/seo'
+import { BUSINESS, breadcrumbJsonLd, jsonLdScript, toKstIso } from '@/lib/seo'
 import { OG_IMAGE, SITE_URL } from '@/lib/site'
 import { getPublishedWed100Items } from '@/lib/wed100'
 
@@ -72,8 +72,8 @@ export default async function ColumnDetailPage({ params }: Params) {
     author: { '@type': 'Person', name: item.author || BUSINESS.founder, jobTitle: '대표원장' },
     publisher: { '@id': `${SITE_URL}/#business` },
     ...(item.heroImage ? { image: `${SITE_URL}${item.heroImage}` } : {}),
-    ...(item.publishedAt ? { datePublished: item.publishedAt } : {}),
-    ...(modified ? { dateModified: modified } : {}),
+    ...(item.publishedAt ? { datePublished: toKstIso(item.publishedAt) } : {}),
+    ...(modified ? { dateModified: toKstIso(modified) } : {}),
     isAccessibleForFree: true,
     articleBody: item.body.join('\n\n'),
   }
