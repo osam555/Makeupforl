@@ -27,7 +27,7 @@
       "src/app/offline/page.tsx:25"
     ],
     "/$": [
-      "src/app/column/[slug]/page.tsx:153",
+      "src/app/column/[slug]/page.tsx:177",
       "src/app/honjoo100/page.tsx:264",
       "src/lib/navigation.ts:52"
     ],
@@ -38,20 +38,20 @@
       "src/lib/navigation.ts:33"
     ],
     "/column": [
-      "src/app/column/[slug]/page.tsx:96",
-      "src/app/column/[slug]/page.tsx:209",
+      "src/app/column/[slug]/page.tsx:97",
+      "src/app/column/[slug]/page.tsx:233",
       "src/lib/navigation.ts:36"
     ],
     "/column/$": [
       "src/app/[topic]/page.tsx:218",
-      "src/app/column/page.tsx:92",
-      "src/app/honjoo100/[slug]/page.tsx:384"
+      "src/app/column/page.tsx:93",
+      "src/app/honjoo100/[slug]/page.tsx:356"
     ],
     "/consultation": [
       "src/app/[topic]/page.tsx:282",
       "src/app/brand/page.tsx:171",
-      "src/app/column/[slug]/page.tsx:194",
-      "src/app/column/page.tsx:133",
+      "src/app/column/[slug]/page.tsx:218",
+      "src/app/column/page.tsx:148",
       "src/app/gallery/[cat]/page.tsx:122",
       "src/app/gallery/page.tsx:56",
       "src/app/honjoo100/page.tsx:150",
@@ -59,7 +59,7 @@
       "src/app/page.tsx:143",
       "src/app/services/page.tsx:215",
       "src/components/wed100/Wed100Locked.tsx:192",
-      "src/components/wed100/Wed100Player.tsx:765",
+      "src/components/wed100/Wed100Player.tsx:792",
       "src/lib/navigation.ts:67"
     ],
     "/gallery": [
@@ -81,10 +81,10 @@
       "src/app/[topic]/page.tsx:142",
       "src/app/[topic]/page.tsx:304",
       "src/app/brand/page.tsx:165",
-      "src/app/column/page.tsx:120",
-      "src/app/column/page.tsx:127",
+      "src/app/column/page.tsx:135",
+      "src/app/column/page.tsx:142",
       "src/app/consultation/page.tsx:112",
-      "src/app/honjoo100/[slug]/page.tsx:219",
+      "src/app/honjoo100/[slug]/page.tsx:220",
       "src/app/instagram/page.tsx:81",
       "src/app/page.tsx:152",
       "src/app/page.tsx:411",
@@ -98,10 +98,10 @@
     "/honjoo100/$": [
       "src/app/[topic]/page.tsx:184",
       "src/app/api/wed100/answer/route.ts:97",
-      "src/app/column/[slug]/page.tsx:167",
+      "src/app/column/[slug]/page.tsx:191",
       "src/app/honjoo100/[slug]/page.tsx:106",
-      "src/app/honjoo100/[slug]/page.tsx:337",
-      "src/app/honjoo100/[slug]/page.tsx:419",
+      "src/app/honjoo100/[slug]/page.tsx:309",
+      "src/app/honjoo100/[slug]/page.tsx:391",
       "src/app/honjoo100/page.tsx:143",
       "src/components/home/QnaCard.tsx:12",
       "src/components/wed100/FreePicks.tsx:38",
@@ -122,7 +122,7 @@
     ],
     "/reservation": [
       "src/app/[topic]/page.tsx:288",
-      "src/app/column/[slug]/page.tsx:200",
+      "src/app/column/[slug]/page.tsx:224",
       "src/app/consultation/page.tsx:106",
       "src/app/consultation/page.tsx:174",
       "src/app/gallery/[cat]/page.tsx:129",

@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Eye, EyeOff, FileText, Plus, Save, Trash2, Upload } from 'lucide-react'
@@ -9,6 +10,7 @@ import AdminShell from '@/components/admin/AdminShell'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import seedRaw from '@/data/columns.json'
+import { photosByCat, type Wed100Photo } from '@/lib/wed100-photos'
 import type { Column, ColumnData } from '@/types/column'
 
 const SEED = seedRaw as unknown as ColumnData
@@ -23,7 +25,9 @@ interface Draft {
   lead: string
   author: string
   publishedAt: string
+  photo: string
   heroImage: string
+  thumbImage: string
   bodyText: string
   keywordsText: string
   hubsText: string
@@ -46,7 +50,9 @@ function toDraft(c?: Column): Draft {
     lead: c?.lead ?? '',
     author: c?.author ?? '김성희',
     publishedAt: c?.publishedAt ?? new Date().toISOString().slice(0, 10),
+    photo: c?.photo ?? '',
     heroImage: c?.heroImage ?? '',
+    thumbImage: c?.thumbImage ?? '',
     // 문단은 빈 줄로 나눈다 — 본문 렌더러가 문단 배열을 그대로 <p> 로 그린다
     bodyText: (c?.body ?? []).join('\n\n'),
     keywordsText: csv(c?.keywords),
@@ -73,6 +79,32 @@ function AdminColumn({
   const [draft, setDraft] = useState<Draft | null>(null)
   const [busy, setBusy] = useState(false)
   const [status, setStatus] = useState<Status>(null)
+
+  /*
+    사진 고르개 — 100문100답이 쓰는 사진 창고를 그대로 쓴다 (2026-09-22).
+
+    칼럼용 사진을 따로 찍지 않았고, 두 곳이 서로 다른 얼굴을 보이면 같은 샵으로
+    읽히지 않는다. 저장소 카탈로그(스크립트로 만든 102장)에 더해 어드민에서 올린
+    사진(wed100_photos)도 함께 읽는다 — 방금 올린 사진이 여기 안 보이면 올린 사람은
+    저장이 안 된 줄 안다. 못 읽으면 카탈로그만으로 조용히 이어 간다.
+  */
+  const [uploadedPhotos, setUploadedPhotos] = useState<Wed100Photo[]>([])
+  useEffect(() => {
+    void (async () => {
+      try {
+        const { getDb } = await import('@/lib/firebase/client')
+        const db = getDb()
+        if (!db) return
+        const { collection, getDocs } = await import('firebase/firestore')
+        const snap = await getDocs(collection(db, 'wed100_photos'))
+        setUploadedPhotos(snap.docs.map((d) => d.data() as Wed100Photo))
+      } catch {
+        /* noop */
+      }
+    })()
+  }, [])
+  const photoGroups = useMemo(() => photosByCat(uploadedPhotos), [uploadedPhotos])
+  const [photoCat, setPhotoCat] = useState('all')
 
   /*
     토큰 가져오는 함수를 ref 로 받아 둔다.
@@ -147,7 +179,9 @@ function AdminColumn({
       lead: draft.lead,
       author: draft.author,
       publishedAt: draft.publishedAt,
+      photo: draft.photo,
       heroImage: draft.heroImage,
+      thumbImage: draft.thumbImage,
       body: draft.bodyText.split(/\n{2,}/).map((s) => s.trim()).filter(Boolean),
       keywords: toArr(draft.keywordsText),
       relatedHubs: toArr(draft.hubsText),
@@ -316,6 +350,90 @@ function AdminColumn({
             리드 (히어로 아래 한 줄)
             <Input className="mt-1" value={draft.lead} onChange={(e) => set({ lead: e.target.value })} />
           </label>
+          {/* 대표 사진 — 목록 카드와 글 머리에 쓰인다 */}
+          <div className="mt-3 rounded-md border border-[var(--a-e0d6cc)] p-3">
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="relative h-16 w-28 shrink-0 overflow-hidden rounded bg-[var(--a-e0d6cc)]">
+                {draft.thumbImage || draft.heroImage ? (
+                  <Image
+                    key={draft.heroImage || draft.thumbImage}
+                    src={draft.heroImage || draft.thumbImage}
+                    alt=""
+                    fill
+                    sizes="112px"
+                    className="object-cover"
+                    unoptimized={(draft.heroImage || draft.thumbImage).startsWith('http')}
+                  />
+                ) : null}
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-semibold text-[var(--a-2e2724)]">
+                  대표 사진{draft.photo ? ` — ${draft.photo}` : ''}
+                </p>
+                <p className="mt-0.5 text-xs text-[var(--a-8a7a72)]">
+                  {draft.heroImage
+                    ? '목록 카드와 글 머리에 이 사진이 보입니다.'
+                    : '고르지 않으면 글에 사진이 없습니다.'}
+                </p>
+              </div>
+              {draft.heroImage && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => set({ photo: '', heroImage: '', thumbImage: '' })}
+                >
+                  사진 빼기
+                </Button>
+              )}
+            </div>
+
+            <div className="mt-3 flex flex-wrap gap-1.5">
+              {[{ cat: 'all', label: '전체' }, ...photoGroups.map((g) => ({ cat: g.cat, label: g.label }))].map(
+                (t) => (
+                  <button
+                    key={t.cat}
+                    onClick={() => setPhotoCat(t.cat)}
+                    className={`rounded-md border px-2.5 py-1 text-xs font-semibold ${
+                      photoCat === t.cat
+                        ? 'border-[var(--a-a63d5a)] text-[var(--a-a63d5a)]'
+                        : 'border-[var(--a-e0d6cc)] text-[var(--a-8a7a72)]'
+                    }`}
+                  >
+                    {t.label}
+                  </button>
+                ),
+              )}
+            </div>
+
+            {/* 102장이 넘으므로 상자 안에서만 스크롤한다 — 편집 화면 전체가 길어지지 않게 */}
+            <div className="mt-2 max-h-56 overflow-y-auto rounded border border-[var(--a-e0d6cc)] p-1.5">
+              <div className="grid grid-cols-5 gap-1.5 sm:grid-cols-8">
+                {photoGroups
+                  .filter((g) => photoCat === 'all' || g.cat === photoCat)
+                  .flatMap((g) => g.photos)
+                  .map((ph) => (
+                    <button
+                      key={ph.name}
+                      title={ph.note ? `${ph.name} — ${ph.note}` : ph.name}
+                      onClick={() => set({ photo: ph.name, heroImage: ph.hero, thumbImage: ph.thumb })}
+                      className={`relative aspect-square overflow-hidden rounded border-2 ${
+                        draft.photo === ph.name ? 'border-[var(--a-a63d5a)]' : 'border-transparent'
+                      }`}
+                    >
+                      <Image
+                        src={ph.thumb}
+                        alt={ph.name}
+                        fill
+                        sizes="80px"
+                        className="object-cover"
+                        unoptimized={ph.thumb.startsWith('http')}
+                      />
+                    </button>
+                  ))}
+              </div>
+            </div>
+          </div>
+
           <label className="mt-3 block text-xs text-[var(--a-8a7a72)]">
             본문 — 문단은 빈 줄로 나눕니다
             <textarea
