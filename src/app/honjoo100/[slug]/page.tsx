@@ -18,9 +18,9 @@ import {
   wed100Parts,
 } from '@/lib/wed100'
 import { getPublishedColumns } from '@/lib/columns'
-import { isFreeQuestion, isOpen } from '@/lib/wed100Access'
+import { isFreePick, isFreeQuestion, isOpen } from '@/lib/wed100Access'
 import { getWed100Access } from '@/lib/wed100Access.server'
-import { BUSINESS, breadcrumbJsonLd, jsonLdScript } from '@/lib/seo'
+import { BLOG_FEATURE, BUSINESS, breadcrumbJsonLd, jsonLdScript } from '@/lib/seo'
 import { SITE_URL } from '@/lib/site'
 import type { Wed100Item } from '@/types/wed100'
 
@@ -121,6 +121,14 @@ export default async function Wed100DetailPage({
 
   const access = await getWed100Access()
   const open = isOpen(access, slug)
+  /*
+    맛보기 다섯 문항에만 블로그 글을 잇는다 (2026-09-22).
+
+    잠긴 95개는 답을 읽지 못한 채 결제 안내를 보는 자리라 밖으로 나가는 문을
+    더 열 이유가 없다. 다 읽고 끝난 다섯에만 이어 읽을 곳을 준다.
+    프롤로그·에필로그는 문항이 아니라 빠진다(isFreePick).
+  */
+  const blogHere = isFreePick(access, slug)
 
   const exclude = new Set([prev?.slug, next?.slug].filter(Boolean) as string[])
   const related = relatedItems(item, all, exclude)
@@ -283,6 +291,36 @@ export default async function Wed100DetailPage({
         />
         )}
       </div>
+
+      {/* 답을 다 읽은 자리 — 블로그로 이어 읽기 */}
+      {blogHere && (
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <a
+            href={BLOG_FEATURE.url}
+            target="_blank"
+            rel="noreferrer"
+            className="group flex items-center gap-4 rounded-2xl border border-[var(--w-line)] bg-[var(--w-card)] px-5 py-4 transition hover:border-[var(--w-rose)]"
+          >
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--w-rose)] text-[15px] font-extrabold text-white">
+              N
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-[12px] font-extrabold tracking-[0.13em] text-[var(--w-rose)]">
+                원장 블로그
+              </span>
+              <span className="block text-[15px] font-bold leading-snug text-[var(--w-ink)] group-hover:text-[var(--w-rose)]">
+                이 이야기, 블로그에서 이어 읽기
+              </span>
+              <span className="mt-0.5 block text-[13px] leading-snug text-[var(--w-ink2)]">
+                대표원장이 네이버 블로그에 쓴 글로 이어집니다.
+              </span>
+            </span>
+            <span aria-hidden className="shrink-0 text-[var(--w-mut)] transition group-hover:text-[var(--w-rose)]">
+              ↗
+            </span>
+          </a>
+        </div>
+      )}
 
       {/* 관련 질문 */}
       {related.length > 0 && (

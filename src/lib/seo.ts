@@ -46,6 +46,22 @@ export const PROFILES = [
   { key: 'place', label: '네이버 플레이스', url: 'https://m.place.naver.com/hairshop/1863938818/home' },
 ] as const
 
+/**
+ * 무료 문항 끝에서 이어 주는 원장 블로그 글.
+ *
+ * 블로그는 푸터에서 계정 주소(makeupstar77)로만 이어져 있었다. 맛보기 다섯 문항은
+ * 값을 내지 않은 사람이 끝까지 읽는 유일한 곳이라, 다 읽고 나서 갈 데가 결제밖에
+ * 없으면 그냥 나간다. 이어 읽을 글을 한 칸 두어 블로그로 보낸다 — 같은 업체의
+ * 다른 계정이므로 신뢰가 흩어지지 않고, 블로그 쪽 유입도 함께 는다.
+ *
+ * 글을 바꿀 때는 여기 주소만 갈아 끼운다. 제목을 적지 않는 것은 블로그에서 제목을
+ * 고치면 사이트에 적힌 말과 달라지기 때문이다 — 화면에는 "블로그 글로 이어집니다"
+ * 라고만 적는다.
+ */
+export const BLOG_FEATURE = {
+  url: 'https://blog.naver.com/makeupstar77/223935001221',
+} as const
+
 /** 사이트 전체에 한 번만 싣는 업체 정보. 홈이 아니라 루트 레이아웃에 둔다. */
 export function businessJsonLd() {
   return {

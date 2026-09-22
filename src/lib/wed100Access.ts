@@ -89,13 +89,25 @@ export const FREE_QNA_DEFAULT = [
 ]
 
 /**
+ * 맛보기로 내놓은 "문항" 다섯 — 프롤로그·에필로그는 뺀다.
+ *
+ * 잠금을 보지 않는다. 잠금이 꺼져 있어도(전부 열림) 이 다섯은 여전히 파트 1~5 의
+ * 맛보기 자리라, 그 자리에만 붙이는 것(블로그 이어 읽기 등)은 잠금 스위치를 따라
+ * 사라지면 안 된다. 잠금까지 봐야 하는 곳은 아래 isFreeQuestion 을 쓴다.
+ */
+export function isFreePick(access: Wed100Access, slug: string): boolean {
+  return access.freeQna.includes(slug) && /^p[1-6]-/.test(slug)
+}
+
+/**
  * 무료 목록에 "문항" 으로 세는 것 — 프롤로그·에필로그는 뺀다.
  *
  * 둘은 열려 있지만(문 앞에서 읽는 글이라 잠글 이유가 없다) 파는 문항이 아니다.
  * "무료 공개 7건" 에 함께 세면 100문 중 일곱이 공짜인 줄 안다. 실제로는 다섯이다.
+ * 잠금이 꺼져 있으면 "무료 공개" 라는 말 자체가 없으므로 세지 않는다.
  */
 export function isFreeQuestion(access: Wed100Access, slug: string): boolean {
-  return access.paywall && access.freeQna.includes(slug) && /^p[1-6]-/.test(slug)
+  return access.paywall && isFreePick(access, slug)
 }
 
 /**
