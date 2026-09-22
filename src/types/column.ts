@@ -16,8 +16,18 @@ export interface Column {
   /** 본문 문단 — 문항 answer[] 와 같은 모양이라 렌더러를 나눠 쓸 수 있다 */
   body: string[]
   keywords: string[]
-  /** 대표 이미지. 없으면 공유 기본 OG 이미지를 쓴다 */
+  /**
+   * 대표 이미지 — 100문100답과 같은 사진 창고(`wed100-photos`)를 쓴다.
+   *
+   * 칼럼용 사진을 따로 찍지 않았고, 찍더라도 두 곳이 서로 다른 얼굴을 보이면
+   * 같은 샵으로 읽히지 않는다. `photo` 는 사진 이름(예: salon-08)이고 나머지 둘은
+   * 그때 정해진 주소다 — 문항(Wed100Item)과 같은 세 칸이라 어드민 고르개를 나눠 쓴다.
+   */
+  photo?: string
+  /** 1600x900. 없으면 공유 기본 OG 이미지를 쓴다 */
   heroImage?: string
+  /** 800x800. 목록 카드가 쓴다 */
+  thumbImage?: string
   /** 필자. 기본은 대표원장 */
   author: string
   /** 발행일 (BlogPosting datePublished). 지어낸 날짜 금지 */

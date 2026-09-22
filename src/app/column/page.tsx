@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 
 import { columnDateLabel, columnsMeta, getPublishedColumns } from '@/lib/columns'
@@ -90,22 +91,36 @@ export default async function ColumnListPage() {
               <li key={x.slug}>
                 <Link
                   href={`/column/${x.slug}`}
-                  className="group block rounded-2xl border border-[var(--w-line)] bg-[var(--w-card)] p-6 transition hover:-translate-y-0.5 hover:border-[var(--w-rose)] hover:shadow-lg lg:p-7"
+                  className="group flex gap-5 rounded-2xl border border-[var(--w-line)] bg-[var(--w-card)] p-6 transition hover:-translate-y-0.5 hover:border-[var(--w-rose)] hover:shadow-lg lg:p-7"
                 >
-                  {x.publishedAt && (
-                    <p className="text-xs font-semibold text-[var(--w-mut)]">
-                      {columnDateLabel(x.publishedAt)}
-                    </p>
+                  {/* 사진은 넓은 화면에서만 — 좁은 화면에서 옆에 세우면 제목이 두 글자씩 끊긴다 */}
+                  {(x.thumbImage ?? x.heroImage) && (
+                    <div className="relative hidden h-28 w-28 shrink-0 overflow-hidden rounded-xl bg-[var(--w-thumb-bg)] sm:block">
+                      <Image
+                        src={(x.thumbImage || x.heroImage) as string}
+                        alt=""
+                        fill
+                        sizes="112px"
+                        className="object-cover"
+                      />
+                    </div>
                   )}
-                  <h2 className="mt-1.5 text-xl font-extrabold leading-snug text-[var(--w-ink)] group-hover:text-[var(--w-rose)] lg:text-2xl">
-                    {x.title}
-                  </h2>
-                  <p className="mt-2 text-[15px] leading-relaxed text-[var(--w-ink2)]">
-                    {x.description}
-                  </p>
-                  <p className="mt-3 text-sm font-bold text-[var(--w-rose)]">
-                    이어 읽기 <span aria-hidden>→</span>
-                  </p>
+                  <span className="min-w-0 flex-1">
+                    {x.publishedAt && (
+                      <span className="block text-xs font-semibold text-[var(--w-mut)]">
+                        {columnDateLabel(x.publishedAt)}
+                      </span>
+                    )}
+                    <h2 className="mt-1.5 text-xl font-extrabold leading-snug text-[var(--w-ink)] group-hover:text-[var(--w-rose)] lg:text-2xl">
+                      {x.title}
+                    </h2>
+                    <span className="mt-2 block text-[15px] leading-relaxed text-[var(--w-ink2)]">
+                      {x.description}
+                    </span>
+                    <span className="mt-3 block text-sm font-bold text-[var(--w-rose)]">
+                      이어 읽기 <span aria-hidden>→</span>
+                    </span>
+                  </span>
                 </Link>
               </li>
             ))}

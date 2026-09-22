@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
@@ -110,6 +111,29 @@ export default async function ColumnDetailPage({ params }: Params) {
           </p>
         </div>
       </section>
+
+      {/*
+        대표 사진 (2026-09-22).
+
+        글만 있는 칼럼은 열세 편이 전부 같은 회색 덩어리로 보였다. 50~60대 손님은
+        본문을 읽기 전에 "여기가 어떤 샵인가"를 사진으로 먼저 판단한다. 새로 찍지 않고
+        100문100답이 쓰는 사진 창고에서 내용에 맞는 것을 골라 쓴다 — 같은 얼굴이
+        두 곳에 보여야 한 샵으로 읽힌다. 머리와 본문 사이에 두어 제목을 밀어내지 않는다.
+      */}
+      {item.heroImage && (
+        <div className="mx-auto max-w-3xl px-6 pt-10 lg:px-8">
+          <div className="relative aspect-[16/9] overflow-hidden rounded-2xl bg-[var(--w-thumb-bg)]">
+            <Image
+              src={item.heroImage}
+              alt={`${item.title} — 메이크업포엘 혼주 메이크업`}
+              fill
+              sizes="(max-width: 768px) 100vw, 768px"
+              className="object-cover"
+              priority
+            />
+          </div>
+        </div>
+      )}
 
       {/* 본문 */}
       <article className="mx-auto max-w-3xl px-6 py-12 lg:px-8">
