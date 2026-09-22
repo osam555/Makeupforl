@@ -1,5 +1,5 @@
 {
-  "countedAt": "2026-09-19",
+  "countedAt": "2026-09-22",
   "links": {
     "/": 1,
     "/$": 3,
@@ -45,7 +45,7 @@
     "/column/$": [
       "src/app/[topic]/page.tsx:218",
       "src/app/column/page.tsx:92",
-      "src/app/honjoo100/[slug]/page.tsx:346"
+      "src/app/honjoo100/[slug]/page.tsx:384"
     ],
     "/consultation": [
       "src/app/[topic]/page.tsx:282",
@@ -84,7 +84,7 @@
       "src/app/column/page.tsx:120",
       "src/app/column/page.tsx:127",
       "src/app/consultation/page.tsx:112",
-      "src/app/honjoo100/[slug]/page.tsx:211",
+      "src/app/honjoo100/[slug]/page.tsx:219",
       "src/app/instagram/page.tsx:81",
       "src/app/page.tsx:152",
       "src/app/page.tsx:411",
@@ -100,8 +100,8 @@
       "src/app/api/wed100/answer/route.ts:97",
       "src/app/column/[slug]/page.tsx:167",
       "src/app/honjoo100/[slug]/page.tsx:106",
-      "src/app/honjoo100/[slug]/page.tsx:299",
-      "src/app/honjoo100/[slug]/page.tsx:381",
+      "src/app/honjoo100/[slug]/page.tsx:337",
+      "src/app/honjoo100/[slug]/page.tsx:419",
       "src/app/honjoo100/page.tsx:143",
       "src/components/home/QnaCard.tsx:12",
       "src/components/wed100/FreePicks.tsx:38",
