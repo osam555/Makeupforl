@@ -20,7 +20,7 @@ import {
 import { getPublishedColumns } from '@/lib/columns'
 import { isFreePick, isFreeQuestion, isOpen } from '@/lib/wed100Access'
 import { getWed100Access } from '@/lib/wed100Access.server'
-import { BLOG_FEATURE, BUSINESS, breadcrumbJsonLd, jsonLdScript } from '@/lib/seo'
+import { BLOG_FEATURE, BUSINESS, breadcrumbJsonLd, jsonLdScript, toKstIso } from '@/lib/seo'
 import { SITE_URL } from '@/lib/site'
 import type { Wed100Item } from '@/types/wed100'
 
@@ -168,7 +168,7 @@ export default async function Wed100DetailPage({
     author: { '@type': 'Person', name: BUSINESS.founder, jobTitle: '대표원장' },
     publisher: { '@id': `${SITE_URL}/#business` },
     isPartOf: { '@type': 'CreativeWorkSeries', name: '혼주메이크업 100문 100답' },
-    ...(modified ? { dateModified: modified } : {}),
+    ...(modified ? { dateModified: toKstIso(modified) } : {}),
     ...(open
       ? { articleBody: item.answer.join('\n\n') }
       : {

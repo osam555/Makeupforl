@@ -4,6 +4,7 @@ import Link from 'next/link'
 import InstagramPost from '@/components/instagram/InstagramPost'
 import SubHero from '@/components/layout/SubHero'
 import { getInstagram } from '@/lib/instagram'
+import { toKstIso } from '@/lib/seo'
 import { SITE_URL } from '@/lib/site'
 import { getSiteImages } from '@/lib/siteImages'
 
@@ -39,7 +40,7 @@ export default async function InstagramPage() {
     hasPart: groups.slice(0, 20).map((g) => ({
       '@type': 'SocialMediaPosting',
       url: g.url,
-      datePublished: g.date,
+      datePublished: toKstIso(g.date),
       headline: g.text.split('\n').find((l) => l.trim()) ?? '',
       image: g.images.map((im) => `${SITE_URL}${im.src}`),
       author: { '@id': `${SITE_URL}/#business` },

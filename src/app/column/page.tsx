@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import { columnDateLabel, columnsMeta, getPublishedColumns } from '@/lib/columns'
-import { breadcrumbJsonLd, jsonLdScript } from '@/lib/seo'
+import { breadcrumbJsonLd, jsonLdScript, toKstIso } from '@/lib/seo'
 import { OG_IMAGE, SITE_URL } from '@/lib/site'
 
 export const revalidate = 3600
@@ -46,7 +46,7 @@ export default async function ColumnListPage() {
     inLanguage: 'ko',
     about: ['혼주메이크업', '혼주화장', '혼주한복', '혼주헤어'],
     publisher: { '@id': `${SITE_URL}/#business` },
-    ...(latest ? { dateModified: latest } : {}),
+    ...(latest ? { dateModified: toKstIso(latest) } : {}),
     mainEntity: {
       '@type': 'ItemList',
       numberOfItems: items.length,

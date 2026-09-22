@@ -18,7 +18,7 @@ import {
 import { getSiteImages } from '@/lib/siteImages'
 import { isFreeQuestion, isOpen } from '@/lib/wed100Access'
 import { getWed100Access } from '@/lib/wed100Access.server'
-import { breadcrumbJsonLd, jsonLdScript } from '@/lib/seo'
+import { breadcrumbJsonLd, jsonLdScript, toKstIso } from '@/lib/seo'
 import { OG_IMAGE, SITE_URL } from '@/lib/site'
 
 export const metadata: Metadata = {
@@ -81,7 +81,7 @@ export default async function Wed100Page() {
     inLanguage: 'ko',
     about: ['혼주메이크업', '혼주화장', '혼주헤어', '한복 메이크업'],
     publisher: { '@id': `${SITE_URL}/#business` },
-    ...(edition ? { dateModified: edition } : {}),
+    ...(edition ? { dateModified: toKstIso(edition) } : {}),
     mainEntity: {
       '@type': 'ItemList',
       numberOfItems: items.length,
