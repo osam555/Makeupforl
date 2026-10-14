@@ -52,3 +52,8 @@ book/promo/*
 # 옛 홈페이지 보관본 — 74MB 스냅샷이라 저장소에 넣지 않는다.
 # 로컬 archive/makeupforl-old/ 에 있고, 별도 백업이 필요하다.
 archive/
+
+# 원장님 영상 작업(docs/video/README.md) — 원본·중간·완성 영상은 git 에 안 올린다. 대본·기록만 커밋
+video/raw/
+video/work/
+video/out/
