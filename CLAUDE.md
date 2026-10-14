@@ -168,6 +168,10 @@ Firestore 에서 고친 내용은 `scripts/wed100/sync_seed.py` 로 시드에 �
 - `public/sw.js`: HTML 은 항상 네트워크 우선(캐시는 오프라인용), 해시 붙은 정적 파일만 캐시 우선,
   API·이미지 최적화·Firestore 는 아예 손대지 않는다. 캐시를 갈아엎으려면 `VERSION` 을 올린다.
 
+### 영상 — 원장님 실제 영상으로 쇼츠·롱폼
+
+시작점은 `docs/video/README.md`(결론·원재료·촬영 안내·자동 편집 순서·다른 맥에서 이어 하기). 원장님 얼굴을 AI 로 새로 만드는 길(Higgsfield·Flow·HeyGen)은 일관성 문제로 접었다 — **실제 촬영본·채널 원본을 자르고 꾸미기만** 한다. 2026-09 의 AI 생성 홍보영상 규칙은 `book/promo/영상제작-규칙.md`. 영상 파일은 `video/raw|work|out/` 에 두고 커밋하지 않는다.
+
 ### 그 밖에
 
 - CSS `background-image` 는 `bgImage(url)` 로 감싼다 — `/_next/image` 를 경유시켜 WebP/AVIF 로 내린다.
