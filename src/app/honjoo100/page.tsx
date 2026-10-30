@@ -20,7 +20,7 @@ import { getSiteImages } from '@/lib/siteImages'
 import { MEMBER_MONTHS, MEMBER_PRICE_LABEL, isFreeQuestion, isOpen } from '@/lib/wed100Access'
 import { getWed100Access } from '@/lib/wed100Access.server'
 import { breadcrumbJsonLd, jsonLdScript, toKstIso } from '@/lib/seo'
-import { OG_IMAGE, SITE_URL } from '@/lib/site'
+import { SITE_URL } from '@/lib/site'
 
 export const metadata: Metadata = {
   // 자기 주소를 정본으로 못 박는다. 쿼리스트링이 붙은 유입도 한 주소로 모인다.
@@ -34,7 +34,10 @@ export const metadata: Metadata = {
     title: '혼주메이크업 100문 100답 | 메이크업포엘',
     description: '결혼식 날, 후회하면 늦습니다. 혼주님이 가장 많이 묻는 질문에 원장이 직접 답합니다.',
     type: 'article',
-    images: [OG_IMAGE],
+    // 카톡·문자로 이 주소를 보낼 때 뜨는 그림. 사이트 공통 OG_IMAGE(가게 사진) 대신 원장님 얼굴과
+    // "무엇이 걱정되세요?" — 링크를 받은 혼주님이 누구에게 무엇을 묻는 곳인지 미리보기에서 알게 한다.
+    // public/og/honjoo100-ask.jpg 는 1200×630 (카톡·페이스북 권장 비율)
+    images: [{ url: '/og/honjoo100-ask.jpg', width: 1200, height: 630, alt: '원장님께 물어보기 — 혼주메이크업 100문 100답' }],
   },
 }
 
@@ -210,7 +213,8 @@ export default async function Wed100Page() {
       </div>
 
       {/* 원장님께 물어보기 — 무료 문항 바로 아래. 걱정 하나를 고르면 그 파트의 무료 문항·이용권·상담 신청으로 이어진다 */}
-      <div className="mx-auto max-w-3xl px-6 pt-6 lg:px-8">
+      {/* id="ask" — 홍보 링크(/honjoo100#ask)가 문답 상자로 바로 내려온다 */}
+      <div id="ask" className="mx-auto max-w-3xl scroll-mt-24 px-6 pt-6 lg:px-8">
         <Wed100ChatGuide
           parts={[1, 2, 3, 4, 5, 6].map((part) => ({
             part,
