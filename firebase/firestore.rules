@@ -44,7 +44,8 @@ service cloud.firestore {
       allow read: if isAdmin();
       allow create: if request.resource.data.keys().hasAll(['name', 'phone', 'status']);
       allow update: if isAdmin();
-      allow delete: if false;
+      // 시험 샘플을 지울 길이 없었다(2026-10-30). 지우기는 관리자만.
+      allow delete: if isAdmin();
     }
 
     // 상담 신청(100문100답 안내 채팅): 이름·전화번호가 들어 있다.

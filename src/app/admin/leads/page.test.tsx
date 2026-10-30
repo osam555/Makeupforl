@@ -38,4 +38,13 @@ describe('/admin/leads', () => {
     render(<AdminLeadsPage />)
     expect(await screen.findByText(/보관 기간\(365일\)이 지난 접수가 1건/)).toBeTruthy()
   })
+  it('열면 쌓인 상담 알림(앱 아이콘 숫자)을 지운다', async () => {
+    const close = vi.fn()
+    Object.defineProperty(navigator, 'serviceWorker', {
+      configurable: true,
+      value: { ready: Promise.resolve({ getNotifications: async () => [{ close }, { close }] }) },
+    })
+    render(<AdminLeadsPage />)
+    await vi.waitFor(() => expect(close).toHaveBeenCalledTimes(2))
+  })
 })

@@ -72,6 +72,16 @@ function AdminLeads() {
     }
   }, [])
 
+  // 목록을 열었으면 쌓인 상담 알림을 닫는다 — 안 닫으면 접수를 지워도 앱 아이콘 숫자가 남는다
+  // (안드로이드 아이콘 숫자는 알림 개수다. 2026-10-30 2건을 지웠는데 "2" 가 남았다)
+  useEffect(() => {
+    if (!('serviceWorker' in navigator)) return
+    navigator.serviceWorker.ready
+      .then((r) => r.getNotifications())
+      .then((ns) => ns.forEach((n) => n.close()))
+      .catch(() => {})
+  }, [])
+
   async function setStatus(id: string, status: ConsultLead['status']) {
     setErr(null)
     try {
