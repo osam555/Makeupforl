@@ -24,7 +24,24 @@ export default function PushOptIn() {
   const key = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY
 
   if (!supported) {
-    return <p className="text-xs text-[var(--a-8a7a72)]">이 브라우저는 알림을 받을 수 없습니다. 안드로이드 크롬에서 열어 주세요.</p>
+    // 무엇이 빠졌는지까지 적는다 — 카톡·네이버 인앱 브라우저나 시크릿 탭에서 열면 크롬처럼 보여도
+    // 푸시가 없다(2026-10-30 갤럭시에서 "크롬에서 열라" 만 보고 원인을 못 찾았다)
+    const nav = typeof navigator !== 'undefined' ? navigator : null
+    const inApp = /KAKAOTALK|NAVER\(inapp|Instagram|FBAN|FBAV|; wv\)/i.test(nav?.userAgent ?? '')
+    const missing = [
+      !(nav && 'serviceWorker' in nav) && 'serviceWorker',
+      !(typeof window !== 'undefined' && 'PushManager' in window) && 'PushManager',
+      !(typeof window !== 'undefined' && 'Notification' in window) && 'Notification',
+    ].filter(Boolean)
+    return (
+      <p className="text-xs text-[var(--a-8a7a72)]">
+        이 브라우저는 알림을 받을 수 없습니다.{' '}
+        {inApp
+          ? '카톡·네이버 같은 앱 안에서 열렸습니다. 오른쪽 위 메뉴의 "다른 브라우저로 열기"로 크롬에서 열어 주세요.'
+          : '크롬 앱에서 직접(시크릿 탭 말고) 열어 주세요.'}{' '}
+        <span className="opacity-60">({missing.join(', ') || 'unknown'})</span>
+      </p>
+    )
   }
   if (!key) return <p className="text-xs text-[var(--a-8a7a72)]">알림 키(NEXT_PUBLIC_VAPID_PUBLIC_KEY)가 아직 설정되지 않았습니다.</p>
 
