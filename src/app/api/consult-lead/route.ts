@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 
 import { getAdminDb } from '@/lib/firebase/admin'
 import { notifyLead } from '@/lib/notifyLead.server'
+import { smsLead } from '@/lib/smsLead.server'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -55,6 +56,6 @@ export async function POST(req: Request) {
     createdAt: new Date().toISOString(),
   })
   // 저장 뒤에 알린다 — 메일이 실패해도 접수는 남는다
-  await notifyLead(lead)
+  await Promise.all([notifyLead(lead), smsLead(lead)])
   return NextResponse.json({ ok: true })
 }

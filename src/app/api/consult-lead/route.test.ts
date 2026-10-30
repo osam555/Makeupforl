@@ -4,8 +4,9 @@ const add = vi.fn()
 let db: unknown = { collection: () => ({ add }) }
 vi.mock('@/lib/firebase/admin', () => ({ getAdminDb: async () => db }))
 
-const { notify } = vi.hoisted(() => ({ notify: vi.fn(async (_l: unknown) => {}) }))
+const { notify } = vi.hoisted(() => ({ notify: vi.fn(async (l: unknown) => void l) }))
 vi.mock('@/lib/notifyLead.server', () => ({ notifyLead: notify }))
+vi.mock('@/lib/smsLead.server', () => ({ smsLead: notify }))
 
 import { POST } from './route'
 
