@@ -47,6 +47,15 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    // 상담 신청(100문100답 안내 채팅): 이름·전화번호가 들어 있다.
+    // 접수(create)는 /api/consult-lead(Admin SDK, 규칙 우회)만 한다. bookings 처럼 클라이언트
+    // create 를 열어 두면 봇이 API 의 형식 검사·숨은 칸을 건너뛰고 바로 쓸 수 있다.
+    // 관리자는 /admin/leads 에서 읽고, 상태를 바꾸고, 보관 기간이 지나면 지운다.
+    match /consult_leads/{id} {
+      allow read, update, delete: if isAdmin();
+      allow create: if false;
+    }
+
     // 후기: 공개 읽기, 수정은 관리자만
     match /reviews/{id} {
       allow read: if true;
