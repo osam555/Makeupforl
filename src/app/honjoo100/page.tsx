@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Wed100Account from '@/components/wed100/Wed100Account'
 import Wed100Browser from '@/components/wed100/Wed100Browser'
 import FreePicks from '@/components/wed100/FreePicks'
+import Wed100ChatGuide from '@/components/wed100/Wed100ChatGuide'
 import PartPicker from '@/components/wed100/PartPicker'
 import { HUBS } from '@/lib/hubs'
 import {
@@ -16,7 +17,7 @@ import {
   wed100Parts,
 } from '@/lib/wed100'
 import { getSiteImages } from '@/lib/siteImages'
-import { isFreeQuestion, isOpen } from '@/lib/wed100Access'
+import { MEMBER_MONTHS, MEMBER_PRICE_LABEL, isFreeQuestion, isOpen } from '@/lib/wed100Access'
 import { getWed100Access } from '@/lib/wed100Access.server'
 import { breadcrumbJsonLd, jsonLdScript, toKstIso } from '@/lib/seo'
 import { OG_IMAGE, SITE_URL } from '@/lib/site'
@@ -206,6 +207,22 @@ export default async function Wed100Page() {
       {/* 무료 문항 — 히어로 바로 아래, 로그인 안내보다 먼저. 공짜부터 보여 주고 값을 말한다 */}
       <div className="mx-auto max-w-7xl px-6 pt-6 lg:px-8">
         <FreePicks items={freePicks} />
+      </div>
+
+      {/* 원장님께 물어보기 — 무료 문항 바로 아래. 걱정 하나를 고르면 그 파트의 무료 문항·이용권·상담 신청으로 이어진다 */}
+      <div className="mx-auto max-w-3xl px-6 pt-6 lg:px-8">
+        <Wed100ChatGuide
+          parts={[1, 2, 3, 4, 5, 6].map((part) => ({
+            part,
+            count: counts.get(part) ?? 0,
+            free: freePicks.find((x) => x.part === part),
+          }))}
+          totalCount={items.length}
+          totalMinutes={Math.round(totalSec / 60)}
+          storeUrl={access.storeUrl}
+          priceLabel={MEMBER_PRICE_LABEL}
+          months={MEMBER_MONTHS}
+        />
       </div>
 
       {/*
