@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server'
 
 import { getAdminDb } from '@/lib/firebase/admin'
+import { notifyLead } from '@/lib/notifyLead.server'
+import { pushLead } from '@/lib/pushLead.server'
+import { smsLead } from '@/lib/smsLead.server'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -40,15 +43,20 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: '지금은 접수할 수 없어요. 02-323-3321 로 전화 주세요.' }, { status: 503 })
   }
 
-  await db.collection('consult_leads').add({
+  const lead = {
     name,
     phone: phone.replace(/^(\d{3})-?(\d{3,4})-?(\d{4})$/, '$1-$2-$3'),
     when,
     who: String(body.who ?? '').slice(0, 30),
     worry: String(body.worry ?? '').slice(0, 60),
+  }
+  await db.collection('consult_leads').add({
+    ...lead,
     source: 'honjoo100-chat',
     status: 'new',
     createdAt: new Date().toISOString(),
   })
+  // 저장 뒤에 알린다 — 메일이 실패해도 접수는 남는다
+  await Promise.all([notifyLead(lead), smsLead(lead), pushLead(lead)])
   return NextResponse.json({ ok: true })
 }

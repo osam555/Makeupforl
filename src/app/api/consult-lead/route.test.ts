@@ -4,6 +4,11 @@ const add = vi.fn()
 let db: unknown = { collection: () => ({ add }) }
 vi.mock('@/lib/firebase/admin', () => ({ getAdminDb: async () => db }))
 
+const { notify } = vi.hoisted(() => ({ notify: vi.fn(async (l: unknown) => void l) }))
+vi.mock('@/lib/notifyLead.server', () => ({ notifyLead: notify }))
+vi.mock('@/lib/smsLead.server', () => ({ smsLead: notify }))
+vi.mock('@/lib/pushLead.server', () => ({ pushLead: notify }))
+
 import { POST } from './route'
 
 const req = (body: unknown) =>
@@ -13,6 +18,7 @@ const ok = { name: '김혼주', phone: '010-1234-5678', when: '1~3개월', who: 
 describe('POST /api/consult-lead', () => {
   beforeEach(() => {
     add.mockReset()
+    notify.mockClear()
     db = { collection: () => ({ add }) }
   })
 
@@ -41,5 +47,15 @@ describe('POST /api/consult-lead', () => {
   it('서비스 계정이 없으면 503', async () => {
     db = null
     expect((await POST(req(ok))).status).toBe(503)
+  })
+  it('정상 접수는 원장·매니저에게 알림', async () => {
+    await POST(req(ok))
+    expect(notify).toHaveBeenCalledWith(expect.objectContaining({ name: '김혼주', phone: '010-1234-5678' }))
+  })
+
+  it('봇·검증 실패는 알림 안 함', async () => {
+    await POST(req({ ...ok, website: 'x' }))
+    await POST(req({ ...ok, agree: false }))
+    expect(notify).not.toHaveBeenCalled()
   })
 })
