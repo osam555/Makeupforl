@@ -12,7 +12,7 @@
 
   캐시 이름에 판올림 번호를 둔다. 이 번호를 올리면 옛 캐시가 지워진다.
 */
-const VERSION = 'mfl-v1'
+const VERSION = 'mfl-v2'
 const STATIC = `${VERSION}-static`
 const PAGES = `${VERSION}-pages`
 const OFFLINE = '/offline'
@@ -72,4 +72,33 @@ self.addEventListener('fetch', (e) => {
         .catch(() => caches.match(request).then((hit) => hit || caches.match(OFFLINE))),
     )
   }
+})
+
+/*
+  상담 신청 웹 푸시 (2026-10-30).
+
+  /admin/leads 에서 "이 기기에서 알림 받기" 를 누른 관리자 기기에만 온다.
+  누르면 상담 신청 목록을 연다 — 이미 열린 창이 있으면 그 창을 앞으로.
+*/
+self.addEventListener('push', (e) => {
+  const d = e.data ? e.data.json() : {}
+  e.waitUntil(
+    self.registration.showNotification(d.title || '상담 신청', {
+      body: d.body || '',
+      icon: '/icons/icon-192.png',
+      badge: '/icons/icon-192.png',
+      data: { url: d.url || '/admin/leads' },
+    }),
+  )
+})
+
+self.addEventListener('notificationclick', (e) => {
+  e.notification.close()
+  const url = (e.notification.data && e.notification.data.url) || '/admin/leads'
+  e.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((list) => {
+      const hit = list.find((c) => new URL(c.url).pathname === url)
+      return hit ? hit.focus() : self.clients.openWindow(url)
+    }),
+  )
 })

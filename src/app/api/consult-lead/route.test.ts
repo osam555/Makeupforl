@@ -7,6 +7,7 @@ vi.mock('@/lib/firebase/admin', () => ({ getAdminDb: async () => db }))
 const { notify } = vi.hoisted(() => ({ notify: vi.fn(async (l: unknown) => void l) }))
 vi.mock('@/lib/notifyLead.server', () => ({ notifyLead: notify }))
 vi.mock('@/lib/smsLead.server', () => ({ smsLead: notify }))
+vi.mock('@/lib/pushLead.server', () => ({ pushLead: notify }))
 
 import { POST } from './route'
 

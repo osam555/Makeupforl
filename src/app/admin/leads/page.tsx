@@ -6,6 +6,7 @@ import { Phone } from 'lucide-react'
 import { getDb } from '@/lib/firebase/client'
 import AdminGate from '@/components/admin/AdminGate'
 import AdminShell from '@/components/admin/AdminShell'
+import PushOptIn from '@/components/admin/PushOptIn'
 import { Chips, Empty, Note, Panel, Stat } from '@/components/admin/AdminUI'
 import { type ConsultLead, LEAD_KEEP_DAYS, isLeadExpired, leadStatusLabel } from '@/lib/consultLeads'
 
@@ -103,6 +104,7 @@ function AdminLeads() {
   return (
     <div className="space-y-5">
       <Chips<Filter> value={filter} onChange={setFilter} options={FILTERS} />
+      <PushOptIn />
       {err && <Note kind="err">{err}</Note>}
       {expired.length > 0 && (
         <Note kind="err">
