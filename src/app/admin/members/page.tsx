@@ -32,7 +32,7 @@ async function idToken(): Promise<string> {
  * 그래서 관리자만 읽는 wed100_members 로 옮겼다. 옛 명단의 사람도 여기 함께 보이고,
  * 이름을 채워 저장하면 새 명단으로 옮겨진다.
  *
- * 기본 기간 6개월 — 날짜 칸을 고치면 그 날짜로 저장된다.
+ * 기본 기간은 이용권과 같은 3개월 — 날짜 칸을 고치면 그 날짜로 저장된다.
  */
 function Members() {
   const [rows, setRows] = useState<Row[]>([])

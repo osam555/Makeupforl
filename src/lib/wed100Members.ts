@@ -1,4 +1,4 @@
-import { todayKST, type Wed100Member } from '@/lib/wed100Access'
+import { MEMBER_MONTHS, todayKST, type Wed100Member } from '@/lib/wed100Access'
 
 /**
  * 100문100답 이용권 회원 — 원장이 어드민에서 한 명씩 등록한다.
@@ -9,8 +9,12 @@ import { todayKST, type Wed100Member } from '@/lib/wed100Access'
  */
 export const MEMBERS_COLLECTION = 'wed100_members'
 
-/** 등록 화면의 기본 기간. 2026-10-31 6개월로 정함. 날짜 칸에서 고칠 수 있다 */
-export const REGISTER_MONTHS = 6
+/**
+ * 등록 화면의 기본 기간 — 손님 화면에 적힌 이용권 기간(MEMBER_MONTHS)과 같은 값을 쓴다.
+ * 2026-10-31 6개월로 했다가 같은 날 3개월로 되돌렸다: 파는 것과 등록하는 것이 다르면 안 된다.
+ * 날짜 칸에서 사람마다 고칠 수 있다.
+ */
+export const REGISTER_MONTHS = MEMBER_MONTHS
 
 export interface Wed100MemberRecord extends Wed100Member {
   name: string

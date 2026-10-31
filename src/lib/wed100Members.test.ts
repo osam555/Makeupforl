@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { REGISTER_MONTHS, addMonths, mergeMembers, parseMemberInput } from './wed100Members'
 
 describe('wed100Members', () => {
-  it('기본 기간은 6개월', () => expect(REGISTER_MONTHS).toBe(6))
+  it('기본 기간은 3개월 (이용권과 같음)', () => expect(REGISTER_MONTHS).toBe(3))
 
   it('개월 더하기 — 달 넘김', () => {
     expect(addMonths(6, '2026-10-31')).toBe('2027-05-01')
