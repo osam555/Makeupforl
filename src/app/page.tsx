@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { ASK_HREF } from '@/components/wed100/AskCta'
 import Image from 'next/image'
 
 import { bgImage } from '@/lib/bgImage'
@@ -153,6 +154,13 @@ export default async function Home() {
           className="inline-flex items-center rounded-full border border-gray-200 px-6 py-3.5 text-[15px] font-bold text-gray-700 transition-colors hover:border-[#F46E65] hover:text-[#F46E65]"
         >
           혼주 100문100답
+        </Link>
+        {/* 설문 입구 — 홈에서 바로 연락처까지 (2026-10-31) */}
+        <Link
+          href={ASK_HREF}
+          className="inline-flex items-center rounded-full border border-gray-200 px-6 py-3.5 text-[15px] font-bold text-gray-700 transition-colors hover:border-[#F46E65] hover:text-[#F46E65]"
+        >
+          원장님께 물어보기
         </Link>
       </div>
 

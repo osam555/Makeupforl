@@ -3,6 +3,8 @@
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 
+import { MEMBER_CREDIT_NOTE } from '@/lib/wed100Access'
+
 /**
  * 말풍선으로 묻고 답하며 100문100답으로 데려가고, 상담 신청까지 받는 안내.
  *
@@ -207,6 +209,7 @@ export default function Wed100ChatGuide({
             <p className="text-[15px] text-[var(--w-ink2)]">
               전체 {totalCount}문항 · 음성 {totalMinutes}분 · {months}개월 동안 몇 번이고 다시 듣기
             </p>
+            <p className="mt-1 text-[15px] font-bold text-[var(--w-rose)]">{MEMBER_CREDIT_NOTE}</p>
             <div className="mt-3 flex flex-wrap gap-2">
               {storeUrl ? (
                 <a href={storeUrl} target="_blank" rel="noopener noreferrer" className={cta}>
