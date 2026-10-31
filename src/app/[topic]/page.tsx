@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import AskCta from '@/components/wed100/AskCta'
 import { notFound } from 'next/navigation'
 
 import { getPublishedColumns } from '@/lib/columns'
@@ -267,6 +268,10 @@ export default async function HubPage({ params }: Params) {
             </div>
           </section>
         )}
+
+        <div className="mt-16">
+          <AskCta title="내 경우는 어떨지 궁금하다면" />
+        </div>
 
         {/* 다음 걸음 */}
         <div className="mt-16 rounded-xl border border-[var(--w-line)] bg-[var(--w-card2)] p-7 text-center">

@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 
-import { MEMBER_MONTHS, MEMBER_PRICE_LABEL } from '@/lib/wed100Access'
+import { MEMBER_CREDIT_NOTE, MEMBER_MONTHS, MEMBER_PRICE_LABEL } from '@/lib/wed100Access'
 
 /**
  * 잠긴 문항 화면.
@@ -155,6 +155,7 @@ export default function Wed100Locked({
               <dd className="mt-0.5 text-[19px] font-extrabold text-[var(--w-rose)]">{MEMBER_PRICE_LABEL}</dd>
             </div>
           </dl>
+          <p className="mt-3 text-[14px] font-bold text-[var(--w-rose)]">{MEMBER_CREDIT_NOTE}</p>
 
           <div className="mt-5 flex flex-wrap gap-2">
             {storeUrl ? (

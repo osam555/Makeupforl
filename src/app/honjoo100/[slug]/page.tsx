@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import AskCta from '@/components/wed100/AskCta'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 
@@ -368,6 +369,11 @@ export default async function Wed100DetailPage({
           </ul>
         </section>
       )}
+
+      {/* 읽고 난 자리에서 연락처를 받는다 — 매출은 예약에서 난다 */}
+      <section className="mx-auto max-w-3xl px-6 pt-10 lg:px-8">
+        <AskCta />
+      </section>
 
       {/*
         같은 파트의 다른 질문 — 문항끼리 잇는 내부링크 (2026-09-19).

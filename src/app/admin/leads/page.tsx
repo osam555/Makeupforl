@@ -8,13 +8,23 @@ import AdminGate from '@/components/admin/AdminGate'
 import AdminShell from '@/components/admin/AdminShell'
 import PushOptIn from '@/components/admin/PushOptIn'
 import { Chips, Empty, Note, Panel, Stat } from '@/components/admin/AdminUI'
-import { type ConsultLead, LEAD_KEEP_DAYS, isLeadExpired, leadStatusLabel } from '@/lib/consultLeads'
+import {
+  type ConsultLead,
+  LEAD_CALL_WITHIN_HOURS,
+  LEAD_KEEP_DAYS,
+  bookingRate,
+  isLeadExpired,
+  isLeadOverdue,
+  leadAge,
+  leadStatusLabel,
+} from '@/lib/consultLeads'
 
-type Filter = 'all' | 'new' | 'called' | 'done'
+type Filter = 'all' | 'new' | 'called' | 'booked' | 'done'
 const FILTERS = [
   ['all', '전체'],
   ['new', '새 접수'],
   ['called', '연락함'],
+  ['booked', '예약함'],
   ['done', '끝남'],
 ] as const
 
@@ -22,6 +32,7 @@ const FILTERS = [
 const TONE: Record<string, string> = {
   new: 'bg-amber-100 text-amber-800',
   called: 'bg-[var(--a-f6e9ed)] text-[var(--a-a63d5a)]',
+  booked: 'bg-emerald-600 text-white',
   done: 'bg-emerald-100 text-emerald-800',
 }
 
@@ -110,6 +121,8 @@ function AdminLeads() {
   const expired = leads.filter((l) => isLeadExpired(l.createdAt))
   const shown = filter === 'all' ? leads : leads.filter((l) => l.status === filter)
   const count = (s: string) => leads.filter((l) => l.status === s).length
+  const overdue = leads.filter((l) => isLeadOverdue(l))
+  const rate = bookingRate(leads)
 
   return (
     <div className="space-y-5">
@@ -125,10 +138,22 @@ function AdminLeads() {
         </Note>
       )}
 
-      <div className="grid grid-cols-3 gap-2.5 sm:gap-3">
+      {overdue.length > 0 && (
+        <Note kind="err">
+          {LEAD_CALL_WITHIN_HOURS}시간 넘게 연락하지 못한 새 접수가 {overdue.length}건 있습니다 (
+          {overdue.map((l) => l.name).join(', ')}). 하루를 넘기면 다른 곳을 알아보시는 경우가 많습니다.
+        </Note>
+      )}
+
+      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4 sm:gap-3">
         <Stat label="새 접수" value={`${count('new')}건`} hint="아직 연락 안 함" warn={count('new') > 0} />
         <Stat label="연락함" value={`${count('called')}건`} hint="통화했거나 문자 보냄" />
-        <Stat label="전체" value={`${leads.length}건`} hint="지금 보관 중" />
+        <Stat label="예약함" value={`${count('booked')}건`} hint="상담이 예약으로 이어짐" />
+        <Stat
+          label="예약 전환"
+          value={rate === null ? '—' : `${rate}%`}
+          hint={`전체 ${leads.length}건 중`}
+        />
       </div>
 
       {loading ? (
@@ -151,7 +176,8 @@ function AdminLeads() {
                   </span>
                 )}
                 <span className="ml-auto text-[0.6875rem] text-[var(--a-8a7a72)]">
-                  {new Date(l.createdAt).toLocaleString('ko-KR')} 접수
+                  {new Date(l.createdAt).toLocaleString('ko-KR')} 접수 · {leadAge(l.createdAt)}
+                  {isLeadOverdue(l) && <b className="ml-1 text-[var(--a-a63d5a)]">연락 늦음</b>}
                 </span>
               </div>
               <div className="mt-2.5 flex flex-wrap items-baseline gap-x-4 gap-y-1">
@@ -171,6 +197,11 @@ function AdminLeads() {
                 {l.status !== 'called' && (
                   <button type="button" className={btn} onClick={() => setStatus(l.id, 'called')}>
                     연락함
+                  </button>
+                )}
+                {l.status !== 'booked' && (
+                  <button type="button" className={btn} onClick={() => setStatus(l.id, 'booked')}>
+                    예약함
                   </button>
                 )}
                 {l.status !== 'done' && (
