@@ -4,6 +4,7 @@ import {
   normalizeMembers,
   type Wed100Access,
 } from '@/lib/wed100Access'
+import { MEMBERS_COLLECTION, mergeMembers } from '@/lib/wed100Members'
 
 /**
  * 100문100답 공개 범위 읽기 (서버 전용).
@@ -22,6 +23,16 @@ export async function getWed100Access(): Promise<Wed100Access> {
     const adb = await getAdminDb()
     if (adb) {
       const snap = await adb.collection(WED100_CONFIG_DOC.collection).doc(WED100_CONFIG_DOC.doc).get()
+      /*
+        회원은 두 곳에 있다: 옛 공개 명단(site_config.members)과 어드민 등록 명단
+        (wed100_members, 이름·전화 포함이라 관리자만 읽음). 둘을 합쳐서 본다.
+      */
+      const recs = await adb
+        .collection(MEMBERS_COLLECTION)
+        .get()
+        .then((q) => normalizeMembers(q.docs.map((x) => x.data())))
+        .catch(() => [])
+      if (!snap.exists && recs.length) return { ...DEFAULT_ACCESS, members: recs }
       if (snap.exists) {
         const d = snap.data() as Partial<Wed100Access>
         return {
@@ -29,7 +40,7 @@ export async function getWed100Access(): Promise<Wed100Access> {
           freeQna: Array.isArray(d.freeQna) ? d.freeQna.map(String) : [],
           storeUrl: typeof d.storeUrl === 'string' ? d.storeUrl : '',
           notice: typeof d.notice === 'string' ? d.notice : '',
-          members: normalizeMembers(d.members),
+          members: mergeMembers(normalizeMembers(d.members), recs),
         }
       }
     }
