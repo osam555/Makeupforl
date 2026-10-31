@@ -29,6 +29,7 @@ export const TABS = [
   { href: '/admin/dashboard', label: '문항 통계' },
   { href: '/admin/bookings', label: '예약' },
   { href: '/admin/leads', label: '상담 신청' },
+  { href: '/admin/members', label: '이용권 회원' },
 ] as const
 
 export default function AdminTabs({ active }: { active: string }) {
