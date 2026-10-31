@@ -116,6 +116,7 @@ function Members() {
   const all: Row[] = [...rows, ...legacy.filter((l) => !rows.some((r) => r.email === l.email))].sort((a, b) =>
     (b.until ?? '9999').localeCompare(a.until ?? '9999'),
   )
+  const stale = all.filter((r) => !!r.until && addMonths(12, r.until) < today)
   const active = all.filter((r) => !r.until || r.until >= today).length
 
   return (
@@ -155,6 +156,13 @@ function Members() {
       </Panel>
 
       {msg && <Note kind={msg.ok ? 'ok' : 'err'}>{msg.text}</Note>}
+      {/* 개인정보처리방침: 이용 기한이 끝나고 1년 보관 후 파기. 자동 삭제가 없어 여기서 알린다 */}
+      {stale.length > 0 && (
+        <Note kind="err">
+          이용 기한이 끝나고 1년이 지난 분이 {stale.length}명 있습니다 ({stale.map((r) => r.name || r.email).join(', ')}).
+          개인정보처리방침의 보관 기간이 끝났으니 [지우기]로 지워 주세요.
+        </Note>
+      )}
 
       <div className="grid grid-cols-2 gap-2.5">
         <Stat label="이용 중" value={`${active}명`} hint="기한이 남은 분" />
