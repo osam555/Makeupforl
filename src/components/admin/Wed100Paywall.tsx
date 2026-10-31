@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { Loader2, Lock, Save } from 'lucide-react'
 
@@ -177,7 +178,7 @@ export default function Wed100Paywall({
             공개 범위를 저장해도 회원 명단은 건드리지 않는다.
           */}
           <p className="mt-3 text-xs text-[var(--a-8a7a72)]">
-            전체 열람 계정은 <a href="/admin/members" className="font-bold text-[var(--a-a63d5a)] underline">이용권 회원</a> 화면에서 등록합니다.
+            전체 열람 계정은 <Link href="/admin/members" className="font-bold text-[var(--a-a63d5a)] underline">이용권 회원</Link> 화면에서 등록합니다.
           </p>
         </>
       )}
