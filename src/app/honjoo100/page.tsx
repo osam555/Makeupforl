@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     // 카톡·문자로 이 주소를 보낼 때 뜨는 그림. 사이트 공통 OG_IMAGE(가게 사진) 대신 원장님 얼굴과
     // "무엇이 걱정되세요?" — 링크를 받은 혼주님이 누구에게 무엇을 묻는 곳인지 미리보기에서 알게 한다.
     // public/og/honjoo100-ask.jpg 는 1200×630 (카톡·페이스북 권장 비율)
-    images: [{ url: '/og/honjoo100-ask.jpg', width: 1200, height: 630, alt: '원장님께 물어보기 — 혼주메이크업 100문 100답' }],
+    images: [{ url: '/og/honjoo100-ask.jpg', width: 1200, height: 630, alt: '궁금한 점 알아보기 — 혼주메이크업 100문 100답' }],
   },
 }
 
