@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { activeWithin, usageLine } from './wed100Usage'
+import { activeWithin, clampSeconds, formatDuration, usageLine } from './wed100Usage'
 
 const now = new Date('2026-11-01T12:00:00Z')
 
@@ -20,5 +20,25 @@ describe('activeWithin', () => {
     expect(activeWithin({ lastAt: '2026-10-28T12:00:00Z' }, 7, now)).toBe(true)
     expect(activeWithin({ lastAt: '2026-10-20T12:00:00Z' }, 7, now)).toBe(false)
     expect(activeWithin(undefined, 7, now)).toBe(false)
+  })
+})
+
+describe('열람 시간', () => {
+  it('보고된 초를 0~30분으로 자른다', () => {
+    expect(clampSeconds(90)).toBe(90)
+    expect(clampSeconds(99999)).toBe(1800)
+    expect(clampSeconds(-3)).toBe(0)
+    expect(clampSeconds('x')).toBe(0)
+  })
+  it('시간을 읽기 쉽게 적는다', () => {
+    expect(formatDuration(30)).toBe('1분 미만')
+    expect(formatDuration(720)).toBe('12분')
+    expect(formatDuration(3900)).toBe('1시간 5분')
+    expect(formatDuration(3600)).toBe('1시간')
+  })
+  it('요약 줄에 총 열람 시간이 들어간다', () => {
+    expect(
+      usageLine({ lastAt: '2026-11-01T09:00:00Z', viewed: ['p1-01'], days: ['2026-11-01'], seconds: 720 }, now),
+    ).toBe('1문항 열람 · 총 12분 · 1일 접속 · 마지막 3시간 전')
   })
 })

@@ -34,6 +34,8 @@ export default function Wed100Gate({
   const [msg, setMsg] = useState<string | null>(null)
   // 로그인 상태 구독이 뜰 때마다 같은 요청을 두 번 보내지 않도록
   const tried = useRef<string | null>(null)
+  // 열람 시간 보고에 쓴다 — 창을 닫는 순간에는 토큰을 새로 받을 틈이 없다
+  const token = useRef<string | null>(null)
 
   const load = useCallback(
     async (idToken: string, loud: boolean) => {
@@ -47,6 +49,7 @@ export default function Wed100Gate({
         })
         const d = await r.json().catch(() => ({}))
         if (r.ok && d?.ok) {
+          token.current = idToken
           setPlayer(d.player as PlayerProps)
           setUntil(typeof d.until === 'string' ? d.until : null)
           setMsg(null)
@@ -80,6 +83,42 @@ export default function Wed100Gate({
     }).then((fn) => (off = fn))
     return () => off()
   }, [load])
+
+  /*
+    얼마나 오래 봤는지 — 본문이 열린 뒤 화면이 앞에 떠 있던 시간을 센다.
+    음성 재생 시간만 세면 글로 읽는 분이 0분으로 보이고, 창만 열어 둔 시간까지 세면
+    부풀려진다. 그래서 '보이는 동안'만 세고, 화면을 내리거나 떠날 때 보낸다.
+    서버는 회원일 때만 더한다(관리자 원고 확인은 빠진다).
+  */
+  useEffect(() => {
+    if (!player) return
+    let shown = document.visibilityState === 'visible' ? Date.now() : 0
+    let acc = 0
+    const flush = () => {
+      if (shown) {
+        acc += Date.now() - shown
+        shown = 0
+      }
+      const seconds = Math.round(acc / 1000)
+      acc = 0
+      if (seconds < 5 || !token.current) return
+      const body = JSON.stringify({ slug, idToken: token.current, seconds })
+      if (!navigator.sendBeacon?.('/api/wed100/usage', new Blob([body], { type: 'application/json' }))) {
+        void fetch('/api/wed100/usage', { method: 'POST', body, keepalive: true }).catch(() => {})
+      }
+    }
+    const onVis = () => {
+      if (document.visibilityState === 'visible') shown = Date.now()
+      else flush()
+    }
+    document.addEventListener('visibilitychange', onVis)
+    window.addEventListener('pagehide', flush)
+    return () => {
+      document.removeEventListener('visibilitychange', onVis)
+      window.removeEventListener('pagehide', flush)
+      flush()
+    }
+  }, [player, slug])
 
   if (player)
     return (

@@ -23,6 +23,26 @@ export interface Wed100Usage {
   viewed: string[]
   /** 연 날 (KST YYYY-MM-DD) */
   days: string[]
+  /** 본문이 화면에 떠 있던 시간 합계(초) — 2026-11-01 부터 센다 */
+  seconds?: number
+}
+
+/** 한 번 보고에 더할 수 있는 최대 초 — 창을 켜 둔 채 자리를 비운 경우를 자른다 */
+export const MAX_REPORT_SECONDS = 30 * 60
+
+/** 보고된 초를 믿을 만한 범위로 자른다. 쓸 수 없으면 0 */
+export function clampSeconds(v: unknown): number {
+  const n = Math.round(Number(v))
+  if (!Number.isFinite(n) || n <= 0) return 0
+  return Math.min(n, MAX_REPORT_SECONDS)
+}
+
+/** 초를 "1시간 5분" / "12분" / "1분 미만" 으로 */
+export function formatDuration(sec: number): string {
+  const m = Math.floor(sec / 60)
+  if (m < 1) return '1분 미만'
+  const h = Math.floor(m / 60)
+  return h ? `${h}시간${m % 60 ? ` ${m % 60}분` : ''}` : `${m}분`
 }
 
 /** 목록 한 줄 요약 — 아직 안 열었으면 그렇게 말한다 */
@@ -30,7 +50,8 @@ export function usageLine(u: Partial<Wed100Usage> | undefined, now = new Date())
   if (!u?.lastAt) return '아직 열람하지 않음'
   const viewed = u.viewed?.length ?? 0
   const days = u.days?.length ?? 0
-  return `${viewed}문항 열람 · ${days}일 접속 · 마지막 ${leadAge(u.lastAt, now)}`
+  const time = u.seconds ? ` · 총 ${formatDuration(u.seconds)}` : ''
+  return `${viewed}문항 열람${time} · ${days}일 접속 · 마지막 ${leadAge(u.lastAt, now)}`
 }
 
 /** 최근 n일 안에 본 적이 있나 */
