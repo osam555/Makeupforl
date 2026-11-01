@@ -9,7 +9,7 @@ import AdminShell from '@/components/admin/AdminShell'
 import { Empty, Note, Panel, Stat } from '@/components/admin/AdminUI'
 import { normalizeMembers, todayKST, type Wed100Member } from '@/lib/wed100Access'
 import { REGISTER_MONTHS, addMonths, type Wed100MemberRecord } from '@/lib/wed100Members'
-import { USAGE_COLLECTION, activeWithin, usageLine, type Wed100Usage } from '@/lib/wed100Usage'
+import { USAGE_COLLECTION, activeWithin, usageStats, type Wed100Usage } from '@/lib/wed100Usage'
 
 type Row = Partial<Wed100MemberRecord> & Wed100Member & { legacy?: boolean }
 
@@ -202,9 +202,18 @@ function Members() {
                     {r.until ? `${r.until}까지${expired ? ' · 지남' : ''}` : '기한 없음'}
                   </span>
                 </div>
-                <p className={`mt-1.5 text-sm ${usage[r.email]?.lastAt ? 'text-[var(--a-2e2724)]' : 'text-[var(--a-8a7a72)]'}`}>
-                  {usageLine(usage[r.email])}
-                </p>
+                {usageStats(usage[r.email]).length ? (
+                  <dl className="mt-2.5 grid grid-cols-2 gap-1.5 sm:grid-cols-5">
+                    {usageStats(usage[r.email]).map((c) => (
+                      <div key={c.label} className="rounded-lg bg-[var(--a-f7f1ec)] px-2.5 py-1.5">
+                        <dt className="text-[0.6875rem] text-[var(--a-8a7a72)]">{c.label}</dt>
+                        <dd className="text-sm font-extrabold text-[var(--a-2e2724)]">{c.value}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                ) : (
+                  <p className="mt-1.5 text-sm text-[var(--a-8a7a72)]">아직 열람하지 않음</p>
+                )}
                 {r.phone && (
                   <a href={`tel:${r.phone}`} className="mt-1.5 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--a-a63d5a)]">
                     <Phone className="h-3.5 w-3.5" aria-hidden />

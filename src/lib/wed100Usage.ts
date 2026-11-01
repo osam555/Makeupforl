@@ -59,3 +59,22 @@ export function activeWithin(u: Partial<Wed100Usage> | undefined, days: number, 
   if (!u?.lastAt) return false
   return now.getTime() - new Date(u.lastAt).getTime() <= days * 86400_000
 }
+
+/**
+ * 회원 카드에 칸으로 늘어놓을 열람 통계. 한 줄 요약은 목록이 길 때 훑기 좋지만,
+ * 회원 한 분을 들여다볼 때는 숫자가 칸마다 떨어져 있어야 읽힌다.
+ * 마지막 열람은 "3시간 전" 대신 KST 날짜·시각으로 — 통화 전에 "어제 밤에 보셨네요" 를 짚으려면 정확한 때가 필요하다.
+ */
+export function usageStats(u: Partial<Wed100Usage> | undefined): { label: string; value: string }[] {
+  if (!u?.lastAt) return []
+  const kst = new Date(new Date(u.lastAt).getTime() + 9 * 3600_000)
+  const hh = String(kst.getUTCHours()).padStart(2, '0')
+  const mm = String(kst.getUTCMinutes()).padStart(2, '0')
+  return [
+    { label: '열람 문항', value: `${u.viewed?.length ?? 0}개` },
+    { label: '총 열람 시간', value: u.seconds ? formatDuration(u.seconds) : '집계 전' },
+    { label: '접속한 날', value: `${u.days?.length ?? 0}일` },
+    { label: '연 횟수', value: `${u.opens ?? 0}회` },
+    { label: '마지막 열람', value: `${kst.getUTCMonth() + 1}.${kst.getUTCDate()} ${hh}:${mm}` },
+  ]
+}

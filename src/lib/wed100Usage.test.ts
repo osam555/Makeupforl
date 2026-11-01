@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { activeWithin, clampSeconds, formatDuration, usageLine } from './wed100Usage'
+import { activeWithin, clampSeconds, formatDuration, usageLine, usageStats } from './wed100Usage'
 
 const now = new Date('2026-11-01T12:00:00Z')
 
@@ -40,5 +40,21 @@ describe('열람 시간', () => {
     expect(
       usageLine({ lastAt: '2026-11-01T09:00:00Z', viewed: ['p1-01'], days: ['2026-11-01'], seconds: 720 }, now),
     ).toBe('1문항 열람 · 총 12분 · 1일 접속 · 마지막 3시간 전')
+  })
+})
+
+describe('usageStats', () => {
+  it('카드 칸: 문항·시간·접속일·연 횟수·마지막 시각', () => {
+    const cells = usageStats({ email: 'a@gmail.com', lastAt: '2026-11-01T12:40:00.000Z', opens: 7, viewed: ['p1-01', 'p1-02'], days: ['2026-10-31', '2026-11-01'], seconds: 750 })
+    expect(cells).toEqual([
+      { label: '열람 문항', value: '2개' },
+      { label: '총 열람 시간', value: '12분' },
+      { label: '접속한 날', value: '2일' },
+      { label: '연 횟수', value: '7회' },
+      { label: '마지막 열람', value: '11.1 21:40' },
+    ])
+  })
+  it('아직 안 열었으면 빈 배열', () => {
+    expect(usageStats(undefined)).toEqual([])
   })
 })
