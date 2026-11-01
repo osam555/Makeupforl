@@ -25,3 +25,20 @@ export async function recordUsage(email: string, slug: string): Promise<void> {
     /* 기록 실패는 삼킨다 */
   }
 }
+
+/** 열람 시간(초)을 더한다. 실패해도 조용히 넘긴다 */
+export async function addReadSeconds(email: string, seconds: number): Promise<void> {
+  if (seconds <= 0) return
+  try {
+    const { getAdminDb } = await import('@/lib/firebase/admin')
+    const adb = await getAdminDb()
+    if (!adb) return
+    const { FieldValue } = await import('firebase-admin/firestore')
+    await adb
+      .collection(USAGE_COLLECTION)
+      .doc(email.toLowerCase())
+      .set({ email: email.toLowerCase(), seconds: FieldValue.increment(seconds) }, { merge: true })
+  } catch {
+    /* 기록 실패는 삼킨다 */
+  }
+}
