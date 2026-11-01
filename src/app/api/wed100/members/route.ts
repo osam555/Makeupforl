@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server'
 import { getAdminDb, verifyAdmin } from '@/lib/firebase/admin'
 import { WED100_CONFIG_DOC, normalizeMembers } from '@/lib/wed100Access'
 import { MEMBERS_COLLECTION, parseMemberInput } from '@/lib/wed100Members'
+import { USAGE_COLLECTION } from '@/lib/wed100Usage'
 
 export const runtime = 'nodejs'
 
@@ -41,6 +42,12 @@ export async function POST(req: Request) {
     const email = String(body.email ?? '').trim().toLowerCase()
     if (!email) return NextResponse.json({ ok: false, error: '이메일이 없습니다.' }, { status: 400 })
     await col.doc(email).delete()
+    // 회원을 지우면 열람 기록도 함께 지운다 — 방침상 같은 보관 기간을 따른다
+    try {
+      await db.collection(USAGE_COLLECTION).doc(email).delete()
+    } catch {
+      /* 열람 기록이 없거나 못 지워도 회원 삭제는 끝난 것이다 */
+    }
     await dropLegacy(email)
     return NextResponse.json({ ok: true })
   }

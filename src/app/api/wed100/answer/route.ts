@@ -10,6 +10,7 @@ import {
 } from '@/lib/wed100'
 import { findMember, isMember, isOpen, todayKST } from '@/lib/wed100Access'
 import { getWed100Access } from '@/lib/wed100Access.server'
+import { recordUsage } from '@/lib/wed100Usage.server'
 
 export const runtime = 'nodejs'
 /* 사람마다 답이 다르므로 절대 캐시하지 않는다 */
@@ -83,6 +84,9 @@ export async function POST(req: Request) {
   if (!item) {
     return NextResponse.json({ ok: false, error: '문항을 찾을 수 없습니다.' }, { status: 404 })
   }
+
+  // 회원 열람만 센다 — 원고를 보는 관리자는 손님 통계가 아니다
+  if (isMember(access, email)) await recordUsage(email, slug)
 
   const all = await getPublishedWed100Items()
   const { prev, next } = await getWed100Neighbors(slug)
