@@ -9,6 +9,7 @@ import AdminShell from '@/components/admin/AdminShell'
 import { Empty, Note, Panel, Stat } from '@/components/admin/AdminUI'
 import { normalizeMembers, todayKST, type Wed100Member } from '@/lib/wed100Access'
 import { REGISTER_MONTHS, addMonths, type Wed100MemberRecord } from '@/lib/wed100Members'
+import { USAGE_COLLECTION, activeWithin, usageLine, type Wed100Usage } from '@/lib/wed100Usage'
 
 type Row = Partial<Wed100MemberRecord> & Wed100Member & { legacy?: boolean }
 
@@ -37,6 +38,7 @@ async function idToken(): Promise<string> {
 function Members() {
   const [rows, setRows] = useState<Row[]>([])
   const [legacy, setLegacy] = useState<Row[]>([])
+  const [usage, setUsage] = useState<Record<string, Wed100Usage>>({})
   const [loading, setLoading] = useState(true)
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null)
   const [busy, setBusy] = useState(false)
@@ -61,6 +63,17 @@ function Members() {
             setLoading(false)
           },
         )
+        // 열람 기록은 없어도 명단은 떠야 한다 — 실패는 조용히 넘긴다
+        const unsubUsage = onSnapshot(
+          collection(db, USAGE_COLLECTION),
+          (snap) => setUsage(Object.fromEntries(snap.docs.map((d) => [d.id, d.data() as Wed100Usage]))),
+          () => {},
+        )
+        const unsubRows = unsub
+        unsub = () => {
+          unsubRows?.()
+          unsubUsage()
+        }
         const cfg = await getDoc(doc(db, 'site_config', 'wed100'))
         setLegacy(normalizeMembers(cfg.data()?.members).map((m) => ({ ...m, legacy: true })))
       } catch (e) {
@@ -164,8 +177,9 @@ function Members() {
         </Note>
       )}
 
-      <div className="grid grid-cols-2 gap-2.5">
+      <div className="grid grid-cols-3 gap-2.5">
         <Stat label="이용 중" value={`${active}명`} hint="기한이 남은 분" />
+        <Stat label="최근 7일 열람" value={`${all.filter((r) => activeWithin(usage[r.email], 7)).length}명`} hint="실제로 본 분" />
         <Stat label="전체" value={`${all.length}명`} hint="기간 지난 분 포함" />
       </div>
 
@@ -188,6 +202,9 @@ function Members() {
                     {r.until ? `${r.until}까지${expired ? ' · 지남' : ''}` : '기한 없음'}
                   </span>
                 </div>
+                <p className={`mt-1.5 text-sm ${usage[r.email]?.lastAt ? 'text-[var(--a-2e2724)]' : 'text-[var(--a-8a7a72)]'}`}>
+                  {usageLine(usage[r.email])}
+                </p>
                 {r.phone && (
                   <a href={`tel:${r.phone}`} className="mt-1.5 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--a-a63d5a)]">
                     <Phone className="h-3.5 w-3.5" aria-hidden />
