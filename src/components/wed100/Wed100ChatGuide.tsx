@@ -64,6 +64,42 @@ export default function Wed100ChatGuide({
   const box = useRef<HTMLDivElement>(null)
   const timers = useRef<number[]>([])
 
+  /*
+    단계 기록 — 어디서 빠지는지 보려고 익명으로 센다(/api/survey-event, lib/surveyStats.ts).
+    입력한 이름·전화는 보내지 않는다. 같은 탭에서 같은 단계는 한 번만.
+  */
+  function mark(e: string, v?: string) {
+    try {
+      const k = `survey:${e}`
+      if (sessionStorage.getItem(k)) return
+      sessionStorage.setItem(k, '1')
+    } catch {
+      /* 사생활 보호 모드 등 — 중복 막기를 못 해도 센다 */
+    }
+    const body = JSON.stringify(v ? { e, v } : { e })
+    if (!navigator.sendBeacon?.('/api/survey-event', new Blob([body], { type: 'application/json' }))) {
+      void fetch('/api/survey-event', { method: 'POST', body, keepalive: true }).catch(() => {})
+    }
+  }
+
+  // 화면에 실제로 들어온 사람만 '봄' 으로 센다 — 페이지 아래에 있어 안 내려 본 분이 많다
+  const root = useRef<HTMLElement>(null)
+  useEffect(() => {
+    const el = root.current
+    if (!el || typeof IntersectionObserver === 'undefined') return
+    const io = new IntersectionObserver(
+      (es) => {
+        if (es.some((x) => x.isIntersecting)) {
+          mark('seen')
+          io.disconnect()
+        }
+      },
+      { threshold: 0.4 },
+    )
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
+
   // 원장님 쪽 말은 잠깐 "입력 중" 을 보인 뒤 나온다 — 바로 뜨면 안내문, 쉬었다 뜨면 대화로 읽힌다
   function say(lines: string[], then?: Step) {
     setTyping(true)
@@ -93,12 +129,14 @@ export default function Wed100ChatGuide({
   }, [msgs, typing, step])
 
   function pickWho(t: string) {
+    mark('who', t)
     answer(t)
     setWho(t)
     say([t.startsWith('그냥') ? '천천히 보세요.' : '축하드려요. 준비할 게 많으시죠.', '지금 가장 걱정되는 게 뭐예요?'], 'worry')
   }
 
   function pickWorry(w: (typeof WORRY)[number]) {
+    mark('worry', w.label)
     answer(w.label)
     setWorry(w)
     const p = parts.find((x) => x.part === w.part)
@@ -114,6 +152,7 @@ export default function Wed100ChatGuide({
   }
 
   function wantCall() {
+    mark('form')
     answer('연락 받고 싶어요')
     say(['성함과 휴대전화 번호, 결혼식 시기를 남겨 주세요.', '제가 확인하고 직접 연락드릴게요.'], 'form')
   }
@@ -132,6 +171,7 @@ export default function Wed100ChatGuide({
       })
       const j = (await r.json().catch(() => ({}))) as { error?: string }
       if (!r.ok) return setErr(j.error ?? '접수하지 못했어요. 02-323-3321 로 전화 주세요.')
+      mark('submit')
       answer(`${form.name.trim()} · ${form.phone.trim()} · ${form.when}`)
       say([`${form.name.trim()}님, 잘 받았어요.`, '영업시간 안에 제가 직접 전화드릴게요. 그 전에 100문 100답을 먼저 들어 보셔도 좋아요.'], 'sent')
     } catch {
@@ -145,7 +185,7 @@ export default function Wed100ChatGuide({
   const showPitch = !typing && (step === 'offer' || step === 'form' || step === 'sent')
 
   return (
-    <section aria-label="원장님께 물어보기" className="rounded-3xl border border-[var(--w-line)] bg-[var(--w-card)] p-5 sm:p-7">
+    <section ref={root} aria-label="원장님께 물어보기" className="rounded-3xl border border-[var(--w-line)] bg-[var(--w-card)] p-5 sm:p-7">
       <p className="text-[13px] font-extrabold tracking-[0.2em] text-[var(--w-rose)]">원장님께 물어보기</p>
 
       <div ref={box} className="mt-4 max-h-[460px] space-y-3 overflow-y-auto pr-1" aria-live="polite">
@@ -196,6 +236,7 @@ export default function Wed100ChatGuide({
           {part?.free && (
             <Link
               href={`/honjoo100/${part.free.slug}`}
+              onClick={() => mark('free')}
               className="flex items-center gap-3 rounded-2xl border border-[var(--w-rose)] p-4 transition hover:bg-[var(--w-bg)]"
             >
               <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[var(--w-rose)] text-white">▶</span>
@@ -212,11 +253,11 @@ export default function Wed100ChatGuide({
             <p className="mt-1 text-[15px] font-bold text-[var(--w-rose)]">{MEMBER_CREDIT_NOTE}</p>
             <div className="mt-3 flex flex-wrap gap-2">
               {storeUrl ? (
-                <a href={storeUrl} target="_blank" rel="noopener noreferrer" className={cta}>
+                <a href={storeUrl} target="_blank" rel="noopener noreferrer" className={cta} onClick={() => mark('buy')}>
                   전체 듣기 {priceLabel}
                 </a>
               ) : (
-                <a href="tel:02-323-3321" className={cta}>
+                <a href="tel:02-323-3321" className={cta} onClick={() => mark('tel')}>
                   이용권 신청 · 02-323-3321
                 </a>
               )}
@@ -238,7 +279,10 @@ export default function Wed100ChatGuide({
               <input
                 className={inp}
                 value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                onChange={(e) => {
+                  mark('typing')
+                  setForm({ ...form, name: e.target.value })
+                }}
                 autoComplete="name"
                 maxLength={30}
               />
@@ -248,7 +292,10 @@ export default function Wed100ChatGuide({
               <input
                 className={inp}
                 value={form.phone}
-                onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                onChange={(e) => {
+                  mark('typing')
+                  setForm({ ...form, phone: e.target.value })
+                }}
                 inputMode="tel"
                 autoComplete="tel"
                 placeholder="010-0000-0000"

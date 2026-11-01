@@ -8,6 +8,7 @@ import AdminGate from '@/components/admin/AdminGate'
 import AdminShell from '@/components/admin/AdminShell'
 import PushOptIn from '@/components/admin/PushOptIn'
 import { Chips, Empty, Note, Panel, Stat } from '@/components/admin/AdminUI'
+import SurveyFunnel from '@/components/admin/SurveyFunnel'
 import {
   type ConsultLead,
   LEAD_CALL_WITHIN_HOURS,
@@ -155,6 +156,8 @@ function AdminLeads() {
           hint={`전체 ${leads.length}건 중`}
         />
       </div>
+
+      <SurveyFunnel />
 
       {loading ? (
         <Empty>읽는 중…</Empty>

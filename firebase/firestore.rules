@@ -65,6 +65,12 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // 설문 단계 통계(익명 증가값): 서버만 쓰고 관리자만 읽는다
+    match /survey_daily/{day} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
     // 이용권 회원 열람 기록: 서버(Admin SDK)만 쓰고 관리자만 읽는다
     match /wed100_usage/{id} {
       allow read: if isAdmin();
