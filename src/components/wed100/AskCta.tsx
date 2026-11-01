@@ -21,7 +21,7 @@ export default function AskCta({ title = '이 고민, 원장님께 직접 물어
         href={ASK_HREF}
         className="mt-4 inline-flex rounded-full bg-[var(--w-cta-bg)] px-6 py-3 text-sm font-bold text-white transition hover:opacity-90"
       >
-        원장님께 물어보기
+        궁금한 점 알아보기
       </Link>
     </div>
   )

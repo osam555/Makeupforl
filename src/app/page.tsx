@@ -160,7 +160,7 @@ export default async function Home() {
           href={ASK_HREF}
           className="inline-flex items-center rounded-full border border-gray-200 px-6 py-3.5 text-[15px] font-bold text-gray-700 transition-colors hover:border-[#F46E65] hover:text-[#F46E65]"
         >
-          원장님께 물어보기
+          궁금한 점 알아보기
         </Link>
       </div>
 

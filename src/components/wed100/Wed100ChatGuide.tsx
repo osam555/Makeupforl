@@ -185,8 +185,8 @@ export default function Wed100ChatGuide({
   const showPitch = !typing && (step === 'offer' || step === 'form' || step === 'sent')
 
   return (
-    <section ref={root} aria-label="원장님께 물어보기" className="rounded-3xl border border-[var(--w-line)] bg-[var(--w-card)] p-5 sm:p-7">
-      <p className="text-[13px] font-extrabold tracking-[0.2em] text-[var(--w-rose)]">원장님께 물어보기</p>
+    <section ref={root} aria-label="궁금한 점 알아보기" className="rounded-3xl border border-[var(--w-line)] bg-[var(--w-card)] p-5 sm:p-7">
+      <p className="text-[13px] font-extrabold tracking-[0.2em] text-[var(--w-rose)]">궁금한 점 알아보기</p>
 
       <div ref={box} className="mt-4 max-h-[460px] space-y-3 overflow-y-auto pr-1" aria-live="polite">
         {msgs.map((m, i) => (
