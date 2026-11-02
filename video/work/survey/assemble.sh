@@ -8,7 +8,7 @@ FR=fonts/Pretendard-Regular.otf
 OUT=../../out; mkdir -p "$OUT"
 
 # 장면 길이(초) — 녹화는 통째로, 그래픽은 장면표 길이로 자른다
-CLOCK=3.0; ADMIN=4.5; NUMBER=4.0; END=5.0
+CLOCK=3.2; ADMIN=4.9; NUMBER=4.4; END=6.0
 SURVEY=$(ffprobe -v error -show_entries format=duration -of csv=p=0 rec/survey.mp4)
 
 # 단계 시각(steps.json) → 전체 타임라인 (앞에 시계 3초)
@@ -24,7 +24,7 @@ nEnd=$(python3 -c "print($aEnd+$NUMBER)")
 
 # 자막 한 줄: 하단 1/4, 흰 글씨 + 검은 테두리
 sub() { # $1 시작 $2 끝 $3 글
-  printf "drawtext=fontfile=%s:text='%s':fontsize=62:fontcolor=white:box=1:boxcolor=black@0.62:boxborderw=26:x=(w-text_w)/2:y=h-300:enable='between(t,%s,%s)'," "$F" "$3" "$1" "$2"
+  printf "drawtext=fontfile=%s:text='%s':fontsize=62:fontcolor=white:box=1:boxcolor=black@0.62:boxborderw=26:x=(w-text_w)/2:y=h-300:alpha='min(1,min((t-%s)/0.26,(%s-t)/0.26))':enable='between(t,%s,%s)'," "$F" "$3" "$1" "$2" "$1" "$2"
 }
 SUBS=$(
   sub 0 $CLOCK "밤 10시 40분"
@@ -42,6 +42,6 @@ NOTE="drawtext=fontfile=$FR:text='실제 화면 · 손님 정보는 가상입니
 
 ffmpeg -loglevel error -y \
   -t $CLOCK -i rec/clock.mp4 -i rec/survey.mp4 -t $ADMIN -i rec/admin.mp4 -t $NUMBER -i rec/number.mp4 -t $END -i rec/end.mp4 \
-  -filter_complex "[0:v][1:v][2:v][3:v][4:v]concat=n=5:v=1:a=0,${SUBS}${NOTE},fade=in:0:10,format=yuv420p[v]" \
+  -filter_complex "[0:v][1:v][2:v][3:v][4:v]concat=n=5:v=1:a=0,${SUBS}${NOTE},fade=in:0:10,fade=out:st=41.5:d=0.6,format=yuv420p[v]" \
   -map "[v]" -r 25 -c:v libx264 -crf 20 -pix_fmt yuv420p -movflags +faststart "$OUT/설문봇-쇼츠A-draft.mp4"
 ffprobe -v error -show_entries format=duration -of csv=p=0 "$OUT/설문봇-쇼츠A-draft.mp4"

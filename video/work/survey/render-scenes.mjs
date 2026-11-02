@@ -14,21 +14,28 @@ for (const [name, dur] of Object.entries(DUR)) {
   await page.goto(`file://${here}/scenes.html?scene=${name}`)
   await page.evaluate(() => document.fonts.ready)
   await page.waitForTimeout(100)
-  const t0 = Date.now()
   const frames = []
-  while ((Date.now() - t0) / 1000 < dur) {
-    const t = (Date.now() - t0) / 1000
-    await page.screenshot({ path: resolve(out, `f${String(frames.length).padStart(4, '0')}.png`), animations: 'allow' })
-    frames.push(t)
-  }
+  const cdp = await page.context().newCDPSession(page)
+  const t0 = Date.now()
+  cdp.on('Page.screencastFrame', async ({ data, sessionId }) => {
+    const i = frames.length
+    frames.push((Date.now() - t0) / 1000)
+    writeFileSync(resolve(out, `f${String(i).padStart(4, '0')}.png`), Buffer.from(data, 'base64'))
+    await cdp.send('Page.screencastFrameAck', { sessionId }).catch(() => {})
+  })
+  await cdp.send('Page.startScreencast', { format: 'png', maxWidth: 1080, maxHeight: 1920, everyNthFrame: 1 })
+  // 마지막 정지 화면도 프레임으로 남게 끝에서 한 번 더 그린다
+  await page.waitForTimeout(dur * 1000)
+  await cdp.send('Page.stopScreencast')
+  await cdp.detach()
   let list = ''
   frames.forEach((t, i) => {
-    const d = i + 1 < frames.length ? frames[i + 1] - t : 0.1
+    const d = i + 1 < frames.length ? frames[i + 1] - t : Math.max(0.1, dur - t) // 마지막 프레임은 장면 끝까지 멈춰 있는다
     list += `file 'f${String(i).padStart(4, '0')}.png'\nduration ${d.toFixed(4)}\n`
   })
   list += `file 'f${String(frames.length - 1).padStart(4, '0')}.png'\n`
   writeFileSync(resolve(out, 'frames.txt'), list)
-  execSync(`ffmpeg -loglevel error -y -f concat -safe 0 -i frames.txt -vf "fps=25,format=yuv420p" -c:v libx264 -crf 18 ../${name}.mp4`, { cwd: out })
+  execSync(`ffmpeg -loglevel error -y -f concat -safe 0 -i frames.txt -vf "scale=1080:1920:flags=lanczos,fps=25,format=yuv420p" -c:v libx264 -crf 18 ../${name}.mp4`, { cwd: out })
   console.log(name, frames.length, 'frames')
 }
 await browser.close()

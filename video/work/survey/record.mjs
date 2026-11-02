@@ -13,10 +13,10 @@ const W = 1080, H = 1920
 const fontB = readFileSync(resolve(import.meta.dirname, 'fonts/Pretendard-Bold.otf'))
 const fontR = readFileSync(resolve(import.meta.dirname, 'fonts/Pretendard-Regular.otf'))
 
-const browser = await chromium.launch()
+// --force-device-scale-factor: CDP 스크린캐스트는 컨텍스트의 deviceScaleFactor 를 무시하고 CSS 픽셀로 내보낸다. 브라우저 자체를 2배로 띄워야 1080×1920 이 나온다
+const browser = await chromium.launch({ args: ['--force-device-scale-factor=2'] })
 const ctx = await browser.newContext({
   viewport: { width: 540, height: 960 },
-  deviceScaleFactor: 2,
   locale: 'ko-KR',
   timezoneId: 'Asia/Seoul',
 })
@@ -32,19 +32,16 @@ mkdirSync(resolve(OUT, 'frames'), { recursive: true })
 const t0 = Date.now()
 const steps = []
 const frames = []
-let shooting = false
-// 12fps 로 화면을 찍는다 — 각 프레임의 실제 시각을 남겨 ffmpeg concat 에서 길이를 맞춘다
-const timer = setInterval(async () => {
-  if (shooting) return
-  shooting = true
-  try {
-    const i = frames.length
-    const t = (Date.now() - t0) / 1000
-    await page.screenshot({ path: resolve(OUT, `frames/f${String(i).padStart(4, '0')}.png`), type: 'png', animations: 'allow', caret: 'hide' })
-    frames.push({ i, t })
-  } catch {}
-  shooting = false
-}, 1000 / 12)
+// CDP 스크린캐스트 — 바뀐 화면마다 브라우저가 2x 프레임을 밀어 준다(스크린샷 루프는 5fps 가 한계였다).
+// 가만히 있을 땐 프레임이 안 오므로 concat 의 duration 이 그 정지 시간을 채운다.
+const cdp = await ctx.newCDPSession(page)
+cdp.on('Page.screencastFrame', async ({ data, sessionId, metadata }) => {
+  const i = frames.length
+  frames.push({ i, t: (Date.now() - t0) / 1000 })
+  writeFileSync(resolve(OUT, `frames/f${String(i).padStart(4, '0')}.jpg`), Buffer.from(data, 'base64'))
+  await cdp.send('Page.screencastFrameAck', { sessionId }).catch(() => {})
+})
+await cdp.send('Page.startScreencast', { format: 'jpeg', quality: 92, maxWidth: W, maxHeight: H, everyNthFrame: 1 })
 const mark = (k) => steps.push({ k, t: (Date.now() - t0) / 1000 })
 const wait = async (ms) => {
   await page.waitForTimeout(Math.min(ms, 900))
@@ -57,7 +54,7 @@ await page.addStyleTag({
   content: `@font-face{font-family:PL;src:url(/__font/Pretendard-Regular.otf)}@font-face{font-family:PL;font-weight:700;src:url(/__font/Pretendard-Bold.otf)}
   @font-face{font-family:PL;font-weight:800;src:url(/__font/Pretendard-Bold.otf)}
   *{font-family:PL,sans-serif!important} html{scroll-behavior:auto!important} .fixed{display:none!important} nextjs-portal{display:none!important}
-  #ask [aria-live]{max-height:600px!important} #ask ~ *{display:none!important} main ~ *{display:none!important}`,
+  #ask [aria-live]{max-height:600px!important} #ask ~ *{display:none!important} main ~ *{display:none!important} .site-controls{display:none!important} [aria-label="글자 크기"]{display:none!important} [aria-label$="모드로 바꾸기"]{display:none!important}`,
 })
 await page.evaluate(() => document.fonts.ready)
 // 설문 상자를 화면 가운데에 — 상자 윗부분이 잘리지 않게
@@ -86,17 +83,17 @@ await choice('원장님께 연락 요청').click(); mark('submit')
 await wait(2600) // "잘 받았어요" 두 줄
 mark('end')
 
-clearInterval(timer)
 await wait(300)
+await cdp.send('Page.stopScreencast')
 await ctx.close()
 await browser.close()
 // concat 목록: 프레임마다 다음 프레임까지의 간격
 let list = ''
 for (let i = 0; i < frames.length; i++) {
   const d = i + 1 < frames.length ? frames[i + 1].t - frames[i].t : 1 / 12
-  list += `file 'frames/f${String(i).padStart(4, '0')}.png'\nduration ${d.toFixed(4)}\n`
+  list += `file 'frames/f${String(i).padStart(4, '0')}.jpg'\nduration ${d.toFixed(4)}\n`
 }
-list += `file 'frames/f${String(frames.length - 1).padStart(4, '0')}.png'\n`
+list += `file 'frames/f${String(frames.length - 1).padStart(4, '0')}.jpg'\n`
 writeFileSync(resolve(OUT, 'frames.txt'), list)
 writeFileSync(resolve(OUT, 'steps.json'), JSON.stringify(steps, null, 2))
 console.log(JSON.stringify(steps))
