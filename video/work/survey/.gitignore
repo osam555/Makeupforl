@@ -2,3 +2,5 @@ rec/
 chk/
 fonts/
 node_modules
+tts/
+sfx/*.wav
