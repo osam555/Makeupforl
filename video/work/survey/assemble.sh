@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# 쇼츠 A 가편집 — 장면 다섯을 잇고 자막을 얹는다. 내레이션은 이 환경에서 TTS 가 막혀 아직 없다(맥에서 붙인다).
+# 자막 시각은 rec/steps.json 의 단계 시각 + 앞 장면 길이. 녹화를 다시 하면 아래 숫자를 steps.json 에 맞춰 고칠 것.
+set -euo pipefail
+cd "$(dirname "$0")"
+F=fonts/Pretendard-Bold.otf
+FR=fonts/Pretendard-Regular.otf
+OUT=../../out; mkdir -p "$OUT"
+
+# 장면 길이(초) — 녹화는 통째로, 그래픽은 장면표 길이로 자른다
+CLOCK=3.0; ADMIN=4.5; NUMBER=4.0; END=5.0
+SURVEY=$(ffprobe -v error -show_entries format=duration -of csv=p=0 rec/survey.mp4)
+
+# 단계 시각(steps.json) → 전체 타임라인 (앞에 시계 3초)
+S=$CLOCK
+who=$(python3 -c "import json;print($S+[s for s in json.load(open('rec/steps.json')) if s['k']=='who'][0]['t'])")
+worry=$(python3 -c "import json;print($S+[s for s in json.load(open('rec/steps.json')) if s['k']=='worry'][0]['t'])")
+offer=$(python3 -c "import json;print($S+[s for s in json.load(open('rec/steps.json')) if s['k']=='offer'][0]['t'])")
+form=$(python3 -c "import json;print($S+[s for s in json.load(open('rec/steps.json')) if s['k']=='form'][0]['t'])")
+submit=$(python3 -c "import json;print($S+[s for s in json.load(open('rec/steps.json')) if s['k']=='submit'][0]['t'])")
+sEnd=$(python3 -c "print($S+$SURVEY)")
+aEnd=$(python3 -c "print($sEnd+$ADMIN)")
+nEnd=$(python3 -c "print($aEnd+$NUMBER)")
+
+# 자막 한 줄: 하단 1/4, 흰 글씨 + 검은 테두리
+sub() { # $1 시작 $2 끝 $3 글
+  printf "drawtext=fontfile=%s:text='%s':fontsize=62:fontcolor=white:box=1:boxcolor=black@0.62:boxborderw=26:x=(w-text_w)/2:y=h-300:enable='between(t,%s,%s)'," "$F" "$3" "$1" "$2"
+}
+SUBS=$(
+  sub 0 $CLOCK "밤 10시 40분"
+  sub $CLOCK $who "홈페이지가 먼저 말을 건다"
+  sub $who $worry "탭 한 번"
+  sub $worry $offer "탭 두 번 — 맞는 답이 나온다"
+  sub $offer $form "예약하면 이용권 값은 돌려받는다"
+  sub $form $submit "탭 세 번 — 연락처만 남기면 끝"
+  sub $submit $sEnd "원장님이 직접 전화드릴게요"
+  sub $sEnd $aEnd "아침에 원장님 폰에 떠 있다"
+  sub $nEnd 999 "무료로 시작"
+)
+# 녹화 구간 동안 위쪽에 작은 고지
+NOTE="drawtext=fontfile=$FR:text='실제 화면 · 손님 정보는 가상입니다':fontsize=28:fontcolor=white:box=1:boxcolor=black@0.5:boxborderw=12:x=(w-text_w)/2:y=130:enable='between(t,$CLOCK,$sEnd)'"
+
+ffmpeg -loglevel error -y \
+  -t $CLOCK -i rec/clock.mp4 -i rec/survey.mp4 -t $ADMIN -i rec/admin.mp4 -t $NUMBER -i rec/number.mp4 -t $END -i rec/end.mp4 \
+  -filter_complex "[0:v][1:v][2:v][3:v][4:v]concat=n=5:v=1:a=0,${SUBS}${NOTE},fade=in:0:10,format=yuv420p[v]" \
+  -map "[v]" -r 25 -c:v libx264 -crf 20 -pix_fmt yuv420p -movflags +faststart "$OUT/설문봇-쇼츠A-draft.mp4"
+ffprobe -v error -show_entries format=duration -of csv=p=0 "$OUT/설문봇-쇼츠A-draft.mp4"

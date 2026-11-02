@@ -1,0 +1,92 @@
+<!doctype html>
+<!--
+  쇼츠 A 의 그래픽 장면 — 실화면 녹화(record.mjs) 앞뒤에 붙는 것들.
+  HyperFrames 가 이 환경에 없어 같은 생각(HTML/CSS 한 장 = 장면 하나, 시간은 CSS 애니메이션)을
+  Playwright 스크린샷으로 돌린다. ?scene=clock|admin|number|end 로 장면을 고르고, 1080×1920 고정.
+  글꼴은 /fonts/ 의 Pretendard. 색은 손님 화면과 같은 장미색(--w-rose 계열)을 눈대중으로 맞췄다.
+-->
+<html lang="ko"><head><meta charset="utf-8">
+<style>
+@font-face{font-family:P;src:url(fonts/Pretendard-Regular.otf)}
+@font-face{font-family:P;font-weight:700;src:url(fonts/Pretendard-Bold.otf)}
+@font-face{font-family:P;font-weight:800;src:url(fonts/Pretendard-ExtraBold.otf)}
+html,body{margin:0;width:1080px;height:1920px;overflow:hidden;font-family:P,sans-serif;background:#111;color:#fff}
+.scene{position:absolute;inset:0;display:none}
+.scene.on{display:flex}
+/* ── 시계 ── */
+#clock{background:#0b0a0c;flex-direction:column;align-items:center;justify-content:center}
+#clock .t{font-size:220px;font-weight:300;letter-spacing:-6px;animation:fade .6s ease-out both}
+#clock .d{font-size:44px;color:#9a9399;margin-top:10px;animation:fade .6s .3s ease-out both}
+#clock .n{margin-top:120px;width:860px;background:#fff;color:#111;border-radius:40px;padding:34px 40px;display:flex;gap:26px;align-items:center;
+  animation:drop .5s 1.3s cubic-bezier(.2,.8,.2,1) both}
+#clock .n .i{width:96px;height:96px;border-radius:24px;background:#9b2b4a;flex:none;display:grid;place-items:center;font-size:40px;font-weight:800;color:#fff}
+#clock .n b{font-size:34px}#clock .n p{margin:6px 0 0;font-size:32px;color:#444}
+/* ── 어드민 접수 알림 ── */
+#admin{background:#f6f3ef;color:#1c1a1b;flex-direction:column;padding:140px 70px;box-sizing:border-box}
+#admin h1{font-size:54px;margin:0 0 14px;letter-spacing:-1px}#admin .sub{font-size:30px;color:#7a7378;margin-bottom:60px}
+.row{background:#fff;border:2px solid #e8e1dc;border-radius:28px;padding:36px 40px;margin-bottom:22px;display:flex;justify-content:space-between;align-items:center}
+.row .l b{font-size:38px;display:block}.row .l span{font-size:28px;color:#6c6469}
+.row .s{font-size:26px;font-weight:700;padding:12px 24px;border-radius:999px;background:#eee}
+.row.new{border-color:#9b2b4a;animation:slide .6s .8s cubic-bezier(.2,.8,.2,1) both}
+.row.new .s{background:#9b2b4a;color:#fff}
+.row.dim{opacity:.55;filter:blur(1px)}
+#admin .phone{margin-top:auto;align-self:center;width:720px;background:#1b1b1f;border-radius:48px;padding:40px 30px;color:#fff;animation:fade .6s 2.2s both}
+#admin .phone .time{font-size:120px;font-weight:300;text-align:center;letter-spacing:-4px}
+#admin .phone .noti{margin-top:30px;background:rgba(255,255,255,.14);border-radius:30px;padding:28px 30px;animation:drop .5s 2.8s both}
+#admin .phone .noti b{font-size:30px}#admin .phone .noti p{margin:6px 0 0;font-size:28px;color:#ddd}
+/* ── 숫자 ── */
+#number{background:#9b2b4a;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 90px;box-sizing:border-box}
+#number .k{font-size:44px;opacity:.85;animation:fade .5s both}
+#number .big{font-size:300px;font-weight:800;line-height:1;margin:30px 0;animation:pop .7s .4s cubic-bezier(.2,.8,.2,1) both}
+#number .big small{font-size:120px;font-weight:700}
+#number .m{font-size:52px;font-weight:700;line-height:1.35;animation:fade .6s 1.2s both}
+#number .f{margin-top:90px;font-size:30px;opacity:.75;animation:fade .6s 1.8s both}
+/* ── 엔드카드 ── */
+#end{background:#f6f3ef;color:#1c1a1b;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 90px;box-sizing:border-box}
+#end .h{font-size:76px;font-weight:800;line-height:1.25;letter-spacing:-2px;animation:fade .6s both}
+#end .p{margin-top:40px;font-size:40px;color:#5b5358;line-height:1.5;animation:fade .6s .3s both}
+#end .cta{margin-top:70px;background:#9b2b4a;color:#fff;font-size:48px;font-weight:800;padding:34px 80px;border-radius:999px;animation:pop .6s .6s both}
+#end .u{margin-top:50px;font-size:38px;font-weight:700;animation:fade .6s .9s both}
+#end .c{margin-top:120px;font-size:30px;color:#7a7378;line-height:1.6;animation:fade .6s 1.2s both}
+@keyframes fade{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes drop{from{opacity:0;transform:translateY(-40px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes slide{from{opacity:0;transform:translateX(80px)}to{opacity:1;transform:none}}
+@keyframes pop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}
+</style></head><body>
+
+<section id="clock" class="scene">
+  <div class="t">22:40</div>
+  <div class="d">원장님은 퇴근했다</div>
+  <div class="n"><div class="i">포</div><div><b>메이크업포엘</b><p>어머니 한복 색, 어떻게 고르세요?</p></div></div>
+</section>
+
+<section id="admin" class="scene">
+  <h1>상담 신청</h1>
+  <div class="sub">어드민 · 새 접수가 오면 원장님 폰으로 알림</div>
+  <div class="row new"><div class="l"><b>김○○ · 010-••••-1234</b><span>신부 어머님 · 한복 색을 못 고르겠어요 · 1~3개월</span></div><div class="s">새 접수</div></div>
+  <div class="row dim"><div class="l"><b>○○○ · 010-••••-••••</b><span>· · ·</span></div><div class="s">연락함</div></div>
+  <div class="row dim"><div class="l"><b>○○○ · 010-••••-••••</b><span>· · ·</span></div><div class="s">예약함</div></div>
+  <div class="phone"><div class="time">07:12</div>
+    <div class="noti"><b>메이크업포엘 · 상담 신청</b><p>김○○ 님 · 신부 어머님 · 한복 색</p></div></div>
+</section>
+
+<section id="number" class="scene">
+  <div class="k">설문을 연 지 사흘</div>
+  <div class="big">1<small>건</small></div>
+  <div class="m">첫 이용권 결제<br>사람이 붙어 있지 않아도<br>홈페이지가 손님을 받았다</div>
+  <div class="f">2026-10-30 ~ 11-02 · makeupforl.co.kr/honjoo100</div>
+</section>
+
+<section id="end" class="scene">
+  <div class="h">내 홈페이지에도<br>설문봇을</div>
+  <div class="p">손님은 세 번만 누르면 되고,<br>사장님은 아침에 전화만 하면 됩니다.</div>
+  <div class="cta">무료로 시작</div>
+  <div class="u">youngliving.page</div>
+  <div class="c">Oilpage · 카카오톡 「오쌤대충영어」 · 0507-1334-9119<br>사례: 메이크업포엘 (makeupforl.co.kr · 02-323-3321)</div>
+</section>
+
+<script>
+const s = new URLSearchParams(location.search).get('scene') || 'clock'
+document.getElementById(s).classList.add('on')
+</script>
+</body></html>
