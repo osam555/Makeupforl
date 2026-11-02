@@ -44,7 +44,10 @@ NOTE="drawtext=fontfile=$FR:text='실제 화면 · 손님 정보는 가상입니
 # 효과음은 sfx/ (ffmpeg 로 합성: 알림 '띵', 탭 클릭, 4화음 패드). 시각은 자막과 같은 변수.
 TOTAL=$(python3 -c "print($nEnd+$END)")
 ms(){ python3 -c "print(int(round($1*1000)))"; }
-AIN="-i sfx/bed.wav -i sfx/ding.wav -i sfx/ding.wav -i sfx/tap.wav -i sfx/tap.wav -i sfx/tap.wav -i sfx/tap.wav -i sfx/thud.wav -i sfx/thud.wav -i sfx/whoosh.wav -i sfx/whoosh.wav"
+# 효과음 파일 고르기 — Sunra(ElevenLabs Sound Effects)로 만든 sfx/real/{thud,ding,whoosh}.mp3 가 있으면 그걸, 없으면 ffmpeg 합성본
+pick(){ [ -f "sfx/real/$1.mp3" ] && echo "sfx/real/$1.mp3" || echo "sfx/$1.wav"; }
+DING=$(pick ding); THUD=$(pick thud); WHOOSH=$(pick whoosh)
+AIN="-i sfx/bed.wav -i $DING -i $DING -i sfx/tap.wav -i sfx/tap.wav -i sfx/tap.wav -i sfx/tap.wav -i $THUD -i $THUD -i $WHOOSH -i $WHOOSH"
 AF="[6:a]volume=0.55,afade=t=in:d=2.5,afade=t=out:st=$(python3 -c "print($TOTAL-1.5)"):d=1.5[bed];"
 AF+="[7:a]adelay=$(ms $(python3 -c "print($HOOK+1.0)"))|$(ms $(python3 -c "print($HOOK+1.0)")),volume=0.8[d1];[8:a]adelay=$(ms $(python3 -c "print($sEnd+2.8)"))|$(ms $(python3 -c "print($sEnd+2.8)")),volume=0.8[d2];"
 AF+="[9:a]adelay=$(ms $who)|$(ms $who)[t1];[10:a]adelay=$(ms $worry)|$(ms $worry)[t2];[11:a]adelay=$(ms $form)|$(ms $form)[t3];[12:a]adelay=$(ms $submit)|$(ms $submit)[t4];"
