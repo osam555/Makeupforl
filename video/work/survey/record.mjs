@@ -5,6 +5,7 @@
 // 각 단계의 시각을 steps.json 에 남겨 자막 타이밍을 맞춘다.
 import { chromium } from 'playwright'
 import { readFileSync, writeFileSync } from 'node:fs'
+import { execSync } from 'node:child_process'
 import { resolve } from 'node:path'
 
 const BASE = process.env.BASE ?? 'http://localhost:3000'
@@ -14,9 +15,12 @@ const fontB = readFileSync(resolve(import.meta.dirname, 'fonts/Pretendard-Bold.o
 const fontR = readFileSync(resolve(import.meta.dirname, 'fonts/Pretendard-Regular.otf'))
 
 // --force-device-scale-factor: CDP 스크린캐스트는 컨텍스트의 deviceScaleFactor 를 무시하고 CSS 픽셀로 내보낸다. 브라우저 자체를 2배로 띄워야 1080×1920 이 나온다
-const browser = await chromium.launch({ args: ['--force-device-scale-factor=2'] })
+// 8차: 뷰포트를 540→400 CSS 픽셀로 좁히고 배율을 2→2.7 로. 같은 1080×1920 이지만 레이아웃이 좁은 폰 기준으로 다시 짜여
+// 말풍선 글자가 35% 커진다. (처음엔 영상에서 가운데를 확대해 봤는데 좌우가 잘려 손님 말풍선이 끊겼다 — 확대가 아니라 다시 그리는 쪽이 맞다.)
+const SC = W / 400
+const browser = await chromium.launch({ args: [`--force-device-scale-factor=${SC}`] })
 const ctx = await browser.newContext({
-  viewport: { width: 540, height: 960 },
+  viewport: { width: 400, height: Math.round(H / SC) },
   locale: 'ko-KR',
   timezoneId: 'Asia/Seoul',
 })
@@ -42,7 +46,7 @@ cdp.on('Page.screencastFrame', async ({ data, sessionId, metadata }) => {
   await cdp.send('Page.screencastFrameAck', { sessionId }).catch(() => {})
 })
 await cdp.send('Page.startScreencast', { format: 'jpeg', quality: 92, maxWidth: W, maxHeight: H, everyNthFrame: 1 })
-const mark = (k, xy) => steps.push({ k, t: (Date.now() - t0) / 1000, ...(xy ? { x: xy.x * 2, y: xy.y * 2 } : {}) })
+const mark = (k, xy) => steps.push({ k, t: (Date.now() - t0) / 1000, ...(xy ? { x: xy.x * SC, y: xy.y * SC } : {}) })
 // 단추를 누르고 그 중심 좌표를 함께 기록한다
 async function tap(loc, k) {
   // boundingBox 는 그 순간의 뷰포트 기준 — 부드러운 스크롤이 끝난 뒤 재야 좌표가 맞는다
@@ -104,4 +108,7 @@ for (let i = 0; i < frames.length; i++) {
 list += `file 'frames/f${String(frames.length - 1).padStart(4, '0')}.jpg'\n`
 writeFileSync(resolve(OUT, 'frames.txt'), list)
 writeFileSync(resolve(OUT, 'steps.json'), JSON.stringify(steps, null, 2))
+// frames.txt → survey.mp4. assemble.sh 가 이 파일을 읽는다(이 한 줄이 빠져 있어 맥에서 처음 돌릴 때 survey.mp4 가 없었다).
+// 스크린캐스트는 가변 간격이라 30fps 로 고정해 이어 붙인다
+execSync(`ffmpeg -loglevel error -y -f concat -safe 0 -i frames.txt -vf "scale=1080:1920:flags=lanczos,fps=30,format=yuv420p" -c:v libx264 -crf 17 survey.mp4`, { cwd: OUT })
 console.log(JSON.stringify(steps))
