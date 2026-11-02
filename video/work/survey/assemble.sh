@@ -40,7 +40,8 @@ SUBS=$(
 # 녹화 구간 동안 위쪽에 작은 고지
 NOTE="drawtext=fontfile=$FR:text='실제 화면 · 손님 정보는 가상입니다':fontsize=28:fontcolor=white:box=1:boxcolor=black@0.5:boxborderw=12:x=(w-text_w)/2:y=130:enable='between(t,$S,$sEnd)'"
 
-# 소리 — 내레이션 파일(tts/n1..n7.mp3)이 있으면 자막 시각에 맞춰 얹고, 없으면 받침 음악·효과음만.
+# 소리 — 내레이션 파일(tts/n1..n7.mp3)이 있으면 장면 시각에 맞춰 얹고, 없으면 받침 음악·효과음만.
+# 내레이션은 tools/say.py(오프라인 TTS)로 만든다. 문장은 tts/lines.json. Sunra·Typecast 로 바꿔 뽑아도 파일 이름만 같으면 된다.
 # 효과음은 sfx/ (ffmpeg 로 합성: 알림 '띵', 탭 클릭, 4화음 패드). 시각은 자막과 같은 변수.
 TOTAL=$(python3 -c "print($nEnd+$END)")
 ms(){ python3 -c "print(int(round($1*1000)))"; }
@@ -54,12 +55,18 @@ AF+="[9:a]adelay=$(ms $who)|$(ms $who)[t1];[10:a]adelay=$(ms $worry)|$(ms $worry
 AF+="[13:a]adelay=150|150[k1];[14:a]adelay=1000|1000[k2];[15:a]adelay=50|50,volume=0.7[w1];[16:a]adelay=900|900,volume=0.7[w2];"
 MIX="[bed][d1][d2][t1][t2][t3][t4][k1][k2][w1][w2]"; N=11; IDX=17
 if ls tts/n1.mp3 >/dev/null 2>&1; then
-  # 내레이션 시작 시각: 장면표 순서대로
-  for pair in "n1:$S" "n2:$who" "n3:$worry" "n4:$offer" "n5:$form" "n6:$sEnd" "n7:$aEnd"; do
-    f=${pair%%:*}; at=${pair#*:}
+  # 내레이션 시작 시각: 장면 시각과 "앞 줄이 끝난 뒤 0.25초" 중 늦은 쪽 — 줄이 겹치면 못 알아듣는다
+  prevEnd=0
+  for pair in "n1:$S" "n2:$who" "n3:$worry" "n4:$offer" "n5:$form" "n6:$aEnd" "n7:$nEnd"; do
+    f=${pair%%:*}; want=${pair#*:}
     [ -f tts/$f.mp3 ] || continue
+    at=$(python3 -c "print(max($want, $prevEnd+0.25))")
+    dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 tts/$f.mp3)
+    prevEnd=$(python3 -c "print($at+$dur)")
     AIN+=" -i tts/$f.mp3"; AF+="[$IDX:a]adelay=$(ms $at)|$(ms $at),volume=1.0[$f];"; MIX+="[$f]"; N=$((N+1)); IDX=$((IDX+1))
   done
+  # 말이 있으면 받침 음악은 더 낮게
+  AF=${AF/volume=0.55,afade=t=in/volume=0.32,afade=t=in}
 fi
 AF+="${MIX}amix=inputs=$N:duration=first:normalize=0,alimiter=limit=0.9,loudnorm=I=-14:TP=-1.5:LRA=11[a]"
 
