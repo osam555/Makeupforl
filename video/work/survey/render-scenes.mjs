@@ -11,7 +11,8 @@ const page = await browser.newPage({ viewport: { width: 1080, height: 1920 } })
 for (const [name, dur] of Object.entries(DUR)) {
   const out = resolve(here, 'rec', name)
   mkdirSync(out, { recursive: true })
-  await page.goto(`file://${here}/scenes.html?scene=${name}`)
+  const site = process.env.SITE ? `&site=${encodeURIComponent(process.env.SITE)}` : ''
+  await page.goto(`file://${here}/scenes.html?scene=${name}${site}`)
   await page.evaluate(() => document.fonts.ready)
   await page.waitForTimeout(100)
   const frames = []

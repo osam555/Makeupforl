@@ -38,7 +38,7 @@ SUBS=$(
   sub $form $submit "탭 세 번 — 연락처만 남기면 끝"
   sub $submit $sEnd "원장님이 직접 전화드릴게요"
   sub $sEnd $aEnd "아침에 원장님 폰에 떠 있다"
-  sub $nEnd 999 "무료로 시작"
+  sub $nEnd 999 "지금 물어보세요"
 )
 # 자막판: 내레이션 문장을 둘째 줄로 — 줄바꿈은 쉼표·마침표 자리에서(한 줄 22자 안팎), textfile 로 넘긴다
 SUB2=""
