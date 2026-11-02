@@ -42,7 +42,15 @@ cdp.on('Page.screencastFrame', async ({ data, sessionId, metadata }) => {
   await cdp.send('Page.screencastFrameAck', { sessionId }).catch(() => {})
 })
 await cdp.send('Page.startScreencast', { format: 'jpeg', quality: 92, maxWidth: W, maxHeight: H, everyNthFrame: 1 })
-const mark = (k) => steps.push({ k, t: (Date.now() - t0) / 1000 })
+const mark = (k, xy) => steps.push({ k, t: (Date.now() - t0) / 1000, ...(xy ? { x: xy.x * 2, y: xy.y * 2 } : {}) })
+// 단추를 누르고 그 중심 좌표를 함께 기록한다
+async function tap(loc, k) {
+  // boundingBox 는 그 순간의 뷰포트 기준 — 부드러운 스크롤이 끝난 뒤 재야 좌표가 맞는다
+  await loc.scrollIntoViewIfNeeded(); await page.waitForTimeout(250)
+  const b = await loc.boundingBox()
+  await loc.click()
+  mark(k, b ? { x: b.x + b.width / 2, y: b.y + b.height / 2 } : null)
+}
 const wait = async (ms) => {
   await page.waitForTimeout(Math.min(ms, 900))
   await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' }))
@@ -62,25 +70,25 @@ await page.evaluate(() => document.getElementById('ask')?.scrollIntoView({ block
 await wait(300)
 await page.evaluate(() => window.scrollBy(0, -60))
 mark('ask-visible')
-await wait(2600) // 첫 인사 두 줄(0.7초 간격) 이 다 뜨도록
+await wait(2100) // 첫 인사 두 줄(0.7초 간격) 이 다 뜨도록
 
 const choice = (t) => page.getByRole('button', { name: t, exact: true })
-await choice('신부 어머님이에요').click(); mark('who')
-await wait(2400)
-await choice('한복 색을 못 고르겠어요').click(); mark('worry')
-await wait(4200) // 답 네 줄
+await tap(choice('신부 어머님이에요'), 'who')
+await wait(1900)
+await tap(choice('한복 색을 못 고르겠어요'), 'worry')
+await wait(3500) // 답 네 줄
 // 이용권 상자와 단추들이 보이게 상자 안을 내림(컴포넌트가 스스로 내린다). 잠깐 머문다
 mark('offer')
-await wait(2200)
-await choice('원장님 연락 받기').click(); mark('form')
-await wait(2000)
+await wait(1700)
+await tap(choice('원장님 연락 받기'), 'form')
+await wait(1500)
 await page.getByLabel('성함').fill('김○○'); await wait(400)
 await page.getByPlaceholder('010-0000-0000').fill('010-••••-1234'); await wait(400)
 await choice('1~3개월').click(); await wait(400)
 await page.getByRole('checkbox').check(); await wait(500)
 mark('typed')
-await choice('원장님께 연락 요청').click(); mark('submit')
-await wait(2600) // "잘 받았어요" 두 줄
+await tap(choice('원장님께 연락 요청'), 'submit')
+await wait(2100) // "잘 받았어요" 두 줄
 mark('end')
 
 await wait(300)

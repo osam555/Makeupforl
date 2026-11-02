@@ -46,6 +46,145 @@
       ]
     },
     {
+      "id": "2026-11-02-2",
+      "date": "2026-11-02",
+      "title": "쇼츠 A 2차 가편집 — 더 부드러운 녹화와 내레이션 준비",
+      "items": [
+        "설문봇 화면 녹화를 초당 33장으로 바꿔 말풍선 움직임이 매끄러워졌고, 화면 위 글자 크기 단추를 뺐으며 자막에 페이드를 넣었습니다",
+        "내레이션 7줄을 음성으로 만들어 두었습니다(아직 영상에는 안 붙음 — 클라우드에서 파일을 받을 수 없어 맥에서 붙입니다)"
+      ],
+      "commits": [
+        {
+          "sha": "a44000a",
+          "subject": "설문봇 쇼츠 A 2차 가편집 — 스크린캐스트 33fps, 단추 숨김, 자막 페이드, 내레이션은 Sunra 에"
+        },
+        {
+          "sha": "ae93a2c",
+          "subject": "업무일지 11/2 + 설문봇 쇼츠 A 2차 가편집 (#37)"
+        }
+      ]
+    },
+    {
+      "id": "2026-11-02-3",
+      "date": "2026-11-02",
+      "title": "설문봇 홍보 쇼츠 7차 — 폰 틀·단계 칩·요약 장면, 자체 홍보 엔드카드",
+      "items": [
+        "영상 끝을 메이크업포엘 자체 홍보로 바꿨습니다(makeupforl.co.kr · 02-323-3321 · '지금 물어보기'). 받침 음악은 피아노 분산화음으로 바꾸고 음량을 낮췄습니다",
+        "설문 화면을 폰 틀 안에 넣고, 손님이 누른 자리에 파문, 위쪽에 '1/3 누구세요 → 2/3 걱정은 → 3/3 연락처' 단계 표시, 끝에 세 단계 요약 장면을 넣어 처음 보는 분도 흐름을 따라가게 했습니다",
+        "내레이션은 Typecast(100문100답 MC 와 같은 목소리)로 맥에서 만들도록 스크립트를 두었고, 음성 없는 자막판도 함께 만듭니다"
+      ],
+      "commits": [
+        {
+          "sha": "566b304",
+          "subject": "기획서에 '맥에서 이어 하기' — 클라우드 세션이 끝낸 데까지의 순서와 손댈 곳"
+        },
+        {
+          "sha": "e32bbfc",
+          "subject": "쇼츠 A 7차 — 폰 틀·탭 파문·단계 칩·요약 장면·진행 막대, 음악 낮춤, 호흡 조임"
+        },
+        {
+          "sha": "2065575",
+          "subject": "쇼츠 A — 엔드카드를 makeupforl.co.kr 자체 홍보로, 목소리는 Typecast(맥), 받침 음악은 피아노 분산화음"
+        },
+        {
+          "sha": "3d71833",
+          "subject": "설문봇 쇼츠 A 자막판 — NO_TTS=1 이면 내레이션 문장을 둘째 줄 자막으로"
+        },
+        {
+          "sha": "db36121",
+          "subject": "내레이션은 맥에서 Supertonic 으로 — 목소리 비교·7줄 생성 스크립트, 기획서에 결정 기록"
+        },
+        {
+          "sha": "f3fab2c",
+          "subject": "설문봇 쇼츠 A 5차 — 오프라인 한국어 TTS 로 내레이션 7줄을 직접 붙인다"
+        },
+        {
+          "sha": "4c6946e",
+          "subject": "설문봇 쇼츠 A — 효과음을 Sunra 로 만들어 두고, 파일이 있으면 합성본 대신 쓰도록"
+        },
+        {
+          "sha": "079fc93",
+          "subject": "설문봇 쇼츠 A 4차 — 인트로를 훅으로: '자는 동안 결제가 됐다.' 가 먼저 내리꽂힌다"
+        },
+        {
+          "sha": "2eccd9a",
+          "subject": "설문봇 쇼츠 A 3차 — ffmpeg 로 합성한 받침 음악·알림·탭 소리, 내레이션은 파일만 두면 자동으로 얹힌다"
+        },
+        {
+          "sha": "f11e140",
+          "subject": "Merge pull request #35 from osam555/chore/ask-label"
+        },
+        {
+          "sha": "a8f614b",
+          "subject": "설문 입구 문구를 '궁금한 점 알아보기'로 — 원장님 이름을 앞세우지 않고 손님 쪽에서 부르는 말로"
+        },
+        {
+          "sha": "4ee30db",
+          "subject": "Merge pull request #34 from osam555/feat/member-card-stats"
+        },
+        {
+          "sha": "0417219",
+          "subject": "회원 카드에 열람 통계 칸 — 문항·시간·접속일·연 횟수·마지막 시각을 따로 보여 준다"
+        },
+        {
+          "sha": "1bb2aac",
+          "subject": "Merge pull request #33 from osam555/chore/worklog-1101"
+        },
+        {
+          "sha": "7de9f5c",
+          "subject": "Merge pull request #32 from osam555/feat/survey-funnel-stats"
+        },
+        {
+          "sha": "1557875",
+          "subject": "Merge pull request #31 from osam555/feat/member-read-time"
+        },
+        {
+          "sha": "c4d55e8",
+          "subject": "Merge pull request #30 from osam555/feat/member-usage"
+        },
+        {
+          "sha": "fd580de",
+          "subject": "Merge pull request #29 from osam555/feat/lead-funnel"
+        },
+        {
+          "sha": "761a52d",
+          "subject": "Merge pull request #28 from osam555/fix/privacy-members"
+        },
+        {
+          "sha": "ea55b5a",
+          "subject": "Merge pull request #27 from osam555/feat/wed100-members"
+        },
+        {
+          "sha": "3719f2c",
+          "subject": "Merge pull request #26 from osam555/fix/admin-delete-badge"
+        },
+        {
+          "sha": "6bdb593",
+          "subject": "Merge pull request #25 from osam555/fix/push-optin-diagnose"
+        },
+        {
+          "sha": "8049634",
+          "subject": "Merge pull request #24 from osam555/feat/lead-email-notify"
+        },
+        {
+          "sha": "2f03ff8",
+          "subject": "Merge pull request #23 from osam555/feat/honjoo100-chat-guide"
+        },
+        {
+          "sha": "96090bf",
+          "subject": "구조화 데이터 datePublished 타임존 누락 수정 (#21)"
+        },
+        {
+          "sha": "4652478",
+          "subject": "칼럼 10편 1500-1700자 + 소제목 5개 이상 확보 (#20)"
+        },
+        {
+          "sha": "3fcc170",
+          "subject": "칼럼 대표 사진 + 블로그 글 제목을 답 끝에 (#19)"
+        }
+      ]
+    },
+    {
       "id": "2026-11-01-1",
       "date": "2026-11-01",
       "title": "이용권 회원 관리와 설문 통계",

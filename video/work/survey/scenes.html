@@ -13,6 +13,34 @@
 html,body{margin:0;width:1080px;height:1920px;overflow:hidden;font-family:P,sans-serif;background:#111;color:#fff}
 .scene{position:absolute;inset:0;display:none}
 .scene.on{display:flex}
+/* ── 훅(인트로) — 글자가 쿵쿵 내리꽂히고, 마지막에 사실 한 줄 ── */
+#hook{background:#0b0a0c;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden}
+#hook .vig{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.85) 100%);pointer-events:none}
+#hook .l{font-size:150px;font-weight:800;line-height:1.08;letter-spacing:-5px;opacity:0}
+#hook .l1{animation:slam .32s .15s cubic-bezier(.1,.9,.2,1) both}
+#hook .l2{color:#ff5c8a;animation:slam .32s 1.0s cubic-bezier(.1,.9,.2,1) both}
+#hook .l3{margin-top:60px;font-size:60px;font-weight:700;color:#cfc7cc;letter-spacing:-1px;opacity:0;animation:fade .4s 1.9s both}
+#hook .l3 b{color:#fff}
+#hook .flash{position:absolute;inset:0;background:#fff;opacity:0;animation:flash .35s .15s both,flash .35s 1.0s both}
+#hook .shake{animation:shake .3s .15s both,shake .3s 1.0s both}
+@keyframes slam{0%{opacity:0;transform:scale(2.2) translateY(-20px);filter:blur(10px)}60%{opacity:1;transform:scale(.96);filter:blur(0)}100%{opacity:1;transform:scale(1)}}
+@keyframes flash{0%{opacity:.0}8%{opacity:.55}100%{opacity:0}}
+@keyframes shake{0%,100%{transform:translate(0,0)}20%{transform:translate(-14px,8px)}40%{transform:translate(12px,-10px)}60%{transform:translate(-8px,6px)}80%{transform:translate(6px,-4px)}}
+/* ── 폰 틀 배경 / 둥근 모서리 마스크 / 탭 파문 / 요약 ── */
+#bg{background:radial-gradient(ellipse at 50% 30%,#f3e6ea 0%,#e9d3da 45%,#d9b8c3 100%)}
+#bg .shadow{position:absolute;left:84px;top:132px;width:912px;height:1656px;border-radius:64px;box-shadow:0 60px 120px rgba(90,20,40,.35),0 0 0 14px #1a1316,0 0 0 18px #3a2a30}
+#mask{background:#000}#mask .m{position:absolute;left:84px;top:132px;width:912px;height:1656px;border-radius:64px;background:#fff}
+#ring{background:transparent}
+#ring .r{position:absolute;left:540px;top:960px;width:0;height:0;border:14px solid #ff5c8a;border-radius:50%;transform:translate(-50%,-50%);animation:ring .55s ease-out both;box-shadow:0 0 30px rgba(255,92,138,.6)}
+@keyframes ring{0%{width:40px;height:40px;opacity:1}100%{width:260px;height:260px;opacity:0;border-width:3px}}
+#recap{background:#f6f3ef;color:#1c1a1b;flex-direction:column;justify-content:center;padding:0 110px;box-sizing:border-box}
+#recap h2{font-size:64px;letter-spacing:-2px;margin:0 0 50px;animation:fade .4s both}
+#recap .s{display:flex;align-items:center;gap:30px;padding:30px 0;border-top:2px solid #e5dcd8;opacity:0}
+#recap .s:nth-child(2){animation:fade .4s .3s both}#recap .s:nth-child(3){animation:fade .4s .8s both}#recap .s:nth-child(4){animation:fade .4s 1.3s both;border-bottom:2px solid #e5dcd8}
+#recap .n{width:84px;height:84px;border-radius:50%;background:#9b2b4a;color:#fff;display:grid;place-items:center;font-size:40px;font-weight:800;flex:none}
+#recap .s b{font-size:46px;display:block}#recap .s span{font-size:30px;color:#6c6469}
+#recap .arrow{text-align:center;font-size:120px;margin:34px 0 0;color:#9b2b4a;animation:pop .5s 1.9s both}
+#recap .res{text-align:center;font-size:56px;font-weight:800;color:#9b2b4a;animation:fade .4s 2.2s both}
 /* ── 시계 ── */
 #clock{background:#0b0a0c;flex-direction:column;align-items:center;justify-content:center}
 #clock .t{font-size:220px;font-weight:300;letter-spacing:-6px;animation:fade .6s ease-out both}
@@ -54,9 +82,31 @@ html,body{margin:0;width:1080px;height:1920px;overflow:hidden;font-family:P,sans
 @keyframes pop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}
 </style></head><body>
 
+<section id="hook" class="scene">
+  <div class="vig"></div>
+  <div class="shake" style="display:flex;flex-direction:column;align-items:center">
+    <div class="l l1">자는 동안</div>
+    <div class="l l2">결제가 됐다.</div>
+    <div class="l3">사람 없이 · 홈페이지 혼자 · <b>55,000원</b></div>
+  </div>
+  <div class="flash"></div>
+</section>
+
+<section id="bg" class="scene"><div class="shadow"></div></section>
+<section id="mask" class="scene"><div class="m"></div></section>
+<section id="ring" class="scene"><div class="r"></div></section>
+<section id="recap" class="scene">
+  <h2>손님이 한 일은 세 번 누르기</h2>
+  <div class="s"><div class="n">1</div><div><b>누구세요?</b><span>신부 어머님</span></div></div>
+  <div class="s"><div class="n">2</div><div><b>뭐가 걱정이세요?</b><span>한복 색 → 맞는 답 + 무료 문항</span></div></div>
+  <div class="s"><div class="n">3</div><div><b>연락처 남기기</b><span>이용권 55,000원 · 예약하면 차감</span></div></div>
+  <div class="arrow">↓</div>
+  <div class="res">아침에 원장님이 전화 → 예약</div>
+</section>
+
 <section id="clock" class="scene">
   <div class="t">22:40</div>
-  <div class="d">원장님은 퇴근했다</div>
+  <div class="d">손님이 홈페이지를 열었다</div>
   <div class="n"><div class="i">포</div><div><b>메이크업포엘</b><p>어머니 한복 색, 어떻게 고르세요?</p></div></div>
 </section>
 
@@ -78,15 +128,18 @@ html,body{margin:0;width:1080px;height:1920px;overflow:hidden;font-family:P,sans
 </section>
 
 <section id="end" class="scene">
-  <div class="h">내 홈페이지에도<br>설문봇을</div>
-  <div class="p">손님은 세 번만 누르면 되고,<br>사장님은 아침에 전화만 하면 됩니다.</div>
-  <div class="cta">무료로 시작</div>
-  <div class="u">youngliving.page</div>
-  <div class="c">Oilpage · 카카오톡 「오쌤대충영어」 · 0507-1334-9119<br>사례: 메이크업포엘 (makeupforl.co.kr · 02-323-3321)</div>
+  <!-- 엔드카드는 메이크업포엘 자체 홍보 — Oilpage 데모 주소 대신 실제 도메인(사장님 결정 2026-11-02) -->
+  <div class="h">혼주 메이크업,<br>궁금한 것부터 물어보세요</div>
+  <div class="p">세 번만 누르면 맞는 답이 나오고,<br>원하시면 원장님이 직접 전화드립니다.</div>
+  <div class="cta">지금 물어보기</div>
+  <div class="u" id="site">makeupforl.co.kr</div>
+  <div class="c">메이크업포엘 · 대표원장 김성희 · 02-323-3321<br>100문 100답 · 강남 혼주 메이크업</div>
 </section>
 
 <script>
 const s = new URLSearchParams(location.search).get('scene') || 'clock'
 document.getElementById(s).classList.add('on')
+if (s === 'ring') { document.documentElement.style.background = 'transparent'; document.body.style.background = 'transparent' }
+const site = new URLSearchParams(location.search).get('site'); if (site) document.getElementById('site').textContent = site
 </script>
 </body></html>
