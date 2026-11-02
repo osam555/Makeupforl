@@ -4,11 +4,11 @@ import { mkdirSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { execSync } from 'node:child_process'
 
-const DUR = { hook: 3.4, clock: 2.6, admin: 5.0, number: 4.5, end: 6.0 } // 초 — 장면표의 길이에 여유 0.5
+const DUR = { hook: 3.4, clock: 2.0, recap: 3.6, admin: 5.0, number: 4.5, end: 6.0 } // 초 — 장면표의 길이에 여유 0.5
 const here = import.meta.dirname
 const browser = await chromium.launch()
 const page = await browser.newPage({ viewport: { width: 1080, height: 1920 } })
-for (const [name, dur] of Object.entries(DUR)) {
+for (const [name, dur] of Object.entries(process.env.RINGS_ONLY ? {} : DUR)) {
   const out = resolve(here, 'rec', name)
   mkdirSync(out, { recursive: true })
   const site = process.env.SITE ? `&site=${encodeURIComponent(process.env.SITE)}` : ''
@@ -38,5 +38,19 @@ for (const [name, dur] of Object.entries(DUR)) {
   writeFileSync(resolve(out, 'frames.txt'), list)
   execSync(`ffmpeg -loglevel error -y -f concat -safe 0 -i frames.txt -vf "scale=1080:1920:flags=lanczos,fps=25,format=yuv420p" -c:v libx264 -crf 18 ../${name}.mp4`, { cwd: out })
   console.log(name, frames.length, 'frames')
+}
+// 정지 그림: 폰 틀 배경, 둥근 모서리 마스크
+for (const name of ['bg', 'mask']) {
+  await page.goto(`file://${here}/scenes.html?scene=${name}`)
+  await page.waitForTimeout(100)
+  await page.screenshot({ path: resolve(here, 'rec', `${name}.png`) })
+}
+// 탭 파문: 0.55초짜리 투명 PNG 12장(중심 540,960) — 조립에서 좌표를 옮겨 얹는다
+mkdirSync(resolve(here, 'rec', 'ring'), { recursive: true })
+await page.goto(`file://${here}/scenes.html?scene=ring`)
+for (let i = 0; i < 12; i++) {
+  await page.evaluate((i) => { const r = document.querySelector('#ring .r'); r.style.animation = 'none'; r.getAnimations().forEach(a => a.cancel()); r.style.animation = `ring .55s ease-out both`; r.style.animationDelay = `-${(i / 12) * 0.55}s`; r.style.animationPlayState = 'paused' }, i)
+  await page.waitForTimeout(30)
+  await page.screenshot({ path: resolve(here, 'rec', 'ring', `r${String(i).padStart(2, '0')}.png`), omitBackground: true, clip: { x: 390, y: 810, width: 300, height: 300 } })
 }
 await browser.close()
