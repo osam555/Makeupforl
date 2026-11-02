@@ -4,7 +4,7 @@ import { mkdirSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { execSync } from 'node:child_process'
 
-const DUR = { hook: 3.4, clock: 2.0, recap: 3.6, admin: 5.0, number: 4.5, end: 6.0 } // 초 — 장면표의 길이에 여유 0.5
+const DUR = { hook: 3.4, clock: 2.0, recap: 3.6, admin: 5.0, insight: 6.5, end: 6.0 } // 8차: number → insight(문항 통계) // 초 — 장면표의 길이에 여유 0.5
 const here = import.meta.dirname
 const browser = await chromium.launch()
 const page = await browser.newPage({ viewport: { width: 1080, height: 1920 } })
