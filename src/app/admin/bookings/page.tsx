@@ -89,6 +89,23 @@ function AdminBookings() {
     }
   }
 
+  /**
+   * 지우기. 취소와 다르다 — 시험으로 넣은 샘플(2026-08-17)처럼 기록으로 남길 이유가 없는 것만.
+   * 전에는 규칙이 delete 를 막아 샘플이 목록에서 영영 빠지지 않았다.
+   */
+  const removeBooking = async (id: string) => {
+    if (!confirm('이 예약을 지울까요? 되돌릴 수 없습니다.')) return
+    setErr(null)
+    try {
+      const db = getDb()
+      if (!db) throw new Error('firebase-not-configured')
+      const { deleteDoc, doc } = await import('firebase/firestore')
+      await deleteDoc(doc(db, 'bookings', id))
+    } catch (e) {
+      setErr(`지우지 못했습니다 — ${e instanceof Error ? e.message : String(e)}`)
+    }
+  }
+
   // Firestore 실시간 구독: 탭을 열어둔 채로도 새 예약/상태 변경이 즉시 반영된다.
   useEffect(() => {
     let unsubscribe: (() => void) | undefined
@@ -282,6 +299,9 @@ function AdminBookings() {
                     끝난 예약입니다. 더 할 일이 없습니다.
                   </span>
                 )}
+                <Action tone="quiet" onClick={() => void removeBooking(b.id)}>
+                  지우기
+                </Action>
               </div>
             </li>
           ))}

@@ -35,6 +35,13 @@ export const MEMBER_MONTHS = 3
 export const MEMBER_PRICE = 55_000
 export const MEMBER_PRICE_LABEL = `${MEMBER_PRICE.toLocaleString('ko-KR')}원`
 
+/**
+ * 이용권 값을 메이크업 예약 때 빼 준다 (2026-10-31, 매니저 결정 · 원장님 확인 필요).
+ * 이용권을 예약으로 가는 다리로 쓴다 — 산 돈이 사라지지 않으니 사기 쉽고, 산 분은 예약으로 온다.
+ * 잠긴 화면과 설문 안내가 같은 문장을 봐야 한다.
+ */
+export const MEMBER_CREDIT_NOTE = `메이크업 예약 시 이용권 값 ${MEMBER_PRICE_LABEL}을 빼 드립니다`
+
 /** 오늘 (한국 시각). 서버가 어디서 돌든 기준이 흔들리면 안 된다 */
 export function todayKST(): string {
   return new Intl.DateTimeFormat('en-CA', {

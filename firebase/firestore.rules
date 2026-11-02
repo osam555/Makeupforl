@@ -44,7 +44,37 @@ service cloud.firestore {
       allow read: if isAdmin();
       allow create: if request.resource.data.keys().hasAll(['name', 'phone', 'status']);
       allow update: if isAdmin();
-      allow delete: if false;
+      // 시험 샘플을 지울 길이 없었다(2026-10-30). 지우기는 관리자만.
+      allow delete: if isAdmin();
+    }
+
+    // 상담 신청(100문100답 안내 채팅): 이름·전화번호가 들어 있다.
+    // 접수(create)는 /api/consult-lead(Admin SDK, 규칙 우회)만 한다. bookings 처럼 클라이언트
+    // create 를 열어 두면 봇이 API 의 형식 검사·숨은 칸을 건너뛰고 바로 쓸 수 있다.
+    // 관리자는 /admin/leads 에서 읽고, 상태를 바꾸고, 보관 기간이 지나면 지운다.
+    match /consult_leads/{id} {
+      allow read, update, delete: if isAdmin();
+      allow create: if false;
+    }
+
+    // 100문100답 이용권 회원(이름·지메일·전화·기한): 관리자만.
+    // site_config 는 공개 읽기라 개인정보를 거기 두면 누구나 읽는다 — 따로 뺐다.
+    // 쓰기는 /api/wed100/members(Admin SDK)가 하고, 화면은 읽기만 한다.
+    match /wed100_members/{id} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    // 설문 단계 통계(익명 증가값): 서버만 쓰고 관리자만 읽는다
+    match /survey_daily/{day} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    // 이용권 회원 열람 기록: 서버(Admin SDK)만 쓰고 관리자만 읽는다
+    match /wed100_usage/{id} {
+      allow read: if isAdmin();
+      allow write: if false;
     }
 
     // 후기: 공개 읽기, 수정은 관리자만
