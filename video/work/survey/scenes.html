@@ -13,6 +13,19 @@
 html,body{margin:0;width:1080px;height:1920px;overflow:hidden;font-family:P,sans-serif;background:#111;color:#fff}
 .scene{position:absolute;inset:0;display:none}
 .scene.on{display:flex}
+/* ── 훅(인트로) — 글자가 쿵쿵 내리꽂히고, 마지막에 사실 한 줄 ── */
+#hook{background:#0b0a0c;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden}
+#hook .vig{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.85) 100%);pointer-events:none}
+#hook .l{font-size:150px;font-weight:800;line-height:1.08;letter-spacing:-5px;opacity:0}
+#hook .l1{animation:slam .32s .15s cubic-bezier(.1,.9,.2,1) both}
+#hook .l2{color:#ff5c8a;animation:slam .32s 1.0s cubic-bezier(.1,.9,.2,1) both}
+#hook .l3{margin-top:60px;font-size:60px;font-weight:700;color:#cfc7cc;letter-spacing:-1px;opacity:0;animation:fade .4s 1.9s both}
+#hook .l3 b{color:#fff}
+#hook .flash{position:absolute;inset:0;background:#fff;opacity:0;animation:flash .35s .15s both,flash .35s 1.0s both}
+#hook .shake{animation:shake .3s .15s both,shake .3s 1.0s both}
+@keyframes slam{0%{opacity:0;transform:scale(2.2) translateY(-20px);filter:blur(10px)}60%{opacity:1;transform:scale(.96);filter:blur(0)}100%{opacity:1;transform:scale(1)}}
+@keyframes flash{0%{opacity:.0}8%{opacity:.55}100%{opacity:0}}
+@keyframes shake{0%,100%{transform:translate(0,0)}20%{transform:translate(-14px,8px)}40%{transform:translate(12px,-10px)}60%{transform:translate(-8px,6px)}80%{transform:translate(6px,-4px)}}
 /* ── 시계 ── */
 #clock{background:#0b0a0c;flex-direction:column;align-items:center;justify-content:center}
 #clock .t{font-size:220px;font-weight:300;letter-spacing:-6px;animation:fade .6s ease-out both}
@@ -54,9 +67,19 @@ html,body{margin:0;width:1080px;height:1920px;overflow:hidden;font-family:P,sans
 @keyframes pop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}
 </style></head><body>
 
+<section id="hook" class="scene">
+  <div class="vig"></div>
+  <div class="shake" style="display:flex;flex-direction:column;align-items:center">
+    <div class="l l1">자는 동안</div>
+    <div class="l l2">결제가 됐다.</div>
+    <div class="l3">사람 없이 · 홈페이지 혼자 · <b>55,000원</b></div>
+  </div>
+  <div class="flash"></div>
+</section>
+
 <section id="clock" class="scene">
   <div class="t">22:40</div>
-  <div class="d">원장님은 퇴근했다</div>
+  <div class="d">손님이 홈페이지를 열었다</div>
   <div class="n"><div class="i">포</div><div><b>메이크업포엘</b><p>어머니 한복 색, 어떻게 고르세요?</p></div></div>
 </section>
 
