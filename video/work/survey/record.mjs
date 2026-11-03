@@ -80,10 +80,10 @@ const choice = (t) => page.getByRole('button', { name: t, exact: true })
 await tap(choice('신부 어머님이에요'), 'who')
 await wait(1900)
 await tap(choice('한복 색을 못 고르겠어요'), 'worry')
-await wait(3500) // 답 네 줄
+await wait(5000) // 답 네 줄 — 9차: 내레이션 n3 가 다 끝나도록 1.5초 더
 // 이용권 상자와 단추들이 보이게 상자 안을 내림(컴포넌트가 스스로 내린다). 잠깐 머문다
 mark('offer')
-await wait(1700)
+await wait(3200) // 9차: n4(이용권 설명 6초)가 양식 전에 끝나도록
 await tap(choice('원장님 연락 받기'), 'form')
 await wait(1500)
 await page.getByLabel('성함').fill('김○○'); await wait(400)
