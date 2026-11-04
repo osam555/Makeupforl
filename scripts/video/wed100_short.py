@@ -319,7 +319,7 @@ def make_card(slug, path):
     d.rectangle([cx - 90, 486, cx + 90, 490], fill=GOLD)
     d.text((cx, 540), "혼주메이크업", font=font("Black", 96), fill=INK, anchor="ma")
     d.text((cx, 660), "100문 100답", font=font("Black", 116), fill=GOLD, anchor="ma")
-    d.text((cx, 860), f"makeupforl.co.kr/honjoo100/{slug}", font=font("Bold", 44), fill=INK, anchor="ma")
+    d.text((cx, 860), "makeupforl.co.kr/honjoo100" + (f"/{slug}" if slug else ""), font=font("Bold", 44), fill=INK, anchor="ma")
     bf = font("Bold", 50)
     s = "30초 설문 — 궁금한 점 알아보기"
     bw = text_w(s, bf) + 90
