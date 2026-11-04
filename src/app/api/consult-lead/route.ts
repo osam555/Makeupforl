@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 
+import { cleanFrom, leadSource } from '@/lib/campaign'
 import { getAdminDb } from '@/lib/firebase/admin'
 import { notifyLead } from '@/lib/notifyLead.server'
 import { pushLead } from '@/lib/pushLead.server'
@@ -19,7 +20,10 @@ export const dynamic = 'force-dynamic'
  * 모두 막는다. 받는 칸은 최소한으로: 이름·전화·결혼식 시기·고른 걱정.
  * IP·UA 는 저장하지 않는다.
  *
- * POST { name, phone, when, who, worry, agree: true, website: '' }
+ * POST { name, phone, when, who, worry, agree: true, website: '', from? }
+ * from 은 첫 랜딩 주소의 캠페인 꼬리표(lib/campaign) — source 에 `honjoo100-chat:<from>` 으로
+ * 붙인다. 어느 쇼츠·광고가 신청과 예약을 냈는지를 여기서만 이을 수 있다. 화면이 보낸 값을
+ * 믿지 않고 여기서 다시 거른다.
  * website 는 화면에 안 보이는 칸이다 — 채워져 오면 봇이라 조용히 성공한 척한다.
  */
 const PHONE = /^01[016789]-?\d{3,4}-?\d{4}$/
@@ -52,7 +56,7 @@ export async function POST(req: Request) {
   }
   await db.collection('consult_leads').add({
     ...lead,
-    source: 'honjoo100-chat',
+    source: leadSource(cleanFrom(body.from)),
     status: 'new',
     createdAt: new Date().toISOString(),
   })

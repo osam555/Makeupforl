@@ -1,6 +1,9 @@
 import AdminShell from '@/components/admin/AdminShell'
 import VisitsGate from '@/components/admin/VisitsGate'
+import { sum } from '@/lib/analytics'
 import { getDailyStats } from '@/lib/analytics.server'
+import { campaignRows } from '@/lib/campaign'
+import { getLeadTallies } from '@/lib/campaign.server'
 
 export const dynamic = 'force-dynamic'
 
@@ -12,10 +15,12 @@ export const dynamic = 'force-dynamic'
  * 단위를 바꿀 때마다 서버를 다시 부르지 않아도 된다.
  */
 export default async function AdminVisitsPage() {
-  const days = await getDailyStats(366)
+  const [days, leads] = await Promise.all([getDailyStats(366), getLeadTallies()])
+  // 캠페인 표는 화면의 일·주·월 단추와 상관없이 1년 전체 — CampaignTable 주석 참고
+  const campaigns = campaignRows(sum(days).sources, leads)
   return (
     <AdminShell active="/admin/visits" title="방문">
-      <VisitsGate days={days} />
+      <VisitsGate days={days} campaigns={campaigns} />
     </AdminShell>
   )
 }

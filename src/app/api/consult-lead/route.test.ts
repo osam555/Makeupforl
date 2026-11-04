@@ -58,4 +58,13 @@ describe('POST /api/consult-lead', () => {
     await POST(req({ ...ok, agree: false }))
     expect(notify).not.toHaveBeenCalled()
   })
+
+  it('꼬리표가 있으면 source 에 붙이고, 이상한 값은 버린다', async () => {
+    await POST(req({ ...ok, from: 'yt-shorts-01' }))
+    expect(add).toHaveBeenLastCalledWith(expect.objectContaining({ source: 'honjoo100-chat:yt-shorts-01' }))
+    await POST(req({ ...ok, from: '010-1234-5678 김혼주' }))
+    expect(add).toHaveBeenLastCalledWith(expect.objectContaining({ source: 'honjoo100-chat' }))
+    await POST(req(ok))
+    expect(add).toHaveBeenLastCalledWith(expect.objectContaining({ source: 'honjoo100-chat' }))
+  })
 })

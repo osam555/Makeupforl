@@ -3,6 +3,8 @@
 import { usePathname } from 'next/navigation'
 import { useEffect, useRef } from 'react'
 
+import { rememberFrom } from '@/lib/campaign'
+
 const SID = 'mfl:sid'
 
 /**
@@ -35,6 +37,10 @@ export default function Track() {
       /* 저장이 막혀 있어도 기록은 보낸다 — 다만 방문 수는 세지 않는다 */
     }
 
+    // 첫 랜딩의 꼬리표만 보낸다 — 출처는 새 세션 한 번만 세므로 그 뒤 쪽에는 쓸 데가 없다.
+    // 설문 제출이 나중에 같은 값을 읽도록 여기서 세션에 붙들어 둔다
+    const from = rememberFrom(window.location.search)
+
     startedAt.current = Date.now()
     sent.current = false
 
@@ -47,6 +53,7 @@ export default function Track() {
         kind: 'view',
         newSession: isNew,
         ref: isNew ? document.referrer : '',
+        ...(isNew && from ? { from } : {}),
       }),
     }).catch(() => {})
 

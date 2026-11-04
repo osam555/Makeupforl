@@ -1,6 +1,8 @@
 /**
  * 방문 기록 읽기와 계산 (순수 함수 — 화면에서도 쓴다).
  */
+import { campaignOfSource } from '@/lib/campaign'
+
 export interface DailyStat {
   date: string
   visits: number
@@ -93,6 +95,12 @@ export const SOURCE_LABEL: Record<string, string> = {
   sns: '인스타·페이스북',
   youtube: '유튜브',
   internal: '사이트 내부',
+}
+
+/** 출처 이름. 캠페인 꼬리표(`from:…`)는 목록에 없으니 꼬리표 그대로 보인다 */
+export function sourceLabel(k: string): string {
+  const c = campaignOfSource(k)
+  return c ? `꼬리표 ${c}` : (SOURCE_LABEL[k] ?? unkey(k))
 }
 
 /** 기간 단위 — 일간은 날짜, 주간은 월요일 날짜, 월간은 YYYY-MM */
