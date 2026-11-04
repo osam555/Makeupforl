@@ -1,0 +1,72 @@
+{
+ "_설명": "유튜브에 올린 영상 기록(docs/video/README.md 3절). 영상 파일은 커밋하지 않고 여기 ID 만 남긴다.",
+ "channel": "UCtlSwebjXpbjnasvIMMTLZA",
+ "uploads": [
+  {
+   "file": "video/out/shorts/00-소개-처음혼주_v1.mp4",
+   "youtubeId": "M2xsBsRstQU",
+   "url": "https://youtube.com/shorts/M2xsBsRstQU",
+   "title": "처음 혼주가 되세요? | 혼주메이크업 100문 100답 #혼주메이크업 #shorts",
+   "link": "https://makeupforl.co.kr/honjoo100",
+   "visibility": "unlisted",
+   "aiLabel": true,
+   "date": "2026-11-04",
+   "note": "출처 꼬리표(?from=)는 PR #40 머지 뒤 설명란 링크에 붙인다"
+  },
+  {
+   "file": "video/out/shorts/01-p3-15-눈물_v1.mp4",
+   "youtubeId": "UI_Un42zDn4",
+   "url": "https://youtube.com/shorts/UI_Un42zDn4",
+   "title": "결혼식 날 눈물 나면 화장 어떡하죠? | 혼주메이크업 100문 100답 #혼주메이크업 #shorts",
+   "link": "https://makeupforl.co.kr/honjoo100/p3-15",
+   "visibility": "unlisted",
+   "aiLabel": true,
+   "date": "2026-11-04",
+   "note": "출처 꼬리표(?from=)는 PR #40 머지 뒤 설명란 링크에 붙인다"
+  },
+  {
+   "file": "video/out/shorts/02-p5-13-귀걸이목걸이_v1.mp4",
+   "youtubeId": "hkcQetBwTIc",
+   "url": "https://youtube.com/shorts/hkcQetBwTIc",
+   "title": "혼주 한복에 귀걸이, 아무거나 하면 안 돼요 | 혼주메이크업 100문 100답 #혼주한복 #shorts",
+   "link": "https://makeupforl.co.kr/honjoo100/p5-13",
+   "visibility": "unlisted",
+   "aiLabel": true,
+   "date": "2026-11-04",
+   "note": "출처 꼬리표(?from=)는 PR #40 머지 뒤 설명란 링크에 붙인다"
+  },
+  {
+   "file": "video/out/shorts/03-p4-07-둥근얼굴형머리_v1.mp4",
+   "youtubeId": "yI-lZCo_7jI",
+   "url": "https://youtube.com/shorts/yI-lZCo_7jI",
+   "title": "얼굴이 둥근 혼주님, 이 머리 하세요 | 혼주메이크업 100문 100답 #혼주머리 #shorts",
+   "link": "https://makeupforl.co.kr/honjoo100/p4-07",
+   "visibility": "unlisted",
+   "aiLabel": true,
+   "date": "2026-11-04",
+   "note": "출처 꼬리표(?from=)는 PR #40 머지 뒤 설명란 링크에 붙인다"
+  },
+  {
+   "file": "video/out/shorts/04-p2-05-시연만족도_v1.mp4",
+   "youtubeId": "WcZ3MauMqw8",
+   "url": "https://youtube.com/shorts/WcZ3MauMqw8",
+   "title": "결혼식 전에 머리를 미리 해 볼 수 있다고요? | 혼주메이크업 100문 100답 #혼주헤어 #shorts",
+   "link": "https://makeupforl.co.kr/honjoo100/p2-05",
+   "visibility": "unlisted",
+   "aiLabel": true,
+   "date": "2026-11-04",
+   "note": "출처 꼬리표(?from=)는 PR #40 머지 뒤 설명란 링크에 붙인다"
+  },
+  {
+   "file": "video/out/shorts/05-p1-06-사전컨설팅_v1.mp4",
+   "youtubeId": "WFvpPD9xqjQ",
+   "url": "https://youtube.com/shorts/WFvpPD9xqjQ",
+   "title": "혼주 메이크업, 당일 상담으로는 늦습니다 | 혼주메이크업 100문 100답 #혼주메이크업 #shorts",
+   "link": "https://makeupforl.co.kr/honjoo100/p1-06",
+   "visibility": "unlisted",
+   "aiLabel": true,
+   "date": "2026-11-04",
+   "note": "출처 꼬리표(?from=)는 PR #40 머지 뒤 설명란 링크에 붙인다"
+  }
+ ]
+}
