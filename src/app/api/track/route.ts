@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
 
+import { campaignSourceKey, cleanFrom } from '@/lib/campaign'
+
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
@@ -17,7 +19,7 @@ export const dynamic = 'force-dynamic'
  * 저장은 날짜별 문서 하나에 증가값으로 쌓는다. 방문마다 문서를 만들면 금세 수만 건이
  * 되고, 어드민이 그걸 다 읽어야 한다.
  *
- * POST { path, kind: 'view'|'leave', sid, dwellMs?, ref? }
+ * POST { path, kind: 'view'|'leave', sid, dwellMs?, ref?, from? }
  */
 const PATH = /^\/[^\s?#]{0,200}$/
 const DAY = () =>
@@ -103,6 +105,13 @@ export async function POST(req: Request) {
 
     if (kind === 'view') {
       const isNewSession = body?.newSession === true
+      /*
+        캠페인 꼬리표(?from=)가 있으면 referrer 대신 그것을 출처로 센다.
+        쇼츠·광고 링크는 유튜브·인스타 앱, 카톡 안에서 눌려 referrer 가 비어 오므로 그대로 두면
+        「직접 방문」에 섞인다. 화면이 거른 값이라도 여기서 다시 거른다 — 아무나 이 API 를 부를 수 있다.
+      */
+      const from = cleanFrom(body?.from)
+      const src = key(from ? campaignSourceKey(from) : refSource(String(body?.ref ?? '')))
       await ref.set(
         {
           date: DAY(),
@@ -118,10 +127,8 @@ export async function POST(req: Request) {
           */
           ...(isNewSession
             ? {
-                sources: { [key(refSource(String(body?.ref ?? '')))]: FieldValue.increment(1) },
-                landings: {
-                  [`${key(refSource(String(body?.ref ?? '')))}__${k}`]: FieldValue.increment(1),
-                },
+                sources: { [src]: FieldValue.increment(1) },
+                landings: { [`${src}__${k}`]: FieldValue.increment(1) },
               }
             : {}),
         },

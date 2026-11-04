@@ -3,19 +3,21 @@
 import { useMemo, useState } from 'react'
 
 import { Panel, Stat } from '@/components/admin/AdminUI'
+import CampaignTable from '@/components/admin/CampaignTable'
 import {
   GRAIN_LABEL,
   SOURCE_COLOR,
   SOURCE_COLOR_OTHER,
-  SOURCE_LABEL,
   avgDwell,
   fmtDwell,
   groupDays,
+  sourceLabel,
   sum,
   unkey,
   type DailyStat,
   type Grain,
 } from '@/lib/analytics'
+import { campaignOfSource, type CampaignRow } from '@/lib/campaign'
 
 /** 단위마다 몇 칸을 보여 주나 — 일간 30일, 주간 12주, 월간 12달 */
 const SPAN: Record<Grain, number> = { day: 30, week: 12, month: 12 }
@@ -36,7 +38,7 @@ const SINCE = '2026-09-09'
  * 열 수를 제한하는 것은 휴대전화 때문이다. 출처가 열 종류를 넘으면 표가 화면 밖으로
  * 나가고, 사실 여섯 번째부터는 한두 건이라 따로 볼 값이 아니다.
  */
-export default function VisitsView({ days }: { days: DailyStat[] }) {
+export default function VisitsView({ days, campaigns }: { days: DailyStat[]; campaigns: CampaignRow[] }) {
   const [grain, setGrain] = useState<Grain>('day')
 
   const rows = useMemo(() => groupDays(days, grain).slice(-SPAN[grain]), [days, grain])
@@ -56,7 +58,7 @@ export default function VisitsView({ days }: { days: DailyStat[] }) {
   const hasOther = rows.some((d) => other(d) > 0)
 
   const maxVisits = Math.max(1, ...rows.map((d) => d.visits))
-  const label = (k: string) => SOURCE_LABEL[k] ?? unkey(k)
+  const label = sourceLabel
   const color = (k: string) => SOURCE_COLOR[k] ?? SOURCE_COLOR_OTHER
 
   /*
@@ -226,6 +228,8 @@ export default function VisitsView({ days }: { days: DailyStat[] }) {
         </p>
       </Panel>
 
+      <CampaignTable rows={campaigns} />
+
       <Panel title="어느 페이지로 들어왔나" hint="출처별 첫 페이지 — 2026-09-11 저녁부터">
         <Landings landings={total.landings} cols={cols} label={label} color={color} />
       </Panel>
@@ -249,7 +253,8 @@ function shortLabel(k: string): string {
     daum: '다음',
     internal: '내부',
   }
-  return short[k] ?? unkey(k).slice(0, 10)
+  // 꼬리표는 끝자리 번호가 쇼츠를 가르므로 자르면 안 된다(yt-shorts-01 과 -02 가 같아 보인다)
+  return short[k] ?? campaignOfSource(k) ?? unkey(k).slice(0, 10)
 }
 
 function fmtPeriod(date: string, grain: Grain): string {

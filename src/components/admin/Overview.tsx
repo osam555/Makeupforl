@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useEffect, useRef, useSyncExternalStore } from 'react'
 
 import { Chips, Panel, SectionTitle, Stat } from '@/components/admin/AdminUI'
-import { SOURCE_LABEL, avgDwell, fmtDwell, sum, unkey, type DailyStat } from '@/lib/analytics'
+import { avgDwell, sourceLabel, fmtDwell, sum, unkey, type DailyStat } from '@/lib/analytics'
 import {
   readiness,
   sortKeywords,
@@ -308,7 +308,7 @@ export default function Overview({
             rows={Object.entries(a.sources)
               .sort((x, y) => y[1] - x[1])
               .map(([k, n]) => ({
-                left: SOURCE_LABEL[k] ?? unkey(k),
+                left: sourceLabel(k),
                 right: n.toLocaleString(),
               }))}
             empty="아직 기록이 없습니다"
@@ -571,7 +571,7 @@ function SourceDays({ days }: { days: DailyStat[] }) {
             <th className="py-1 text-right font-bold">방문</th>
             {cols.map((k) => (
               <th key={k} className="py-1 pl-2 text-right font-bold">
-                {SOURCE_LABEL[k] ?? unkey(k)}
+                {sourceLabel(k)}
               </th>
             ))}
           </tr>
@@ -619,7 +619,7 @@ function Landings({ landings }: { landings: Record<string, number> }) {
       <ul className="space-y-1 text-[0.6875rem]">
         {top.map(({ src, rows }) => (
           <li key={src} className="flex min-w-0 gap-2">
-            <span className="w-28 shrink-0 truncate text-[var(--a-8a7a72)]">{SOURCE_LABEL[src] ?? unkey(src)}</span>
+            <span className="w-28 shrink-0 truncate text-[var(--a-8a7a72)]">{sourceLabel(src)}</span>
             <span className="min-w-0 flex-1 truncate text-[var(--a-3a322e)]">
               {rows.map(([p, n]) => `${decodePath(unkey(p))} ${n}`).join(' · ')}
             </span>
