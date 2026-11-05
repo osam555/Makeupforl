@@ -48,6 +48,10 @@ SUB_SIZE = 68           # 스킬 기준 1080p 72 — 세로 화면은 폭이 108
 SNAP = 0.6              # 자막 경계를 쉼으로 끌어당기는 최대 거리(초)
 
 OUTRO_LINE = "더 궁금하신 점은, 혼주메이크업 100문 100답에서 확인하세요."
+# 끝의 끝 2초 — 주소만 크게. 쇼츠 화면에서는 설명란 링크를 누를 수 없어서 링크는 고정 댓글에 달고 그걸 말로도 알린다
+# (2026-11-05 요청). 이 2초도 소리가 비면 1.5초 무음 검사에 걸려 같은 목소리로 한 줄 읽힌다.
+DOMAIN_LINE = "링크는 고정 댓글에 있어요."
+DOMAIN_SHOW = 2.0       # 주소 카드가 다 올라온 뒤 머무는 시간
 
 
 def font(weight, size):
@@ -73,9 +77,9 @@ def decode(path):
     return np.frombuffer(out, dtype=np.float32).copy()
 
 
-def silences(path, d=0.2):
+def silences(path, d=0.2, db=-45):
     err = subprocess.run(["ffmpeg", "-hide_banner", "-i", str(path), "-af",
-                          f"silencedetect=noise=-45dB:d={d}", "-f", "null", "-"],
+                          f"silencedetect=noise={db}dB:d={d}", "-f", "null", "-"],
                          capture_output=True, text=True).stderr
     st = [float(x) for x in re.findall(r"silence_start: ([\d.]+)", err)]
     en = [float(x) for x in re.findall(r"silence_end: ([\d.]+)", err)]
@@ -330,6 +334,55 @@ def make_card(slug, path):
     img.save(path)
 
 
+def make_domain_card(path):
+    img = gradient(W, H).convert("RGBA")
+    d = ImageDraw.Draw(img)
+    d.rectangle([0, 0, W, 14], fill=GOLD)
+    d.rectangle([0, H - 14, W, H], fill=GOLD)
+    cx = W // 2
+    d.text((cx, 520), "메이크업포엘", font=font("Bold", 46), fill=SUB, anchor="ma")
+    d.rectangle([cx - 90, 606, cx + 90, 610], fill=GOLD)
+    d.text((cx, 670), "makeupforl.co.kr", font=font("Black", 104), fill=INK, anchor="ma")
+    d.text((cx, 800), "/honjoo100", font=font("Black", 132), fill=GOLD, anchor="ma")
+    bf = font("Bold", 54)
+    s = "링크는 고정 댓글에 있어요 ↓"
+    bw = text_w(s, bf) + 100
+    d.rounded_rectangle([cx - bw // 2, 1040, cx + bw // 2, 1150], radius=55, fill=GOLD)
+    d.text((cx, 1095), s, font=bf, fill=(255, 255, 255), anchor="mm")
+    img.save(path)
+
+
+def tts_line(text, path):
+    """답변과 같은 목소리(edge-tts SunHi +25%)로 한 줄. 앞뒤 무음은 걷어 낸다."""
+    if not path.exists():
+        # homebrew 의 edge-tts 는 낡아서 403(Sec-MS-GEC)으로 막힌다 — 같은 venv 의 최신판을 쓴다
+        run([str(Path(sys.executable).parent / "edge-tts"), "--voice", "ko-KR-SunHiNeural", "--rate=+25%", "--text", text,
+             "--write-media", str(path) + ".part"])
+        Path(str(path) + ".part").rename(path)  # 실패해 빈 파일이 남으면 다음 실행이 그걸 집어 든다
+    y = decode(path)
+    nz = np.where(np.abs(y) > 10 ** (-45 / 20))[0]
+    return y[max(0, nz[0] - int(0.05 * SR)):nz[-1] + int(0.2 * SR)]
+
+
+def ending(main_dur, outro, line2, card_png, domain_png, out_mp4):
+    """끝 카드(마무리 한 줄) → 주소 카드(링크 안내 한 줄)를 한 영상으로 만들고 소리 놓을 자리를 돌려준다.
+    두 쇼츠 도구(wed100_short·intro_short)가 같이 쓴다 — 여섯 편의 끝이 똑같아야 한다."""
+    XF = 0.55  # 카드 진입 slideup(스킬 2절)
+    card_start = main_dur - XF
+    outro_at = card_start + 0.35          # 카드가 올라오는 도중에 말을 시작해 본편 끝 무음을 줄인다
+    c1 = (outro_at - card_start) + len(outro) / SR + 0.15
+    line2_at = card_start + c1 + 0.3
+    d2 = max(XF + DOMAIN_SHOW, (line2_at - card_start - c1) + len(line2) / SR + 0.35)
+    run(["ffmpeg", "-y", "-v", "error",
+         "-loop", "1", "-framerate", str(FPS), "-t", f"{c1 + XF:.3f}", "-i", str(card_png),
+         "-loop", "1", "-framerate", str(FPS), "-t", f"{d2:.3f}", "-i", str(domain_png),
+         "-filter_complex", f"[0:v]format=yuv420p,setsar=1[a];[1:v]format=yuv420p,setsar=1[b];"
+                            f"[a][b]xfade=transition=slideup:duration={XF}:offset={c1:.3f}[v]",
+         "-map", "[v]", "-c:v", "libx264", "-crf", "16", "-preset", "veryfast", "-r", str(FPS), str(out_mp4)])
+    return dict(XF=XF, card_start=card_start, outro_at=outro_at, line2_at=line2_at,
+                card_dur=c1 + d2, total=card_start + c1 + d2, domain_at=card_start + c1 + XF)
+
+
 # ---------- 조립 ----------
 
 def parse_cuts(cuts, dur):
@@ -409,28 +462,23 @@ def main():
         seg[-fade:] *= np.linspace(1, 0, fade)
         parts.append(seg)
     body = np.concatenate(parts)
-    main_dur = len(body) / SR + 0.3
+    main_dur = len(body) / SR + 0.15   # 0.3 이었다 — 주소 카드 2초를 붙이며 05편(p1-06)이 60초를 넘어 줄였다
 
-    outro_mp3 = work / "outro.mp3"
-    if not outro_mp3.exists():
-        # homebrew 의 edge-tts 는 낡아서 403(Sec-MS-GEC)으로 막힌다 — 같은 venv 의 최신판을 쓴다
-        run([str(Path(sys.executable).parent / "edge-tts"), "--voice", "ko-KR-SunHiNeural", "--rate=+25%", "--text", OUTRO_LINE,
-             "--write-media", str(outro_mp3) + ".part"])
-        Path(str(outro_mp3) + ".part").rename(outro_mp3)  # 실패해 빈 파일이 남으면 다음 실행이 그걸 집어 든다
-    outro = decode(outro_mp3)
-    # 앞뒤 무음을 걷어 내야 카드가 뜨자마자 말이 시작된다
-    nz = np.where(np.abs(outro) > 10 ** (-45 / 20))[0]
-    outro = outro[max(0, nz[0] - int(0.05 * SR)):nz[-1] + int(0.2 * SR)]
-
-    XF = 0.55  # 카드 진입 slideup(스킬 2절)
-    card_start = main_dur - XF
-    outro_at = card_start + XF + 0.2
-    card_dur = (outro_at - card_start) + len(outro) / SR + 0.7
-    total = card_start + card_dur
+    outro = tts_line(OUTRO_LINE, work / "outro.mp3")
+    line2 = tts_line(DOMAIN_LINE, work / "outro2.mp3")
+    layers = work / "layers"
+    layers.mkdir(exist_ok=True)
+    for old in layers.glob("*.png"):
+        old.unlink()
+    make_card(a.slug, layers / "card.png")
+    make_domain_card(layers / "domain.png")
+    E = ending(main_dur, outro, line2, layers / "card.png", layers / "domain.png", work / "ending.mp4")
+    XF, card_start, card_dur, total = E["XF"], E["card_start"], E["card_dur"], E["total"]
     audio = np.zeros(int(total * SR) + SR // 10, dtype=np.float32)
     audio[:len(body)] = body
-    o = int(outro_at * SR)
-    audio[o:o + len(outro)] += outro
+    for clip, at in ((outro, E["outro_at"]), (line2, E["line2_at"])):
+        o = int(at * SR)
+        audio[o:o + len(clip)] += clip[:len(audio) - o]
     raw_wav = work / "mix.f32"
     audio.tofile(raw_wav)
 
@@ -453,10 +501,6 @@ def main():
         if subs[i + 1][1] - subs[i][2] < 0.4:
             subs[i][2] = subs[i + 1][1]
 
-    layers = work / "layers"
-    layers.mkdir(exist_ok=True)
-    for old in layers.glob("*.png"):
-        old.unlink()
     make_base(item, layers / "base.png")
     crops = [tuple(map(float, c.split("-"))) for c in a.crop]
     panels = []
@@ -468,7 +512,6 @@ def main():
         make_photo(item, layers / "photo0.png", a.pan)
         panels.append(layers / "photo0.png")
     make_hook(a.hook, layers / "hook.png")
-    make_card(a.slug, layers / "card.png")
     sub_files = []
     for i, (p, s, e) in enumerate(subs):
         fn = layers / f"sub{i:03d}.png"
@@ -494,7 +537,7 @@ def main():
     for k, pp in enumerate(panels):
         inputs += ["-loop", "1", "-framerate", str(FPS), "-t", f"{lens[k]:.3f}", "-i", str(pp)]
     ci = pi + n
-    inputs += ["-loop", "1", "-framerate", str(FPS), "-t", f"{card_dur:.3f}", "-i", str(layers / "card.png")]
+    inputs += ["-i", str(work / "ending.mp4")]
     ai = ci + 1
     inputs += ["-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", str(raw_wav)]
 
@@ -513,8 +556,9 @@ def main():
         nxt = f"s{k}"
         fg.append(f"[{last}][{2 + k}:v]overlay=x=(W-w)/2:y={SUB_CY}-h/2:enable='between(t,{s:.3f},{e:.3f})'[{nxt}]")
         last = nxt
-    fg.append(f"[{last}]format=yuv420p,setsar=1[mainv]")
-    fg.append(f"[{ci}:v]format=yuv420p,setsar=1[cardv]")
+    # 미리 만든 엔딩 영상은 시간 단위(timebase)가 달라 그대로 잇면 xfade 가 「Error reinitializing filters」로 멈춘다
+    fg.append(f"[{last}]format=yuv420p,setsar=1,fps={FPS},settb=AVTB[mainv]")
+    fg.append(f"[{ci}:v]format=yuv420p,setsar=1,fps={FPS},settb=AVTB[cardv]")
     fg.append(f"[mainv][cardv]xfade=transition=slideup:duration={XF}:offset={card_start:.3f}[v]")
 
     # 음량: 두 번 재서 -14 LUFS 에 선형으로 맞춘다(한 번 재기는 동적으로 눌러 숨소리가 출렁인다)
@@ -546,7 +590,7 @@ def main():
     print(f"길이 {vdur:.2f}초 (60초 이하: {'예' if vdur <= 60 else '아니오'})")
     print(f"음량 {i:.1f} LUFS, 순간 최대 {tp:.1f} dBFS")
     print(f"1.5초 넘는 무음: {long_sil or '없음'}")
-    print(f"자막 {len(subs)}조각, 훅 0~{hook_end:.2f}초, 끝 카드 {card_start + XF:.2f}~{total:.2f}초")
+    print(f"자막 {len(subs)}조각, 훅 0~{hook_end:.2f}초, 끝 카드 {card_start + XF:.2f}~, 주소 카드 {E['domain_at']:.2f}~{total:.2f}초")
     for p, s, e in subs:
         print(f"  {s:6.2f}-{e:6.2f}  {p}")
 

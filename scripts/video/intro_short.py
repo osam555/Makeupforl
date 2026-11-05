@@ -7,7 +7,9 @@ Veo 워터마크(오른쪽 아래 반짝이)가 사진 칸 밖으로 빠진다. 
 소리는 한 트랙이다(Flow 는 클립마다 목소리를 새로 만들어 사람이 바뀐다 — docs/video/README.md 1절):
   ① block1-v3-blend.mp4 에 이미 입이 맞춰진 복제 음성
   B롤·화면 녹화 구간은 tts-solo.wav 의 해당 줄
-  ②③ 은 align_voice.py 로 Flow 입 박자에 맞춘 복제 음성
+  ②③ 은 Flow 가 만든 말을 원장님 음색으로 바꾼 소리(flow_voice_convert.py, 2026-11-05)
+     — 처음엔 복제 음성을 Flow 입 박자에 맞춰 늘였는데(align_voice.py) 구간마다 0.3초씩 어긋나
+       「원장 음성과 입이 일치하지 않는다」는 지적을 받았다. 비교본 세 판 중 원장님이 이 판을 골랐다.
 줄 시각은 받아쓰기가 아니라 tts-solo.wav.lines/ 의 줄별 길이로 계산한다. whisper 의 줄 경계는
 「처음 혼주가 되세요?」를 1.06초에 끝냈는데 실제 소리는 1.9초까지 이어졌다 — 자막이 먼저 사라진다.
 
@@ -77,10 +79,14 @@ def line_times():
 
 
 def speech_spans(path, n):
-    """②③ 은 늘이고 줄인 소리라 줄 경계를 쉼에서 다시 찾는다 — 가장 긴 쉼 n-1 개가 줄 사이다."""
-    sil = [(a, b) for a, b in ws.silences(path, 0.25) if b is not None]
+    """②③ 은 Flow 박자를 따르는 소리라 줄 경계를 쉼에서 다시 찾는다 — 가장 긴 쉼 n-1 개가 줄 사이다.
+    음성 변환 판은 바닥 잡음이 -45dB 보다 높아 쉼이 안 잡힌다 → 잡힐 때까지 기준을 5dB 씩 올린다."""
     dur = sf.info(path).duration
-    inner = sorted([s for s in sil if s[0] > 0.3 and s[1] < dur - 0.2], key=lambda s: s[0] - s[1])[:n - 1]
+    for db in (-45, -40, -35, -30):
+        sil = [(a, b) for a, b in ws.silences(path, 0.25, db) if b is not None]
+        inner = sorted([s for s in sil if s[0] > 0.3 and s[1] < dur - 0.2], key=lambda s: s[0] - s[1])[:n - 1]
+        if len(inner) >= n - 1:
+            break
     inner.sort()
     starts = [next((b for a, b in sil if a <= 0.05), 0.0)] + [b for a, b in inner]
     ends = [a for a, b in inner] + [next((a for a, b in sil if b >= dur - 0.05), dur)]
@@ -118,8 +124,8 @@ def main():
         return solo[int(a * SR):int(b * SR)]
 
     b1 = V / "work/lipsync/block1-v3-blend.mp4"
-    b2 = V / "work/lipsync/block2-v2-aligned.mp4"
-    b3 = V / "work/intro/block3-aligned.mp4"
+    b2 = V / "work/intro/block2-vc.mp4"
+    b3 = V / "work/intro/block3-vc.mp4"
     dur = lambda p: float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of",
                                           "csv=p=0", str(p)], capture_output=True, text=True).stdout)
 
@@ -186,23 +192,31 @@ def main():
         t += d
     main_dur = t   # ③ 끝의 미소(약 1초 무음)가 이미 꼬리 노릇을 한다 — 더 늘이면 카드까지 1.5초 무음에 걸린다
 
-    # 끝 카드 마무리 한 줄 — 같은 복제 음성(clone_tts.py)으로 「궁금한 건, 메이크업 포엘 백문백답에서 들어 보세요.」
-    outro = ws.decode(V / "work/intro/outro-clone.wav")
-    nz = np.where(np.abs(outro) > 10 ** (-45 / 20))[0]
-    outro = outro[max(0, nz[0] - int(0.05 * SR)):nz[-1] + int(0.2 * SR)]
-    XF = 0.55
-    card_start = main_dur - XF
-    outro_at = card_start + 0.35   # 카드가 올라오는 도중에 말을 시작해 ③ 미소 뒤 무음을 1초 안쪽으로
-    card_dur = (outro_at - card_start) + len(outro) / SR + 0.7
-    total = card_start + card_dur
+    # 끝 카드 마무리 한 줄 + 주소 카드 링크 안내 한 줄 — 같은 복제 음성(clone_tts.py)으로
+    # 「궁금한 건, 메이크업 포엘 백문백답에서 들어 보세요.」「링크는, 고정 댓글에 있어요.」
+    # 엔딩 모양은 무료 문항 쇼츠와 한 함수(ws.ending)로 맞춘다
+    def trim(y):
+        nz = np.where(np.abs(y) > 10 ** (-45 / 20))[0]
+        return y[max(0, nz[0] - int(0.05 * SR)):nz[-1] + int(0.2 * SR)]
+    outro = trim(ws.decode(V / "work/intro/outro-clone.wav"))
+    line2 = trim(ws.decode(V / "work/intro/outro2-clone.wav"))
+    layers = work / "layers"
+    layers.mkdir(exist_ok=True)
+    for old in layers.glob("*.png"):
+        old.unlink()
+    ws.make_card("", layers / "card.png")
+    ws.make_domain_card(layers / "domain.png")
+    E = ws.ending(main_dur, outro, line2, layers / "card.png", layers / "domain.png", work / "ending.mp4")
+    XF, card_start, total = E["XF"], E["card_start"], E["total"]
 
     audio = np.zeros(int((total + 0.2) * SR), dtype=np.float32)
     for (name, d, a, _), t0 in zip(segs, T):
         a = a[:int(d * SR)]
         o = int(t0 * SR)
         audio[o:o + len(a)] += a
-    o = int(outro_at * SR)
-    audio[o:o + len(outro)] += outro
+    for clip, at in ((outro, E["outro_at"]), (line2, E["line2_at"])):
+        o = int(at * SR)
+        audio[o:o + len(clip)] += clip[:len(audio) - o]
     raw = work / "mix.f32"
     audio.tofile(raw)
 
@@ -219,14 +233,9 @@ def main():
     hook_end = subs_out[1][1] if len(subs_out) > 1 else 2.0   # 첫 줄 「처음 혼주가 되세요?」가 곧 훅
     subs_out = subs_out[1:]
 
-    layers = work / "layers"
-    layers.mkdir(exist_ok=True)
-    for old in layers.glob("*.png"):
-        old.unlink()
     item = {"part": 0, "partTitle": "대표원장 김성희", "question": "혼주메이크업 100문 100답"}
     make_base(item, layers / "base.png")
     ws.make_hook("처음 혼주가 되세요?", layers / "hook.png")
-    ws.make_card("", layers / "card.png")
     sub_files = []
     d_from, d_to = T[3], T[4]
     for k, (p, s, e) in enumerate(subs_out):
@@ -246,7 +255,7 @@ def main():
     for c in clips:
         inputs += ["-i", str(c)]
     cardi = ci0 + len(clips)
-    inputs += ["-loop", "1", "-framerate", str(FPS), "-t", f"{card_dur:.3f}", "-i", str(layers / "card.png")]
+    inputs += ["-i", str(work / "ending.mp4")]
     ai = cardi + 1
     inputs += ["-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", str(raw)]
 
@@ -265,7 +274,8 @@ def main():
     for k, (_, s, e) in enumerate(sub_files):
         fg.append(f"[{last}][{2 + k}:v]overlay=x=(W-w)/2:y={ws.SUB_CY}-h/2:enable='between(t,{s:.3f},{e:.3f})'[s{k}]")
         last = f"s{k}"
-    fg += [f"[{last}]format=yuv420p,setsar=1[mainv]", f"[{cardi}:v]format=yuv420p,setsar=1[cardv]",
+    fg += [f"[{last}]format=yuv420p,setsar=1,fps={FPS},settb=AVTB[mainv]",
+           f"[{cardi}:v]format=yuv420p,setsar=1,fps={FPS},settb=AVTB[cardv]",
            f"[mainv][cardv]xfade=transition=slideup:duration={XF}:offset={card_start:.3f}[v]"]
     # 복제 음성은 순간 최대치가 튀어서 선형 loudnorm 이 -14 까지 못 올린다(-15.1 에서 멈췄다).
     # 튀는 머리만 리미터로 먼저 눌러 두면 선형으로 맞출 수 있다 — 동적 모드는 말 사이 숨소리가 출렁인다
@@ -292,7 +302,7 @@ def main():
     print(f"길이 {vdur:.2f}초 (60초 이하: {'예' if vdur <= 60 else '아니오'})")
     print(f"음량 {i_:.1f} LUFS, 순간 최대 {tp:.1f} dBFS")
     print(f"1.5초 넘는 무음: {ws.silences(out, 1.5) or '없음'}")
-    print("덩어리 시작: " + ", ".join(f"{s[0]} {t0:.2f}" for s, t0 in zip(segs, T)) + f", 끝 카드 {card_start + XF:.2f}")
+    print("덩어리 시작: " + ", ".join(f"{s[0]} {t0:.2f}" for s, t0 in zip(segs, T)) + f", 끝 카드 {card_start + XF:.2f}, 주소 카드 {E['domain_at']:.2f}~{total:.2f}")
     for p, s, e in subs_out:
         print(f"  {s:6.2f}-{e:6.2f}  {p}")
 
