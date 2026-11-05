@@ -10,7 +10,12 @@
 2. ChatterboxVC 로 참조 음성(video/work/voice-ref-short.wav — clone_tts.py 와 같은 12초)의 음색을 입힌다
 3. 길이는 원본과 같게 자르고 채운다 — 변환은 박자를 바꾸지 않는다
 
-실행:  ~/.venvs/voice/bin/python scripts/video/flow_voice_convert.py <flow영상> <참조.wav> <출력.wav>
+실행:  ~/.venvs/voice/bin/python scripts/video/flow_voice_convert.py <flow영상> <참조.wav> <출력.wav> [--plain]
+  --plain : 잡음이 없는 소리(복제 음성 등)는 demucs 를 건너뛴다 — 깨끗한 소리에 걸면 오히려 숨소리가 깎인다
+  --vocals: 변환하지 않고 demucs 로 걸러 낸 목소리만 저장한다(참조 음성 만들 때)
+
+2026-11-06: 「원장 음성이 4가지 정도 나온다 — 첫번째 음성을 유지하게」. Flow 는 클립마다 목소리가 달라
+①②③ 과 복제 음성(B롤 구간)이 다 다르게 들렸다. ① Flow 목소리를 걸러 참조로 삼고 나머지를 모두 그 음색으로 바꾼다.
 """
 import subprocess
 import sys
@@ -22,16 +27,24 @@ import soundfile as sf
 import torch
 
 
-def main(flow_path, ref_path, out_path):
+def main(flow_path, ref_path, out_path, *flags):
     with tempfile.TemporaryDirectory() as td:
         td = Path(td)
         wav = td / "flow.wav"
         subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(flow_path), "-vn", "-ac", "1", "-ar", "44100", str(wav)],
                        check=True)
         dur = sf.info(wav).duration
-        subprocess.run([sys.executable, "-m", "demucs", "--two-stems", "vocals", "-o", str(td), str(wav)],
-                       check=True, capture_output=True)
-        voc = next(td.glob("*/flow/vocals.wav"))
+        if "--plain" in flags:
+            voc = wav
+        else:
+            subprocess.run([sys.executable, "-m", "demucs", "--two-stems", "vocals", "-o", str(td), str(wav)],
+                           check=True, capture_output=True)
+            voc = next(td.glob("*/flow/vocals.wav"))
+        if "--vocals" in flags:
+            y, sr0 = sf.read(voc, dtype="float32")
+            sf.write(out_path, y.mean(1) if y.ndim > 1 else y, sr0)
+            print(f"saved {out_path} (vocals only)")
+            return
         from chatterbox.vc import ChatterboxVC
         device = "mps" if torch.backends.mps.is_available() else "cpu"
         vc = ChatterboxVC.from_pretrained(device)
@@ -45,4 +58,4 @@ def main(flow_path, ref_path, out_path):
 
 
 if __name__ == "__main__":
-    main(*sys.argv[1:4])
+    main(*sys.argv[1:])
