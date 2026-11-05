@@ -73,9 +73,9 @@ def decode(path):
     return np.frombuffer(out, dtype=np.float32).copy()
 
 
-def silences(path, d=0.2):
+def silences(path, d=0.2, db=-45):
     err = subprocess.run(["ffmpeg", "-hide_banner", "-i", str(path), "-af",
-                          f"silencedetect=noise=-45dB:d={d}", "-f", "null", "-"],
+                          f"silencedetect=noise={db}dB:d={d}", "-f", "null", "-"],
                          capture_output=True, text=True).stderr
     st = [float(x) for x in re.findall(r"silence_start: ([\d.]+)", err)]
     en = [float(x) for x in re.findall(r"silence_end: ([\d.]+)", err)]

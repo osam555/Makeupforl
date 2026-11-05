@@ -7,7 +7,9 @@ Veo 워터마크(오른쪽 아래 반짝이)가 사진 칸 밖으로 빠진다. 
 소리는 한 트랙이다(Flow 는 클립마다 목소리를 새로 만들어 사람이 바뀐다 — docs/video/README.md 1절):
   ① block1-v3-blend.mp4 에 이미 입이 맞춰진 복제 음성
   B롤·화면 녹화 구간은 tts-solo.wav 의 해당 줄
-  ②③ 은 align_voice.py 로 Flow 입 박자에 맞춘 복제 음성
+  ②③ 은 Flow 가 만든 말을 원장님 음색으로 바꾼 소리(flow_voice_convert.py, 2026-11-05)
+     — 처음엔 복제 음성을 Flow 입 박자에 맞춰 늘였는데(align_voice.py) 구간마다 0.3초씩 어긋나
+       「원장 음성과 입이 일치하지 않는다」는 지적을 받았다. 비교본 세 판 중 원장님이 이 판을 골랐다.
 줄 시각은 받아쓰기가 아니라 tts-solo.wav.lines/ 의 줄별 길이로 계산한다. whisper 의 줄 경계는
 「처음 혼주가 되세요?」를 1.06초에 끝냈는데 실제 소리는 1.9초까지 이어졌다 — 자막이 먼저 사라진다.
 
@@ -77,10 +79,14 @@ def line_times():
 
 
 def speech_spans(path, n):
-    """②③ 은 늘이고 줄인 소리라 줄 경계를 쉼에서 다시 찾는다 — 가장 긴 쉼 n-1 개가 줄 사이다."""
-    sil = [(a, b) for a, b in ws.silences(path, 0.25) if b is not None]
+    """②③ 은 Flow 박자를 따르는 소리라 줄 경계를 쉼에서 다시 찾는다 — 가장 긴 쉼 n-1 개가 줄 사이다.
+    음성 변환 판은 바닥 잡음이 -45dB 보다 높아 쉼이 안 잡힌다 → 잡힐 때까지 기준을 5dB 씩 올린다."""
     dur = sf.info(path).duration
-    inner = sorted([s for s in sil if s[0] > 0.3 and s[1] < dur - 0.2], key=lambda s: s[0] - s[1])[:n - 1]
+    for db in (-45, -40, -35, -30):
+        sil = [(a, b) for a, b in ws.silences(path, 0.25, db) if b is not None]
+        inner = sorted([s for s in sil if s[0] > 0.3 and s[1] < dur - 0.2], key=lambda s: s[0] - s[1])[:n - 1]
+        if len(inner) >= n - 1:
+            break
     inner.sort()
     starts = [next((b for a, b in sil if a <= 0.05), 0.0)] + [b for a, b in inner]
     ends = [a for a, b in inner] + [next((a for a, b in sil if b >= dur - 0.05), dur)]
@@ -118,8 +124,8 @@ def main():
         return solo[int(a * SR):int(b * SR)]
 
     b1 = V / "work/lipsync/block1-v3-blend.mp4"
-    b2 = V / "work/lipsync/block2-v2-aligned.mp4"
-    b3 = V / "work/intro/block3-aligned.mp4"
+    b2 = V / "work/intro/block2-vc.mp4"
+    b3 = V / "work/intro/block3-vc.mp4"
     dur = lambda p: float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of",
                                           "csv=p=0", str(p)], capture_output=True, text=True).stdout)
 

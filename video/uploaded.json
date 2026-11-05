@@ -3,15 +3,26 @@
  "channel": "UCtlSwebjXpbjnasvIMMTLZA",
  "uploads": [
   {
+   "file": "video/out/shorts/00-소개-처음혼주_v2.mp4",
+   "youtubeId": "XBbbb3Wehhs",
+   "url": "https://youtube.com/shorts/XBbbb3Wehhs",
+   "title": "처음 혼주가 되세요? | 혼주메이크업 100문 100답 #혼주메이크업 #shorts",
+   "link": "https://makeupforl.co.kr/honjoo100",
+   "visibility": "unlisted",
+   "aiLabel": true,
+   "date": "2026-11-05",
+   "note": "②③ 을 Flow 말 + 원장님 음색(flow_voice_convert.py)으로 바꾼 판. 출처 꼬리표(?from=)는 PR #40 머지 뒤"
+  },
+  {
    "file": "video/out/shorts/00-소개-처음혼주_v1.mp4",
    "youtubeId": "M2xsBsRstQU",
    "url": "https://youtube.com/shorts/M2xsBsRstQU",
    "title": "처음 혼주가 되세요? | 혼주메이크업 100문 100답 #혼주메이크업 #shorts",
    "link": "https://makeupforl.co.kr/honjoo100",
-   "visibility": "unlisted",
+   "visibility": "private",
    "aiLabel": true,
    "date": "2026-11-04",
-   "note": "출처 꼬리표(?from=)는 PR #40 머지 뒤 설명란 링크에 붙인다"
+   "note": "2026-11-05 원장 음성과 입이 안 맞아 v2 로 교체하고 비공개로 돌림(지우지 않음)"
   },
   {
    "file": "video/out/shorts/01-p3-15-눈물_v1.mp4",
