@@ -58,3 +58,21 @@ Locked-off camera, no cuts, one continuous shot. No text, no captions, no subtit
 입맞춤: whisper 낱말 11개가 양쪽에서 같았고, 늘인 비율이 최대 1.47배(혼주의 … 진심인)였지만 받아쓰기는 대본 그대로였다.
 Flow 화면에는 「생성 전 확인」 설정이 보이지 않았다(11-04) — 생성 단추는 한 번만 누른다.
 Aside REPL 은 세션 폴더 밖 파일을 올리지 못한다 → 이미지를 base64 로 넘겨 세션 폴더에 쓴 뒤 올렸다.
+
+## 2026-11-06 — ②③ 다시: 입을 작게 (「입이 너무 크게 벌어진다」)
+
+②③ 첫 판은 입 벌림이 ① 의 2.06배·2.00배였다(`scripts/video/mouth_size.py`, ① p90 0.102). 같은 첫 프레임에
+아래 문구를 넣어 다시 만들었다. 받은 뒤 반드시 `mouth_size.py` 로 ① 의 1.3배 안쪽인지 잰다.
+
+```
+Same woman as in the start frame, exactly the same face, short black hair and black pinstripe jacket with white top.
+Solo shot, exactly one person in frame. Chest-up framing, facing the camera directly, eye level.
+She speaks softly and calmly to the camera in Korean, saying exactly: "<대사>"
+Small, restrained mouth movements: lips only slightly parted while speaking, never opening the mouth wide,
+no big grin, teeth barely visible, no exaggerated expressions. Composed, elegant and gentle, like a refined senior professional.
+<② Hands resting together in front, one small calm nod. / ③ ... finishes with a soft closed-lip smile and a small polite nod, holding it for the last second.>
+Bright elegant wedding hall background, soft warm light, softly blurred, unchanged from the start frame.
+Locked-off camera, no cuts, one continuous shot. No text, no captions, no subtitles, no music, no other people.
+```
+② 대사: 우리 혼주님들이 가장 궁금해하시는 질문 백 가지를, 혼주메이크업 백문백답에 모두 담았습니다.
+③ 대사: 결혼식 날, 품위와 아름다움 모두 놓치지 마세요. 혼주에 진심인, 메이크업포엘입니다.

@@ -3,16 +3,28 @@
  "channel": "UCtlSwebjXpbjnasvIMMTLZA",
  "uploads": [
   {
-   "file": "video/out/shorts/00-소개-처음혼주_v6-첫목소리.mp4",
-   "youtubeId": "47TT2EgMuPE",
-   "url": "https://youtube.com/shorts/47TT2EgMuPE",
+   "file": "video/out/shorts/00-소개-처음혼주_v7-작은입.mp4",
+   "youtubeId": "22QGcBUzawY",
+   "url": "https://youtube.com/shorts/22QGcBUzawY",
    "title": "처음 혼주가 되세요? | 혼주메이크업 100문 100답 #혼주메이크업 #shorts",
    "link": "https://makeupforl.co.kr/honjoo100",
    "visibility": "unlisted",
    "aiLabel": true,
    "date": "2026-11-06",
    "pinnedComment": "▶ 혼주메이크업 100문 100답 무료 문항 듣기: https://makeupforl.co.kr/honjoo100\n▶ 30초 설문으로 궁금한 점 알아보기 · 상담 02-323-3321\n메이크업포엘 대표원장 김성희",
-   "note": "원장님 장면 셋 모두 Flow 원본 영상(입 그대로), 모든 구간 목소리를 ① Flow 목소리 음색으로 통일(flow_voice_convert.py), 상단 제목 한 줄 최대 크기. 고정 댓글 있음"
+   "note": "②③ 을 「입을 작게」 프롬프트로 Flow 재생성(block2-flow-v3·block3-flow-v2-smallmouth). 입 벌림 ① 대비 1.72·1.55배(이전 1.84·1.55, 화질 맞춰 잼). 목소리는 ① 목소리 하나. 고정 댓글 있음"
+  },
+  {
+   "file": "video/out/shorts/00-소개-처음혼주_v6-첫목소리.mp4",
+   "youtubeId": "47TT2EgMuPE",
+   "url": "https://youtube.com/shorts/47TT2EgMuPE",
+   "title": "처음 혼주가 되세요? | 혼주메이크업 100문 100답 #혼주메이크업 #shorts",
+   "link": "https://makeupforl.co.kr/honjoo100",
+   "visibility": "private",
+   "aiLabel": true,
+   "date": "2026-11-06",
+   "pinnedComment": "▶ 혼주메이크업 100문 100답 무료 문항 듣기: https://makeupforl.co.kr/honjoo100\n▶ 30초 설문으로 궁금한 점 알아보기 · 상담 02-323-3321\n메이크업포엘 대표원장 김성희",
+   "note": "2026-11-06 ②③ 입이 너무 크게 벌어져 v7 로 교체, 비공개(지우지 않음)"
   },
   {
    "file": "video/out/shorts/00-소개-처음혼주_v4-원장음색.mp4",

@@ -84,9 +84,12 @@ def speech_spans(path, n):
     """②③ 은 Flow 박자를 따르는 소리라 줄 경계를 쉼에서 다시 찾는다 — 가장 긴 쉼 n-1 개가 줄 사이다.
     음성 변환 판은 바닥 잡음이 -45dB 보다 높아 쉼이 안 잡힌다 → 잡힐 때까지 기준을 5dB 씩 올린다."""
     dur = sf.info(path).duration
+    # 쉼은 0.15초부터 본다 — 「입을 작게」로 다시 만든 ③ 은 줄 사이 쉼이 0.21초뿐이었다.
+    # 끝 무음 바로 앞(0.5초 안)의 숨 고르기는 줄 사이가 아니다 — ② 에서 그걸 줄 경계로 잘못 골랐다
     for db in (-45, -40, -35, -30):
-        sil = [(a, b) for a, b in ws.silences(path, 0.25, db) if b is not None]
-        inner = sorted([s for s in sil if s[0] > 0.3 and s[1] < dur - 0.2], key=lambda s: s[0] - s[1])[:n - 1]
+        sil = [(a, b) for a, b in ws.silences(path, 0.15, db) if b is not None]
+        tail = min([a for a, b in sil if b >= dur - 0.05] or [dur])
+        inner = sorted([s for s in sil if s[0] > 0.3 and s[1] < tail - 0.5], key=lambda s: s[0] - s[1])[:n - 1]
         if len(inner) >= n - 1:
             break
     inner.sort()
@@ -107,6 +110,12 @@ def slot_clip(src, out, start, dur, crop, scroll=None):
               f"setsar=1,fps={FPS},format=yuv420p")
         cmd = ["ffmpeg", "-y", "-v", "error", "-ss", f"{start:.3f}", "-t", f"{dur:.3f}", "-i", str(src)]
     run(cmd + ["-an", "-vf", vf, "-t", f"{dur:.3f}", "-c:v", "libx264", "-crf", "14", "-preset", "veryfast", str(out)])
+
+
+def vsize(p):
+    o = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=width,height",
+                        "-of", "csv=p=0", str(p)], capture_output=True, text=True).stdout.strip()
+    return tuple(int(x) for x in o.split(","))
 
 
 def frac_crop(w, h, y0=0.05):
@@ -138,6 +147,12 @@ def main():
     BLOCKS = [(V / "raw/ref/flow-처음혼주-10s.mp4", V / "work/intro/b1-vc.wav"),
               (V / "raw/flow/block2-flow-v2-korean.mp4", V / "work/intro/b2-vc.wav"),
               (V / "raw/flow/block3-flow-korean-1080p.mp4", V / "work/intro/b3-vc.wav")]
+    # small: ②③ 을 「입을 작게」 프롬프트로 다시 만든 클립으로(2026-11-06 「입이 너무 크게 벌어진다」).
+    # 이 클립들은 Flow 소리를 첫 목소리로 바꾼 b2s/b3s-first.wav 로 자막 시각도 잰다
+    SMALL = "small" in sys.argv[3:]
+    if SMALL:
+        BLOCKS[1] = (V / "raw/flow/block2-flow-v3-smallmouth-1080p.mp4", V / "work/intro/b2s-first.wav")
+        BLOCKS[2] = (V / "raw/flow/block3-flow-v2-smallmouth-1080p.mp4", V / "work/intro/b3s-first.wav")
     b1, b2, b3 = (b for b, _ in BLOCKS)
     dur = lambda p: float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of",
                                           "csv=p=0", str(p)], capture_output=True, text=True).stdout)
@@ -147,7 +162,7 @@ def main():
         if VOICE == "flow":
             return ws.decode(vid)
         if VOICE == "first":
-            return ws.decode(V / f"work/intro/b{k + 1}-first.wav")
+            return ws.decode(V / f"work/intro/b{k + 1}{'s' if SMALL and k else ''}-first.wav")
         return ws.decode(vc)
 
     segs = []   # (이름, 길이, 소리 numpy, 자막 [(줄번호, 시작, 끝)] 덩어리 안 시각)
@@ -176,9 +191,9 @@ def main():
         if name == "A":
             slot_clip(b1, f, A_SKIP, d, frac_crop(406, 720))
         elif name == "C":
-            slot_clip(b2, f, 0, d, frac_crop(720, 1280))
+            slot_clip(b2, f, 0, d, frac_crop(*vsize(b2)))
         elif name == "E":
-            slot_clip(b3, f, 0, d, frac_crop(1080, 1920))
+            slot_clip(b3, f, 0, d, frac_crop(*vsize(b3)))
         elif name == "D":
             slot_clip(V / "work/intro/honjoo100-tall.png", f, 0, d, None, scroll=2300)
         else:
