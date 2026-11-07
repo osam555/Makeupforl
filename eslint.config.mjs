@@ -21,6 +21,12 @@ const eslintConfig = defineConfig([
       최소화본이고, 그것만으로 오류 145건이 나 정작 우리 코드의 오류가 묻혔다.
     */
     "archive/**",
+
+    /*
+      쇼츠 만드는 도구(Remotion·HyperFrames). 사이트와 따로 npm 을 깔고 따로 돈다 —
+      사이트 규칙(next/core-web-vitals)으로 검사하면 <img> 경고 따위가 우리 코드 오류를 덮는다.
+    */
+    "video/**",
   ]),
 ]);
 
