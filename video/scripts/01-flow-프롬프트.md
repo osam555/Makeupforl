@@ -76,3 +76,18 @@ Locked-off camera, no cuts, one continuous shot. No text, no captions, no subtit
 ```
 ② 대사: 우리 혼주님들이 가장 궁금해하시는 질문 백 가지를, 혼주메이크업 백문백답에 모두 담았습니다.
 ③ 대사: 결혼식 날, 품위와 아름다움 모두 놓치지 마세요. 혼주에 진심인, 메이크업포엘입니다.
+
+## 2026-11-07 — 인기 문항 쇼츠 10편 원장님 한마디(`03-인기10편.json` 의 empathy)
+
+짧은 대사(3~4초)를 8초 클립에 주면 Veo 가 남은 시간에 말을 되풀이했다(p4-01 「꼭 해야하냐고」 두 번, p5-14 뒷부분 두 번).
+나머지 8편은 아래처럼 「한 번만, 되풀이 금지, 끝까지 조용히 미소」를 넣었더니 8편 모두 한 번만 말했다.
+
+```
+... She speaks softly and calmly to the camera in Korean, saying exactly once: "<대사>" She says the sentence only once and never repeats any words; after it she stays quiet.
+Small, restrained mouth movements: ... (11-06 판 그대로)
+... after speaking she gives a soft closed-lip smile and one small, understanding nod, holding it calmly and silently until the end.
+```
+
+입 벌림(`mouth_size.py`, 소개 ① 기준 p90 0.102, 쓰는 앞 5초만): 통과 p4-03 1.28 · p4-20 0.86 · p4-04 1.27 · p5-12 1.11,
+넘음 p4-01 1.31 · p5-14 1.43 · p3-06 1.46 · p4-22 1.34 · p6-01 1.50 · p4-02 1.45 — 원장님이 「그대로 쓰고 다시 만들 때는 묻는다」로 승인(800크레딧).
+p6-01·p4-22·p3-06 은 「1080p Upscaled」 받기가 두 번 다 시간 초과라 「720p Original size」로 받았다.
