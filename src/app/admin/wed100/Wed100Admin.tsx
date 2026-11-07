@@ -5,14 +5,13 @@ import Link from 'next/link'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Search, Save, Eye, RefreshCw, Database, CheckCircle2, XCircle, Volume2, Trash2, Undo2, Archive } from 'lucide-react'
 
-import seedRaw from '@/data/wed100.json'
 import Wed100BatchAudio from '@/components/admin/Wed100BatchAudio'
 import Wed100History from '@/components/admin/Wed100History'
 import Wed100Paywall from '@/components/admin/Wed100Paywall'
 import { whenExact, whenText } from '@/lib/when'
 import { getDb, uploadAudio } from '@/lib/firebase/client'
 import AdminGate from '@/components/admin/AdminGate'
-import AdminView from '@/components/admin/AdminView'
+import AdminView, { getIdToken } from '@/components/admin/AdminView'
 import type { QnaHit } from '@/lib/adminViews'
 import AdminShell from '@/components/admin/AdminShell'
 import { Button } from '@/components/ui/button'
@@ -20,10 +19,8 @@ import { splitSentences } from '@/lib/wed100-text'
 import { photosByCat, allPhotos, type Wed100Photo } from '@/lib/wed100-photos'
 import Wed100PhotoUpload from '@/components/admin/Wed100PhotoUpload'
 import Wed100McLevel from '@/components/admin/Wed100McLevel'
-import type { Wed100Data, Wed100Item } from '@/types/wed100'
+import type { Wed100Item } from '@/types/wed100'
 import { PART_THEME } from '@/types/wed100'
-
-const seed = seedRaw as unknown as Wed100Data
 
 /** 프롤로그(part 0)·에필로그(part 7)는 번호 대신 이름으로 표시한다 */
 function itemLabel(x: { part: number; n: number }): string {
@@ -184,9 +181,24 @@ function AdminWed100Editor({
         }
       }
     } catch {
-      /* firebase 미설정 */
+      /* firebase 미설정 — 서버에 물어본다 */
     }
-    setItems(seed.items)
+    /*
+      시드 JSON 을 여기서 import 하지 않는다 (2026-11-07). 클라이언트 컴포넌트가 import 한
+      JSON 은 공개 JS 파일에 통째로 실려, 로그인 없이도 잠긴 95문항의 답 전문을 받을 수 있었다.
+      대신 로그인 확인을 거치는 /api/admin/view 로 서버가 읽은 목록을 받는다.
+    */
+    try {
+      const res = await fetch('/api/admin/view', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ idToken: await getIdToken(), view: 'wed100Items' }),
+      })
+      const j = (await res.json()) as { ok: boolean; data?: { items: Wed100Item[] } }
+      if (j.ok && j.data) setItems(j.data.items)
+    } catch {
+      /* 서버도 안 되면 빈 목록 — 위 띠가 폴백 상태임을 알린다 */
+    }
     setSource('seed')
   }, [])
 
@@ -608,7 +620,7 @@ function AdminWed100Editor({
               source === 'db' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
             }`}
           >
-            {source === 'db' ? 'DB 연결됨' : '시드 JSON (읽기전용 폴백)'}
+            {source === 'db' ? 'DB 연결됨' : '서버 폴백 (읽기전용)'}
           </span>
           <span className="text-xs text-[var(--a-6b5d57)]">
             질문 {items.filter((x) => x.part >= 1 && x.part <= 6).length}문

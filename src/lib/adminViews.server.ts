@@ -9,7 +9,7 @@ import {
   getSeoKeywords,
   getSeoTodos,
 } from '@/lib/seoKeywords.server'
-import { estimateDuration, getPublishedWed100Items } from '@/lib/wed100'
+import { estimateDuration, getPublishedWed100Items, getWed100Items } from '@/lib/wed100'
 import { isOpen } from '@/lib/wed100Access'
 import { getWed100Access } from '@/lib/wed100Access.server'
 import { fetchRepoCommits, getWorklog, unloggedCommits } from '@/lib/worklog'
@@ -104,6 +104,11 @@ export const ADMIN_LOADERS: { [K in AdminView]: () => Promise<AdminViews[K]> } =
     }
     // 잠금이 꺼져 있으면 전부 열린 것이라 "무료" 를 따로 세울 이유가 없다
     return { hits, free: access.paywall ? access.freeQna : [] }
+  },
+
+  // 편집기의 읽기 전용 폴백 — 서버는 Admin SDK → 시드 순으로 읽는다(getWed100Items)
+  async wed100Items() {
+    return { items: await getWed100Items() }
   },
 
   /*

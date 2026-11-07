@@ -15,6 +15,7 @@ import type { QuestionRef } from '@/components/admin/Proposals'
 import type { DailyStat } from '@/lib/analytics'
 import type { SeoConfig, SeoFacts, SeoKeyword, SeoSnapshot, SeoTodo } from '@/lib/seoKeywords'
 import type { RepoCommit, WorklogEntry } from '@/lib/worklog'
+import type { Wed100Item } from '@/types/wed100'
 
 export type QnaHit = { views: number; last: string | null }
 
@@ -38,6 +39,12 @@ export interface AdminViews {
     linksCountedAt: string
   }
   wed100: { hits: Record<string, QnaHit>; free: string[] }
+  /*
+    편집기가 브라우저에서 Firestore 를 못 읽었을 때 받는 문항 전체 (2026-11-07).
+    전에는 편집기가 시드 JSON 을 import 해 두었다가 썼는데, 그러면 102문항 답 전문이
+    누구나 받을 수 있는 공개 JS 파일에 실렸다. 이제 로그인 확인 뒤에만 서버가 준다.
+  */
+  wed100Items: { items: Wed100Item[] }
   proposals: { questions: QuestionRef[] }
   worklog: { entries: WorklogEntry[]; unlogged: RepoCommit[] }
 }
@@ -49,6 +56,7 @@ export const ADMIN_VIEWS: readonly AdminView[] = [
   'visits',
   'seo',
   'wed100',
+  'wed100Items',
   'proposals',
   'worklog',
 ]
