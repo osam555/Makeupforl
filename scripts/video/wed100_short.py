@@ -48,9 +48,11 @@ SUB_SIZE = 68           # 스킬 기준 1080p 72 — 세로 화면은 폭이 108
 SNAP = 0.6              # 자막 경계를 쉼으로 끌어당기는 최대 거리(초)
 
 OUTRO_LINE = "더 궁금하신 점은, 혼주메이크업 100문 100답에서 확인하세요."
-# 끝의 끝 2초 — 주소만 크게. 쇼츠 화면에서는 설명란 링크를 누를 수 없어서 링크는 고정 댓글에 달고 그걸 말로도 알린다
-# (2026-11-05 요청). 이 2초도 소리가 비면 1.5초 무음 검사에 걸려 같은 목소리로 한 줄 읽힌다.
-DOMAIN_LINE = "링크는 고정 댓글에 있어요."
+# 끝의 끝 2초 — 주소만 크게. 이 2초도 소리가 비면 1.5초 무음 검사에 걸려 같은 목소리로 한 줄 읽힌다.
+# 처음엔 「링크는 고정 댓글에 있어요」였는데(11-05) 쇼츠 화면에서는 댓글·설명 속 링크를 YouTube 가 일부러
+# 누를 수 없게 막아 둔다(2023-08 부터, 스팸 대책). 쇼츠에서도 눌리는 건 채널 프로필 링크라 그쪽으로 안내한다(11-07).
+DOMAIN_LINE = "링크는 채널 프로필에 있어요."
+DOMAIN_PILL = "링크는 채널 프로필에 있어요"
 DOMAIN_SHOW = 2.0       # 주소 카드가 다 올라온 뒤 머무는 시간
 
 
@@ -345,7 +347,7 @@ def make_domain_card(path):
     d.text((cx, 670), "makeupforl.co.kr", font=font("Black", 104), fill=INK, anchor="ma")
     d.text((cx, 800), "/honjoo100", font=font("Black", 132), fill=GOLD, anchor="ma")
     bf = font("Bold", 54)
-    s = "링크는 고정 댓글에 있어요 ↓"
+    s = DOMAIN_PILL
     bw = text_w(s, bf) + 100
     d.rounded_rectangle([cx - bw // 2, 1040, cx + bw // 2, 1150], radius=55, fill=GOLD)
     d.text((cx, 1095), s, font=bf, fill=(255, 255, 255), anchor="mm")
@@ -353,7 +355,10 @@ def make_domain_card(path):
 
 
 def tts_line(text, path):
-    """답변과 같은 목소리(edge-tts SunHi +25%)로 한 줄. 앞뒤 무음은 걷어 낸다."""
+    """답변과 같은 목소리(edge-tts SunHi +25%)로 한 줄. 앞뒤 무음은 걷어 낸다.
+    파일 이름에 문구의 해시를 붙인다 — 문구를 바꿨는데 예전 소리 파일을 집어 드는 일을 막는다."""
+    import hashlib
+    path = path.with_name(f"{path.stem}-{hashlib.sha1(text.encode()).hexdigest()[:8]}{path.suffix}")
     if not path.exists():
         # homebrew 의 edge-tts 는 낡아서 403(Sec-MS-GEC)으로 막힌다 — 같은 venv 의 최신판을 쓴다
         run([str(Path(sys.executable).parent / "edge-tts"), "--voice", "ko-KR-SunHiNeural", "--rate=+25%", "--text", text,

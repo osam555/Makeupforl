@@ -225,14 +225,15 @@ def main():
     main_dur = t   # ③ 끝의 미소(약 1초 무음)가 이미 꼬리 노릇을 한다 — 더 늘이면 카드까지 1.5초 무음에 걸린다
 
     # 끝 카드 마무리 한 줄 + 주소 카드 링크 안내 한 줄 — 같은 복제 음성(clone_tts.py)으로
-    # 「궁금한 건, 메이크업 포엘 백문백답에서 들어 보세요.」「링크는, 고정 댓글에 있어요.」
+    # 「궁금한 건, 메이크업 포엘 백문백답에서 들어 보세요.」「링크는, 채널 프로필에 있어요.」
     # 엔딩 모양은 무료 문항 쇼츠와 한 함수(ws.ending)로 맞춘다
     def trim(y):
         nz = np.where(np.abs(y) > 10 ** (-45 / 20))[0]
         return y[max(0, nz[0] - int(0.05 * SR)):nz[-1] + int(0.2 * SR)]
     tag = "first" if VOICE == "first" else "clone"
     outro = trim(ws.decode(V / f"work/intro/outro-{tag}.wav"))
-    line2 = trim(ws.decode(V / f"work/intro/outro2-{tag}.wav"))
+    # outro3 = 「링크는, 채널 프로필에 있어요.」(11-07, 고정 댓글 안내에서 바꿈 — ws.DOMAIN_LINE 주석 참고)
+    line2 = trim(ws.decode(V / f"work/intro/outro3-{tag}.wav"))
     layers = work / "layers"
     layers.mkdir(exist_ok=True)
     for old in layers.glob("*.png"):
