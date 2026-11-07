@@ -1,5 +1,5 @@
 {
- "_설명": "유튜브에 올린 영상 기록(docs/video/README.md 3절). 영상 파일은 커밋하지 않고 여기 ID 만 남긴다.",
+ "_설명": "유튜브에 올린 영상 기록(docs/video/README.md 3절). 영상 파일은 커밋하지 않고 여기 ID 만 남긴다. 채널이 다른 항목은 channel 을 따로 적는다(기본은 위 channel = 원장님 채널).",
  "channel": "UCtlSwebjXpbjnasvIMMTLZA",
  "uploads": [
   {
@@ -279,6 +279,30 @@
    "aiLabel": true,
    "date": "2026-11-04",
    "note": "2026-11-05 끝에 주소 카드·고정 댓글 안내를 넣은 판으로 교체하고 비공개로 돌림(지우지 않음)"
+  },
+  {
+   "file": "video/out/설문봇-쇼츠A-draft.mp4",
+   "youtubeId": "k089YCdnYFM",
+   "url": "https://youtube.com/shorts/k089YCdnYFM",
+   "title": "자는 동안 결제가 됐다 — 홈페이지 설문봇이 손님을 받는 법 #shorts",
+   "channel": "UC4m3k4hb94HtSV355WWZrxg (영어듣기 대충영어)",
+   "link": "https://makeupforl.co.kr/honjoo100",
+   "visibility": "unlisted",
+   "aiLabel": true,
+   "date": "2026-11-02",
+   "note": "원장님 결재(기획서 7절) 전이라 일부공개. 같은 채널에 3시간 앞서 올라간 「자는 동안 매출이 뜨는 홈페이지 만들기. 메이크업포엘」 은 사이트 매니저가 직접 올린 것 · 쇼츠 A 8차 ②, 46초"
+  },
+  {
+   "file": "video/out/설문봇-쇼츠A-draft.mp4",
+   "youtubeId": "POyR1zwRBSE",
+   "url": "https://youtube.com/shorts/POyR1zwRBSE",
+   "title": "자는 동안 결제가 됐다 — 홈페이지 설문봇이 손님을 받는 법 (내레이션 B) #shorts",
+   "channel": "UC4m3k4hb94HtSV355WWZrxg (영어듣기 대충영어)",
+   "link": "https://makeupforl.co.kr/honjoo100",
+   "visibility": "unlisted",
+   "aiLabel": true,
+   "date": "2026-11-03",
+   "note": "k089YCdnYFM(Typecast 판)은 그대로 두고 목소리 비교용으로 따로 올림(사장님: 교체 말고 추가). 둘 중 고른 뒤 나머지는 비공개로 · 쇼츠 A 9차 — ElevenLabs Anna Kim, 49초"
   }
  ],
  "channelProfileLinks": [

@@ -45,7 +45,9 @@ function AdminDashboard() {
         collection(db, 'wed100_events'),
         where('createdAt', '>=', since),
         orderBy('createdAt', 'desc'),
-        limit(50000),
+        // Firestore 쿼리 limit 의 최대는 10000 — 50000 을 넣자 운영에서 "Limit value ... over the maximum value of 10000" 로
+        // 통째로 빈 화면이 됐다(2026-11-02 발견). 최근 90일 이벤트가 1만 건을 넘으면 오래된 쪽이 잘리지만, 빈 화면보다는 낫다.
+        limit(10000),
       )
       const snap = await getDocs(q)
       setEvents(
