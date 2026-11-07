@@ -23,7 +23,7 @@
   #q { position: absolute; left: 0; right: 0; top: 1170px; text-align: center; color: #D9BB86; font-weight: 700; font-size: 52px; letter-spacing: 4px; }
   /* 쇼츠 UI 가 맨 아래 15% 를 가리므로 1560px 안에서 끝낸다 */
   #hook { position: absolute; left: 70px; right: 70px; top: 1250px; text-align: center; color: #fff;
-          font-weight: 900; font-size: 96px; line-height: 1.22; word-break: keep-all; text-shadow: 0 4px 18px rgba(0,0,0,.45); }
+          font-weight: 900; font-size: 96px; line-height: 1.22; white-space: pre; text-shadow: 0 4px 18px rgba(0,0,0,.45); }
 </style>
 </head>
 <body>
@@ -38,7 +38,10 @@
   const v = window.__hyperframes.getVariables();
   document.getElementById("photo").src = v.photo;
   document.getElementById("photo").style.objectPosition = v.pos;
-  document.getElementById("hook").textContent = v.hook;
+  const hk = document.getElementById("hook");
+  hk.textContent = v.hook;
+  // 줄은 대본의 \n 자리에서만 바꾼다(자동 줄바꿈은 「전에?」「될까?」만 다음 줄로 떨궜다) — 한 줄이 넘치면 글자를 줄인다
+  for (let fs = 96; fs > 60 && hk.scrollWidth > hk.clientWidth; fs -= 4) hk.style.fontSize = fs - 4 + "px";
   const tl = gsap.timeline({ paused: true });
   tl.fromTo("#photo", { scale: 1.0 }, { scale: 1.05, duration: 4, ease: "none" }, 0);
   tl.fromTo("#q", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 0.05);

@@ -116,7 +116,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("slug")
     ap.add_argument("--flow", help="Flow 원장님 컷(8초). 없으면 사진 + edge-tts 로 임시")
+    ap.add_argument("--flow-end", type=float, help="Flow 컷을 이 초에서 끊는다 — 짧은 대사를 주면 Veo 가 남은 시간에 뒷부분을 되풀이한다(p5-14 v1)")
     ap.add_argument("--crop", action="append", default=[], help="대표 사진 가로 구간 a-b(0~1), 여러 번 주면 차례로")
+    ap.add_argument("--vcrop", help="대표 사진 세로 구간 a-b(0~1) — 사진에 글자가 박혀 있으면 그 줄을 잘라 낸다(p5-14 「결혼식 아버님정장」)")
     ap.add_argument("--pos", default="50% 40%", help="훅 화면에서 사진의 중심(object-position)")
     ap.add_argument("--pan", type=int, default=60)
     ap.add_argument("--voice", choices=["first", "tts"], default="first")
@@ -134,10 +136,18 @@ def main():
     out.parent.mkdir(parents=True, exist_ok=True)
 
     # ---- 재료 ----
-    hero = work / "hero.jpg"
+    hero = work / f"hero{'-' + a.vcrop if a.vcrop else ''}.jpg"
     if not hero.exists():
-        src = fetch(item["heroImage"], work / "hero.src")
-        ws.run(["ffmpeg", "-y", "-v", "error", "-i", str(src), "-q:v", "2", str(hero)])
+        # 대표 사진 주소는 Storage URL 이거나 사이트 안 경로(/wed100/photo/hero/…, public/ 아래)다
+        hu = item["heroImage"]
+        src = ROOT / "public" / hu.lstrip("/") if hu.startswith("/") else fetch(hu, work / "hero.src")
+        # ffmpeg 의 webp 해독기는 일부 대표 사진(p6-01·p4-03·p5-12)을 「Invalid data」로 못 읽는다 — PIL 로 연다
+        from PIL import Image
+        im = Image.open(src).convert("RGB")
+        if a.vcrop:
+            y0, y1 = map(float, a.vcrop.split("-"))
+            im = im.crop((0, round(im.height * y0), im.width, round(im.height * y1)))
+        im.save(hero, quality=93)
     iw, ih = map(int, ws.run(["ffprobe", "-v", "error", "-show_entries", "stream=width,height", "-of", "csv=p=0",
                               str(hero)]).stdout.strip().split(","))
     mp3 = fetch(item["audio"], work / "audio.mp3")
@@ -172,8 +182,21 @@ def main():
         nz = np.where(np.abs(fy) > 10 ** (-40 / 20))[0]
         f0 = max(0.0, nz[0] / SR - 0.15)
         f1 = min(len(fy) / SR, nz[-1] / SR + 0.3)
+        if a.flow_end:
+            f1 = min(f1, a.flow_end)
         if a.voice == "first":
             emp = vc(flow_src, work / "flow-first.wav", plain_voice=False)
+            # 예식장 잔향이 -33dB 쯤 깔려 원본으로는 말끝을 못 찾았다(p4-01 v1 끝에 2.3초 무음) —
+            # 잡음을 걷고 음색을 바꾼 소리로 다시 찾는다
+            # 변환한 소리 맨 끝 0.1초에 딸깍 소리(-30dB)가 남아 「마지막 소리」로 찾으면 다시 끝까지 갔다(p3-06·p4-22·p4-02·p4-03 v1)
+            # → 말이 시작된 뒤 처음으로 0.6초 넘게 조용해지는 자리를 말끝으로 본다
+            h = int(0.1 * SR)
+            env = [20 * np.log10(np.sqrt(np.mean(emp[i:i + h] ** 2)) + 1e-9) for i in range(0, len(emp) - h, h)]
+            on = next((i for i, v in enumerate(env) if v > -30), 0)
+            for i in range(on, len(env) - 6):
+                if all(v < -45 for v in env[i:i + 6]):
+                    f1 = min(f1, i * 0.1 + 0.3)
+                    break
         else:
             emp = fy
         emp = emp[int(f0 * SR):int(f1 * SR)]
@@ -228,6 +251,8 @@ def main():
     for cue in cues[r[0]:r[-1] + 1]:
         for p, s, e in ws.time_pieces(cue, ws.pieces_of(cue["ko"], f), sil):
             subs.append({"text": p, "from": t_emp + (s - ra), "to": t_emp + (e - ra)})
+    # 시드 cue 끝이 실제 소리보다 늦어 마지막 자막이 잠금 화면까지 남았다(p5-14 v1) — 답 구간 안으로 자른다
+    subs = [dict(x, to=min(x["to"], t_ans - 0.05)) for x in subs if x["from"] < t_ans - 0.3]
     for i in range(len(subs) - 1):
         if subs[i + 1]["from"] - subs[i]["to"] < 0.4:
             subs[i]["to"] = subs[i + 1]["from"]
@@ -268,7 +293,13 @@ def main():
     pj = work / "props.json"
     pj.write_text(json.dumps(props, ensure_ascii=False, indent=1))
     body = work / "body.mp4"
-    ws.run(["npx", "remotion", "render", "src/index.ts", "Teaser", str(body), f"--props={pj}", "--log=error"], cwd=RM)
+    rcmd = ["npx", "remotion", "render", "src/index.ts", "Teaser", str(body), f"--props={pj}", "--log=error"]
+    try:
+        ws.run(rcmd, cwd=RM)
+    except subprocess.CalledProcessError as e:
+        # p4-01 첫 판이 까닭 없이 한 번 멈췄고 같은 명령을 다시 돌리니 됐다 — 한 번만 다시 해 보고 그래도 안 되면 오류를 보인다
+        print("!! Remotion 렌더 실패, 한 번 더:", (e.stderr or "")[-400:])
+        ws.run(rcmd, cwd=RM)
 
     # ---- 끝 카드를 잇고 소리를 합친다 ----
     meas = subprocess.run(["ffmpeg", "-hide_banner", "-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", str(raw),

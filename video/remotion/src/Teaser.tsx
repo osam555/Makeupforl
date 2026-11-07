@@ -179,10 +179,12 @@ export const Teaser: React.FC<TeaserProps> = ({ part, question, segments, subs }
               <PhotoPanel {...s} />
             </AbsoluteFill>
           ) : s.kind === "flow" ? (
-            // Veo 워터마크가 오른쪽 아래에 박혀 있다 — 6% 키워 가장자리째 밀어낸다(소개 쇼츠와 같은 처리)
+            // Veo 워터마크(✦)는 (83%, 90%) 자리, 반지름 2% 남짓이다. 6% 키우면 그대로 보였다(p4-01 v1).
+            // 옆으로 밀어내려면 1.4배를 키워야 해서, 위 가운데를 기준으로 15% 키워 아래로만 밀어낸다(별 위끝 88.7% → 102%).
+            // 얼굴은 위쪽 30% 자리라 34% 로 조금 내려올 뿐이다
             <AbsoluteFill style={{ overflow: "hidden" }}>
               <OffthreadVideo src={staticFile(s.src)} startFrom={f(s.mediaStart)} muted
-                style={{ width: "100%", height: "100%", objectFit: "cover", transform: "scale(1.06)", transformOrigin: "40% 40%" }} />
+                style={{ width: "100%", height: "100%", objectFit: "cover", transform: "scale(1.15)", transformOrigin: "50% 0%" }} />
             </AbsoluteFill>
           ) : (
             <OffthreadVideo src={staticFile(s.src)} muted style={{ width: "100%", height: "100%" }} />
