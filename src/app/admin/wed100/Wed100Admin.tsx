@@ -12,6 +12,8 @@ import Wed100Paywall from '@/components/admin/Wed100Paywall'
 import { whenExact, whenText } from '@/lib/when'
 import { getDb, uploadAudio } from '@/lib/firebase/client'
 import AdminGate from '@/components/admin/AdminGate'
+import AdminView from '@/components/admin/AdminView'
+import type { QnaHit } from '@/lib/adminViews'
 import AdminShell from '@/components/admin/AdminShell'
 import { Button } from '@/components/ui/button'
 import { splitSentences } from '@/lib/wed100-text'
@@ -91,7 +93,7 @@ const FONT_SIZES: { key: FontSize; label: string; px: number; lh: number }[] = [
 const FONT_KEY = 'wed100AdminFont'
 
 /** 문항별 조회 — 서버(page.tsx)가 방문 기록에서 뽑아 넘긴다 */
-export type QnaHit = { views: number; last: string | null }
+export type { QnaHit } from '@/lib/adminViews'
 
 function AdminWed100Editor({
   email,
@@ -1319,12 +1321,16 @@ function AdminWed100Editor({
   )
 }
 
-export default function Wed100Admin({ hits, free }: { hits: Record<string, QnaHit>; free: string[] }) {
+export default function Wed100Admin() {
   return (
     <AdminShell active="/admin/wed100" title="100문100답 콘텐츠 관리" wide>
       <AdminGate title="100문100답 관리">
         {({ email, password, canWrite }) => (
-          <AdminWed100Editor email={email} password={password} canWrite={canWrite} hits={hits} free={free} />
+          <AdminView view="wed100">
+            {({ hits, free }) => (
+              <AdminWed100Editor email={email} password={password} canWrite={canWrite} hits={hits} free={free} />
+            )}
+          </AdminView>
         )}
       </AdminGate>
     </AdminShell>
