@@ -1,48 +1,18 @@
 import AdminShell from '@/components/admin/AdminShell'
 import SeoGate from '@/components/admin/SeoGate'
-import {
-  LINKS_COUNTED_AT,
-  collectSeoFacts,
-  getSeoConfig,
-  getSeoHistory,
-  getSeoKeywords,
-  getSeoTodos,
-} from '@/lib/seoKeywords.server'
 
 export const dynamic = 'force-dynamic'
 
 /**
  * 검색어 목표와 달성도.
  *
- * 사실 수집은 서버에서 한다 — 사이트를 읽어 세는 일이라 브라우저가 할 일이 아니고,
- * 관리자 화면에서 firebase-admin 을 끌어오면 브라우저 번들이 터진다.
+ * 사실 수집은 서버에서 하되, 페이지가 아니라 /api/admin/view 에서 로그인을 확인한 뒤에
+ * 한다 — 페이지에서 읽어 넘기면 로그인 전 HTML 에 실린다.
  */
-export default async function AdminSeoPage() {
-  /*
-    목록을 먼저 읽고 그것으로 사실과 순위를 모은다.
-
-    사실 계산과 순위 추림이 둘 다 "어떤 말을 노리나" 에 달려 있어서, 목록을 나중에
-    읽으면 어드민에서 방금 더한 검색어가 이 화면에서만 빠져 보인다.
-  */
-  const keywords = await getSeoKeywords()
-  // 추세는 길어야 4주라 60일치면 넉넉하다
-  const [facts, config, history, todos] = await Promise.all([
-    collectSeoFacts(keywords),
-    getSeoConfig(keywords),
-    getSeoHistory(60),
-    getSeoTodos(),
-  ])
-
+export default function AdminSeoPage() {
   return (
     <AdminShell active="/admin/seo" title="키워드">
-      <SeoGate
-        facts={facts}
-        config={config}
-        keywords={keywords}
-        history={history}
-        todos={todos}
-        linksCountedAt={LINKS_COUNTED_AT}
-      />
+      <SeoGate />
     </AdminShell>
   )
 }

@@ -16,7 +16,9 @@ Veo 워터마크(오른쪽 아래 반짝이)가 사진 칸 밖으로 빠진다. 
 B롤은 원장님 채널 쇼츠라 자막이 화면 안에 박혀 있다. 박힌 자막 띠를 피해 자르고(CROP 표의 y),
 손님 얼굴이 보이는 컷(이모지로 가린 컷 포함)과 외국인 스톡 모델 컷은 고르지 않았다.
 
-실행:  video/work/.venv/bin/python scripts/video/intro_short.py [출력.mp4]
+실행:  video/work/.venv/bin/python scripts/video/intro_short.py [출력.mp4] [vc|flow]
+       vc = Flow 말 + 원장님 음색(기본), flow = Flow 영상 속 목소리 그대로,
+       first = 모든 구간을 ① Flow 목소리 음색으로(flow_voice_convert.py 로 *-first.wav 를 먼저 만든다)
 """
 import json
 import subprocess
@@ -42,7 +44,7 @@ SCRIPT = V / "scripts/01-낭독용.txt"
 
 # 자막 — 01 대본의 「자막」 절(낭독용은 발음 때문에 「백문백답」「메이크업 포엘」로 적어 둔 것이라 화면용과 다르다)
 SUBS = {
-    0: "처음 혼주가 되세요?", 1: "궁금한 건 많은데, 어디 물어볼 곳도 없어 답답하셨죠?",
+    0: "처음 혼주가 되세요?", 1: "어디 물어볼 곳도 없어 답답하셨죠?",
     2: "혼주가 궁금한 건 따로 있습니다", 4: "어떤 혼주 헤어가 내게 어울리는지",
     5: "어떻게 해야 젊고 세련된 혼주가 되는지", 6: "안경은 써도 될까? 눈물이 날 땐 어떡하지?",
     7: "한복 색깔을 고르는 기준까지", 9: "우리 혼주님들이 가장 궁금해하시는 질문 100가지를",
@@ -82,9 +84,12 @@ def speech_spans(path, n):
     """②③ 은 Flow 박자를 따르는 소리라 줄 경계를 쉼에서 다시 찾는다 — 가장 긴 쉼 n-1 개가 줄 사이다.
     음성 변환 판은 바닥 잡음이 -45dB 보다 높아 쉼이 안 잡힌다 → 잡힐 때까지 기준을 5dB 씩 올린다."""
     dur = sf.info(path).duration
+    # 쉼은 0.15초부터 본다 — 「입을 작게」로 다시 만든 ③ 은 줄 사이 쉼이 0.21초뿐이었다.
+    # 끝 무음 바로 앞(0.5초 안)의 숨 고르기는 줄 사이가 아니다 — ② 에서 그걸 줄 경계로 잘못 골랐다
     for db in (-45, -40, -35, -30):
-        sil = [(a, b) for a, b in ws.silences(path, 0.25, db) if b is not None]
-        inner = sorted([s for s in sil if s[0] > 0.3 and s[1] < dur - 0.2], key=lambda s: s[0] - s[1])[:n - 1]
+        sil = [(a, b) for a, b in ws.silences(path, 0.15, db) if b is not None]
+        tail = min([a for a, b in sil if b >= dur - 0.05] or [dur])
+        inner = sorted([s for s in sil if s[0] > 0.3 and s[1] < tail - 0.5], key=lambda s: s[0] - s[1])[:n - 1]
         if len(inner) >= n - 1:
             break
     inner.sort()
@@ -107,6 +112,12 @@ def slot_clip(src, out, start, dur, crop, scroll=None):
     run(cmd + ["-an", "-vf", vf, "-t", f"{dur:.3f}", "-c:v", "libx264", "-crf", "14", "-preset", "veryfast", str(out)])
 
 
+def vsize(p):
+    o = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=width,height",
+                        "-of", "csv=p=0", str(p)], capture_output=True, text=True).stdout.strip()
+    return tuple(int(x) for x in o.split(","))
+
+
 def frac_crop(w, h, y0=0.05):
     """원장님 컷: 폭은 그대로, 높이는 칸 비율로 — 머리 위 5% 에서 시작하면 가슴 위까지 들어오고 워터마크는 빠진다."""
     ch = round(w * SH / W)
@@ -115,53 +126,74 @@ def frac_crop(w, h, y0=0.05):
 
 def main():
     out = ROOT / (sys.argv[1] if len(sys.argv) > 1 else "video/out/shorts/00-소개-처음혼주_v1.mp4")
+    global VOICE
+    VOICE = sys.argv[2] if len(sys.argv) > 2 else "vc"
     work = V / "work/intro/build"
     work.mkdir(parents=True, exist_ok=True)
     lt = line_times()
-    solo = ws.decode(SOLO)
+    # first: 「원장 음성이 4가지 정도 나온다 — 첫번째 음성을 유지하게」(2026-11-06). ① Flow 목소리를 걸러
+    # (voice-first.wav) 다른 구간을 모두 그 음색으로 바꾼 소리를 쓴다. 박자는 원래 소리 그대로다.
+    solo = ws.decode(V / "work/intro/solo-first.wav" if VOICE == "first" else SOLO)
 
     def solo_cut(a, b):
         return solo[int(a * SR):int(b * SR)]
 
-    b1 = V / "work/lipsync/block1-v3-blend.mp4"
-    b2 = V / "work/intro/block2-vc.mp4"
-    b3 = V / "work/intro/block3-vc.mp4"
+    # 원장님 세 덩어리: 그림은 Flow 원본. 소리는 VOICE 에 따라 Flow 자체 음성(flow) 또는 그 말에 원장님 음색만
+    # 입힌 소리(vc, flow_voice_convert.py). 둘 다 Flow 박자 그대로라 입이 맞는다.
+    # ① 은 처음엔 Wav2Lip 으로 입을 다시 그려 복제 음성에 맞췄는데(block1-v3-blend) 406×720 에서 입이 흐려지고
+    #    박자도 평균 0.23초 어긋나 「원장 립싱크 문제가 많다」는 지적을 받았다(2026-11-06).
+    #    Flow 원본 ① 은 「궁금한 건 많은데,」 한 구절이 빠져 있어 자막도 그에 맞췄다(SUBS[1]).
+    # 자막 시각은 늘 vc 소리에서 잰다 — Flow 원본 소리는 예식장 잡음이 깔려 -25dB 로도 줄 사이 쉼이 안 잡힌다.
+    BLOCKS = [(V / "raw/ref/flow-처음혼주-10s.mp4", V / "work/intro/b1-vc.wav"),
+              (V / "raw/flow/block2-flow-v2-korean.mp4", V / "work/intro/b2-vc.wav"),
+              (V / "raw/flow/block3-flow-korean-1080p.mp4", V / "work/intro/b3-vc.wav")]
+    # small: ②③ 을 「입을 작게」 프롬프트로 다시 만든 클립으로(2026-11-06 「입이 너무 크게 벌어진다」).
+    # 이 클립들은 Flow 소리를 첫 목소리로 바꾼 b2s/b3s-first.wav 로 자막 시각도 잰다
+    SMALL = "small" in sys.argv[3:]
+    if SMALL:
+        BLOCKS[1] = (V / "raw/flow/block2-flow-v3-smallmouth-1080p.mp4", V / "work/intro/b2s-first.wav")
+        BLOCKS[2] = (V / "raw/flow/block3-flow-v2-smallmouth-1080p.mp4", V / "work/intro/b3s-first.wav")
+    b1, b2, b3 = (b for b, _ in BLOCKS)
     dur = lambda p: float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of",
                                           "csv=p=0", str(p)], capture_output=True, text=True).stdout)
 
+    def block_audio(k):
+        vid, vc = BLOCKS[k]
+        if VOICE == "flow":
+            return ws.decode(vid)
+        if VOICE == "first":
+            return ws.decode(V / f"work/intro/b{k + 1}{'s' if SMALL and k else ''}-first.wav")
+        return ws.decode(vc)
+
     segs = []   # (이름, 길이, 소리 numpy, 자막 [(줄번호, 시작, 끝)] 덩어리 안 시각)
-    # ① 원장님 — 줄 0~2
-    a1 = ws.decode(b1)
-    segs.append(("A", dur(b1), a1, [(i, *lt[i]) for i in (0, 1, 2)]))
+    # ① 원장님 — 줄 0~2. Flow 원본 ① 은 첫 1.6초가 무음이라(첫머리 무음 + 훅이 늦어짐) 앞 A_SKIP 초를 잘라 쓴다
+    A_SKIP = 1.25
+    sp1 = speech_spans(BLOCKS[0][1], 3)
+    segs.append(("A", dur(b1) - A_SKIP, block_audio(0)[int(A_SKIP * SR):],
+                 [(i, a - A_SKIP, b - A_SKIP) for i, (a, b) in zip((0, 1, 2), sp1)]))
     # B롤 — 줄 4~7. 줄 사이 쉼은 solo 그대로(0.35·0.6초)
     s0, s1 = lt[4][0] - 0.15, lt[7][1] + 0.35
     segs.append(("B", s1 - s0, solo_cut(s0, s1), [(i, lt[i][0] - s0, lt[i][1] - s0) for i in (4, 5, 6, 7)]))
     # ② 원장님 — 줄 9·10
-    a2 = ws.decode(b2)
-    tmpw = work / "b2.wav"
-    sf.write(tmpw, a2, SR)
-    sp2 = speech_spans(tmpw, 2)
-    segs.append(("C", dur(b2), a2, [(9, *sp2[0]), (10, *sp2[1])]))
+    sp2 = speech_spans(BLOCKS[1][1], 2)
+    segs.append(("C", dur(b2), block_audio(1), [(9, *sp2[0]), (10, *sp2[1])]))
     # 화면 녹화 — 줄 11
     d0, d1 = lt[11][0] - 0.15, lt[11][1] + 0.3
     segs.append(("D", d1 - d0, solo_cut(d0, d1), [(11, 0.15, lt[11][1] - d0)]))
     # ③ 원장님 — 줄 13·14
-    a3 = ws.decode(b3)
-    tmpw3 = work / "b3.wav"
-    sf.write(tmpw3, a3, SR)
-    sp3 = speech_spans(tmpw3, 2)
-    segs.append(("E", dur(b3), a3, [(13, *sp3[0]), (14, *sp3[1])]))
+    sp3 = speech_spans(BLOCKS[2][1], 2)
+    segs.append(("E", dur(b3), block_audio(2), [(13, *sp3[0]), (14, *sp3[1])]))
 
     # 덩어리별 칸 영상
     clips = []
     for name, d, _, subs in segs:
         f = work / f"{name}.mp4"
         if name == "A":
-            slot_clip(b1, f, 0, d, frac_crop(406, 720))
+            slot_clip(b1, f, A_SKIP, d, frac_crop(406, 720))
         elif name == "C":
-            slot_clip(b2, f, 0, d, frac_crop(720, 1280))
+            slot_clip(b2, f, 0, d, frac_crop(*vsize(b2)))
         elif name == "E":
-            slot_clip(b3, f, 0, d, frac_crop(1080, 1920))
+            slot_clip(b3, f, 0, d, frac_crop(*vsize(b3)))
         elif name == "D":
             slot_clip(V / "work/intro/honjoo100-tall.png", f, 0, d, None, scroll=2300)
         else:
@@ -193,13 +225,15 @@ def main():
     main_dur = t   # ③ 끝의 미소(약 1초 무음)가 이미 꼬리 노릇을 한다 — 더 늘이면 카드까지 1.5초 무음에 걸린다
 
     # 끝 카드 마무리 한 줄 + 주소 카드 링크 안내 한 줄 — 같은 복제 음성(clone_tts.py)으로
-    # 「궁금한 건, 메이크업 포엘 백문백답에서 들어 보세요.」「링크는, 고정 댓글에 있어요.」
+    # 「궁금한 건, 메이크업 포엘 백문백답에서 들어 보세요.」「링크는, 채널 프로필에 있어요.」
     # 엔딩 모양은 무료 문항 쇼츠와 한 함수(ws.ending)로 맞춘다
     def trim(y):
         nz = np.where(np.abs(y) > 10 ** (-45 / 20))[0]
         return y[max(0, nz[0] - int(0.05 * SR)):nz[-1] + int(0.2 * SR)]
-    outro = trim(ws.decode(V / "work/intro/outro-clone.wav"))
-    line2 = trim(ws.decode(V / "work/intro/outro2-clone.wav"))
+    tag = "first" if VOICE == "first" else "clone"
+    outro = trim(ws.decode(V / f"work/intro/outro-{tag}.wav"))
+    # outro3 = 「링크는, 채널 프로필에 있어요.」(11-07, 고정 댓글 안내에서 바꿈 — ws.DOMAIN_LINE 주석 참고)
+    line2 = trim(ws.decode(V / f"work/intro/outro3-{tag}.wav"))
     layers = work / "layers"
     layers.mkdir(exist_ok=True)
     for old in layers.glob("*.png"):
@@ -316,7 +350,12 @@ def make_base(item, path):
     ws.draw_shadow_text(img, (W - 44, 70), "혼주 메이크업 100문 100답", hf, ws.NAVY, anchor="ra")
     d = ImageDraw.Draw(img)
     d.text((W // 2, 176), item["partTitle"], font=ws.font("Bold", 34), fill=ws.GOLD, anchor="ma")
-    d.text((W // 2, 236), item["question"], font=ws.font("Black", 62), fill=ws.INK, anchor="ma")
+    # 제목은 한 줄에 들어가는 한도까지 키운다(2026-11-06 「상단 혼주메이크업 100문100답 폰트확대 한줄 범위내에서」).
+    # 좌우 50px 은 남긴다 — 쇼츠 화면 가장자리는 기기마다 조금씩 잘린다
+    size = 62
+    while ws.text_w(item["question"], ws.font("Black", size + 2)) <= W - 100:
+        size += 2
+    d.text((W // 2, 300), item["question"], font=ws.font("Black", size), fill=ws.INK, anchor="mm")
     d.rectangle([0, SY - 6, W, SY - 1], fill=ws.GOLD)
     d.rectangle([0, SY + SH, W, SY + SH + 5], fill=ws.GOLD)
     d.text((W // 2, SY + SH + 46), "makeupforl.co.kr/honjoo100", font=ws.font("Medium", 32), fill=ws.SUB, anchor="ma")

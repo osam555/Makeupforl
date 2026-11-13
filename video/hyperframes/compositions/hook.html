@@ -1,0 +1,53 @@
+<!doctype html>
+<!--
+  쇼츠 맨 앞 훅(MC 가 질문을 읽는 2~4초) — 대표 사진 위 큰 훅 한 줄.
+  PIL 로 그리던 훅(wed100_short.py make_hook)은 정지 그림이라 첫 프레임이 사진처럼 보였다.
+  쇼츠는 첫 1초에 넘길지 정하므로 글자가 「올라오는」 움직임 하나만 준다 — 과장 효과 금지 규칙 때문에 그 이상은 넣지 않는다.
+  머리글(메이크업포엘 · 100문 100답)은 Remotion 이 영상 전체에 덮으므로 여기서는 그리지 않는다.
+-->
+<html data-composition-variables='[
+  {"id":"photo","type":"string","label":"사진","default":"../assets/top10/p4-01/hero.jpg"},
+  {"id":"hook","type":"string","label":"훅","default":"혼주는 무조건 올림머리?"},
+  {"id":"pos","type":"string","label":"사진 중심(object-position) — 가로 사진은 얼굴 쪽으로","default":"50% 40%"}
+]'>
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family: P; font-weight: 900; src: url(../assets/Pretendard-Black.otf); }
+  @font-face { font-family: P; font-weight: 700; src: url(../assets/Pretendard-Bold.otf); }
+  html, body { margin: 0; background: #000; }
+  #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; font-family: P; }
+  #photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform-origin: 50% 40%; }
+  /* 글자 아래만 어둡게 — 얼굴(사진 위쪽)은 그대로 보이게 */
+  #shade { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0) 45%, rgba(0,0,0,.72) 78%, rgba(0,0,0,.82)); }
+  #q { position: absolute; left: 0; right: 0; top: 1170px; text-align: center; color: #D9BB86; font-weight: 700; font-size: 52px; letter-spacing: 4px; }
+  /* 쇼츠 UI 가 맨 아래 15% 를 가리므로 1560px 안에서 끝낸다 */
+  #hook { position: absolute; left: 70px; right: 70px; top: 1250px; text-align: center; color: #fff;
+          font-weight: 900; font-size: 96px; line-height: 1.22; white-space: pre; text-shadow: 0 4px 18px rgba(0,0,0,.45); }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="hook" data-width="1080" data-height="1920" data-duration="4">
+  <img id="photo" class="clip" data-start="0" data-duration="4">
+  <div id="shade"></div>
+  <div id="q">Q.</div>
+  <div id="hook"></div>
+</div>
+<script src="../assets/gsap.min.js"></script>
+<script>
+  const v = window.__hyperframes.getVariables();
+  document.getElementById("photo").src = v.photo;
+  document.getElementById("photo").style.objectPosition = v.pos;
+  const hk = document.getElementById("hook");
+  hk.textContent = v.hook;
+  // 줄은 대본의 \n 자리에서만 바꾼다(자동 줄바꿈은 「전에?」「될까?」만 다음 줄로 떨궜다) — 한 줄이 넘치면 글자를 줄인다
+  for (let fs = 96; fs > 60 && hk.scrollWidth > hk.clientWidth; fs -= 4) hk.style.fontSize = fs - 4 + "px";
+  const tl = gsap.timeline({ paused: true });
+  tl.fromTo("#photo", { scale: 1.0 }, { scale: 1.05, duration: 4, ease: "none" }, 0);
+  tl.fromTo("#q", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 0.05);
+  tl.fromTo("#hook", { opacity: 0, y: 36 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 0.1);
+  window.__timelines = window.__timelines || {};
+  window.__timelines["hook"] = tl;
+</script>
+</body>
+</html>
