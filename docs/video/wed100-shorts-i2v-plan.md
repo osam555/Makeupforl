@@ -13,6 +13,18 @@
 
 이 방식은 Flow 원장님 컷을 **대신**한다. 원장님 실제 촬영본이 생기면 그쪽이 늘 우선이다(`README.md` 결론).
 
+### 0-1. 참고한 영상 — 「정지 그림 위주 + 일부만 i2v」
+
+osamwiki `projects/ref-video-ai-gyoyang-docu.md`(2026-11-13)에서 분석한 AI 교양 다큐(교양궁금, 24분)를 참고했다. 내용·그림은 베끼지 않는다. 방법만 가져온다.
+
+| 그 영상에서 본 것 | 이 기획에 가져온 것 |
+|---|---|
+| 대부분 **정지 그림**이고 **일부 컷만 i2v**다. 움직임은 작고 짧다(김, 불, 손, 들어오는 기차) | 한 편의 i2v는 **훅 1컷 + 클라이맥스 1컷, 많아야 3컷**이다. 나머지는 정지 그림에 느린 줌·패럴랙스를 준다(1-2, 3-2) |
+| 컷 218개 중 216개가 **내레이션 무음 끝 ±0.6초**에서 바뀐다. 토막 사이 무음은 약 0.4초로 일정하다 | **소리 토막 하나 = 그림 하나.** 음성을 Typecast 토막으로 만들고 쉼을 0.35초로 고정한다. 컷은 토막이 시작하는 자리에서 바꾼다(1-2, 4-1) |
+| 같은 화풍, 같은 인물이 여러 장면에 반복된다 | 고정 블록과 기준 이미지로 화풍·인물을 묶는다(2-3). 실사풍과 일러스트풍 중 고르는 것은 8절에서 정한다 |
+| 설명란에 「생성형 AI로 제작」을 밝힌다 | 업로드 때 합성 콘텐츠 「예」 + 설명란 한 줄(7절) |
+| 우리 쪽 시험(같은 날): Flow Nano Banana 그림 **0크레딧**, Veo 3.1 Fast 8초 클립 **10크레딧**, 약 2분. 끝부분에서 인물이 몸을 돌렸다 | 생성은 **Flow 경로를 기본**으로 한다(3절). Veo 클립은 **앞 5~6초만** 쓴다. 클립에 붙어 나오는 소리(AAC)는 버린다 |
+
 ## 1. 장면 분할 규칙
 
 ### 1-1. 한 편의 틀 (30~40초)
@@ -28,17 +40,18 @@
 
 ### 1-2. 컷을 나누는 규칙
 
-1. **소리가 먼저다.** 컷은 시드 `cues` 의 시각(start·end)에 맞춰 자른다. 그림에 소리를 맞추지 않는다(`book/promo/영상제작-규칙.md` 8절 「중요」와 같다).
-2. 자막 하나(cue)는 **컷 2~3개**로 나눈다. 한 컷은 **2.0~4.0초**다. 4초가 넘으면 쇼츠에서 지루하다. 2초보다 짧으면 i2v 움직임이 보이기 전에 끝난다.
-3. 컷 경계는 자막 경계나 쉼표 자리에 둔다. 자막 사이 쉼(약 0.3초)은 앞 컷에 붙인다.
+1. **소리가 먼저다.** Typecast 토막을 먼저 만들고 그 길이에 맞춰 컷을 자른다(4-1). 그림에 소리를 맞추지 않는다(`book/promo/영상제작-규칙.md` 8절 「중요」와 같다).
+2. **컷은 무음이 끝나는 자리에서 바꾼다.** 즉 다음 토막이 시작하는 시각이다(참고 영상 216/218컷이 이렇게 바뀌었다). 토막 사이 고정 쉼(0.35초)은 앞 컷에 붙인다.
+3. 자막 하나(cue)는 **컷 2~3개**로 나눈다. 한 컷은 **2.0~4.0초**다. 쇼츠는 참고 영상(중앙값 6.8초)보다 빨라야 한다. cue 안에서 컷을 나눌 때는 쉼표 자리를 쓴다. 쉼표 자리는 단어 시각(`align_voice.py`)으로 찾는다.
 4. 첫 컷은 **0.0초부터 움직이고 있어야** 한다. 페이드인으로 시작하지 않는다. 훅 2초를 잃기 때문이다.
 5. 한 편에 같은 장면을 두 번 쓰지 않는다. 다만 잠금 화면 배경에는 앞 컷을 흐리게 다시 써도 된다.
-6. 한 편은 **컷 6~8개**로 짠다. 그중 i2v는 **4~5개**까지만 쓴다. 나머지는 3-3의 무료 움직임으로 만든다.
+6. 한 편은 **컷 6~8개**로 짠다. i2v는 **훅 1컷 + 클라이맥스 1컷**이 기본이고 많아야 3컷이다. 나머지는 정지 그림에 느린 줌·패럴랙스(3-3의 무료 움직임)를 준다. 움직임이 「여기가 중요하다」는 신호가 되도록 아껴 쓴다.
+7. i2v를 줄 컷은 **물체가 스스로 움직여야 뜻이 사는 컷**만 고른다. 손이 꽂는다, 걷는다, 촛불이 흔들린다 같은 컷이다. 가만히 놓인 소품은 정지 그림으로 충분하다.
 
 ### 1-3. 길이 맞추기 공식
 
 - 컷 길이 `d` = (해당 cue 구간 길이 + 뒤쪽 쉼) ÷ 그 cue의 컷 수.
-- i2v 클립은 `d + 0.5초` 이상으로 만든다. 보통 5초 클립 하나를 만들어 필요한 부분만 자른다.
+- i2v 클립은 `d + 0.5초` 이상으로 만든다. Veo 8초 클립을 만들어 **앞부분부터** 필요한 만큼 자른다. Veo는 끝으로 갈수록 인물이 몸을 돌리는 등 흐트러졌다(참고 문서 6절).
 - 길이가 모자라면 클립을 **최대 1.25배까지만** 늘린다(`setpts`). 그보다 늘리면 움직임이 끊겨 보인다. 그래도 모자라면 다시 만들지 않는다. 정지 화면 패럴랙스(3-3)로 메운다.
 
 ## 2. 이미지 프롬프트 설계
@@ -101,44 +114,44 @@
 
 ## 3. 도구 비교와 추천
 
-여기 적은 비용은 **추정치**다. Higgsfield 단가는 `영상제작-규칙.md` 7절의 2026-09 실측값이다. Flow 단가는 15편 기획에서 잰 값(Veo 3.1 Quality, 8초에 100크레딧)이다. 나머지는 공개 가격을 기억에 기대어 적은 대략값이다. 결제 전에 다시 확인해야 한다.
-2026-11-13 기준 Higgsfield 잔액은 **0크레딧**(무료 플랜)이다.
+**쓰는 도구는 Flow와 Typecast 둘뿐이다. Higgsfield는 쓰지 않는다**(2026-11-13 사용자 결정).
+
+여기 적은 비용은 **추정치**다. Flow 단가는 두 번 잰 값이다. Veo 3.1 Quality는 15편 작업에서 8초에 100크레딧이었다. Nano Banana 그림 0크레딧과 Veo 3.1 Fast 8초 10크레딧은 2026-11-13 교양 다큐 시험에서 잰 값이다. 실행 전에 Flow 화면의 크레딧 표시로 다시 확인한다. Flow 계정은 john.wu571이다.
 
 ### 3-1. 이미지
 
 | 도구 | 강점 | 약점 | 한 장 비용(추정) | 쓰임 |
 |---|---|---|---|---|
-| **Nano Banana Pro** (Gemini 3 Pro Image. Higgsfield `nano_banana_pro`, Flow, AI Studio에서 쓸 수 있다) | 참고 이미지로 편집할 때 인물과 옷을 가장 잘 유지한다. 프레이밍 지시가 먹힌다(7절 실측) | 한복 고증이 가끔 흔들린다 | Higgsfield 2크레딧 | **추천 — 기준 이미지와 인물 컷** |
-| gpt-image (OpenAI) | 사진 질감, 소품 정물, 글자 정확도가 좋다 | 참고 이미지 일관성은 Nano Banana보다 약하다 | 장당 약 $0.04~0.2 (품질별) | 소품 정물 컷의 대안 |
-| Higgsfield Soul | 패션 사진 느낌이 난다 | 프레이밍 지시가 안 먹는다(7절 「비추」) | 0.12 | 쓰지 않는다 |
+| **Nano Banana (Flow 안)** | 참고 이미지로 편집할 때 인물과 옷을 가장 잘 유지한다. 프레이밍 지시가 먹힌다(7절 실측). 11-13 시험에서 한 번에 통과했다 | 한복 고증이 가끔 흔들린다 | **Flow 0크레딧** | **추천 — 모든 그림** |
 | 기존 사이트 사진(`public/` 의 hair·hanbok·portrait) | 진짜 사진이고 비용이 0이다 | 손님 얼굴이 담긴 사진이 많다 | 0 | 얼굴 없는 사진만 패럴랙스 배경으로 |
 
 ### 3-2. image-to-video
 
-| 도구 | 강점 | 약점 | 5초 비용(추정) | 쓰임 |
+| 도구 | 강점 | 약점 | 클립 비용(추정) | 쓰임 |
 |---|---|---|---|---|
-| **Kling 3.0 Turbo** (Higgsfield) | 시작 이미지를 잘 지킨다. 느린 카메라 지시가 먹힌다. 싸다(7절 실측) | 720p다. 손가락 같은 작은 동작이 가끔 뭉개진다 | 7.5크레딧 | **추천 — 기본 i2v** |
-| Veo 3.1 (Flow, john.wu571 계정) | 빛, 원단, 촛불이 가장 사실적이다. 15편 작업에서 계정과 과정을 검증했다 | 비싸다(Quality는 8초에 100). 시작 이미지를 덜 지킨다 | Fast 약 20, Quality 100 Flow 크레딧 | 훅 첫 컷 하나에만(품질 차이가 보일 때) |
-| MiniMax H3 | 천의 흔들림과 몸의 움직임이 자연스럽다 | Kling보다 비싸다 | 10크레딧 | 걷는 뒷모습, 치맛자락 |
-| Seedance 2.5 | 카메라 움직임이 화려하다 | 가장 비싸다 | 4초 26크레딧 | 쓰지 않는다(효과가 과하다) |
+| **Veo 3.1 Fast (Flow, 시작 프레임 = 그 컷의 그림)** | 11-13 시험에서 화풍·인물·구도를 지키며 김·불·손을 움직였다. 싸다. 15편 작업에서 계정과 과정도 검증했다 | 끝으로 갈수록 흐트러진다(앞 5~6초만 쓴다). 소리가 붙어 나온다(버린다) | **8초 10 Flow 크레딧** | **추천 — 기본 i2v** |
+| Veo 3.1 Quality (Flow) | Fast보다 질감이 낫다 | 8초 100크레딧으로 10배 비싸다 | 100 Flow 크레딧 | Fast 결과가 눈에 띄게 모자란 컷에만 |
 | **무료 움직임** (ffmpeg `zoompan`, HyperFrames 2.5D 패럴랙스) | 비용이 0이고 결과가 늘 같다 | 물체 자체는 움직이지 않는다 | 0 | 정물, 잠금 화면 배경, 모자란 길이 메우기 |
 
-**추천 조합: Nano Banana Pro(이미지) + Kling 3.0 Turbo(i2v) + 무료 움직임(정물) + 기존 HyperFrames·Remotion·ffmpeg(조립).**
-Veo는 Kling으로 만든 훅 컷이 약할 때만 한 컷에 쓴다.
+**추천 조합: Flow Nano Banana(그림, 0크레딧) + Flow Veo 3.1 Fast(i2v 2~3컷, 컷당 10크레딧) + 무료 움직임(나머지 정지 그림) + Typecast(음성) + 기존 HyperFrames·Remotion·ffmpeg(조립).**
+Flow는 Aside 브라우저로 돌린다. 도구는 speed-listening 저장소의 `store/video/book-promo-3part/newtake/flow.py` 다. 원래 9:16용이라 그대로 쓴다. 고칠 일이 있으면 사본을 만들어 고친다. 원본은 고치지 않는다.
+
+i2v 프롬프트 틀(11-13 시험에서 통과한 문형):
+`Static camera, no zoom, no cut. Keep exactly the same scene, person and style as the start frame. {움직이는 것 하나}. Only small, natural movement. No new objects, no text, no camera shake. Face never visible.`
 
 ### 3-3. 장면 유형별 효과
 
-| 장면 유형 | 효과 | 만드는 도구 | i2v 프롬프트 핵심 |
+| 장면 유형 | 기본 처리 | i2v로 올릴 때 | i2v 프롬프트의 「움직이는 것 하나」 |
 |---|---|---|---|
-| 소품 클로즈업 | 아주 느린 푸시인, 빛이 표면을 쓸고 지나감 | Kling | `locked-off macro shot, extremely slow push-in, a soft light sweep glides across the surface, object stays still` |
-| 손 동작 | 손이 들어와 한 동작만 하고 멈춤 | Kling (실패하면 MiniMax) | `one hand enters from the right, slowly inserts the ornament, then rests; only one action; no extra fingers` |
-| 원단 | 원단이 살짝 흔들리고 광택이 흐름 | Kling 또는 MiniMax | `fabric sways gently as if from a light breeze, sheen ripples along the folds, camera static` |
-| 공간 | 느린 트래킹, 또는 촛불의 흔들림 | Kling | `slow dolly forward down the aisle, candle flames flicker, no people appear` |
-| 뒷모습 | 어깨 너머로 느린 패럴랙스, 인물은 거의 정지 | Kling | `slow parallax orbit of 10 degrees behind the woman, she does not turn her head, face never visible` |
-| 정물·배경 | 켄번스 줌, 2.5D 패럴랙스 | ffmpeg / HyperFrames | (프롬프트 없음) |
+| 소품 클로즈업 | 정지 그림 + 느린 푸시인(ffmpeg `zoompan`) | 거의 올리지 않는다 | `a soft light sweep glides across the surface, object stays still` |
+| 손 동작 | — | **올린다** (손이 움직여야 뜻이 산다) | `one hand slowly inserts the ornament, then rests; only one action; no extra fingers` |
+| 원단 | 정지 그림 + 패럴랙스 | 광택이 핵심일 때(p5-10 같은 문항) | `fabric sways gently, sheen ripples along the folds` |
+| 공간 | 정지 그림 + 느린 이동 | 촛불·꽃처럼 흔들릴 것이 있을 때 | `candle flames flicker gently, no people appear` |
+| 뒷모습 | 정지 그림 + 느린 푸시인 | 걷는 순간처럼 몸이 움직여야 할 때 | `she walks slowly away from camera, skirt sways, she never turns` |
+| 정물·배경 | 켄번스 줌, 2.5D 패럴랙스 | 올리지 않는다 | — |
 | 컷 사이 전환 | 기본은 하드컷. 같은 물건이 이어지면 매치컷 | ffmpeg | 크로스 디졸브 금지(`쇼츠-100문100답-홍보.md` 공통 규격) |
 
-i2v 프롬프트 끝에는 늘 `no cuts, one continuous shot, no text, face never visible` 를 붙인다.
+i2v 프롬프트는 3-2의 틀에 이 칸의 한 줄만 바꿔 넣는다.
 
 ### 3-4. 한글 글자 처리
 
@@ -161,25 +174,32 @@ i2v 프롬프트 끝에는 늘 `no cuts, one continuous shot, no text, face neve
 
 ### 4-1. 어떤 소리를 쓰나
 
-| 몫 | 소리 | 이유 |
-|---|---|---|
-| MC 질문(훅) | 문항 음성의 `questionAudio` 구간(Typecast)을 그대로 | 사이트와 같은 소리다. 훅을 무음으로 두면 1.5초 쉼 규칙에 걸린다 |
-| 답 앞부분 | **사이트 답 음성을 그대로**(edge-tts `ko-KR-SunHiNeural`, 1.25배속) | 이미 사이트에 실린, 결재를 거친 문장이다. 새로 읽히면 문장이 달라질 수 있다 |
-| 잠금 한 줄, 끝맺음 두 줄 | 같은 SunHi 음성으로 새로 만든다(`ws.tts_line`) | 답과 같은 목소리여야 한다. edge-tts SunHi와 Azure `ko-KR-SunHiNeural` 은 같은 목소리다 |
+**음성은 Typecast로 한다**(2026-11-13 사용자 결정). 한 편의 소리를 모두 Typecast로 새로 만든다.
 
-- 원장님 실제 목소리 녹음이 생기면 **바로 바꿔 끼운다.** 그 전에는 원장님 목소리를 AI로 새로 만들지 않는다(`README.md` 7절).
-- 전역 규칙이 무료 기본으로 정한 **VoxCPM2** 는 이번에 쓰지 않는다. 쓰면 답 음성과 다른 목소리가 한 편에 섞인다. VoxCPM2를 쓰는 경우는 사이트 답 음성 전체를 VoxCPM2로 갈아 끼울 때뿐이다. 그때도 기존 파일을 덮어쓰지 않고 새 이름으로 만든다.
-- 15편은 `voice-first` 음색 변환을 거쳤다. Flow 원장님 컷과 목소리를 맞추려는 것이었다. 이번에는 Flow 컷이 없으므로 **변환하지 않는 것**을 기본으로 한다. 채널 안의 다른 편과 목소리를 맞출지는 8절에서 정한다.
+| 몫 | 소리 | 문장 |
+|---|---|---|
+| MC 질문(훅) | Typecast **MC 목소리**. 사이트 `questionAudio` 와 같은 목소리다. 사이트 음성 구간을 그대로 잘라 써도 된다 | 문항 `question` 그대로 |
+| 답 앞부분 | Typecast **답 목소리** 하나(50~60대 여성 느낌의 차분한 목소리). 15편과 사이트의 edge-tts SunHi는 쓰지 않는다 | `reveal` 자막의 `ko` 를 **한 글자도 바꾸지 않고** 읽힌다. 사이트에 실린, 결재를 거친 문장이다 |
+| 잠금 한 줄, 끝맺음 두 줄 | 답 목소리와 같은 Typecast 목소리 | 결재받은 `lock` + 「정답은 100문 100답에 있어요.」, `ws.OUTRO_LINE`, `ws.DOMAIN_LINE` |
+
+- 키는 기존 `TYPECAST_API_KEY` 를 쓴다(사이트 MC 질문을 만든 키다). 답 목소리 후보 2~3개를 같은 문장으로 들어 보고 하나를 고정한다. 고른 목소리 ID는 `video/scripts/i2v/voice.json` 에 적어 모든 편이 같은 목소리를 쓰게 한다.
+- **토막 단위로 만든다.** cue 하나(긴 cue는 쉼표에서 두 토막)를 한 번에 하나씩 생성한다. 참고 영상처럼 토막 하나 = 컷 하나로 이어 붙이기 쉽다. 한 번에 길게 읽히면 빨라지고 구절이 빠지는 문제도 피한다(VoxCPM2 규칙과 같은 이유).
+- 토막 사이 쉼은 **0.35초로 고정**한다. 참고 영상의 0.4초와 사이트 답 음성의 0.3초 사이 값이다.
+- 배속은 생성 뒤에 1.0~1.1배 안에서만 맞춘다. 더 빨라야 하면 문장을 줄이지 않는다. 컷 수를 줄인다.
+- 원장님 실제 목소리 녹음이 생기면 **바로 바꿔 끼운다.** 그 전에는 원장님 목소리를 AI로 새로 만들거나 복제하지 않는다(`README.md` 7절). Typecast 목소리는 원장님 목소리가 아닌 「내레이터」다. 화면이나 설명란에 원장님 목소리라고 적지 않는다.
+- 15편의 `voice-first` 음색 변환은 쓰지 않는다.
+- **이 결정으로 시각 기준이 바뀐다.** 컷 길이는 사이트 `p4-18.mp3` 의 cue 시각이 아니라 **새 Typecast 토막의 실제 길이**로 정한다(1-2, 1-3, 6절 장면표의 시각은 사이트 음성 기준 추정이다. 생성 뒤 다시 계산한다).
 
 ### 4-2. 음원 규격
 
-- 섞기 전 원본은 **PCM 24-bit 48kHz 모노 WAV** 로 만든다(전역 규칙). 사이트 mp3(24kHz·48kbps)는 48kHz로 올려서 섞는다. 인공 고주파는 넣지 않는다.
-- 새로 만든 잠금 줄과 끝 줄에는 단어 시각이 없다. 자막을 소리에 맞춰 정렬한 뒤에 렌더한다(전역 규칙, `align_voice.py`).
+- Typecast 결과는 WAV로 받아 **PCM 24-bit 48kHz 모노 WAV** 로 맞춘다(전역 규칙). mp3·AAC로 받지 않는다. 인공 고주파는 넣지 않는다.
+- Typecast는 단어 시각을 주지 않는다. 그래서 토막마다 자막을 소리에 맞춰 정렬한 뒤 렌더한다(전역 규칙, `align_voice.py`). 토막 안에서 컷을 쉼표 자리로 나눌 때도 이 단어 시각을 쓴다.
+- Typecast는 유료다. 토막 생성은 결재(훅·reveal·잠금 문구)가 끝난 뒤에 한다. 문장이 바뀌면 다시 사야 하기 때문이다.
 - 최종 영상은 15편과 같은 방식으로 소리와 합친다. 검사 기준: -14 LUFS, 1.5초 넘는 쉼 없음, 9:16 1080×1920 30fps, 60초 이하.
 
 ### 4-3. 자막
 
-- 답 자막은 시드 `cues` 의 시각을 그대로 쓴다. 한 줄 단위로 나누는 계산은 `wed100_short.py` 의 분할(DP·쉼 맞춤)을 쓴다.
+- 답 자막의 글은 시드 `cues` 의 `ko` 를 쓰고, 시각은 Typecast 토막을 정렬해서 얻는다. 한 줄 단위로 나누는 계산은 `wed100_short.py` 의 분할(DP·쉼 맞춤)을 쓴다.
 - 컷 경계가 자막 경계를 따른다(1-2). 그래서 자막은 바뀌는데 그림은 그대로인 일이 생기지 않는다. 그 반대도 마찬가지다.
 
 ## 5. 유료 상품 보호
@@ -205,20 +225,22 @@ i2v 프롬프트 끝에는 늘 `no cuts, one continuous shot, no text, face neve
 
 ### 장면표
 
-시각은 `p4-18.mp3` 기준이다. 질문은 0~3.36초, 0번 자막은 3.70~10.20초, 1번 자막은 10.54~20.02초다. 전체는 약 30초다.
+아래 시각은 **사이트 `p4-18.mp3` 기준 추정**이다(질문 0~3.36초, 0번 자막 3.70~10.20초, 1번 자막 10.54~20.02초). 음성은 Typecast로 새로 만들므로 토막 길이가 나오면 시각을 다시 계산한다. 컷 순서와 나누는 자리는 그대로 둔다. 전체는 약 30초다.
 
 | # | 시간 | 소리 / 자막 | 장면 유형 | 이미지 프롬프트 (요지, 고정 블록을 붙인다) | 움직임 | 길이 |
 |---|---|---|---|---|---|---|
-| 1 | 0.00–3.40 | MC: 「뒤꽂이(헤어 장식)는 꼭 준비해야 하나요?」 + 훅 글자 「뒤꽂이,\n꼭 해야 할까?」 | 뒷모습 | back view of the woman's low chignon with **no ornament yet**, nape of neck and jeogori collar, shallow DOF | Kling: `extremely slow push-in toward the chignon, she stays perfectly still, face never visible` | 3.4s |
-| 2 | 3.40–6.50 | 0번 앞: 「뒤꽂이는 필수는 아니지만,」 | 소품 | a single small pearl dwikkoji lying on cream velvet in a lacquered tray, macro | Kling: `locked-off macro, slow light sweep across the pearls, object still` | 3.1s |
-| 3 | 6.50–10.40 | 0번 뒤: 「밋밋할 수 있는 올림머리 뒷모습에 '표정'을 불어넣어 주는 아주 중요한 소품입니다.」 | 손 | over-the-shoulder close-up, one hand (no rings, natural nails) holding the dwikkoji beside the chignon from shot 1 | Kling(1번 마지막 프레임을 참고로): `the hand slowly slides the ornament into the side of the chignon, then withdraws; one action only` | 3.9s |
-| 4 | 10.40–13.60 | 1번 앞: 「혼주는 하객을 맞이할 때 뒷모습이나 옆모습도 자주 노출되며,」 | 공간 | Korean wedding hall lobby, soft flowers, blurred guests' silhouettes far away, the woman seen from behind at the frame edge (same look, ornament now in hair) | Kling: `slow lateral parallax, guests stay as soft blur, she does not turn, face never visible` | 3.2s |
-| 5 | 13.60–16.80 | 1번 중간: 「특히 버진 로드를 걸어가는 촛불 점화 순서에서」 | 공간 | Korean wedding hall virgin road, tall candlesticks with unlit candles at the front, flower arch, no people | Kling: `slow dolly forward down the aisle, warm light, no people appear` | 3.2s |
-| 6 | 16.80–20.30 | 1번 끝: 「하객들의 시선을 뒷모습에 집중적으로 받게 됩니다.」 | 뒷모습 | the woman walking away down the aisle, back view, holding a candle lighter, ornament catching light in her chignon | MiniMax H3 또는 Kling: `she walks slowly away from camera, skirt sways, camera follows gently, face never visible` | 3.5s |
-| 7 | 20.30–25.00 | 잠금: 「한복 색과 어울리는 뒤꽂이, 어떻게 고를까요? 정답은 100문 100답에 있어요.」 | 정물(흐림) | several jeogori fabric swatches and hairpins spread on cream linen — **흐리게 처리**하고 🔒을 얹는다 | 무료: HyperFrames 2.5D 패럴랙스 + 블러 | 약 4.7s |
+| 1 | 0.00–3.70 | MC: 「뒤꽂이(헤어 장식)는 꼭 준비해야 하나요?」 + 훅 글자 「뒤꽂이,\n꼭 해야 할까?」 | 뒷모습 | back view of the woman's low chignon with **no ornament yet**, nape of neck and jeogori collar, shallow DOF | 정지 + 느린 푸시인 (훅이 약하면 Veo: `a few loose strands of hair stir slightly`) | 3.7s |
+| 2 | 3.70–6.50 | 0번 앞: 「뒤꽂이는 필수는 아니지만,」 | 소품 | a single small pearl dwikkoji lying on cream velvet in a lacquered tray, macro | 정지 + 느린 푸시인, 빛 그라데이션을 얹는다 | 2.8s |
+| 3 | 6.50–10.54 | 0번 뒤: 「밋밋할 수 있는 올림머리 뒷모습에 '표정'을 불어넣어 주는 아주 중요한 소품입니다.」 | 손 | over-the-shoulder close-up, one hand (no rings, natural nails) holding the dwikkoji beside the chignon from shot 1 | **Veo i2v**: `one hand slowly slides the ornament into the side of the chignon, then rests; one action only` | 4.0s |
+| 4 | 10.54–13.60 | 1번 앞: 「혼주는 하객을 맞이할 때 뒷모습이나 옆모습도 자주 노출되며,」 | 공간 | Korean wedding hall lobby, soft flowers, blurred guests' silhouettes far away, the woman seen from behind at the frame edge (same look, ornament now in hair) | 정지 + 가로 패럴랙스 | 3.1s |
+| 5 | 13.60–16.80 | 1번 중간: 「특히 버진 로드를 걸어가는 촛불 점화 순서에서」 | 공간 | Korean wedding hall virgin road, tall candlesticks with lit candles at the front, flower arch, no people | 정지 + 앞으로 느린 이동 (여유 있으면 Veo: `candle flames flicker gently`) | 3.2s |
+| 6 | 16.80–20.35 | 1번 끝: 「하객들의 시선을 뒷모습에 집중적으로 받게 됩니다.」 | 뒷모습 | the woman walking away down the aisle, back view, holding a candle lighter, ornament catching light in her chignon | **Veo i2v (클라이맥스)**: `she walks slowly away from camera, skirt sways, she never turns` | 3.55s |
+| 7 | 20.35–25.00 | 잠금: 「한복 색과 어울리는 뒤꽂이, 어떻게 고를까요? 정답은 100문 100답에 있어요.」 | 정물(흐림) | several jeogori fabric swatches and hairpins spread on cream linen — **흐리게 처리**하고 🔒을 얹는다 | 무료: HyperFrames 2.5D 패럴랙스 + 블러 | 약 4.7s |
 | 8 | 25.00–30.00 | 끝맺음 두 줄(`ws.OUTRO_LINE`, `ws.DOMAIN_LINE`) | 끝 카드 | (기존 `ending()`) | 없음 | 약 5s |
 
-- i2v 컷은 1~6번의 **6개**다. 2번을 무료 움직임(켄번스 + 빛 그라데이션)으로 바꾸면 5개로 줄어든다. 결과를 보고 고른다.
+- i2v 컷은 **3번(손)과 6번(걷는 뒷모습) 2개**다. 둘 다 움직여야 뜻이 사는 컷이다. 1번 훅과 5번 촛불은 정지 그림이 약할 때만 올린다(최대 4컷).
+- 컷 경계는 토막이 시작하는 자리다. 토막은 질문 1개, 0번 자막 2개(「필수는 아니지만,」에서 나눔), 1번 자막 3개(쉼표 두 자리에서 나눔), 잠금 1개, 끝맺음 2개로 모두 9개다.
+- Typecast 비용은 이 9토막(약 300자)과 목소리 후보 시험분이다. 기존 Typecast 요금제 안에서 처리될 양으로 본다(추정).
 - 잠금 화면 전까지 장식은 **진주 하나**만 보여 준다. 결론인 색 맞추기(p4-19)를 미리 보여 주지 않기 위해서다.
 - 3번 손 컷은 실패율이 가장 높다. 두 번 실패하면 정물 컷으로 바꾼다. 뒤꽂이가 이미 꽂힌 쪽머리 위로 빛이 지나가는 장면이다.
 
@@ -226,14 +248,14 @@ i2v 프롬프트 끝에는 늘 `no cuts, one continuous shot, no text, face neve
 
 | 항목 | 양 | 크레딧 |
 |---|---|---|
-| 이미지(Nano Banana Pro) | 7장 × 다시 만들기 몫 1.5 ≈ 11장 × 2 | 약 22 |
-| i2v(Kling 3.0 Turbo) | 6클립 × 다시 만들기 몫 1.6 ≈ 10클립 × 7.5 | 약 75 |
-| (선택) 6번을 MiniMax H3로 | +2클립 × 10 | +20 |
-| **합계** | | **약 100 Higgsfield 크레딧**. Veo 훅을 더하면 Flow Fast 20~40 또는 Quality 100 크레딧이 추가된다 |
+| 그림(Flow Nano Banana) | 7장 × 다시 만들기 몫 1.5 ≈ 11장 | **0** |
+| i2v(Flow Veo 3.1 Fast) | 2클립 × 다시 만들기 몫 2 = 4클립 × 10 | 약 40 |
+| (선택) 1번·5번도 올리면 | +2클립 × 2 × 10 | +40 |
+| **합계** | | **Flow 약 40~80 크레딧** + Typecast 9토막 |
 
 - 사람 시간: 첫 편은 약 3~4시간이다. 스크립트 `i2v_short.py` 와 Remotion `clip` 장면을 만드는 시간이 포함된다. 틀이 생기면 편당 약 1~1.5시간이다(프롬프트 작성, 컷 고르기, 검사).
-- 생성 대기 시간: 이미지는 장당 수십 초, Kling 5초 클립은 하나에 대략 1~3분이다. 편당 30분 안팎이다.
-- 15편의 Flow 방식은 편당 약 130 Flow 크레딧(재시도 포함)이 들었다. 거기에 음색 변환과 입 크기 검사가 더해졌다. 이번 방식에는 그 두 단계가 없다.
+- 생성 대기 시간: 그림은 장당 수십 초, Veo Fast 클립은 하나에 약 2분(11-13 실측)이다. 편당 20~30분이다.
+- 15편의 Flow 방식은 편당 약 130 Flow 크레딧(재시도 포함)이 들었다. 거기에 음색 변환과 입 크기 검사가 더해졌다. 이번 방식은 편당 40~80크레딧이고 그 두 단계가 없다.
 
 ## 7. 위험과 결재
 
@@ -249,8 +271,8 @@ i2v 프롬프트 끝에는 늘 `no cuts, one continuous shot, no text, face neve
 
 - 업로드는 사용자가 **그때그때 명시적으로 지시할 때만** 한다. 대상 채널도 지시받은 채널만 쓴다. 2026-11-02에 확인 없이 다른 채널(「영어듣기 대충영어」)에 올린 일이 있었다.
 - 처음에는 **일부 공개**로 올리고 `video/uploaded.json` 에 기록한다. 공개 전환은 원장님이 승인한 뒤에 한다.
-- 업로드할 때 「변경되었거나 합성된 콘텐츠 — 예」로 표시한다(15편과 같다).
-- 생성 도구 계정: Flow는 **john.wu571(`/u/1/`)만** 쓴다. 원장님 계정(`/u/2/`)은 쓰지 않는다. Higgsfield는 잔액이 0이라 충전이 먼저다. 충전은 사용자가 직접 한다.
+- 업로드할 때 「변경되었거나 합성된 콘텐츠 — 예」로 표시한다(15편과 같다). 설명란에도 「생성형 AI 이미지로 만든 장면입니다」 한 줄을 넣는다(참고 영상도 밝혔다).
+- 생성 도구 계정: Flow는 **john.wu571(`/u/1/`)만** 쓴다. 원장님 계정(`/u/2/`)은 쓰지 않는다. Higgsfield는 쓰지 않는다. Flow 크레딧이 모자라면 사용자에게 먼저 묻는다.
 
 ### 위험
 
@@ -261,14 +283,16 @@ i2v 프롬프트 끝에는 늘 `no cuts, one continuous shot, no text, face neve
 | 손가락이 뭉개진다 | 손 컷은 한 동작만 시킨다. 두 번 실패하면 정물로 바꾼다 |
 | 「AI 영상」이라 신뢰가 떨어진다 | 사람 얼굴 없이 물건 중심으로 만든다. 원장님 실제 영상이 생기면 그쪽이 우선이다 |
 | 결론을 그림으로 누설한다 | 잠금 전에는 중립색 장식만 쓴다. 이 점을 결재 항목에 넣는다 |
-| 크레딧이 불어난다 | 다시 만들기는 컷당 2번까지다. 그 뒤에는 무료 움직임으로 메운다. 편당 상한은 150크레딧이다 |
+| 크레딧이 불어난다 | i2v는 편당 2~4컷, 다시 만들기는 컷당 2번까지다. 그 뒤에는 정지 그림으로 메운다. 편당 상한은 Flow 100크레딧이다 |
 | 사이트 사진에 손님 얼굴이 있다 | 참고 이미지로 쓰지 않는다. 배경으로 쓸 때도 얼굴 없는 사진만 쓴다 |
 
 ## 8. 정할 것 (사용자·원장님)
 
-- [ ] 이 방식을 파일럿 1편으로 시험할지. 시험한다면 Higgsfield 충전(약 100~150크레딧)이 필요하다
+- [ ] 이 방식을 파일럿 1편으로 시험할지. 시험한다면 Flow 약 40~80크레딧이 든다(충전 불필요)
+- [ ] 그림 화풍: 실사풍(사진 같은)으로 할지, 참고 영상처럼 일러스트풍(수채·잉크)으로 할지. 일러스트풍은 「가짜 사진」 느낌이 없고 고증 흔들림도 덜 거슬린다. 대신 메이크업샵의 실제 결과물 느낌은 약해진다
 - [ ] 파일럿 문항을 p4-18(뒤꽂이)로 할지. 대안은 p5-10(무광·유광 원단, 52초)과 p6-07(손수건, 39초)이다
-- [ ] 목소리: 사이트 답 음성(SunHi)을 그대로 둘지, 15편처럼 `voice-first` 로 맞출지
+- [x] 목소리: Typecast로 한다(2026-11-13 사용자 결정)
+- [ ] Typecast 답 목소리를 어느 것으로 고정할지(후보 2~3개를 같은 문장으로 들어 보고 고른다)
 - [ ] 혼주 쪽: 신부 쪽(분홍)으로 고정할지, 문항마다 고를지
-- [ ] 훅 첫 컷에 Veo(Flow)를 쓸지, Kling 하나로 끝낼지
+- [ ] i2v를 2컷(손·걷기)으로 시작할지, 훅·촛불까지 4컷으로 할지
 - [ ] 결재 단위: 정지 컷 단계와 완성본에서 두 번 받을지(제안), 완성본에서 한 번만 받을지
