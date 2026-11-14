@@ -4754,7 +4754,7 @@
       "thumbImage": "https://firebasestorage.googleapis.com/v0/b/makeupforl.firebasestorage.app/o/wed100%2Fphoto%2Fthumb%2Fportrait-46.webp?alt=media&token=f966c523-9bc3-41d3-8879-ac9e87b780a1",
       "photo": "portrait-46",
       "photoAuto": false,
-      "published": true
+      "published": false
     },
     {
       "id": 42,
@@ -8543,7 +8543,7 @@
       "thumbImage": "https://firebasestorage.googleapis.com/v0/b/makeupforl.firebasestorage.app/o/wed100%2Fphoto%2Fthumb%2Fportrait-49.webp?alt=media&token=bf825282-d6e1-46f8-9ba5-9e892e74f450",
       "photo": "portrait-49",
       "photoAuto": false,
-      "published": true
+      "published": false
     },
     {
       "id": 93,
