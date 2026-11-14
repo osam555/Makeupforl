@@ -7,7 +7,7 @@ NEXT = {"p1-06": ("p2-04", "상담 때 무엇을 준비할까?"), "p2-05": ("p2-
         "p5-13": ("p5-11", "한복에 어울리는 안경테는?")}
 TEMPO_OLD = {"p1-06": 1.07, "p3-15": 1.07}
 TEMPO = {"p1-06": 1.07, "p3-15": 1.1}
-BRIDGE = "다음 질문은 잠겨 있어요. 이런 답이 95개, 3개월 이용권 5만 5천 원, 메이크업 예약하시면 그대로 빼 드려요."
+BRIDGE = "다음 질문은 잠겨 있어요. 이런 답이 95개, 3개월 이용권 5만 5천 원이에요."  # 「예약 시 차감」은 뺐다(2026-11-15)
 OUTRO = "100문 100답에서 확인하세요."
 for slug, (nxt, short) in [(k, v) for k, v in NEXT.items() if not sys.argv[1:] or k in sys.argv[1:]]:
     V = fv.B / slug / "voice"
@@ -31,7 +31,7 @@ for slug, (nxt, short) in [(k, v) for k, v in NEXT.items() if not sys.argv[1:] o
     spec["scenes"] = [sc for sc in spec["scenes"] if not sc.get("lock")]
     last_still = next(sc for sc in reversed(spec["scenes"]) if sc.get("still"))["still"]
     spec["scenes"].append({"segs": ["zz-bridge"], "still": last_still, "blur": True, "zoom": 0.03, "caption": False,
-                           "lock": ["다음 질문은 잠겨 있어요", short, "답 95개 · 3개월 55,000원", "메이크업 예약 시 그대로 차감", "신청 · 전화 02-323-3321"]})
+                           "lock": ["다음 질문은 잠겨 있어요", short, "답 95개 · 3개월 55,000원", "신청 · 전화 02-323-3321"]})
     spec["outro_seg"] = "zz-outro2"
     spec["next"] = nxt
     json.dump(spec, open(S / f"{slug}.json", "w"), ensure_ascii=False, indent=2)

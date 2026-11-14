@@ -1,0 +1,63 @@
+{
+  "slug": "p1-07",
+  "font_dir": "/Users/osam/dev/speed-listening/store/video/book-promo-3part/work-myeongsim25/fonts",
+  "dir": "/Users/osam/dev/makeupforl/.claude/worktrees/wed100-i2v-plan-438f77/video/work/i2v/p1-07/damchae",
+  "voice_dir": "/Users/osam/dev/makeupforl/.claude/worktrees/wed100-i2v-plan-438f77/video/work/i2v/p1-07/voice",
+  "out": "/Users/osam/dev/makeupforl/.claude/worktrees/wed100-i2v-plan-438f77/video/out/shorts/i2v/p1-07_v2.mp4",
+  "outro_seg": "zz-outro",
+  "domain_seg": "zz-domain",
+  "scenes": [
+    {
+      "segs": [
+        "q"
+      ],
+      "clip": "clip-01.mp4",
+      "hook": "출장 vs 샵,\n어디가 나을까?",
+      "caption": false
+    },
+    {
+      "segs": [
+        "c0-0"
+      ],
+      "still": "img-02.jpg",
+      "zoom": 0.07
+    },
+    {
+      "segs": [
+        "c1-0",
+        "c2-0"
+      ],
+      "still": "img-03.jpg",
+      "zoom": 0.07
+    },
+    {
+      "segs": [
+        "c3-0"
+      ],
+      "still": "img-04.jpg",
+      "zoom": 0.07
+    },
+    {
+      "segs": [
+        "c4-0",
+        "c4-1"
+      ],
+      "clip": "clip-05.mp4"
+    },
+    {
+      "segs": [
+        "lock-v2"
+      ],
+      "still": "img-03.jpg",
+      "blur": true,
+      "zoom": 0.03,
+      "caption": false,
+      "lock": [
+        "출장의 단점, 그리고 샵의 장점은?",
+        "정답은 100문 100답에서",
+        "3개월 이용권 55,000원",
+        "신청 · 전화 02-323-3321"
+      ]
+    }
+  ]
+}

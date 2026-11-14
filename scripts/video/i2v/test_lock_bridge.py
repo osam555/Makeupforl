@@ -20,6 +20,11 @@ class LockBridgeTest(unittest.TestCase):
         self.assertIn("프로필 링크 → P2·04", lines)
         self.assertEqual(lines[-1], "신청 · 전화 02-323-3321")
 
+    def test_예약_시_차감은_화면에도_목소리에도_없다(self):
+        lines = lb.lock_lines({"loop": "둘째·셋째 준비물은?", "label": "P2·04"})
+        self.assertFalse(any("차감" in x for x in lines))
+        self.assertNotIn("빼 드려요", lb.PITCH)
+
 
 if __name__ == "__main__":
     unittest.main()

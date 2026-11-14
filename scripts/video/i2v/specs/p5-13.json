@@ -3,7 +3,7 @@
   "font_dir": "/Users/osam/dev/speed-listening/store/video/book-promo-3part/work-myeongsim25/fonts",
   "dir": "video/work/i2v/p5-13/damchae",
   "voice_dir": "video/work/i2v/p5-13/voice",
-  "out": "video/out/shorts/i2v/p5-13_v1.mp4",
+  "out": "video/out/shorts/i2v/p5-13_v2.mp4",
   "outro_seg": "zz-outro2",
   "domain_seg": "zz-domain",
   "scenes": [
@@ -60,7 +60,7 @@
     },
     {
       "segs": [
-        "zz-bridge"
+        "zz-bridge-v2"
       ],
       "still": "img-07.jpg",
       "blur": true,
@@ -70,7 +70,6 @@
         "다음 질문은 잠겨 있어요",
         "한복에 어울리는 안경테는?",
         "답 95개 · 3개월 55,000원",
-        "메이크업 예약 시 그대로 차감",
         "신청 · 전화 02-323-3321"
       ]
     }
