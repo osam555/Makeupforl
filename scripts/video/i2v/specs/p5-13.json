@@ -1,0 +1,79 @@
+{
+  "slug": "p5-13",
+  "font_dir": "/Users/osam/dev/speed-listening/store/video/book-promo-3part/work-myeongsim25/fonts",
+  "dir": "video/work/i2v/p5-13/damchae",
+  "voice_dir": "video/work/i2v/p5-13/voice",
+  "out": "video/out/shorts/i2v/p5-13_v1.mp4",
+  "outro_seg": "zz-outro2",
+  "domain_seg": "zz-domain",
+  "scenes": [
+    {
+      "segs": [
+        "q"
+      ],
+      "clip": "clip-01.mp4",
+      "hook": "한복엔\n어떤 귀걸이?",
+      "caption": false
+    },
+    {
+      "segs": [
+        "c0-0"
+      ],
+      "still": "img-02.jpg",
+      "zoom": 0.07
+    },
+    {
+      "segs": [
+        "c1-0"
+      ],
+      "still": "img-03.jpg",
+      "zoom": 0.07
+    },
+    {
+      "segs": [
+        "c2-0",
+        "c2-1"
+      ],
+      "still": "img-04.jpg",
+      "zoom": 0.07
+    },
+    {
+      "segs": [
+        "c3-0",
+        "c3-1"
+      ],
+      "clip": "clip-05.mp4"
+    },
+    {
+      "segs": [
+        "c4-0"
+      ],
+      "clip": "clip-06.mp4"
+    },
+    {
+      "segs": [
+        "c5-0",
+        "c5-1"
+      ],
+      "still": "img-07.jpg",
+      "zoom": 0.07
+    },
+    {
+      "segs": [
+        "zz-bridge"
+      ],
+      "still": "img-07.jpg",
+      "blur": true,
+      "zoom": 0.03,
+      "caption": false,
+      "lock": [
+        "다음 질문은 잠겨 있어요",
+        "한복에 어울리는 안경테는?",
+        "답 95개 · 3개월 55,000원",
+        "메이크업 예약 시 그대로 차감",
+        "신청 · 전화 02-323-3321"
+      ]
+    }
+  ],
+  "next": "p5-11"
+}

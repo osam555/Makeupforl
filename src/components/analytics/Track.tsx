@@ -47,6 +47,8 @@ export default function Track() {
         kind: 'view',
         newSession: isNew,
         ref: isNew ? document.referrer : '',
+        // 쇼츠 프로필 링크(?from=yt) 같은 출처 꼬리표 — 첫 방문에만. 서버가 아는 값만 받는다(trackSource.ts)
+        from: isNew ? (new URLSearchParams(window.location.search).get('from') ?? '') : '',
       }),
     }).catch(() => {})
 

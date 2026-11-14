@@ -1,0 +1,89 @@
+{
+  "slug": "p3-15",
+  "font_dir": "/Users/osam/dev/speed-listening/store/video/book-promo-3part/work-myeongsim25/fonts",
+  "dir": "video/work/i2v/p3-15/damchae",
+  "voice_dir": "video/work/i2v/p3-15/voice",
+  "out": "video/out/shorts/i2v/p3-15_v1.mp4",
+  "outro_seg": "zz-outro2",
+  "domain_seg": "zz-domain",
+  "scenes": [
+    {
+      "segs": [
+        "q-t"
+      ],
+      "clip": "clip-01.mp4",
+      "hook": "눈물 날 것 같은데,\n화장 괜찮을까?",
+      "caption": false
+    },
+    {
+      "segs": [
+        "c0-0-t"
+      ],
+      "still": "img-02.jpg",
+      "zoom": 0.07
+    },
+    {
+      "segs": [
+        "c1a-0-t",
+        "c1a-1-t"
+      ],
+      "still": "img-03.jpg",
+      "zoom": 0.07
+    },
+    {
+      "segs": [
+        "c1b-0-t",
+        "c1b-1-t"
+      ],
+      "still": "img-04.jpg",
+      "zoom": 0.07
+    },
+    {
+      "segs": [
+        "c2-0-t",
+        "c2-1-t"
+      ],
+      "still": "img-05.jpg",
+      "zoom": 0.07
+    },
+    {
+      "segs": [
+        "c3-0-t",
+        "c3-1-t"
+      ],
+      "clip": "clip-06.mp4"
+    },
+    {
+      "segs": [
+        "c4-0-t",
+        "c4-1-t",
+        "c4-2-t"
+      ],
+      "still": "img-07.jpg",
+      "zoom": 0.07
+    },
+    {
+      "segs": [
+        "c5-0-t"
+      ],
+      "clip": "clip-08.mp4"
+    },
+    {
+      "segs": [
+        "zz-bridge"
+      ],
+      "still": "img-07.jpg",
+      "blur": true,
+      "zoom": 0.03,
+      "caption": false,
+      "lock": [
+        "다음 질문은 잠겨 있어요",
+        "눈물 날 때 손수건 쓰는 법",
+        "답 95개 · 3개월 55,000원",
+        "메이크업 예약 시 그대로 차감",
+        "신청 · 전화 02-323-3321"
+      ]
+    }
+  ],
+  "next": "p6-07"
+}
