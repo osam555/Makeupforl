@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { fromTag } from '@/lib/trackSource'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -103,6 +104,8 @@ export async function POST(req: Request) {
 
     if (kind === 'view') {
       const isNewSession = body?.newSession === true
+      // 쇼츠 프로필 링크(?from=yt)처럼 주소에 붙은 꼬리표가 referrer 보다 먼저다 — trackSource.ts
+      const src = key(fromTag(String(body?.from ?? '')) ?? refSource(String(body?.ref ?? '')))
       await ref.set(
         {
           date: DAY(),
@@ -118,9 +121,9 @@ export async function POST(req: Request) {
           */
           ...(isNewSession
             ? {
-                sources: { [key(refSource(String(body?.ref ?? '')))]: FieldValue.increment(1) },
+                sources: { [src]: FieldValue.increment(1) },
                 landings: {
-                  [`${key(refSource(String(body?.ref ?? '')))}__${k}`]: FieldValue.increment(1),
+                  [`${src}__${k}`]: FieldValue.increment(1),
                 },
               }
             : {}),
