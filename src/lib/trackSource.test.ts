@@ -1,14 +1,16 @@
-// 실행: node --test src/lib/trackSource.test.ts  (Node 22.6+ 는 타입을 벗겨 바로 돌린다)
-import { test } from 'node:test'
-import assert from 'node:assert/strict'
-import { fromTag } from './trackSource.ts'
+// npm test(vitest)로 돈다. node:test 로 썼더니 vitest 가 「No test suite found」로 이 파일을 실패 처리했다(2026-11-14).
+import { describe, expect, it } from 'vitest'
 
-test('쇼츠 프로필 링크의 ?from=yt 는 youtube-shorts 출처가 된다', () => {
-  assert.equal(fromTag('yt'), 'youtube-shorts')
-})
+import { fromTag } from './trackSource'
 
-test('모르는 꼬리표는 받지 않는다 — 아무 문자열이나 문서 열쇠가 되면 안 된다', () => {
-  assert.equal(fromTag(''), null)
-  assert.equal(fromTag('__proto__'), null)
-  assert.equal(fromTag('toString'), null)
+describe('fromTag', () => {
+  it('쇼츠 프로필 링크의 ?from=yt 는 youtube-shorts 출처가 된다', () => {
+    expect(fromTag('yt')).toBe('youtube-shorts')
+  })
+
+  it('모르는 꼬리표는 받지 않는다 — 아무 문자열이나 문서 열쇠가 되면 안 된다', () => {
+    expect(fromTag('')).toBeNull()
+    expect(fromTag('__proto__')).toBeNull()
+    expect(fromTag('toString')).toBeNull()
+  })
 })
