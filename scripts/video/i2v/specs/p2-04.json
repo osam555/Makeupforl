@@ -1,0 +1,57 @@
+{
+  "slug": "p2-04",
+  "font_dir": "/Users/osam/dev/speed-listening/store/video/book-promo-3part/work-myeongsim25/fonts",
+  "dir": "video/work/i2v/p2-04/damchae",
+  "voice_dir": "video/work/i2v/p2-04/voice",
+  "out": "video/out/shorts/i2v/p2-04_v1.mp4",
+  "outro_seg": "zz-outro2",
+  "domain_seg": "zz-domain",
+  "scenes": [
+    {
+      "segs": [
+        "q"
+      ],
+      "clip": "clip-01.mp4",
+      "hook": "상담 가기 전,\n이 세 가지 챙기세요",
+      "caption": false
+    },
+    {
+      "segs": [
+        "c0-0"
+      ],
+      "still": "img-02.jpg",
+      "zoom": 0.07
+    },
+    {
+      "segs": [
+        "c1-0"
+      ],
+      "still": "img-03.jpg",
+      "zoom": 0.07
+    },
+    {
+      "segs": [
+        "c2-0"
+      ],
+      "clip": "clip-04.mp4"
+    },
+    {
+      "segs": [
+        "zz-bridge"
+      ],
+      "still": "img-03.jpg",
+      "blur": true,
+      "zoom": 0.03,
+      "caption": false,
+      "lock": [
+        "둘째·셋째 준비물은?",
+        "원장이 상담실에서만 하던 답 98개",
+        "3개월 이용권 55,000원",
+        "메이크업 예약하면 전액 차감",
+        "프로필 링크 → P2·04",
+        "신청 · 전화 02-323-3321"
+      ]
+    }
+  ],
+  "next": "p2-04"
+}

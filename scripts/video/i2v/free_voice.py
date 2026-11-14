@@ -1,12 +1,13 @@
 import json, os, re, subprocess, sys, urllib.request
 from pathlib import Path
 S = Path(__file__).parent / "specs"
+SET = os.environ.get("I2V_SET", "free5.json")  # 문항 묶음 — free5.json(무료 5편) · locked5.json(잠긴 5편)
 R = Path(__file__).resolve().parents[3]  # 저장소 뿌리 — worktree 경로를 박아 두면 worktree 를 지우는 순간 깨진다
 B = R / "video/work/i2v"
 JI, MC = "tc_6a4f2130d153a5cac8e19996", "tc_6731b2b2478a48710ecc9158"
 KEY = os.environ["TYPECAST_API_KEY"]
 items = {x["slug"]: x for x in json.load(open(R / "src/data/wed100.json"))["items"]}
-allp = json.load(open(S / "free5.json"))
+allp = {k: v for k, v in json.load(open(S / SET)).items() if not k.startswith("_")}
 OUT = "더 궁금하신 점은, 혼주메이크업 100문 100답에서 확인하세요."
 DOM = "링크는 채널 프로필에 있어요."
 
