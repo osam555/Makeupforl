@@ -440,8 +440,9 @@
  "channelProfileLinks": [
   {
    "title": "혼주메이크업 100문 100답",
-   "url": "https://makeupforl.co.kr/honjoo100",
-   "added": "2026-11-07"
+   "url": "https://makeupforl.co.kr/honjoo100?from=yt",
+   "added": "2026-11-07",
+   "changed": "2026-11-14 — 쇼츠 유입을 「유튜브 쇼츠」 출처로 세려고 ?from=yt 를 붙였다(src/lib/trackSource.ts)"
   },
   {
    "title": "블로그",
