@@ -1,0 +1,43 @@
+{
+ "_설명": "잠긴 문항 5편(2026-11-14). 판매가 목적이라 「한 가지는 쓸모 있게 들려주고, 남은 것을 이름 붙여 잠근다」. cues 에 없는 자막은 소리로도 그림으로도 내지 않는다. label 은 /honjoo100 목록에 보이는 번호(slug 와 다를 수 있다 — p6-07 은 P6·06).",
+ "p2-04": {"prefix": "J", "label": "P2·04", "hook": "상담 가기 전,\n이 세 가지 챙기세요", "title": "혼주 사전 상담 전, 준비물 세 가지", "tag": "#혼주메이크업",
+  "loop": "둘째·셋째 준비물은?", "loop_voice": "둘째와 셋째 준비물, 특히 정수리 고민이 있다면 꼭 들어 보세요.",
+  "scenes": [
+   {"cues": ["q"], "kind": "clip", "p": "person", "ref": "ref-damchae.jpg", "img": "Back view of the Korean mother of the bride walking into a calm, bright makeup consultation studio, holding a slim folder under her arm, NOT a wedding hall.", "m": "She walks slowly away from the camera toward a small table; her skirt sways gently; she never turns."},
+   {"cues": [0], "kind": "still", "p": "object", "img": "Still life: three small blank cream cards laid in a neat row on a wooden consultation table beside a closed makeup case, soft daylight, no writing."},
+   {"cues": [1], "kind": "still", "p": "object", "img": "Still life: a smartphone lying on a table showing a photo of a folded pale pink silk jeogori and deep magenta chima, beside a coffee cup, soft light."},
+   {"cues": [2], "kind": "clip", "p": "object", "img": "Close still life: a swatch of pale pink silk jeogori fabric laid next to an open makeup palette of soft rose and coral tones on a white counter.", "m": "Soft daylight slowly moves across the silk, making a gentle sheen glide over the fabric; nothing else moves."}
+  ]},
+ "p2-06": {"prefix": "K", "label": "P2·06", "hook": "원하는 사진,\n가져가도 될까요?", "title": "원하는 사진 들고 가도 될까? 혼주 상담 팁", "tag": "#혼주메이크업",
+  "loop": "연예인 사진도 괜찮을까?", "loop_voice": "연예인 사진이라도 괜찮을까요? 나와 얼굴형이 달라도요?",
+  "scenes": [
+   {"cues": ["q"], "kind": "clip", "p": "person", "ref": "ref-close.jpg", "img": "Close back view of the Korean mother of the bride seated at a consultation table, holding a smartphone in one hand, NOT a wedding hall.", "m": "She slowly lowers the phone toward the table; one action only, five natural fingers; she never turns."},
+   {"cues": [0], "kind": "still", "p": "object", "img": "Still life: a smartphone face-up on a table with its screen softly glowing blank, next to small hanbok fabric swatches in pink and magenta."},
+   {"cues": [1], "kind": "still", "p": "object", "img": "Still life: several small printed photos of elegant low chignon updos seen only from behind, spread on a table, no faces anywhere."},
+   {"cues": [2], "kind": "still", "p": "person", "ref": "ref-close.jpg", "img": "Close back view of the same woman in a makeup chair; a makeup artist's hand holds a brush paused in the air beside her, a moment of hesitation, NOT a wedding hall."},
+   {"cues": [3], "kind": "clip", "p": "object", "img": "Still life: two blush compacts side by side on a white counter, one barely-there sheer pink, one vivid rose.", "m": "An extremely slow push-in between the two compacts; soft light shifts; nothing else moves."},
+   {"cues": [4], "kind": "clip", "p": "person", "ref": "ref-close.jpg", "img": "Close view from behind the same woman's shoulder: her hand places one printed photo of an elegant updo seen from behind onto the table.", "m": "Her hand slowly sets the photo down and rests beside it; one action only, five natural fingers."}
+  ]},
+ "p6-07": {"prefix": "L", "label": "P6·06", "hook": "식장에서 눈물,\n손으로 닦으면 안 돼요", "title": "예식 중 눈물, 손으로 닦으면 생기는 일", "tag": "#혼주메이크업",
+  "loop": "번지지 않게 닦는 법은?", "loop_voice": "번지지 않게 닦는 법, 그리고 번졌을 때 바로 고치는 법까지 있어요.",
+  "scenes": [
+   {"cues": ["q"], "kind": "clip", "p": "person", "ref": "ref-damchae.jpg", "img": "Back view of the Korean mother of the bride seated in the front row of a bright wedding hall, white flowers and candles ahead, her shoulders slightly raised with emotion.", "m": "Candle flames flicker softly; her shoulders rise and fall once with a quiet breath; she never turns."},
+   {"cues": [0], "kind": "clip", "p": "person", "ref": "ref-damchae.jpg", "img": "Back view of the same woman from far behind, the couple bowing in the distance at the end of the aisle, soft light, everything small and blurred ahead.", "m": "Very slow push-in toward her back; petals drift down slowly; she never turns."},
+   {"cues": [1], "kind": "still", "p": "object", "img": "Still life on a vanity: an open waterproof mascara tube lying beside a white tissue with a small black smudge on it, soft light."}
+  ]},
+ "p4-08": {"prefix": "M", "label": "P4·08", "hook": "얼굴이 길다면,\n둥근형과 정반대로", "title": "얼굴이 긴 혼주님, 머리는 반대로 가세요", "tag": "#혼주머리",
+  "loop": "옆 볼륨·가르마, 두 가지 더", "loop_voice": "옆머리와 가르마, 두 가지가 더 남았어요. 나이 들어 보이지 않게 하는 방법이에요.",
+  "scenes": [
+   {"cues": ["q"], "kind": "clip", "p": "person", "ref": "ref-close.jpg", "img": "Back view of the Korean mother of the bride seated in a salon chair, low neat chignon, pale pink jeogori, soft light, no mirror visible, NOT a wedding hall.", "m": "An extremely slow push-in toward her chignon; soft light glints on the hair; she stays perfectly still."},
+   {"cues": [0], "kind": "still", "p": "object", "img": "Still life: two tail combs lying crossed in opposite directions on a salon counter beside hair pins, soft light."},
+   {"cues": [1], "kind": "clip", "p": "person", "ref": "ref-close.jpg", "img": "Close back view of the same woman's head: one hand (natural nails, no rings) rests flat on the smooth crown of her low chignon.", "m": "The hand slowly smooths the crown flat once, then rests; one action only, five natural fingers."}
+  ]},
+ "p5-10": {"prefix": "N", "label": "P5·08", "hook": "한복 원단,\n광택 있게? 없게?", "title": "혼주 한복 원단, 광택 고르는 법", "tag": "#혼주한복",
+  "loop": "웜톤이라면 어떤 원단?", "loop_voice": "그럼 노란 기가 도는 웜톤이라면요? 오히려 피해야 할 원단이 있어요.",
+  "scenes": [
+   {"cues": ["q"], "kind": "clip", "p": "person", "ref": "ref-close.jpg", "img": "Back view of the Korean mother of the bride in a hanbok shop, touching bolts of silk on a shelf, soft daylight, NOT a wedding hall.", "m": "Her hand slowly glides along the silk bolts; one action only; she never turns."},
+   {"cues": [0], "kind": "still", "p": "object", "img": "Still life: folded hanbok silks in pale pink and soft lavender stacked on a wooden table, soft daylight."},
+   {"cues": [1], "kind": "clip", "p": "object", "img": "Close still life: a fold of lustrous cool pale pink myeongju silk catching the light like a soft reflector.", "m": "Light slowly travels across the silk, making a gentle sheen glide over it; nothing else moves."},
+   {"cues": [2], "kind": "still", "p": "person", "ref": "ref-close.jpg", "img": "Close back view of the same woman holding a lustrous pale pink silk swatch up near her shoulder, soft window light, NOT a wedding hall."}
+  ]}
+}

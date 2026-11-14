@@ -1,5 +1,5 @@
 """5편 일부 공개 업로드 — 채널 확인 → 파일+제목 → 초안 마무리(설명·아동·AI·광고적합성·일부 공개) → 목록 공개상태 확인 → 고정 댓글."""
-import base64, json, re, subprocess, sys, tempfile, time
+import base64, json, os, re, subprocess, sys, tempfile, time
 from pathlib import Path
 S = Path(__file__).parent / "specs"
 R = Path(__file__).resolve().parents[3]  # 저장소 뿌리 — worktree 경로를 박아 두면 worktree 를 지우는 순간 깨진다
@@ -14,17 +14,34 @@ def repl(js, t=280):
     r = subprocess.run(["aside", "repl", "--file", str(d / "s.js")], capture_output=True, text=True, timeout=t)
     return "\n".join(l for l in (r.stdout + r.stderr).splitlines() if not l.startswith("[system]"))
 
+SITE = "https://makeupforl.co.kr/honjoo100"
+TAG = "?from=yt"  # 설명란 링크로 온 방문도 「유튜브 쇼츠」로 센다(src/lib/trackSource.ts). 쇼츠 화면에선 링크가 안 눌려도 일반 보기에선 눌린다
+SET = os.environ.get("I2V_SET", "free5.json")
+PASS = ("▶ 100문 100답 — 원장이 상담실에서만 하던 답 98개 · 음성 103분\n"
+        "▶ 3개월 이용권 55,000원 · 메이크업 예약하면 이용권 값 전액 차감 · 신청 전화 02-323-3321")
+
+
+def texts(slug, allp, spec):
+    """설명란·고정 댓글. 무료 문항은 답 + 다음 잠긴 문항, 잠긴 문항은 바로 그 문항(잠금 페이지가 곧 판매 페이지)."""
+    p = allp[slug]
+    if "loop" in p:  # 잠긴 문항
+        head = (f"▶ 전체 답변(잠금): {SITE}/{slug}{TAG}\n"
+                f"   남은 답 — {p['loop']} (목록 {p['label']})\n")
+    else:
+        head = f"▶ 전체 답변: {SITE}/{slug}{TAG}\n▶ 다음 질문(잠금): {SITE}/{spec['next']}{TAG}\n"
+    mine = head + PASS + "\n메이크업포엘 대표원장 김성희의 「혼주메이크업 100문 100답」\n생성형 AI 이미지로 만든 장면입니다."
+    return mine, head + PASS
+
+
 def main(slug):
-    allp = json.load(open(S / "free5.json")); spec = json.load(open(S / f"{slug}.json"))
-    nxt = spec["next"]; title = f"{TITLES[slug]} | 혼주메이크업 100문 100답 {allp[slug]['tag']} #shorts"
-    mine = (f"▶ 전체 답변: https://makeupforl.co.kr/honjoo100/{slug}\n▶ 다음 질문(잠금): https://makeupforl.co.kr/honjoo100/{nxt}\n"
-            "▶ 100문 100답 3개월 이용권 55,000원 — 메이크업 예약 시 그대로 차감 · 신청 02-323-3321\n"
-            "메이크업포엘 대표원장 김성희의 「혼주메이크업 100문 100답」\n생성형 AI 이미지로 만든 장면입니다.")
-    pin = (f"▶ 전체 답변: https://makeupforl.co.kr/honjoo100/{slug}\n▶ 다음 질문(잠금): https://makeupforl.co.kr/honjoo100/{nxt}\n"
-           "▶ 3개월 이용권 55,000원 · 메이크업 예약 시 그대로 차감 · 신청 02-323-3321")
+    allp = json.load(open(S / SET)); spec = json.load(open(S / f"{slug}.json"))
+    nxt = spec.get("next", slug)
+    short = TITLES.get(slug) or allp[slug]["title"]
+    title = f"{short} | 혼주메이크업 100문 100답 {allp[slug]['tag']} #shorts"
+    mine, pin = texts(slug, allp, spec)
     f = R / f"video/out/shorts/i2v/{slug}_v1.mp4"
     b64 = base64.b64encode(f.read_bytes()).decode()
-    key = TITLES[slug][:8]
+    key = short[:8]  # 목록에서 행을 찾는 열쇠 — 옛 제목과 앞 8자가 겹치지 않게 지을 것(9절 ③)
     # 0) 이미 올라가 있으면 올리기를 건너뛴다(다시 돌릴 때 중복 업로드 방지)
     o0 = repl(f"""
 const P = await openTab("https://studio.youtube.com/channel/{CH}/videos/short"); await sleep(10000);
@@ -118,7 +135,7 @@ console.log('FIRST', (await P.evaluate(() => document.querySelector('ytd-comment
     print(slug, "pin", (re.search(r"FIRST (.+)", o) or [None, o[-200:]])[1], flush=True)
     json.dump({"slug": slug, "vid": vid, "title": title, "next": nxt, "pin": pin, "vis": vis}, open(S.parent / "uploads" / f"up_{slug}.json", "w"), ensure_ascii=False)
 
-for s in (sys.argv[1:] or ["p1-06", "p2-05", "p3-15", "p4-07", "p5-13"]):
+for s in sys.argv[1:]:
     try:
         main(s)
     except Exception as e:

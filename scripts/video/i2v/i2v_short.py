@@ -58,7 +58,9 @@ def scene_video(sc, dur, src_dir, out):
     if sc.get("clip"):
         run(["ffmpeg", "-v", "error", "-y", "-i", src_dir / sc["clip"], "-vf",
              f"scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},fps={FPS},setsar=1,"
-             f"tpad=stop_mode=clone:stop_duration=3,trim=duration={dur:.3f}", "-an", *ENC, out])
+             # 클립(8초)보다 긴 장면은 마지막 프레임으로 채운다. 3초로 고정했더니 11초 넘는 장면에서 영상이 모자라
+             # 뒤 장면이 밀리고 끝 잠금 화면이 잘렸다(2026-11-14 p5-10)
+             f"tpad=stop_mode=clone:stop_duration={dur:.3f},trim=duration={dur:.3f}", "-an", *ENC, out])
         return
     blur = ",gblur=sigma=14" if sc.get("blur") else ""
     z = sc.get("zoom", 0.06)
