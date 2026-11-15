@@ -30,9 +30,9 @@
       {"kind": "still", "p": "object", "img": "A tail comb, a small round brush and a few hairpins laid neatly on a cream cloth on a salon counter."},
       {"kind": "still", "p": "object", "img": "Two wooden combs placed side by side on a cream linen tray, simple and symmetrical."},
       {"kind": "clip", "p": "person", "img": "Close view from directly behind the woman's head: her dark brown hair is a short neatly styled pixie cut ending above the nape (no chignon, no bun, no updo), a small pearl and gold hair ornament pinned on the side of her head above the ear; strictly from behind, no profile.", "m": "Light glints softly on the small hair ornament behind her ear; she stays still and never turns."},
-      {"kind": "still", "p": "object", "img": "A dark brown partial hairpiece bun resting on a small stand on a salon counter beside hairpins."},
+      {"kind": "clip", "p": "object", "img": "A dark brown partial hairpiece bun resting on a small stand on a salon counter beside hairpins.", "m": "Soft light glides slowly over the hairpiece. Static camera, no people, no hands."},
       {"kind": "still", "p": "object", "img": "A dark brown lock of hair laid next to a hairpiece bun of exactly the same dark brown color on a cream cloth, perfectly matching."},
-      {"kind": "clip", "p": "object", "img": "A vanity by a window with a round hand mirror lying face down, a comb and a small notebook beside it, soft morning light.", "m": "Morning light slowly brightens across the vanity. Static camera, no people, no hands."},
+      {"kind": "still", "p": "object", "img": "A vanity by a window with a round hand mirror lying face down, a comb and a small notebook beside it, soft morning light."},
       {"kind": "lock"}
     ]
   },
