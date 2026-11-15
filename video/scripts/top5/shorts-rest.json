@@ -1,0 +1,134 @@
+{
+  "_설명": "리메이크 나머지 8편(①·②·③ 3편·④ 3편) 쇼츠 장면 사양(2026-11-15). shorts-5.json 과 같은 규칙. 소리는 narration-rest.json. cap 은 소리 글과 화면 글이 다른 줄만 적는다(숫자). ②는 사람 몸을 그리지 않는다 — 원단·소품만(기획 문서 ②).",
+  "_narration": "narration-rest.json",
+  "1": {
+    "prefix": "R5", "target": "p5-11", "label": "P5·09", "question": "안경테는 어떻게 고를까?",
+    "hook": "귀걸이,\n안 하는 게 정석?",
+    "title": "한복엔 귀걸이 안 하는 게 정석? 하신다면 이 세 가지 #혼주귀걸이 #혼주한복 #shorts",
+    "voice": {"chunks": "1_chunks", "files": ["00", "01", "02", "03", "04", "05", "06", "07", "08"]},
+    "cap": {"0": "한복엔 귀걸이, 안 하는 게 정석일까요?"},
+    "scenes": [
+      {"kind": "clip", "p": "object", "img": "A pair of small white pearl stud earrings resting on a folded pale pink silk ribbon on a vanity, soft light.", "m": "Soft light glints slowly across the pearls. Static camera, no people, no hands."},
+      {"kind": "still", "p": "object", "img": "Three pairs of earrings laid in a row on a cream linen tray: pearl studs, small gold hoops, long dangling drops."},
+      {"kind": "clip", "p": "person", "img": "Close back view of the woman's head and shoulder, low chignon, a small white pearl stud visible on her ear lobe from behind.", "m": "Light glints on the pearl earring as she tilts her head very slightly; she never turns."},
+      {"kind": "still", "p": "object", "img": "A white pearl earring and a black pearl earring side by side on a cream cloth, the white pearl softly glowing."},
+      {"kind": "still", "p": "object", "img": "Two earring shapes on dark velvet: a slender vertical oval pearl and a round button pearl, side by side."},
+      {"kind": "still", "p": "object", "img": "A pair of long slender vertical earrings set apart on a vanity, looking elongated."},
+      {"kind": "still", "p": "object", "img": "On a tray, a pair of swinging dangling drop earrings pushed aside, and a pair of neat close-fitting pearl studs placed in the center."},
+      {"kind": "clip", "p": "object", "img": "An open small jewelry box lined with cream silk holding one pair of white pearl stud earrings, beside a folded hanbok ribbon.", "m": "Soft light moves slowly over the open box and pearls. Static camera, no people, no hands."},
+      {"kind": "lock"}
+    ]
+  },
+  "2": {
+    "prefix": "R6", "target": "p6-01", "label": "P6·01", "question": "당일 샵에 입고 갈 옷은?",
+    "hook": "한복 안에\n브래지어?",
+    "title": "혼주 한복 속옷, 아무도 안 알려 주는 것 #혼주한복 #shorts",
+    "voice": {"chunks": "2_chunks", "files": ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09_r2"]},
+    "cap": {},
+    "scenes": [
+      {"kind": "clip", "p": "object", "img": "A pale pink jeogori and a deep magenta chima folded neatly on a bed with a soft cream quilt, morning light.", "m": "The long goreum ribbon stirs slightly in a breeze; light shifts softly. Static camera, no people, no hands."},
+      {"kind": "still", "p": "object", "img": "Close-up of flowing deep magenta silk chima fabric draped in soft folds."},
+      {"kind": "still", "p": "object", "img": "Close-up of a hanbok chima waistband with its long tie ribbon wrapped and tied, fabric only, laid on a table."},
+      {"kind": "still", "p": "object", "img": "A pale pink jeogori laid flat on a table, its short hem gently curved and smooth."},
+      {"kind": "still", "p": "object", "img": "A soft plain beige seamless garment folded small and neat on a cream cloth, modest and simple."},
+      {"kind": "clip", "p": "object", "img": "A window with autumn leaves outside, and on the sill a neatly folded plain beige cotton undershirt beside a cup of tea.", "m": "A few leaves drift down outside the window; steam rises gently from the tea. Static camera, no people, no hands."},
+      {"kind": "still", "p": "object", "img": "Sheer pale pink silk laid over two fabric swatches: a skin-tone beige one blends in, a dark navy one shows through."},
+      {"kind": "clip", "p": "object", "img": "A pair of folded sheer nude stockings beside white beoseon socks and a pair of hanbok kkotsin shoes on a wooden floor.", "m": "Soft light moves slowly across the shoes and stockings. Static camera, no people, no hands."},
+      {"kind": "still", "p": "object", "img": "Three neatly folded beige items lined up in a row on a cream tray, simple and tidy."},
+      {"kind": "lock"}
+    ]
+  },
+  "3-1": {
+    "prefix": "R7", "target": "p4-10", "label": "P4·10", "question": "이마가 부담스럽다면?",
+    "hook": "이마, 다 가리면\n손해예요",
+    "title": "혼주 앞머리, 이마 다 가리면 손해예요 #혼주앞머리 #혼주헤어 #shorts",
+    "voice": {"chunks": "3-1_chunks", "files": ["00", "01", "02", "03", "04", "05", "06"]},
+    "cap": {},
+    "scenes": [
+      {"kind": "clip", "p": "person", "img": "Close back view of the woman seated in a makeup studio, one hand raised to the front of her hair as if pulling it forward, no mirror visible.", "m": "Her hand slowly smooths the front of her hair, then lowers; she never turns."},
+      {"kind": "still", "p": "object", "img": "Heavy curtains drawn almost closed over a bright window, a narrow strip of light, a slightly stuffy quiet room."},
+      {"kind": "still", "p": "object", "img": "An elegant pale pink jeogori and deep magenta chima on a hanbok stand, graceful curved collar and sleeves."},
+      {"kind": "clip", "p": "person", "img": "Back view of the woman by a bright window, her hair in a neat low chignon with soft front hair swept gently to one side.", "m": "A light breeze lifts a few strands at her temple; she stays still and never turns."},
+      {"kind": "still", "p": "object", "img": "A tail comb, a few hairpins and a small hair clip arranged diagonally on a cream cloth, suggesting a side sweep."},
+      {"kind": "clip", "p": "object", "img": "A vanity with a round hand mirror lying face down, a comb beside it, morning light from a window.", "m": "Morning light slowly brightens across the vanity. Static camera, no people, no hands."},
+      {"kind": "lock"}
+    ]
+  },
+  "3-2": {
+    "prefix": "R8", "target": "p4-17", "label": "P4·17", "question": "젊음과 올드함, 한 끗 차이",
+    "hook": "앞가르마\n2~3cm",
+    "title": "앞가르마 2~3cm, 혼주가 젊어 보이는 법 #혼주헤어 #shorts",
+    "voice": {"chunks": "3-2_chunks", "files": ["00", "01", "02", "03", "04", "05"]},
+    "cap": {"1": "앞에서 2~3cm만 가르마를 타고,"},
+    "scenes": [
+      {"kind": "clip", "p": "person", "img": "Back view from slightly above of the woman seated, a tail comb held at the top front of her dark brown hair as if making a short part.", "m": "The comb moves a short distance along the hair, then stops; she never turns."},
+      {"kind": "still", "p": "object", "img": "A tail comb lying next to a short wooden ruler on a cream cloth, only a small distance marked between two hairpins."},
+      {"kind": "clip", "p": "person", "img": "Close back view of the woman's head: hair swept smoothly back from the front with soft gentle volume at the crown, neat low chignon.", "m": "Soft light glides over the smooth hair and volume; she stays still and never turns."},
+      {"kind": "clip", "p": "person", "img": "Back view of the woman standing by a bright window, elegant swept-back hair, calm and youthful posture.", "m": "The curtain sways gently; she straightens her posture slightly and never turns."},
+      {"kind": "still", "p": "object", "img": "A comb and a round hand mirror lying face down on a vanity, morning light."},
+      {"kind": "lock"}
+    ]
+  },
+  "3-3": {
+    "prefix": "R9", "target": "p4-15", "label": "P4·15", "question": "비대칭 얼굴의 가르마는?",
+    "hook": "가르마에서\n성격이 보여요",
+    "title": "가르마에서 성격이 보인다? 올백 혼주 #혼주올림머리 #shorts",
+    "voice": {"chunks": "3-3_chunks", "files": ["00", "01", "02", "03", "04", "05"]},
+    "cap": {},
+    "scenes": [
+      {"kind": "clip", "p": "person", "img": "Back view of the woman walking briskly down a bright airy corridor of a wedding venue, confident and lively.", "m": "She walks forward with a lively step, skirt swaying; she never turns."},
+      {"kind": "still", "p": "person", "img": "Close back view of the woman's head, all hair swept cleanly back into a sleek neat low chignon, bright light."},
+      {"kind": "clip", "p": "object", "img": "A bright open window with light cream curtains, a clear sky outside, fresh and open.", "m": "The curtains billow gently in a fresh breeze. Static camera, no people, no hands."},
+      {"kind": "still", "p": "object", "img": "Three combs laid side by side on a cream cloth: a tail comb, a wide-tooth comb and a small brush."},
+      {"kind": "clip", "p": "person", "img": "Close back view of the woman seated, one hand holding a tail comb near the top of her head as if choosing a parting line, no mirror visible.", "m": "The comb tip moves slowly along her hair, then stops; she never turns."},
+      {"kind": "lock"}
+    ]
+  },
+  "4-1": {
+    "prefix": "R10", "target": "p4-09", "label": "P4·09", "question": "나에게 맞는 높이는?",
+    "hook": "올림머리 높이,\n요즘 1위는?",
+    "title": "혼주 올림머리 높이, 요즘 1위는? #혼주올림머리 #shorts",
+    "voice": {"chunks": "4-1_chunks", "files": ["00", "01", "02", "03", "04", "05", "06", "07"]},
+    "cap": {"2": "하이업은 요즘 1년에 한두 분 정도예요.", "3": "키가 커 보이고 싶어서 하시는데, 5cm 넘게 올리면 얼굴보다 머리가 커 보여 자연스럽지 않아요."},
+    "scenes": [
+      {"kind": "clip", "p": "person", "img": "Close back view of the woman's elegant updo in a quiet makeup studio, soft light on the hair.", "m": "Soft light glints slowly across her updo; she stays still and never turns."},
+      {"kind": "still", "p": "object", "img": "Three plain wooden head forms seen from behind in a row on a shelf, each with a dark hair bun at a different height: high, middle, low."},
+      {"kind": "still", "p": "person", "img": "Back view of the woman with a very high tall bun on top of her head, standing by a window."},
+      {"kind": "still", "p": "object", "img": "A tall stacked hairpiece on a stand looking oversized and top-heavy next to a small round head form."},
+      {"kind": "clip", "p": "person", "img": "Close back view of the woman's graceful low bun at the nape, pale pink jeogori collar, refined and elegant.", "m": "Light moves softly over the low bun; she lowers her head very slightly and never turns."},
+      {"kind": "still", "p": "object", "img": "Four hair bun pieces on cream cloth: a round one, a half-moon one, a large one and a small one."},
+      {"kind": "clip", "p": "person", "img": "Back view of the woman standing calmly by a bright window in the studio, elegant low updo.", "m": "The curtain sways gently; she stands still and never turns."},
+      {"kind": "lock"}
+    ]
+  },
+  "4-2": {
+    "prefix": "R11", "target": "p4-20", "label": "P4·20", "question": "목이 짧다면 어떤 머리?",
+    "hook": "목이 짧다면,\n다운업은 피하세요",
+    "title": "목 짧은 혼주님, 다운업은 피하세요 #혼주헤어 #shorts",
+    "voice": {"chunks": "4-2_chunks", "files": ["00", "01", "02", "03", "04", "05"]},
+    "cap": {},
+    "scenes": [
+      {"kind": "clip", "p": "person", "img": "Close back view of the woman with a low bun resting right on her high hanbok collar, the hair touching the collar.", "m": "She shifts her shoulders slightly as if uncomfortable, then rests; she never turns."},
+      {"kind": "still", "p": "object", "img": "A pale pink jeogori on a hanbok stand seen from behind, with a high upright collar reaching up the neck."},
+      {"kind": "still", "p": "person", "img": "Close back view of the woman's head and neck: a large low bun covering the back of her high collar, looking crowded."},
+      {"kind": "clip", "p": "person", "img": "Close back view of the woman with a neat mid-height bun at the center of the back of her head, neck line clear above the high collar.", "m": "Soft light glides over the bun and the clear neck line; she stays still and never turns."},
+      {"kind": "clip", "p": "person", "img": "Close back view of the woman's crown: one hand (natural nails, no rings) lifts a section with a tail comb to add volume before the bun.", "m": "The hand slowly lifts the section to add volume, then rests; five natural fingers, she never turns."},
+      {"kind": "lock"}
+    ]
+  },
+  "4-3": {
+    "prefix": "R12", "target": "p4-05", "label": "P4·05", "question": "머리색과 가발색이 다르면?",
+    "hook": "\"언제 머리\n이렇게 길렀어?\"",
+    "title": "\"언제 머리 이렇게 길렀어?\" 가발 티 안 나는 법 #혼주헤어 #shorts",
+    "voice": {"chunks": "4-3_chunks", "files": ["00", "01", "02", "03", "04", "05_r2"]},
+    "cap": {"0": "\"어머, 언제 머리 이렇게 길렀어?\" 이 말 들으신 혼주님들이 계세요."},
+    "scenes": [
+      {"kind": "clip", "p": "person", "img": "Back view of the woman in a wedding venue lobby with a full, elegant updo that looks naturally long-haired.", "m": "Soft light shifts across her full updo; she stands still and never turns."},
+      {"kind": "clip", "p": "object", "img": "A dark brown partial hairpiece bun resting on a small stand on a salon counter, beside hairpins.", "m": "Soft light glides slowly over the hairpiece. Static camera, no people, no hands."},
+      {"kind": "still", "p": "object", "img": "Two partial hairpiece buns side by side on cream cloth: one dark brown, one noticeably lighter brown."},
+      {"kind": "still", "p": "object", "img": "A dark brown hair lock next to a lighter brown hairpiece, the color difference clearly visible."},
+      {"kind": "clip", "p": "person", "img": "Close back view of the woman's seamless dark brown updo, the added volume blending perfectly with her own hair.", "m": "Light moves softly over the seamless updo; she stays still and never turns."},
+      {"kind": "lock"}
+    ]
+  }
+}
