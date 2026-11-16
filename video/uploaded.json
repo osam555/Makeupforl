@@ -770,60 +770,60 @@
    "youtubeId": "7uZXyk8WyjI",
    "url": "https://youtu.be/7uZXyk8WyjI",
    "title": "혼주 한복, 이것만 알면 됩니다 — 저고리 색부터 속옷·귀걸이까지",
-   "visibility": "unlisted",
+   "visibility": "public",
    "aiLabel": true,
    "ads": "on",
    "date": "2026-11-16",
    "pinnedComment": "저고리 색이 치마보다 중요한 이유 P5·07 · 신랑 측 혼주 배색 P5·04 — 혼주메이크업 100문 100답\nhttps://makeupforl.co.kr/honjoo100/p5-09?from=yt\n3개월 이용권 55,000원 · 신청 전화 02-323-3321",
    "pinned": true,
-   "playlist": false,
+   "playlist": true,
    "thumbnailTest": "A/B 테스팅 — 썸네일만, 3안(a·b·c)",
-   "note": "탑20 롱폼(docs/video/top20-longform-hanbok-plan.md, 브랜치 claude/top20-longform-hanbok-8e2117). 1920×1080, 설명란에 챕터. 일부 공개 — 공개 전환은 사용자가 정한다."
+   "note": "탑20 롱폼(docs/video/top20-longform-hanbok-plan.md, 브랜치 claude/top20-longform-hanbok-8e2117). 1920×1080, 설명란에 챕터. 2026-11-16 사용자 지시 「공개로 전환」으로 공개 + 재생목록 「혼주메이크업 100문 100답」(수정 화면에서 확인)."
   },
   {
    "file": "video/out/longform/top20/hair_v1.mp4",
    "youtubeId": "FfZxa7MiUk4",
    "url": "https://youtu.be/FfZxa7MiUk4",
    "title": "혼주 머리, 결혼식 3주 전부터 당일까지 — 퍼머·염색·가르마·앞머리·올림머리 위치 총정리",
-   "visibility": "unlisted",
+   "visibility": "public",
    "aiLabel": true,
    "ads": "on",
    "date": "2026-11-16",
    "pinnedComment": "내 얼굴형 혼주 머리는? 둥근 얼굴 P4·07(무료) · 긴 얼굴 P4·08 / 항암 중·후 P4·26 / 머리색과 가발색 P4·05 — 혼주메이크업 100문 100답\nhttps://makeupforl.co.kr/honjoo100/p4-07?from=yt\n3개월 이용권 55,000원 · 신청 전화 02-323-3321",
    "pinned": true,
-   "playlist": false,
+   "playlist": true,
    "thumbnailTest": "A/B 테스팅 — 썸네일만, 3안(a·b·c)",
-   "note": "탑20 롱폼(docs/video/top20-longform-hair-plan.md, 브랜치 claude/top20-longform-hair-752ae7). 1920×1080, 설명란에 챕터. 일부 공개 — 공개 전환은 사용자가 정한다."
+   "note": "탑20 롱폼(docs/video/top20-longform-hair-plan.md, 브랜치 claude/top20-longform-hair-752ae7). 1920×1080, 설명란에 챕터. 2026-11-16 사용자 지시 「공개로 전환」으로 공개 + 재생목록 「혼주메이크업 100문 100답」(수정 화면에서 확인)."
   },
   {
    "file": "video/out/longform/top20/image_v1.mp4",
    "youtubeId": "XfVSBd_yveY",
    "url": "https://youtu.be/XfVSBd_yveY",
    "title": "혼주 뒤꽂이 고르는 법 — 색은 저고리에 맞추고, 하얀 뒤꽂이는 피하세요",
-   "visibility": "unlisted",
+   "visibility": "public",
    "aiLabel": true,
    "ads": "on",
    "date": "2026-11-16",
    "pinnedComment": "뒤꽂이는 꼭 준비해야 할까요? P4·18 · 뒤꽂이 선택 잘하려면 P4·19 — 혼주메이크업 100문 100답\nhttps://makeupforl.co.kr/honjoo100/p4-18?from=yt\n3개월 이용권 55,000원 · 신청 전화 02-323-3321",
    "pinned": true,
-   "playlist": false,
+   "playlist": true,
    "thumbnailTest": "A/B 테스팅 — 썸네일만, 3안(a·b·c)",
-   "note": "탑20 롱폼(docs/video/top20-longform-image-plan.md, 브랜치 claude/top20-longform-image-b082b9). 1920×1080, 설명란에 챕터. 일부 공개 — 공개 전환은 사용자가 정한다."
+   "note": "탑20 롱폼(docs/video/top20-longform-image-plan.md, 브랜치 claude/top20-longform-image-b082b9). 1920×1080, 설명란에 챕터. 2026-11-16 사용자 지시 「공개로 전환」으로 공개 + 재생목록 「혼주메이크업 100문 100답」(수정 화면에서 확인)."
   },
   {
    "file": "video/out/longform/top20/prep_v1.mp4",
    "youtubeId": "Iv8p9FuMKdI",
    "url": "https://youtu.be/Iv8p9FuMKdI",
    "title": "혼주메이크업 준비 순서 총정리 | 예약 전부터 결혼식 당일 아침까지 체크리스트",
-   "visibility": "unlisted",
+   "visibility": "public",
    "aiLabel": true,
    "ads": "on",
    "date": "2026-11-16",
    "pinnedComment": "사전 컨설팅은 왜 필수인가 P1·06(무료) · 당일 아침 세안 후 P3·07 — 혼주메이크업 100문 100답\nhttps://makeupforl.co.kr/honjoo100/p1-06?from=yt\n3개월 이용권 55,000원 · 신청 전화 02-323-3321",
    "pinned": true,
-   "playlist": false,
+   "playlist": true,
    "thumbnailTest": "A/B 테스팅 — 썸네일만, 3안(a·b·c)",
-   "note": "탑20 롱폼(docs/video/top20-longform-prep-plan.md, 브랜치 claude/top20-longform-prep-9bbdc7). 1920×1080, 설명란에 챕터. 일부 공개 — 공개 전환은 사용자가 정한다."
+   "note": "탑20 롱폼(docs/video/top20-longform-prep-plan.md, 브랜치 claude/top20-longform-prep-9bbdc7). 1920×1080, 설명란에 챕터. 2026-11-16 사용자 지시 「공개로 전환」으로 공개 + 재생목록 「혼주메이크업 100문 100답」(수정 화면에서 확인)."
   }
  ],
  "channelProfileLinks": [
