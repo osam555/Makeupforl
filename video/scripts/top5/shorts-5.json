@@ -1,0 +1,69 @@
+{
+  "_설명": "리메이크 ⑤ 안내사항 연작 쇼츠 4편의 장면 사양(2026-11-15). 소리는 narration-5.json 의 Yunjeong 토막을 한 줄 = 한 장면으로 쓴다. cap 은 화면 자막(숫자는 아라비아 숫자), 소리 글과 따로 둔다. 그림은 Flow Nano Banana 담채, 움직이는 컷(kind=clip)은 Veo 3.1 Fast 로 편당 3개. 사람은 늘 뒷모습이고 원장님 얼굴·목소리를 AI 로 만들지 않는다. 끝 장면은 잇는 문항을 잠금 화면으로 보여 준다 — 목록 번호는 slug 가 아니라 화면 번호(src/data/wed100.json 의 part·n).",
+  "5-1": {
+    "prefix": "R1", "target": "p3-07", "label": "P3·07", "question": "세안 후 무엇을 바를까?",
+    "hook": "결혼식 아침,\n스킨 7번",
+    "title": "결혼식 아침, 스킨을 일곱 번 바르세요 #혼주메이크업 #shorts",
+    "voice": {"chunks": "5-1_chunks", "files": ["00", "01", "02", "03", "04", "05", "06", "07", "08"]},
+    "cap": ["결혼식 날 아침, 스킨을 7번 바르세요.", "메이크업 시작 1시간 전이에요.", "스킨을 바르고 두드려 흡수시키기, 이걸 7번.", "하루 종일 수분감을 지키는 준비예요.", "그다음 로션 2번, 에센스 2번. 역시 두드려서.", "순서는 스킨, 로션, 에센스. 이 세 가지만 바르세요.", "선크림이나 영양크림은 제형에 따라 때처럼 밀려요.", "자외선 차단 성분은 샵에서 쓰는 제품에 들어 있어요.", null],
+    "scenes": [
+      {"kind": "clip", "p": "object", "img": "Still life on a vanity by a bright morning window: a clear glass toner bottle and a stack of cotton pads, a small porcelain dish, soft early light.", "m": "A single drop of toner slides down the bottle; morning light slowly brightens. Static camera, no people, no hands."},
+      {"kind": "still", "p": "object", "img": "A round wall clock in a calm bedroom at early morning, a hanbok hanging on a stand beside it, soft light."},
+      {"kind": "clip", "p": "person", "img": "Close back view of the woman seated at a vanity by a window, both hands raised to her cheeks as if gently patting in skin toner, no mirror visible.", "m": "Her hands pat her cheeks lightly two or three times, then rest; she never turns."},
+      {"kind": "still", "p": "object", "img": "A shallow celadon bowl of clear water with a single drop rippling, a green leaf beside it, fresh and moist."},
+      {"kind": "still", "p": "object", "img": "Two small cosmetic bottles, a milky lotion and a clear essence, standing side by side on a cream linen cloth."},
+      {"kind": "still", "p": "object", "img": "Three skincare bottles lined up neatly from tall to short on a vanity tray, cotton pads beside them, soft morning light."},
+      {"kind": "still", "p": "object", "img": "A jar of rich cream and a tube of sunscreen pushed aside to the edge of a vanity, closed, gently set apart from the rest."},
+      {"kind": "clip", "p": "object", "img": "A tidy professional makeup counter in a quiet studio: foundation bottles, makeup brushes in a cup, a soft sponge, warm light.", "m": "Soft light glides slowly across the brushes and bottles. Static camera, no people, no hands."},
+      {"kind": "lock"}
+    ]
+  },
+  "5-2": {
+    "prefix": "R2", "target": "p3-05", "label": "P3·05", "question": "혼주 메이크업 피부 관리는?",
+    "hook": "아침에 팩?\n세수부터 다시",
+    "title": "혼주님, 팩은 아침 말고 전날 밤 #혼주메이크업 #shorts",
+    "voice": {"chunks": "5-2_chunks", "files": ["00", "01", "02", "03", "04", "05", "06", "07_r2"]},
+    "cap": ["\"원장님, 저 아침에 팩도 하고 왔어요!\"", "세수부터 다시 해야 합니다.", "결혼식 당일 아침에는 팩을 하지 마세요.", "피부에 남아 있으면 파운데이션이 뭉치고 밀려요.", "팩은 꼭 전날 밤에.", "전날 저녁은 7시 전에 가볍게, 야식은 참으세요. 얼굴이 부어요.", "따뜻한 물로 샤워하고 푹 주무시면 아침 피부가 좋아요.", null],
+    "scenes": [
+      {"kind": "clip", "p": "object", "img": "A used sheet mask folded on a small porcelain saucer next to its torn-open pouch, on a vanity by a bright morning window.", "m": "Morning sunlight slowly moves across the saucer; a curtain edge sways slightly. Static camera, no people, no hands."},
+      {"kind": "still", "p": "object", "img": "A white ceramic wash basin filled with clear water, a folded towel and a cake of soap beside it."},
+      {"kind": "still", "p": "object", "img": "A small stack of sealed sheet mask pouches put away in an open drawer, closed and unused, morning light."},
+      {"kind": "still", "p": "object", "img": "A foundation bottle and a makeup sponge on a vanity, a smear of foundation looking patchy and lifted on a small palette."},
+      {"kind": "clip", "p": "person", "img": "Back view of the woman sitting by a window at night, a full moon outside, a sheet mask pouch on the table beside her, calm bedroom.", "m": "The curtain sways gently and moonlight shimmers; she lowers her hands slowly and stays still, never turns."},
+      {"kind": "still", "p": "object", "img": "A light early-evening dinner on a wooden table: a small bowl of rice, clear soup and a few side dishes, soft dusk light through the window."},
+      {"kind": "clip", "p": "object", "img": "A warm bathroom with soft steam, a folded towel on a stool, and beyond the doorway a neatly made bed with a soft quilt.", "m": "Gentle steam rises and drifts slowly. Static camera, no people, no hands."},
+      {"kind": "lock"}
+    ]
+  },
+  "5-3": {
+    "prefix": "R3", "target": "p4-26", "label": "P4·25", "question": "당일 샴푸와 린스는?",
+    "hook": "린스 하라던데요?",
+    "title": "다른 데선 린스 하라던데? 혼주 머리 날은 달라요 #혼주헤어 #shorts",
+    "voice": {"chunks": "5-3_chunks", "files": ["00", "01", "02", "03", "04_r2", "05", "06_r3"]},
+    "cap": ["다른 곳에선 린스 하라던데요? 혼주 머리 날은 다릅니다.", "머리는 전날 밤에 감으세요.", "아침에 감으면 겉은 마르고 속은 젖은 채로 오세요.", "스타일이 잘 안 나오고, 고데기나 드라이가 뜨겁게 느껴져요.", "두피가 지성이라면 아침 일찍 감되, 속까지 완전히 말려 주세요.", "그리고 샴푸만. 린스는 미끄러워서 핀이 잘 안 잡혀요.", null],
+    "scenes": [
+      {"kind": "clip", "p": "object", "img": "Two plain pump bottles, shampoo and conditioner, on a bathroom shelf with water droplets on the tiles, soft light.", "m": "Water droplets slide slowly down the tiles and bottles. Static camera, no people, no hands."},
+      {"kind": "still", "p": "object", "img": "A hair dryer and a wide-tooth comb on a bathroom counter at night, a moon visible through a small window."},
+      {"kind": "clip", "p": "person", "img": "Close back view of the woman with a soft towel wrapped around her shoulders, her dark brown hair down and slightly damp, quiet bedroom.", "m": "She slowly presses the towel to the ends of her hair, then rests; she never turns."},
+      {"kind": "clip", "p": "object", "img": "A curling iron and a hair dryer resting on a salon counter, a faint warm shimmer above the iron.", "m": "A thin wisp of warm air shimmers above the curling iron. Static camera, no people, no hands."},
+      {"kind": "still", "p": "object", "img": "Early dawn light through a window onto a vanity with a hair dryer and a brush, everything calm and dry."},
+      {"kind": "still", "p": "object", "img": "A single shampoo bottle standing alone, with a few hairpins and a small chignon net laid neatly beside it on a cream cloth."},
+      {"kind": "lock"}
+    ]
+  },
+  "5-4": {
+    "prefix": "R4", "target": "p5-14", "label": "P5·12", "question": "아버님 넥타이 색은?",
+    "hook": "한복은 두고\n박스만?",
+    "title": "한복은 두고 박스만 들고 오신 아버님 #혼주 #shorts",
+    "voice": {"chunks": "5-4_chunks", "files": ["00", "01_r3", "02", "03", "04_r2", "05_r3"]},
+    "cap": ["남편분이 한복을 가져오기로 했는데… 박스만 들고 오셨어요.", "전날 깨끗하게 다려 걸어 둔 한복은 집에 두고요. 생각보다 자주 있는 일이에요.", "아버님 넥타이나 벨트가 빠져서 백화점으로 뛰어가시는 분도 계세요.", "갈아입을 한복이나 정장, 소품은 전날 현관 앞에 두거나 차에 미리 실어 두세요.", "혼주는 자주 해 보는 일이 아니라서, 빠뜨리기 쉬워요.", null],
+    "scenes": [
+      {"kind": "clip", "p": "object", "img": "An empty hanbok gift box with its lid slightly open, sitting alone on a makeup studio bench, nothing inside.", "m": "The box lid settles slightly open, soft light shifts. Static camera, no people, no hands."},
+      {"kind": "still", "p": "object", "img": "A pressed hanbok hanging neatly on a wooden hanger against a home wall, a deep magenta chima and pale pink jeogori, quiet living room."},
+      {"kind": "clip", "p": "object", "img": "A men's silk necktie and a leather belt draped over the back of a chair by a window, forgotten.", "m": "The tie end sways gently in a breeze from the window; the curtain moves slightly. Static camera, no people, no hands."},
+      {"kind": "still", "p": "object", "img": "A tidy home entryway: a garment bag, a hanbok box, a small handbag and polished shoes lined up neatly by the front door."},
+      {"kind": "clip", "p": "person", "img": "Back view of the woman standing in a home entryway beside a garment bag and a hanbok box lined up by the front door.", "m": "She slowly sets a small handbag down next to the box, then stands still; she never turns."},
+      {"kind": "lock"}
+    ]
+  }
+}
