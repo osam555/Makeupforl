@@ -3,7 +3,7 @@
   "font_dir": "/Users/osam/dev/speed-listening/store/video/book-promo-3part/work-myeongsim25/fonts",
   "dir": "video/work/i2v/p4-07/damchae",
   "voice_dir": "video/work/i2v/p4-07/voice",
-  "out": "video/out/shorts/i2v/p4-07_v1.mp4",
+  "out": "video/out/shorts/i2v/p4-07_v2.mp4",
   "outro_seg": "zz-outro2",
   "domain_seg": "zz-domain",
   "scenes": [
@@ -58,7 +58,7 @@
     },
     {
       "segs": [
-        "zz-bridge"
+        "zz-bridge-v2"
       ],
       "still": "img-06.jpg",
       "blur": true,
@@ -68,7 +68,6 @@
         "다음 질문은 잠겨 있어요",
         "긴 얼굴형엔 어떤 머리?",
         "답 95개 · 3개월 55,000원",
-        "메이크업 예약 시 그대로 차감",
         "신청 · 전화 02-323-3321"
       ]
     }

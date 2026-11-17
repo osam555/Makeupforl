@@ -18,7 +18,9 @@ SITE = "https://makeupforl.co.kr/honjoo100"
 TAG = "?from=yt"  # 설명란 링크로 온 방문도 「유튜브 쇼츠」로 센다(src/lib/trackSource.ts). 쇼츠 화면에선 링크가 안 눌려도 일반 보기에선 눌린다
 SET = os.environ.get("I2V_SET", "free5.json")
 PASS = ("▶ 100문 100답 — 원장이 상담실에서만 하던 답 98개 · 음성 103분\n"
-        "▶ 3개월 이용권 55,000원 · 메이크업 예약하면 이용권 값 전액 차감 · 신청 전화 02-323-3321")
+        "▶ 3개월 이용권 55,000원 · 신청 전화 02-323-3321")  # 「예약 시 차감」은 뺐다(2026-11-15 사용자 지시)
+VER = os.environ.get("I2V_VER", "v1")  # 다시 만든 판은 _v2 — 옛 파일은 지우지 않는다
+FORCE = os.environ.get("I2V_FORCE") == "1"  # 같은 제목의 옛 영상이 있어도 새로 올린다(문구를 고쳐 다시 올릴 때)
 
 
 def texts(slug, allp, spec):
@@ -39,15 +41,15 @@ def main(slug):
     short = TITLES.get(slug) or allp[slug]["title"]
     title = f"{short} | 혼주메이크업 100문 100답 {allp[slug]['tag']} #shorts"
     mine, pin = texts(slug, allp, spec)
-    f = R / f"video/out/shorts/i2v/{slug}_v1.mp4"
+    f = R / f"video/out/shorts/i2v/{slug}_{VER}.mp4"
     b64 = base64.b64encode(f.read_bytes()).decode()
-    key = short[:8]  # 목록에서 행을 찾는 열쇠 — 옛 제목과 앞 8자가 겹치지 않게 지을 것(9절 ③)
+    key = short  # 목록에서 행을 찾는 열쇠 — 앞 8자만 쓰면 「혼주 메이크업, …」 제목끼리 겹쳤다
     # 0) 이미 올라가 있으면 올리기를 건너뛴다(다시 돌릴 때 중복 업로드 방지)
     o0 = repl(f"""
 const P = await openTab("https://studio.youtube.com/channel/{CH}/videos/short"); await sleep(10000);
 console.log('EXISTS', await P.evaluate((k) => [...document.querySelectorAll('ytcp-video-row')].some(x=>x.innerText.includes(k)), {J(key)}));
 """)
-    exists = "EXISTS true" in o0
+    exists = "EXISTS true" in o0 and not FORCE
     # 1) 올리기
     o = "UPLOADED (skipped)" if exists else repl(f"""
 const P = await openTab("https://studio.youtube.com/"); await sleep(9000);
