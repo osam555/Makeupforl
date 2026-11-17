@@ -1391,6 +1391,30 @@
    "playlist": true,
    "thumbnailTest": "A/B 테스팅 — 썸네일만, 3안(a·b·c)",
    "note": "2026-11-16 소리 수정판 — 끝 질문 「파트 오의 이 번」 토막 교체. 광고 사용, 썸네일 A/B 세 안, 챕터. 옛 판 XfVSBd_yveY 은 그대로 둠(사용자 결정)."
+  },
+  {
+   "file": "video/out/설문봇-쇼츠A-draft.mp4",
+   "youtubeId": "k089YCdnYFM",
+   "url": "https://youtube.com/shorts/k089YCdnYFM",
+   "title": "자는 동안 결제가 됐다 — 홈페이지 설문봇이 손님을 받는 법 #shorts",
+   "channel": "UC4m3k4hb94HtSV355WWZrxg (영어듣기 대충영어)",
+   "link": "https://makeupforl.co.kr/honjoo100",
+   "visibility": "unlisted",
+   "aiLabel": true,
+   "date": "2026-11-02",
+   "note": "원장님 결재(기획서 7절) 전이라 일부공개. 같은 채널에 3시간 앞서 올라간 「자는 동안 매출이 뜨는 홈페이지 만들기. 메이크업포엘」 은 사이트 매니저가 직접 올린 것 · 쇼츠 A 8차 ②, 46초"
+  },
+  {
+   "file": "video/out/설문봇-쇼츠A-draft.mp4",
+   "youtubeId": "POyR1zwRBSE",
+   "url": "https://youtube.com/shorts/POyR1zwRBSE",
+   "title": "자는 동안 결제가 됐다 — 홈페이지 설문봇이 손님을 받는 법 (내레이션 B) #shorts",
+   "channel": "UC4m3k4hb94HtSV355WWZrxg (영어듣기 대충영어)",
+   "link": "https://makeupforl.co.kr/honjoo100",
+   "visibility": "unlisted",
+   "aiLabel": true,
+   "date": "2026-11-03",
+   "note": "k089YCdnYFM(Typecast 판)은 그대로 두고 목소리 비교용으로 따로 올림(사장님: 교체 말고 추가). 둘 중 고른 뒤 나머지는 비공개로 · 쇼츠 A 9차 — ElevenLabs Anna Kim, 49초"
   }
  ],
  "channelProfileLinks": [

@@ -18,7 +18,8 @@ NO_TTS=${NO_TTS:-0}
 NAME=설문봇-쇼츠A-draft; [ "$NO_TTS" = 1 ] && NAME=설문봇-쇼츠A-자막판
 
 # 장면 길이(초) — 녹화는 통째로, 그래픽은 장면표 길이로 자른다
-HOOK=3.4; CLOCK=1.8; ADMIN=4.6; RECAP=3.4; NUMBER=4.0; END=5.5
+# 8차: 숫자 장면(결제 1건)을 통계 장면(insight — 손님이 많이 두드린 문항)으로. "방문 N → 결제 1" 은 전환율로 읽혀 뺐다
+HOOK=3.4; CLOCK=1.8; ADMIN=4.6; RECAP=3.4; NUMBER=6.0; END=5.5
 SURVEY=$(ffprobe -v error -show_entries format=duration -of csv=p=0 rec/survey.mp4)
 
 # 단계 시각(steps.json) → 전체 타임라인 (앞에 훅 + 시계)
@@ -35,8 +36,36 @@ ms(){ python3 -c "print(int(round($1*1000)))"; }
 # ── 폰 틀: 녹화를 912×1656 으로 줄여 (84,132) 에 놓고 둥근 모서리 마스크, 장미색 바탕 위에 ──
 PX=84; PY=132; PW=912; PH=1656
 # 탭 파문 좌표 변환: 녹화 픽셀 → 폰 틀 안 픽셀, 링 그림(300×300)의 중심을 맞춘다
-rx(){ python3 -c "import json;s=[s for s in json.load(open('rec/steps.json')) if s['k']=='$1'][0];print(int($PX+s['x']*$PW/1080-150))"; }
-ry(){ python3 -c "import json;s=[s for s in json.load(open('rec/steps.json')) if s['k']=='$1'][0];print(int($PY+s['y']*$PH/1920-150))"; }
+#
+# 8차: 설문 녹화는 대화 상자 쪽으로 살짝 줌인한다(1.1배, 양식 단계는 1배로 물러남) — 말풍선 글자가 쇼츠 화면에서 읽히게.
+# 1.4배로 당겨 봤더니 상자가 화면 폭의 90% 라 좌우가 잘려 손님 말풍선이 끊겼다. 글자 키우기는 record.mjs 가 좁은 폰 너비(400px)로 녹화해서 해결하고,
+# 여기 줌은 시선을 아래로 끄는 정도로만 둔다.
+# 줌 때문에 탭 위치가 시간에 따라 달라지므로 파문 좌표도 같은 배율 함수로 계산한다(아래 ZPY 한 곳에서 수식과 좌표가 같이 나온다).
+# 초점은 말풍선·칩이 쌓이는 상자 아래쪽(녹화 y=1300). 배율·시각을 바꾸려면 ZPY 첫 줄 상수만 고친다.
+ZFORM=$(python3 -c "import json;print([s for s in json.load(open('rec/steps.json')) if s['k']=='form'][0]['t'])")
+ZPY=$(cat <<'PY'
+import sys
+Z1,Z2,I0,I1,OL,FY=1.1,1.0,2.2,3.4,0.9,1300  # 대화 배율, 양식 배율, 당기기 시작·끝(녹화 초), 물러나는 길이, 초점 y
+W,H,PW,PH=1080,1920,912,1656
+form=float(sys.argv[2])
+def ss(a,b,t):
+    r=min(1,max(0,(t-a)/(b-a)));return r*r*(3-2*r)
+def z(t): return 1+(Z1-1)*ss(I0,I1,t)-(Z1-Z2)*ss(form,form+OL,t)
+def expr(v):
+    s=lambda a,b:f"pow(clip(({v}-{a})/({b}-{a}),0,1),2)*(3-2*clip(({v}-{a})/({b}-{a}),0,1))"
+    return f"(1+{Z1-1:.3f}*{s(I0,I1)}-{Z1-Z2:.3f}*{s(form,form+OL)})"
+if sys.argv[1]=='expr': print(expr(sys.argv[3]))
+else:
+    x,y,t=map(float,sys.argv[3:6]); zz=z(t+0.12)
+    cx=(W*zz-W)/2; cy=min(max(FY*zz-H/2,0),H*zz-H)
+    print(int((x*zz-cx)*PW/W), int((y*zz-cy)*PH/H))
+PY
+)
+ZE=$(python3 -c "$ZPY" expr $ZFORM 'n/30')
+# 탭 파문 좌표: 줌 반영한 폰 틀 안 위치에서 링 그림(300×300) 중심을 맞춘다
+zpos(){ python3 -c "import json;s=[s for s in json.load(open('rec/steps.json')) if s['k']=='$1'][0];print(s['x'],s['y'],s['t'])" | { read x y t; python3 -c "$ZPY" pos $ZFORM $x $y $t; }; }
+rx(){ echo $(( PX + $(zpos $1 | cut -d' ' -f1) - 150 )); }
+ry(){ echo $(( PY + $(zpos $1 | cut -d' ' -f2) - 150 )); }
 
 # ── 자막(큰 줄): 하단, 흰 글씨 + 검은 상자, 0.26초 페이드 ──
 sub() { # $1 시작 $2 끝 $3 글
@@ -123,10 +152,10 @@ for k in who worry form submit; do
 done
 
 # 녹화를 폰 틀에: bg 위에 올리고 → 마스크로 둥글게 → 다시 bg 위에
-PHONE="[7:v]format=rgb24,split[bg1][bg2];[8:v]format=gray[mk];[2:v]scale=$PW:$PH[sv];[bg1][sv]overlay=$PX:$PY[flat];[flat][mk]alphamerge[fa];[bg2][fa]overlay=0:0,format=yuv420p[phone];"
+PHONE="[7:v]format=rgb24,split[bg1][bg2];[8:v]format=gray[mk];[2:v]scale=w='trunc(1080*$ZE/2)*2':h='trunc(1920*$ZE/2)*2':eval=frame:flags=bilinear,crop=1080:1920:x='(iw-1080)/2':y='clip(1300*$ZE-960,0,ih-1920)',scale=$PW:$PH[sv];[bg1][sv]overlay=$PX:$PY[flat];[flat][mk]alphamerge[fa];[bg2][fa]overlay=0:0,format=yuv420p[phone];"
 
 ffmpeg -loglevel error -y \
-  -t $HOOK -i rec/hook.mp4 -t $CLOCK -i rec/clock.mp4 -i rec/survey.mp4 -t $ADMIN -i rec/admin.mp4 -t $RECAP -i rec/recap.mp4 -t $NUMBER -i rec/number.mp4 -t $END -i rec/end.mp4 \
+  -t $HOOK -i rec/hook.mp4 -t $CLOCK -i rec/clock.mp4 -i rec/survey.mp4 -t $ADMIN -i rec/admin.mp4 -t $RECAP -i rec/recap.mp4 -t $NUMBER -i rec/insight.mp4 -t $END -i rec/end.mp4 \
   -loop 1 -t $SURVEY -i rec/bg.png -loop 1 -t $SURVEY -i rec/mask.png $AIN $RIN \
   -filter_complex "${PHONE}[0:v][1:v]concat=n=2:v=1:a=0[head];${ROV/\[phone\]/[phone]}${prev}setpts=PTS-STARTPTS[sv2];[head][sv2][3:v][4:v][5:v][6:v]concat=n=6:v=1:a=0,${SUBS}${CHIPS}${SUB2}${NOTE}${BAR}fade=out:st=$(python3 -c "print($TOTAL-0.6)"):d=0.6,format=yuv420p[v];$AF" \
   -map "[v]" -map "[a]" -t $TOTAL -r 25 -c:v libx264 -crf 20 -pix_fmt yuv420p -c:a aac -b:a 160k -movflags +faststart "$OUT/$NAME.mp4"
