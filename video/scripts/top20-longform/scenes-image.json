@@ -1,0 +1,189 @@
+{
+  "_설명": "탑20 롱폼 C편 「혼주 이미지와 뒤꽂이」 장면 사양(2026-11-16). 가로 16:9, 1920×1080. 소리는 narration-image.json — scenes 의 lines 는 그 파일 lines 의 줄 번호(0부터)다. 문장 한두 개에 그림 한 장. kind: title(장 제목 화면 — 다음 그림을 흐리게 깔고 제목), summary(장 한 줄 요약 화면 — bg 로 적은 그림 번호를 흐리게 깔고 요약 + 잇는 문항), still(정지 그림에 느린 확대·이동), clip(그 그림을 시작 프레임으로 한 Veo 3.1 Fast 8초 컷), lock(끝 화면). 그림 번호는 still·clip 을 나오는 순서대로 1부터 센다(img-NN.jpg, clip-NN.mp4). cap 은 소리 글과 화면 글이 다른 줄만 적는다. 사람은 뒷모습만 그리고, 물건 컷에는 손도 사람도 없다. 그림에 글자·숫자 없음.",
+  "_narration": "narration-image.json",
+  "format": {"w": 1920, "h": 1080, "fps": 30, "gap_sec": 0.35, "lufs": -14},
+  "style": {
+    "img_style": "Korean ink-and-wash illustration (damchae): fine, confident sumi ink linework with soft transparent watercolor washes, visible hanji mulberry-paper texture across the whole image, gentle color bleeding at the edges, generous empty paper space. Warm cream and muted gold palette; the hanbok silks and the hair ornaments carry the only strong colors. Modern, elegant, refined — a contemporary wedding setting, not an old-fashioned folk painting. Single full-bleed illustration, no borders, no seal stamps, no calligraphy. Horizontal 16:9 landscape composition; keep the bottom fifth of the frame calm and uncluttered for captions. Not photorealistic, not 3D, not anime.",
+    "banned_person": "Exactly one person in the frame, seen only from behind — her face is never visible, no profile, no mirror reflection. No text, letters, numbers, logos or signs anywhere. No kimono, no obi, no Chinese hanfu, no western church altar, no gold-foil patterns all over the hanbok. No rings, no nail art.",
+    "banned_object": "NO people at all, no hands, no figures, no faces anywhere — an object-only still life or empty interior. No text, letters, numbers, logos or signs anywhere. No gold-foil patterns.",
+    "look": " The woman: Korean mother of the bride in her late 50s, short pale pink silk jeogori with long goreum ribbon, deep magenta full chima, dark brown hair in a neat low chignon; seen only from behind, face never visible.",
+    "look_wavy": " The woman: Korean mother of the bride in her late 50s, short pale pink silk jeogori with long goreum ribbon, deep magenta full chima, dark brown hair; seen only from behind, face never visible.",
+    "clip": "Static camera, no zoom, no cut. Keep exactly the same scene, person, hanbok and Korean ink-and-wash illustration style (fine ink lines, soft watercolor washes, hanji paper texture stay visible the whole time; never becomes photorealistic or 3D) as the start frame. {m} Her face is never visible. Only small, natural movement. No new people, no new objects, no text, no camera shake."
+  },
+  "cap": {
+    "63": "양가 혼주 한복 색은 맞춰야 할까요? 프로필 링크에서 100문 100답, P5·02."
+  },
+  "outro_cap": ["100문 100답에서 확인하세요.", "링크는 채널 프로필에 있어요."],
+  "lock": {
+    "question": "양가 혼주 한복 색, 맞춰야 할까?",
+    "label": "P5·02",
+    "slug": "p5-02",
+    "lines": ["정답은 혼주메이크업 100문 100답에서", "프로필 링크 → P5·02", "3개월 이용권 55,000원", "신청 · 전화 02-323-3321"],
+    "notice": "그림과 음성은 AI로 만들었습니다"
+  },
+  "chapters": [
+    {
+      "key": "hook",
+      "title": null,
+      "scenes": [
+        {"lines": [0], "kind": "clip", "p": "person", "hook": "단아한 혼주만 있나요?",
+         "img": "Wide back view of the woman standing in a bright hanbok boutique, facing a row of soft pastel hanboks on stands that all look similar and quiet in color.",
+         "m": "She tilts her head very slightly as if thinking; she never turns."},
+        {"lines": [1, 2], "kind": "still", "p": "object",
+         "img": "A vivid deep magenta silk jeogori with fine gold-thread trim on a hanbok stand in a bright room, glowing against a cream wall."},
+        {"lines": [3], "kind": "still", "p": "object",
+         "img": "Several Korean hanbok hair ornament pins of different designs laid in a row on a cream silk tray, seen at a gentle angle."},
+        {"lines": [4, 5], "kind": "still", "p": "object",
+         "img": "A single plain all-white hair ornament pin lying alone on a pale wooden table, with empty space around it."}
+      ]
+    },
+    {
+      "key": "c1", "no": 1,
+      "title": "혼주마다 이미지가 다릅니다",
+      "summary": ["혼주 이미지는 하나가 아닙니다", "단아함도, 화려함도 — 각자에게 어울리는 것으로"],
+      "link": {"label": "P3·24", "slug": "p3-25", "q": "혼주 이미지를 달리할 수 있다던데요?"},
+      "scenes": [
+        {"lines": [6], "kind": "title"},
+        {"lines": [7], "kind": "clip", "p": "object",
+         "img": "A bright makeup studio in the morning: a row of empty salon chairs with a folded cape on each, brushes in cups on the counter, sunlight through tall windows with sheer curtains; no mirrors visible.",
+         "m": "Sunlight shifts slowly across the chairs and the sheer curtain stirs. Static camera, no people, no hands."},
+        {"lines": [8], "kind": "still", "p": "object",
+         "img": "Two hanboks on stands side by side: on the left a quiet soft pastel pink-and-ivory hanbok, on the right a vivid jade-green and magenta hanbok with fine gold trim; calm versus glamorous."},
+        {"lines": [9], "kind": "clip", "p": "person",
+         "img": "Full back view of the woman standing in a refined bright hall, elegant updo with an ornate gold hair ornament, poised and graceful.",
+         "m": "The skirt hem sways very slightly; she stands still and never turns."},
+        {"lines": [10], "kind": "still", "p": "object",
+         "img": "A well-kept dressing table with an open jewelry box, a folded vivid silk scarf, a perfume bottle and a vase of fresh peonies."},
+        {"lines": [11], "kind": "summary", "bg": 6}
+      ]
+    },
+    {
+      "key": "c2", "no": 2,
+      "title": "화려함은 품위 안에서",
+      "summary": ["화려함의 기준", "혼주의 품위를 지켜 주는 화려함"],
+      "link": {"label": "P3·23", "slug": "p3-24", "q": "너무 평범한 것보다는 저만의 개성을 살리고 싶어요"},
+      "scenes": [
+        {"lines": [12], "kind": "title"},
+        {"lines": [13, 14], "kind": "clip", "p": "person",
+         "img": "Back view of the woman standing in a grand, bright hotel wedding lobby with a tall ceiling and flower arrangements, elegant updo, poised and confident.",
+         "m": "Soft light shifts across the lobby; she straightens her posture slightly and never turns."},
+        {"lines": [15], "kind": "still", "p": "object",
+         "img": "A vanity with an open eyeshadow palette of warm rose and plum tones, a lipstick and two makeup brushes neatly arranged on a cream cloth."},
+        {"lines": [16], "kind": "still", "p": "object",
+         "img": "A single ornate gold hair ornament pin resting on folded deep magenta silk, refined and graceful, not gaudy."},
+        {"lines": [17], "kind": "still", "p": "object",
+         "img": "Two jeogori side by side on hanbok stands: a plain ivory one and a vivid jade-green one with a magenta ribbon, the colored one glowing."},
+        {"lines": [18], "kind": "still", "p": "object",
+         "img": "A full hanbok on a stand, vivid colored jeogori and flowing chima, with embroidered kkotsin shoes placed neatly below, luxurious from top to bottom."},
+        {"lines": [19], "kind": "clip", "p": "object",
+         "img": "A grand empty hotel ballroom with crystal chandeliers, a high ceiling and rows of flower arrangements, spacious and bright.",
+         "m": "The chandelier crystals sparkle gently and light shimmers. Static camera, no people, no hands."},
+        {"lines": [20], "kind": "clip", "p": "person", "look": "look_wavy",
+         "img": "Back view of the woman seated in a makeup studio; her hair is styled in a glamorous, voluminous updo made of large soft waves and curls pinned up (clearly wavy and full, not a smooth tight bun).",
+         "m": "She tilts her head very slightly and holds still; she never turns."},
+        {"lines": [21], "kind": "still", "p": "person", "look": "look_wavy",
+         "img": "Close back view of the woman's glamorous wavy updo of large soft curls, with a large ornate gold, pearl and red coral hair ornament pinned at the back; strictly from behind, no profile."},
+        {"lines": [22], "kind": "summary", "bg": 13}
+      ]
+    },
+    {
+      "key": "c3", "no": 3,
+      "title": "뒤꽂이는 뒷모습의 표정",
+      "summary": ["뒤꽂이 디자인", "혼주 이미지에 맞는 것으로"],
+      "link": {"label": "P4·18", "slug": "p4-18", "q": "뒤꽂이(헤어 장식)는 꼭 준비해야 하나요?"},
+      "scenes": [
+        {"lines": [23], "kind": "title"},
+        {"lines": [24, 25], "kind": "clip", "p": "person",
+         "img": "Close back view of the woman's neat low chignon with one elegant jade-and-gold hair ornament pinned at the back, pale pink jeogori collar; strictly from behind.",
+         "m": "Light glints slowly across the hair ornament; she stays still and never turns."},
+        {"lines": [26, 27], "kind": "still", "p": "person",
+         "img": "Full back view of the woman standing at the entrance of a bright wedding hall lobby beside tall flower stands, as if waiting to greet guests; a hair ornament shows in her chignon; no other people."},
+        {"lines": [28], "kind": "clip", "p": "object",
+         "img": "A long wedding hall aisle lined with flower arrangements, leading to two tall lit candles on stands at the far end; bright and solemn, no people.",
+         "m": "The two candle flames flicker gently and petals stir slightly. Static camera, no people, no hands."},
+        {"lines": [29], "kind": "still", "p": "object",
+         "img": "One elegant hair ornament pin with small jade flowers and pearls resting on a cream silk cushion."},
+        {"lines": [30], "kind": "still", "p": "object",
+         "img": "Many hair ornament pins of varied materials and designs — metal, crystal, mother-of-pearl, enamel — arranged neatly on a wide wooden tray."},
+        {"lines": [31], "kind": "still", "p": "object",
+         "img": "A Western-style hair comb ornament made of sparkling clear crystals and silver metal, sleek and brilliant, on pale grey silk."},
+        {"lines": [32], "kind": "still", "p": "object",
+         "img": "An Eastern-style Korean hair ornament made of iridescent mother-of-pearl inlay and colorful cloisonné enamel on gold, resting on a dark lacquer tray; graceful and refined."},
+        {"lines": [33], "kind": "still", "p": "object",
+         "img": "Two small trays side by side on a table: the left tray holds two hair ornaments, one simple and one ornate; the right tray holds folded silk swatches in pink, blue and ivory."},
+        {"lines": [34], "kind": "still", "p": "object",
+         "img": "A small simple hair ornament of a few pearls and one jade leaf lying on folded soft pastel hanbok silk; quiet and graceful."},
+        {"lines": [35], "kind": "still", "p": "person",
+         "img": "Full back view of the woman standing by a tall window, the whole hanbok outfit visible from the hair ornament in her chignon down to the skirt hem."},
+        {"lines": [36], "kind": "clip", "p": "object",
+         "img": "A large ornate hair ornament with gold filigree, pearls and red coral beads resting on rich silk, close-up.",
+         "m": "Light glints softly across the gold and pearls. Static camera, no people, no hands."},
+        {"lines": [37], "kind": "summary", "bg": 27}
+      ]
+    },
+    {
+      "key": "c4", "no": 4,
+      "title": "뒤꽂이 색은 저고리 색에 맞춥니다",
+      "summary": ["뒤꽂이 색", "저고리의 계열 색으로 · 아이보리 저고리는 치마 색으로"],
+      "link": {"label": "P4·19", "slug": "p4-19", "q": "뒤꽂이 선택 잘하려면?"},
+      "scenes": [
+        {"lines": [38], "kind": "title"},
+        {"lines": [39], "kind": "clip", "p": "object",
+         "img": "A pale pink jeogori folded on a table with a hair ornament pin of pink flowers lying on it, the colors matching.",
+         "m": "Soft light glides slowly over the silk and the ornament. Static camera, no people, no hands."},
+        {"lines": [40], "kind": "still", "p": "object",
+         "img": "Three hair ornament pins in similar shades of pink, rose and peach laid in a row on a cream cloth."},
+        {"lines": [41], "kind": "still", "p": "person",
+         "img": "Close back view of the woman's low chignon with a pink-flowered hair ornament pinned at the back, pale pink jeogori collar; strictly from behind."},
+        {"lines": [42], "kind": "clip", "p": "object",
+         "img": "A soft blue jeogori folded on a table with a hair ornament pin of blue and jade flowers lying on it, the colors matching.",
+         "m": "Soft light glides slowly over the blue silk and the ornament. Static camera, no people, no hands."},
+        {"lines": [43, 44], "kind": "still", "p": "object",
+         "img": "An ivory jeogori laid flat in the center, with a rose-pink skirt folded on its left and a blue skirt folded on its right."},
+        {"lines": [45], "kind": "still", "p": "object",
+         "img": "An ivory jeogori laid flat with two hair ornaments lying on it: one in rose-red tones and one in blue tones."},
+        {"lines": [46], "kind": "still", "p": "object",
+         "img": "Two delicate hair ornaments side by side on ivory silk: one of white pearl flowers tinted with a hint of soft blue, the other of white pearl flowers tinted with a hint of soft pink."},
+        {"lines": [47, 48], "kind": "clip", "p": "object",
+         "img": "Two hanboks on stands side by side in a bright wedding hall: an ivory jeogori with a rose-pink skirt and an ivory jeogori with a blue skirt; on a small table in front of each lies a hair ornament matching its skirt color.",
+         "m": "The skirt hems sway very slightly and light shifts softly. Static camera, no people, no hands."},
+        {"lines": [49], "kind": "summary", "bg": 35}
+      ]
+    },
+    {
+      "key": "c5", "no": 5,
+      "title": "하얀 뒤꽂이는 피해 주세요",
+      "summary": ["하얀 뒤꽂이는 피합니다", "한복에 어울리지 않고, 세련된 느낌도 덜합니다"],
+      "link": {"label": "P5·06", "slug": "p5-08", "q": "아이보리/화이트 저고리가 안 어울리는 피부 톤은?"},
+      "scenes": [
+        {"lines": [50], "kind": "title"},
+        {"lines": [51], "kind": "clip", "p": "object",
+         "img": "A plain all-white hair ornament pin lying in a small open gift box on a folded wrapping cloth at the edge of a table.",
+         "m": "Soft light glides slowly over the box. Static camera, no people, no hands."},
+        {"lines": [52, 53], "kind": "still", "p": "object",
+         "img": "A pale pink jeogori folded on a table with a plain stark white hair ornament pin lying on it; the white looks flat and mismatched against the pink."},
+        {"lines": [54, 55], "kind": "clip", "p": "object",
+         "img": "A plain white hair ornament pin on a dark wooden table in dim cool light, quiet and somber.",
+         "m": "Dim light shifts very slowly across the table. Static camera, no people, no hands."},
+        {"lines": [56], "kind": "summary", "bg": 37}
+      ]
+    },
+    {
+      "key": "close",
+      "title": null,
+      "recap": ["단아한 혼주도, 화려한 혼주도 — 품위를 지키는 화려함", "뒤꽂이는 저고리 색에, 디자인은 혼주 이미지에", "하얀 뒤꽂이는 피합니다"],
+      "scenes": [
+        {"lines": [57, 58], "kind": "still", "p": "person", "recap": 1,
+         "img": "Back view of the woman standing in a bright wedding hall doorway, elegant and composed, a hair ornament visible in her chignon."},
+        {"lines": [59, 60], "kind": "still", "p": "object", "recap": 2,
+         "img": "Two folded jeogori side by side: a pale pink one with a pink-flowered hair ornament on it and a soft blue one with a blue-and-jade hair ornament on it."},
+        {"lines": [61], "kind": "still", "p": "object", "recap": 3,
+         "img": "A plain white hair ornament next to a colorful jade and coral hair ornament on a cream cloth; the colorful one looks richer."},
+        {"lines": [62], "kind": "clip", "p": "object",
+         "img": "A small lacquer jewelry box standing open with an ornate hair ornament resting on silk inside.",
+         "m": "Soft light glides across the ornament in the box. Static camera, no people, no hands."},
+        {"lines": [63], "kind": "lock", "bg": 42}
+      ]
+    }
+  ]
+}
