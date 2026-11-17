@@ -1,0 +1,171 @@
+{
+  "_설명": "탑20 롱폼(머리) 장면 사양(2026-11-16). 소리는 narration-hair.json, 기획은 docs/video/top20-longform-hair-plan.md. 가로 16:9 1920×1080. lines 는 그 장의 소리 글 줄 번호(0부터)다. kind: card(장 제목 화면) · still(정지 그림, 느린 확대·이동) · clip(Veo 3.1 Fast 8초, 움직이는 컷) · summary(한 줄 요약 화면 + 잇는 100문100답 문항) · recap(끝 정리) · next(다음 질문) · end(끝 화면). p: person 은 기준 그림을 붙여 그리고 뒷모습만(옆얼굴·거울 속 얼굴 금지), object 는 사람·손 없이 물건만. hair 는 기준 그림의 낮은 쪽머리와 달라야 하는 컷에만 적는다. cap 은 화면 자막이 소리 글과 다른 줄만(숫자). 그림에는 글자·숫자를 그리지 않는다 — 화면의 글은 모두 조립 때 얹는다.",
+  "_narration": "narration-hair.json",
+  "aspect": "16:9",
+  "look": "The woman: Korean mother of the bride in her late 50s, short pale pink silk jeogori with long goreum ribbon, deep magenta full chima; seen only from behind, face never visible.",
+  "hair_default": "dark brown hair in a neat low chignon",
+  "img_style_tail": "Horizontal 16:9 wide frame; keep the lower 22% of the frame calm and uncluttered for subtitles.",
+  "end": {
+    "lines": ["혼주메이크업 100문 100답", "3개월 이용권 55,000원", "신청 · 전화 02-323-3321"],
+    "note": "그림과 음성은 AI로 만들었습니다",
+    "brand": "메이크업포엘 · makeupforl.co.kr"
+  },
+  "chapters": [
+    {
+      "id": "0-hook",
+      "cap": {"5": "머리가 짧은 분을 위한 방법도 끝에 있어요. 결혼식 3주 전부터, 순서대로 갑니다."},
+      "scenes": [
+        {"lines": [0], "kind": "clip", "p": "person", "img": "Wide back view of the woman standing alone in a bright modern wedding hall lobby with tall windows, her full figure small in the left third of the frame, looking toward the hall.", "m": "She stands still; soft daylight shifts slowly across the floor and her skirt hem sways very slightly; she never turns."},
+        {"lines": [1], "kind": "still", "p": "object", "img": "A blank wall calendar page with empty grid squares (no numbers, no writing), three large perm rollers and a small hair-dye bowl with a tint brush arranged on a cream salon counter."},
+        {"lines": [2, 3], "kind": "still", "p": "object", "img": "A neat vanity tray with a wooden tail comb, a round brush, a few hairpins and a jade hairpin laid out in a row, soft morning light.", "list": ["퍼머·염색 날짜", "혼주에게 무난한 머리 색", "앞머리 · 가르마 · 올림머리 위치"]},
+        {"lines": [4], "kind": "clip", "p": "person", "img": "Close back view of the woman's head and shoulders: neat low chignon with a small hair ornament, hanbok collar, soft window light.", "m": "Soft light glides across her hair; she stays still and never turns."},
+        {"lines": [5], "kind": "still", "p": "object", "img": "Three small folded silk cloths in a row on a long cream table leading toward a neatly folded pink hanbok jeogori at the far right, soft daylight.", "timeline": ["3주 전 퍼머", "1주 전 염색", "결혼식 날 머리 모양"]}
+      ]
+    },
+    {
+      "id": "1-perm",
+      "card": {"no": "01", "when": "결혼식 3주 전", "title": "퍼머"},
+      "summary": "퍼머는 3주 전 · 굵은 웨이브로",
+      "wed100": {"label": "P4·12", "slug": "p4-12", "question": "정수리 탈모가 걱정인데 혼주 머리 가능할까요?"},
+      "cap": {
+        "1": "혼주 머리를 위한 퍼머는, 결혼식 3주 전에 하세요.",
+        "3": "혼주님들 가운데 40% 정도는 전체 숱이 적고, 80%는 정수리 탈모를 갖고 계십니다.",
+        "6": "그런데 왜 3주 전일까요? 그보다 일찍 하면 펌기가 풀립니다.",
+        "7": "더 중요한 이유가 있어요. 3주 전에 퍼머를 하고, 1주 전에는 새치 염색을 하기 때문입니다.",
+        "11": "그럼 1주 전에 하는 염색은, 무슨 색이 좋을까요?"
+      },
+      "scenes": [
+        {"lines": [0], "kind": "card"},
+        {"lines": [1], "kind": "clip", "p": "object", "img": "Large perm rollers resting on a cream salon counter beside a blank calendar page with empty grid squares (no numbers, no writing) and a wide-tooth comb.", "m": "Soft light glides slowly across the rollers. Static camera, no people, no hands."},
+        {"lines": [2], "kind": "still", "p": "person", "img": "Back view of the woman seated at a vanity table (the mirror is outside the frame), a comb resting on the table, her shoulders slightly lowered."},
+        {"lines": [3], "kind": "still", "p": "object", "img": "Two locks of dark brown hair on a cream cloth, one thick and full, one thin and sparse."},
+        {"lines": [4, 5], "kind": "still", "p": "object", "img": "A long lock of dark brown hair with large, soft, bouncy waves laid on a cream cloth."},
+        {"lines": [6], "kind": "still", "p": "object", "img": "A lock of dark brown hair whose waves have loosened and gone nearly straight, beside one unused perm roller."},
+        {"lines": [7, 8], "kind": "clip", "p": "object", "img": "A blank wall calendar page with empty grid squares (no numbers, no writing); a perm roller placed on a square in an upper row and a small dye bowl with a tint brush placed on a square two rows below.", "m": "Soft light moves slowly from the roller down to the dye bowl. Static camera, no people, no hands."},
+        {"lines": [9], "kind": "still", "p": "object", "img": "Large fat perm rollers on the left and tiny thin perm rods on the right on a cream cloth, the large rollers in the brighter light."},
+        {"lines": [10, 11], "kind": "summary"}
+      ]
+    },
+    {
+      "id": "2-color",
+      "card": {"no": "02", "when": "결혼식 1주 전", "title": "염색과 머리 색"},
+      "summary": "염색은 1주 전 · 색은 자연 갈색",
+      "wed100": {"label": "P5·01", "slug": "p5-01", "question": "혼주에게도 퍼스널 컬러 진단이 필요한가요?"},
+      "cap": {},
+      "scenes": [
+        {"lines": [0], "kind": "card"},
+        {"lines": [1], "kind": "still", "p": "object", "img": "A small hair-dye bowl with a tint brush and a folded dark cape on a salon counter, beside a blank wall calendar page with empty grid squares (no numbers, no writing)."},
+        {"lines": [2], "kind": "clip", "p": "person", "hair": "natural soft medium brown hair in a neat low chignon", "img": "Close back view of the woman seated in a makeup studio, warm daylight on her natural brown hair, hanbok collar.", "m": "Soft daylight shifts gently across her brown hair; she stays still and never turns."},
+        {"lines": [3], "kind": "still", "p": "person", "img": "Wide back view of the woman walking down the aisle carpet of a bright wedding hall, her full figure small in the frame, flowers along the aisle."},
+        {"lines": [4], "kind": "still", "p": "object", "img": "A jet black lock of hair laid on a folded pastel pink hanbok silk, the black looking heavy against the soft fabric."},
+        {"lines": [5], "kind": "still", "p": "object", "img": "A very light golden-blonde lock of hair on a folded pastel pink hanbok silk, looking thin and light."},
+        {"lines": [6], "kind": "clip", "p": "object", "img": "A row of five hair color swatch locks on a cream tray, from black on the left to light blonde on the right; the natural brown and dark brown locks in the middle rest on a small raised wooden block.", "m": "Soft light glides slowly along the row and rests on the two brown locks in the middle. Static camera, no people, no hands."},
+        {"lines": [7], "kind": "still", "p": "object", "img": "Two small stacks of folded silk on a cream table: one stack in cool tones (soft blue, lavender, silver gray), the other in warm tones (peach, coral, warm beige)."},
+        {"lines": [8], "kind": "still", "p": "person", "img": "Full-length back view of the woman standing by a tall window in a wedding hall, her entire hanbok visible from hair to skirt hem."},
+        {"lines": [9, 10], "kind": "summary"}
+      ]
+    },
+    {
+      "id": "3-bangs",
+      "card": {"no": "03", "when": "결혼식 날 ①", "title": "앞머리"},
+      "summary": "이마는 다 가리지 않는다 · 앞머리는 가르마로 정한다",
+      "wed100": {"label": "P4·10", "slug": "p4-10", "question": "이마를 드러내는 게 부담스러워요, 앞머리 연출법은?"},
+      "cap": {"10": "다음은 앞가르마. 앞에서 2~3cm 정도만 가르마를 타고, 그다음은 뒤로 넘겨 살짝 볼륨을 줍니다."},
+      "scenes": [
+        {"lines": [0], "kind": "card"},
+        {"lines": [1], "kind": "still", "p": "object", "img": "A hand mirror lying face down and a tail comb on a vanity in soft light, a few hairpins beside them."},
+        {"lines": [2, 3], "kind": "still", "p": "object", "img": "Three wooden tail combs laid side by side with wide gaps on a cream cloth: the first angled to the side, the second straight and vertical, the third pointing backward.", "chips": ["옆가르마", "앞가르마", "올백"]},
+        {"lines": [4, 5], "kind": "clip", "p": "person", "hair": "dark brown hair with a clear side part on the left of the crown, swept sideways and down into a low chignon", "img": "View from behind and above the woman's head: a clear side part line on the left of her crown, the hair sweeping diagonally away from the part; strictly from behind, no face.", "m": "Soft light moves gently along the side part line in her hair; she stays still and never turns."},
+        {"lines": [6], "kind": "still", "p": "person", "img": "Back view of the woman seated before a vanity (the mirror is outside the frame), one hand raised touching the hair at her temple."},
+        {"lines": [7], "kind": "still", "p": "object", "img": "A folded casual knit cardigan on the left and a neatly folded pale pink hanbok jeogori with a white collar on the right, on a cream table."},
+        {"lines": [8], "kind": "still", "p": "object", "img": "Close-up of a hanbok jeogori's curved neckline, white dongjeong collar and long goreum ribbon lying in a soft flowing curve."},
+        {"lines": [9], "kind": "clip", "p": "person", "hair": "dark brown hair swept diagonally back from a side part in one smooth soft wave, gathered into a low chignon", "img": "Close view from behind and above: her hair flowing diagonally backward from the side part in one smooth wave; strictly from behind, no profile.", "m": "She lightly smooths the swept hair with one hand, then lowers it; she never turns."},
+        {"lines": [10, 11], "kind": "still", "p": "person", "hair": "dark brown hair with a short straight center part only at the very front of the crown, the rest brushed straight back with soft volume into a low chignon", "img": "View from directly behind and above the woman's head: a short, straight center part only at the front few centimeters, then the hair brushed back with gentle volume; no face."},
+        {"lines": [12, 13], "kind": "clip", "p": "person", "hair": "dark brown hair combed straight back with no part line at all, smooth and voluminous at the crown, gathered into a low chignon", "img": "View from behind and above the woman's head: all hair combed straight back from the hairline, no part line anywhere; no face.", "m": "Soft light glides over the smooth swept-back hair; she stays still and never turns."},
+        {"lines": [14], "kind": "still", "p": "object", "img": "Two nearly identical jade hairpins side by side on cream silk, one tilted just slightly."},
+        {"lines": [15, 16], "kind": "summary"}
+      ]
+    },
+    {
+      "id": "4-part",
+      "card": {"no": "04", "when": "결혼식 날 ②", "title": "가르마 방향"},
+      "summary": "가르마는 얼굴형이 더 예쁜 쪽으로",
+      "wed100": {"label": "P4·13", "slug": "p4-13", "question": "빈약한 정수리 볼륨을 짱짱하게 살리는 노하우"},
+      "cap": {},
+      "scenes": [
+        {"lines": [0], "kind": "card"},
+        {"lines": [1, 2], "kind": "clip", "p": "person", "hair": "dark brown hair combed straight back and loosely gathered at the nape", "img": "Back view of the woman standing, both hands raised smoothing her hair straight back from her forehead; the mirror she faces is outside the frame.", "m": "She slowly smooths her hair back with both hands, then holds still; she never turns."},
+        {"lines": [3], "kind": "still", "p": "object", "img": "A tail comb laid vertically in the center of a cream cloth, dividing it into left and right halves, one hairpin on each side."},
+        {"lines": [4], "kind": "still", "p": "object", "img": "A smooth ceramic vase with a soft flowing curved outline in gentle side light on a cream background."},
+        {"lines": [5], "kind": "still", "p": "person", "hair": "side-parted dark brown hair swept smoothly behind the ear into a low chignon", "img": "Close back view of the woman's head, her hair swept smoothly behind the ear; strictly from behind, no profile."},
+        {"lines": [6], "kind": "still", "p": "object", "img": "A tail comb beside two locks of dark brown hair on a cream cloth, one noticeably thin and flat, the other full."},
+        {"lines": [7], "kind": "clip", "p": "object", "img": "A round brush and a hair dryer on a salon counter beside a full, voluminous lock of dark brown hair.", "m": "Soft light glides slowly over the brush and the hair. Static camera, no people, no hands."},
+        {"lines": [8, 9], "kind": "still", "p": "object", "img": "A small dark brown hairpiece and a few volume clips on a tray beside a comb."},
+        {"lines": [10, 11], "kind": "summary"}
+      ]
+    },
+    {
+      "id": "5-bun",
+      "card": {"no": "05", "when": "결혼식 날 ③", "title": "올림머리 위치"},
+      "summary": "요즘은 다운업 · 목이 짧으면 미드업",
+      "wed100": {"label": "P4·09", "slug": "p4-09", "question": "로우 번, 미들 번, 하이 번 — 나에게 어울리는 위치는?"},
+      "cap": {
+        "3": "먼저 하이업. 요즘은 거의 안 하시고, 1년에 한두 분 정도 원하실 때 해 드려요.",
+        "5": "그런데 머리를 높일 수 있는 건 5cm 정도예요. 그보다 높이면 얼굴보다 머리가 커서, 가분수처럼 보일 수 있습니다."
+      },
+      "scenes": [
+        {"lines": [0], "kind": "card"},
+        {"lines": [1], "kind": "clip", "p": "person", "img": "Extreme close back view of the smooth round bun at the nape of the woman's neck, hanbok collar just below.", "m": "Soft light glides around the round bun; she stays still and never turns."},
+        {"lines": [2], "kind": "still", "p": "person", "hair": "dark brown hair worn smooth and close to the head, gathered low at the nape", "img": "Clean, centered back view of the woman's head, neck and shoulders against a plain cream background, the whole back of the head from crown to nape clearly visible.", "markers": ["하이업", "미드업", "다운업"]},
+        {"lines": [3, 4], "kind": "still", "p": "person", "hair": "dark brown hair gathered into a tall round bun at the very top of the crown (a high updo), the nape fully exposed, no bun at the nape", "img": "Back view of the woman's head and shoulders, the bun sitting high on top of her head."},
+        {"lines": [5], "kind": "still", "p": "person", "img": "Wide full-length back view of the woman standing small beneath the very high ceiling of a wedding hall lobby."},
+        {"lines": [6, 7], "kind": "clip", "p": "person", "hair": "dark brown hair pulled up into a big round bun placed HIGH on the back of the head, level with the top of the ears (a mid updo), with a long bare neck clearly visible below the bun and no hair at the nape", "img": "Close back view of the woman's head and shoulders; the big round bun sits at the widest part of the back of her skull, well above the nape, with a long stretch of bare neck beneath it before the hanbok collar.", "m": "Soft light glides over the round bun at the middle of her head; she stays still and never turns."},
+        {"lines": [8], "kind": "still", "p": "object", "img": "A small dark brown hair padding ring and a fine-tooth teasing comb with a few hairpins on a cream cloth."},
+        {"lines": [9, 10], "kind": "still", "p": "object", "img": "Close-up of the high stand-up collar of a pale pink hanbok jeogori on a wooden hanger, the white dongjeong collar reaching high, soft light."},
+        {"lines": [11], "kind": "still", "p": "person", "hair": "dark brown hair pulled up into a big round bun placed HIGH on the back of the head, level with the top of the ears (a mid updo), nothing at the nape", "img": "Close back view of the woman's neck and the high stand-up hanbok collar; the big round bun sits high on the back of her head, with a long clean line of bare neck between the bun and the collar."},
+        {"lines": [12, 13], "kind": "clip", "p": "person", "img": "Close back view: an elegant low bun at the nape with a small jeweled hairpin, hanbok collar and shoulders, soft window light.", "m": "Soft light glints gently on the hairpin and glides across the low bun; she stays still and never turns."},
+        {"lines": [14], "kind": "still", "p": "object", "img": "Several dark brown bun hairpieces on a cream tray: one perfectly round, one half-moon shaped, one large, one small, one braided."},
+        {"lines": [15], "kind": "still", "p": "person", "img": "Back view of the woman standing by a bright window, medium shot from the waist up."},
+        {"lines": [16, 17], "kind": "summary"}
+      ]
+    },
+    {
+      "id": "6-short",
+      "card": {"no": "06", "when": "머리가 짧다면", "title": "숏컷과 부분 가발"},
+      "summary": "짧은 머리도 된다 · 가발은 내 머리와 같은 색으로",
+      "wed100": {"label": "P4·11", "slug": "p4-11", "question": "머리는 (앞머리 포함) 어디까지 길러야 해요?"},
+      "cap": {},
+      "scenes": [
+        {"lines": [0], "kind": "card"},
+        {"lines": [1], "kind": "clip", "p": "person", "hair": "short cropped dark brown hair (a neat short cut), the nape of the neck bare, no bun, no chignon", "img": "Back view of the head and shoulders of the woman with short cropped hair, soft daylight.", "m": "Soft daylight shifts gently across her short hair; she stays still and never turns."},
+        {"lines": [2, 3], "kind": "still", "p": "person", "hair": "short cropped dark brown hair styled with soft volume, a small jeweled hair ornament pinned just behind one ear, no bun, no chignon", "img": "Close back view of the woman's short hair, the ornament visible beside her ear; strictly from behind, no profile."},
+        {"lines": [4], "kind": "clip", "p": "object", "img": "A dark brown bun hairpiece resting on a simple wooden T-shaped stand on a salon counter, hairpins beside it.", "m": "Soft light glides slowly around the hairpiece. Static camera, no people, no hands."},
+        {"lines": [5, 6], "kind": "still", "p": "object", "img": "A blank calendar page with empty grid squares (no numbers, no writing) and, beside it, three locks of dark brown hair of increasing length laid in a row."},
+        {"lines": [7, 8], "kind": "still", "p": "object", "img": "On the left, a dark brown hairpiece lying next to a matching dark brown lock, blending as one; on the right, a reddish light-brown hairpiece next to a dark lock, clearly mismatched."},
+        {"lines": [9], "kind": "still", "p": "person", "img": "Back view of the woman in a wedding hall with her finished elegant low updo, soft light, blurred flowers in the background."},
+        {"lines": [10], "kind": "summary"}
+      ]
+    },
+    {
+      "id": "7-end",
+      "cap": {
+        "1": "3주 전, 퍼머는 굵은 웨이브로.",
+        "2": "1주 전, 새치 염색은 자연 갈색으로.",
+        "9": "정수리 숱이 걱정이라면? 머리는 어디까지 길러야 할까요? 다음 질문은 혼주메이크업 100문 100답에 있습니다."
+      },
+      "recap": ["3주 전 — 퍼머는 굵은 웨이브로", "1주 전 — 새치 염색은 자연 갈색", "앞머리 — 이마는 다 가리지 않는다", "가르마 — 얼굴형이 더 예쁜 쪽", "올림머리 — 요즘은 다운업, 목이 짧으면 미드업", "짧은 머리 — 그대로, 또는 같은 색 부분 가발"],
+      "next": [
+        {"label": "P4·12", "slug": "p4-12", "question": "정수리 탈모가 걱정인데 혼주 머리 가능할까요?"},
+        {"label": "P4·11", "slug": "p4-11", "question": "머리는 (앞머리 포함) 어디까지 길러야 해요?"}
+      ],
+      "scenes": [
+        {"lines": [0, 1, 2, 3, 4, 5], "kind": "recap"},
+        {"lines": [6], "kind": "still", "p": "person", "img": "Back view of the woman seated at a consultation table in a bright makeup studio, an empty chair across the table and a tea cup."},
+        {"lines": [7], "kind": "clip", "p": "object", "img": "A hand mirror lying face down and a tail comb on a vanity near a window in morning light.", "m": "Morning light moves slowly across the mirror back and the comb. Static camera, no people, no hands."},
+        {"lines": [8], "kind": "still", "reuse": "5-bun:2"},
+        {"lines": [9], "kind": "next"},
+        {"lines": [10], "kind": "end"}
+      ]
+    }
+  ]
+}

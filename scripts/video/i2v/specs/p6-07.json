@@ -3,7 +3,7 @@
   "font_dir": "/Users/osam/dev/speed-listening/store/video/book-promo-3part/work-myeongsim25/fonts",
   "dir": "video/work/i2v/p6-07/damchae",
   "voice_dir": "video/work/i2v/p6-07/voice",
-  "out": "video/out/shorts/i2v/p6-07_v1.mp4",
+  "out": "video/out/shorts/i2v/p6-07_v2.mp4",
   "outro_seg": "zz-outro2",
   "domain_seg": "zz-domain",
   "scenes": [
@@ -30,7 +30,7 @@
     },
     {
       "segs": [
-        "zz-bridge"
+        "zz-bridge-v2"
       ],
       "still": "img-03.jpg",
       "blur": true,
@@ -40,7 +40,6 @@
         "번지지 않게 닦는 법은?",
         "원장이 상담실에서만 하던 답 98개",
         "3개월 이용권 55,000원",
-        "메이크업 예약하면 전액 차감",
         "프로필 링크 → P6·06",
         "신청 · 전화 02-323-3321"
       ]

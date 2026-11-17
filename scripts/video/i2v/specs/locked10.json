@@ -1,0 +1,536 @@
+{
+ "_설명": "잠긴 문항 10편 p1-01~p1-11(p1-06 제외, 2026-11-14). 앞부분 답만 들려주고 tease 를 잠근다. loop 는 tease, label 은 /honjoo100 목록 번호.",
+ "p1-01": {
+  "prefix": "K1",
+  "hook": "신부 샵에서\n혼주 메이크업?",
+  "title": "신부 샵에서 혼주 메이크업, 괜찮을까?",
+  "tag": "#혼주메이크업",
+  "tease": "신부 샵이 놓치는 것, 무엇일까요?",
+  "scenes": [
+   {
+    "cues": [
+     "q"
+    ],
+    "kind": "clip",
+    "p": "person",
+    "img": "Back view of the woman stepping into a bright bridal salon lined with white wedding gowns on racks.",
+    "m": "She walks slowly into the salon, skirt sways gently; she never turns."
+   },
+   {
+    "cues": [
+     0
+    ],
+    "kind": "still",
+    "p": "object",
+    "img": "An empty bridal makeup salon: white wedding gowns, veils and tiaras on display, bright and youthful."
+   },
+   {
+    "cues": [
+     1
+    ],
+    "kind": "clip",
+    "p": "person",
+    "img": "Back view of the woman standing at the front of a Korean wedding hall like a hostess, white flowers and candles ahead.",
+    "m": "Candle flames flicker gently, her skirt sways slightly; she stays still and never turns."
+   },
+   {
+    "cues": [
+     2
+    ],
+    "kind": "still",
+    "p": "object",
+    "img": "A salon reservation desk with an open appointment book and a pen, white roses in a vase."
+   },
+   {
+    "cues": [
+     3
+    ],
+    "kind": "still",
+    "p": "object",
+    "img": "A single cream booking card and a fountain pen resting on a desk, soft light."
+   },
+   {
+    "cues": [
+     4
+    ],
+    "kind": "clip",
+    "p": "person",
+    "img": "Close back view of the woman seated, head slightly lowered as if thinking, low chignon, quiet studio.",
+    "m": "Her head tilts slightly as if thinking, then rests; she never turns."
+   }
+  ],
+  "loop": "신부 샵이 놓치는 것, 무엇일까요?",
+  "label": "P1·01"
+ },
+ "p1-02": {
+  "prefix": "K2",
+  "hook": "공장식\n혼주 메이크업?",
+  "title": "공장식 혼주 메이크업, 들어 보셨어요?",
+  "tag": "#혼주메이크업",
+  "tease": "공장식이란 정확히 무엇이고, 왜 피해야 할까요?",
+  "scenes": [
+   {
+    "cues": [
+     "q"
+    ],
+    "kind": "clip",
+    "p": "object",
+    "img": "A long row of identical salon chairs with capes and hair dryers, a wall clock, no people.",
+    "m": "The clock hands move, the capes sway slightly. Static camera, no people."
+   },
+   {
+    "cues": [
+     0
+    ],
+    "kind": "still",
+    "p": "person",
+    "img": "Back view of the woman seated, looking toward a crowded salon in the distance."
+   },
+   {
+    "cues": [
+     1
+    ],
+    "kind": "still",
+    "p": "object",
+    "img": "A calm consultation table with two cups of tea and hanbok fabric swatches."
+   },
+   {
+    "cues": [
+     2
+    ],
+    "kind": "clip",
+    "p": "person",
+    "img": "Close back view of the woman seated at the consultation table, hands resting on the table.",
+    "m": "She lowers her head slightly and her hands rest still; one small action only."
+   },
+   {
+    "cues": [
+     3
+    ],
+    "kind": "clip",
+    "p": "object",
+    "img": "Many identical makeup stations in a straight line, mirrors without reflections of people, no people.",
+    "m": "Light flickers softly across the stations. Static camera, no people appear."
+   }
+  ],
+  "loop": "공장식이란 정확히 무엇이고, 왜 피해야 할까요?",
+  "label": "P1·02"
+ },
+ "p1-03": {
+  "prefix": "K3",
+  "hook": "혼주 메이크업 예약,\n이 5가지 보세요",
+  "title": "혼주 메이크업 예약 전, 이 5가지 보세요",
+  "tag": "#혼주메이크업",
+  "tease": "나머지 네 가지는 무엇일까요?",
+  "scenes": [
+   {
+    "cues": [
+     "q"
+    ],
+    "kind": "clip",
+    "p": "object",
+    "img": "An open notebook with a list of five empty checkboxes (no writing) and a pen, soft window light.",
+    "m": "The pen rolls slightly, light moves across the page. Static camera."
+   },
+   {
+    "cues": [
+     0
+    ],
+    "kind": "still",
+    "p": "person",
+    "img": "Back view of the woman seated at a desk with an open notebook."
+   },
+   {
+    "cues": [
+     1,
+     2
+    ],
+    "kind": "still",
+    "p": "object",
+    "img": "A calm private makeup studio for mature women: pale hanbok on stands, a single elegant chair, no people."
+   },
+   {
+    "cues": [
+     3
+    ],
+    "kind": "clip",
+    "p": "object",
+    "img": "A bright bridal salon with wedding gowns on racks and a busy styling area, no people.",
+    "m": "The gowns sway gently on the racks. Static camera, no people."
+   },
+   {
+    "cues": [
+     4
+    ],
+    "kind": "clip",
+    "p": "person",
+    "img": "Back view of the woman sitting and waiting in a busy salon lobby.",
+    "m": "Her hand smooths her skirt slowly, then rests; she never turns."
+   }
+  ],
+  "loop": "나머지 네 가지는 무엇일까요?",
+  "label": "P1·03"
+ },
+ "p1-04": {
+  "prefix": "K4",
+  "hook": "예약 전,\n이 질문 꼭 하세요",
+  "title": "혼주 메이크업 예약 전, 이 질문 꼭 하세요",
+  "tag": "#혼주메이크업",
+  "tease": "두 번째 질문은 무엇일까요?",
+  "scenes": [
+   {
+    "cues": [
+     "q"
+    ],
+    "kind": "clip",
+    "p": "person",
+    "img": "Back view of the woman seated by a window, holding a phone.",
+    "m": "She slowly raises the phone toward her ear; one action only, she never turns."
+   },
+   {
+    "cues": [
+     0
+    ],
+    "kind": "still",
+    "p": "object",
+    "img": "A phone lying beside an open notebook and a pen on a cream table."
+   },
+   {
+    "cues": [
+     1
+    ],
+    "kind": "clip",
+    "p": "person",
+    "img": "Close-up of one hand holding a makeup brush over an open eyeshadow palette.",
+    "m": "The brush dabs softly into the palette, then lifts; one action only, five natural fingers."
+   },
+   {
+    "cues": [
+     2
+    ],
+    "kind": "still",
+    "p": "person",
+    "img": "Back view of the woman seated in a makeup chair, low chignon."
+   },
+   {
+    "cues": [
+     3
+    ],
+    "kind": "clip",
+    "p": "object",
+    "img": "An empty makeup chair with an apron hanging on it, early morning light, no people.",
+    "m": "Morning light slowly brightens; the apron sways slightly. Static camera."
+   }
+  ],
+  "loop": "두 번째 질문은 무엇일까요?",
+  "label": "P1·04"
+ },
+ "p1-05": {
+  "prefix": "K5",
+  "hook": "홈페이지 사진,\n이것부터 보세요",
+  "title": "혼주 메이크업 샵, 홈페이지 사진부터 보세요",
+  "tag": "#혼주메이크업",
+  "tease": "혼주 전문인지 가리는 나머지 방법은?",
+  "scenes": [
+   {
+    "cues": [
+     "q"
+    ],
+    "kind": "clip",
+    "p": "person",
+    "img": "Over-the-shoulder view from behind the woman holding a tablet whose screen shows only soft blurred light.",
+    "m": "Her finger slowly swipes across the tablet; one action only, she never turns."
+   },
+   {
+    "cues": [
+     0
+    ],
+    "kind": "still",
+    "p": "object",
+    "img": "A salon display mixing bridal gowns and mature women's hanbok, no people."
+   },
+   {
+    "cues": [
+     1
+    ],
+    "kind": "still",
+    "p": "object",
+    "img": "An open notebook and a pen next to a cup of tea."
+   },
+   {
+    "cues": [
+     2
+    ],
+    "kind": "clip",
+    "p": "object",
+    "img": "A portfolio album open on a table, pages with soft blurred photos, no readable images.",
+    "m": "The album pages turn slowly. Static camera."
+   },
+   {
+    "cues": [
+     3
+    ],
+    "kind": "still",
+    "p": "object",
+    "img": "A laptop and a phone face-up showing a blurred photo grid, no text."
+   },
+   {
+    "cues": [
+     4
+    ],
+    "kind": "clip",
+    "p": "object",
+    "img": "Blurred photo prints of brides in white gowns scattered on a table, faces not visible.",
+    "m": "The prints slide slightly as if in a light breeze. Static camera."
+   }
+  ],
+  "loop": "혼주 전문인지 가리는 나머지 방법은?",
+  "label": "P1·05"
+ },
+ "p1-07": {
+  "prefix": "K7",
+  "hook": "출장 vs 샵,\n어디가 나을까?",
+  "title": "혼주 메이크업, 출장과 샵 중 어디가 나을까?",
+  "tag": "#혼주메이크업",
+  "tease": "출장의 단점, 그리고 샵의 장점은?",
+  "scenes": [
+   {
+    "cues": [
+     "q"
+    ],
+    "kind": "clip",
+    "p": "object",
+    "img": "A hanbok garment bag and a makeup case standing by an apartment front door.",
+    "m": "The door slowly opens and morning light spills in. Static camera, no people."
+   },
+   {
+    "cues": [
+     0
+    ],
+    "kind": "still",
+    "p": "person",
+    "img": "Back view of the woman in her living room in the early morning."
+   },
+   {
+    "cues": [
+     1,
+     2
+    ],
+    "kind": "still",
+    "p": "object",
+    "img": "A professional makeup case open on a living room table."
+   },
+   {
+    "cues": [
+     3
+    ],
+    "kind": "clip",
+    "p": "person",
+    "img": "Back view of the woman seated relaxed on a sofa at home.",
+    "m": "She slowly lifts a teacup; one action only, she never turns."
+   },
+   {
+    "cues": [
+     4
+    ],
+    "kind": "clip",
+    "p": "object",
+    "img": "A heavy hanbok garment bag lying on the floor beside the front door.",
+    "m": "Light moves slowly across the bag. Static camera, no people."
+   }
+  ],
+  "loop": "출장의 단점, 그리고 샵의 장점은?",
+  "label": "P1·07"
+ },
+ "p1-08": {
+  "prefix": "K8",
+  "hook": "혼주 메이크업,\n언제 예약해요?",
+  "title": "혼주 메이크업, 언제 예약해야 할까?",
+  "tag": "#혼주메이크업",
+  "tease": "그래서 몇 달 전에 예약해야 할까요?",
+  "scenes": [
+   {
+    "cues": [
+     "q"
+    ],
+    "kind": "clip",
+    "p": "object",
+    "img": "A desk calendar beside a vase of flowers, soft light.",
+    "m": "The calendar pages flip slowly. Static camera."
+   },
+   {
+    "cues": [
+     0
+    ],
+    "kind": "still",
+    "p": "object",
+    "img": "An appointment book densely filled with blurred handwriting, no readable text."
+   },
+   {
+    "cues": [
+     1
+    ],
+    "kind": "clip",
+    "p": "person",
+    "img": "Back view of the woman seated alone in a quiet private makeup room.",
+    "m": "An extremely slow push-in toward her chignon. She stays perfectly still."
+   },
+   {
+    "cues": [
+     2
+    ],
+    "kind": "clip",
+    "p": "object",
+    "img": "A large busy salon floor with many chairs and dryers, no people.",
+    "m": "Light flickers softly across the chairs. Static camera, no people."
+   }
+  ],
+  "loop": "그래서 몇 달 전에 예약해야 할까요?",
+  "label": "P1·08"
+ },
+ "p1-09": {
+  "prefix": "K9",
+  "hook": "혼주 메이크업,\n얼마가 적당해요?",
+  "title": "혼주 메이크업 비용, 얼마가 적당할까?",
+  "tag": "#혼주메이크업",
+  "tease": "그래서 적정 가격은 얼마일까요?",
+  "scenes": [
+   {
+    "cues": [
+     "q"
+    ],
+    "kind": "clip",
+    "p": "object",
+    "img": "A cream envelope beside a lacquered tray of makeup brushes, soft light.",
+    "m": "A soft light sweep glides across the brushes. Static camera."
+   },
+   {
+    "cues": [
+     1
+    ],
+    "kind": "still",
+    "p": "person",
+    "img": "Back view of the woman seated at a consultation table."
+   },
+   {
+    "cues": [
+     2
+    ],
+    "kind": "clip",
+    "p": "person",
+    "img": "Back view of the woman seated in a makeup chair in a calm private studio.",
+    "m": "An extremely slow push-in toward her chignon. She stays perfectly still."
+   },
+   {
+    "cues": [
+     3
+    ],
+    "kind": "clip",
+    "p": "object",
+    "img": "High-end makeup products neatly arranged on a tray.",
+    "m": "A soft light sweep glides across the products. Static camera."
+   }
+  ],
+  "loop": "그래서 적정 가격은 얼마일까요?",
+  "label": "P1·09"
+ },
+ "p1-10": {
+  "prefix": "KA",
+  "hook": "10만 원대 업체,\n괜찮을까?",
+  "title": "10만 원대 혼주 메이크업, 괜찮을까?",
+  "tag": "#혼주메이크업",
+  "tease": "저가 업체의 또 다른 문제는?",
+  "scenes": [
+   {
+    "cues": [
+     "q"
+    ],
+    "kind": "clip",
+    "p": "object",
+    "img": "A few worn makeup brushes on a plain table.",
+    "m": "Light moves slowly across the brushes. Static camera."
+   },
+   {
+    "cues": [
+     0
+    ],
+    "kind": "clip",
+    "p": "object",
+    "img": "A wall clock above an empty makeup chair.",
+    "m": "The clock hands move quickly. Static camera, no people."
+   },
+   {
+    "cues": [
+     1
+    ],
+    "kind": "still",
+    "p": "object",
+    "img": "A cheap worn makeup brush resting on a cracked palette."
+   },
+   {
+    "cues": [
+     2
+    ],
+    "kind": "clip",
+    "p": "person",
+    "img": "Back view of the woman seated with her hands clasped in her lap.",
+    "m": "Her hands tighten slightly, then relax; she never turns."
+   }
+  ],
+  "loop": "저가 업체의 또 다른 문제는?",
+  "label": "P1·10"
+ },
+ "p1-11": {
+  "prefix": "KB",
+  "hook": "단독룸 샵,\n뭐가 다를까?",
+  "title": "혼주 메이크업, 단독룸 샵은 뭐가 다를까?",
+  "tag": "#혼주메이크업",
+  "tease": "프라이빗 샵의 또 다른 장점은?",
+  "scenes": [
+   {
+    "cues": [
+     "q"
+    ],
+    "kind": "clip",
+    "p": "person",
+    "img": "Back view of the woman walking into a quiet private room through an open door.",
+    "m": "She walks slowly through the doorway; she never turns."
+   },
+   {
+    "cues": [
+     0
+    ],
+    "kind": "still",
+    "p": "person",
+    "img": "Back view of the woman seated, hands clasped, slightly tense posture."
+   },
+   {
+    "cues": [
+     1
+    ],
+    "kind": "still",
+    "p": "object",
+    "img": "A delicate glass vase with a single flower."
+   },
+   {
+    "cues": [
+     2
+    ],
+    "kind": "clip",
+    "p": "object",
+    "img": "A private makeup room with a single chair and soft curtains, no people.",
+    "m": "The curtains sway gently. Static camera, no people."
+   },
+   {
+    "cues": [
+     3
+    ],
+    "kind": "still",
+    "p": "person",
+    "img": "Back view of the woman seated calmly alone in the private room."
+   }
+  ],
+  "loop": "프라이빗 샵의 또 다른 장점은?",
+  "label": "P1·11"
+ }
+}

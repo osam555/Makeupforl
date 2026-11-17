@@ -1,0 +1,21 @@
+{
+  "_설명": "상위 5편 리메이크(docs/video/top5-remake-plan.md) 내레이터 목소리. 원장님 목소리가 아니다 — 원장님 음성을 참조·복제하지 않았고, 화면·설명란에 원장님 목소리라고 적지 않는다. 원장님 녹음이 생기면 그쪽으로 바꾼다.",
+  "chosen": "typecast_yunjeong",
+  "chosen_at": "2026-11-15",
+  "chosen_by": "사이트 매니저(VoxCPM2·일레븐랩스·Typecast 후보 15개 중 Typecast 5번)",
+  "replaced": "VoxCPM2 v3_bright30 (같은 날 먼저 골랐다가 바꿈)",
+  "engine": "typecast",
+  "api": "https://api.typecast.ai/v1/text-to-speech",
+  "key_env": "TYPECAST_API_KEY",
+  "model": "ssfm-v30",
+  "voice_id": "tc_65bb39f30c9fdc33ad4c5a7b",
+  "voice_name": "Yunjeong (중년 여성, 다큐멘터리)",
+  "language": "kor",
+  "prompt": {"emotion_type": "preset", "emotion_preset": "normal"},
+  "reference_wav": "video/scripts/top5/narrator_ref.wav",
+  "reference_note": "고른 샘플(대본 5-1 앞 네 문장, 17.3초). Typecast 는 참조 음성을 받지 않는다 — 귀로 견줄 기준으로만 둔다.",
+  "chunk": "문장(또는 쉼표 앞) 하나씩 만든다. 한 번에 길게 만들면 빨라지고 구절이 빠진다.",
+  "gap_sec": 0.35,
+  "check": "토막마다 whisper small(ko)로 받아써서 대본 낱말과 맞는지 확인한다. 안 맞으면 다시 만든다.",
+  "output": "Typecast 는 44.1kHz 16-bit WAV 를 준다 → PCM 24-bit 48kHz 모노로 바꿔 작업, 최종 믹스 −14 LUFS. AAC·mp3 로 받지 않는다."
+}

@@ -1,0 +1,182 @@
+{
+  "_설명": "조회수 12~20위 리메이크 8편(⑫·⑬·⑭·⑮·⑯·⑰·⑱·⑳) 쇼츠 장면 사양(2026-11-16). shorts-6-10.json 과 같은 규칙. 소리는 narration-12-20.json. cap 은 소리 글과 화면 글이 다른 줄만 적는다(숫자). 사람은 뒷모습만 그린다. 물건 컷에는 손도 그리지 않는다 — ⑱의 두드리는 손은 물건(화장솜·물결)으로 바꿔 그렸다.",
+  "_narration": "narration-12-20.json",
+  "12": {
+    "prefix": "S12",
+    "target": "p5-01",
+    "label": "P5·01",
+    "question": "혼주에게도 퍼스널 컬러 진단이 필요할까?",
+    "hook": "혼주 머리 염색\n무슨 색이 좋을까요?",
+    "title": "혼주 머리 염색, 무슨 색이 좋을까요? 답은 자연 갈색 #혼주헤어 #혼주염색 #shorts",
+    "voice": {"chunks": "12_chunks", "files": ["00", "01", "02", "03", "04", "05", "06", "07", "08"]},
+    "cap": {},
+    "scenes": [
+      {"kind": "clip", "p": "person", "img": "Close back view of the woman seated in a makeup studio, her hair a natural soft medium brown color in a neat low chignon, warm daylight on the hair, pale pink jeogori collar.", "m": "Soft daylight shifts gently across her brown hair; she stays still and never turns."},
+      {"kind": "still", "p": "object", "img": "A small hair-dye bowl with a tint brush and a folded dark cape on a salon counter, beside a blank wall calendar page with empty grid squares (no numbers, no writing)."},
+      {"kind": "still", "p": "object", "img": "A jet black lock of hair laid on a folded pastel pink hanbok silk, the black looking heavy against the soft fabric."},
+      {"kind": "still", "p": "object", "img": "A very light blond-brown lock of hair laid on a cream cloth, looking pale and thin."},
+      {"kind": "clip", "p": "object", "img": "A bright wedding hall aisle with flower arrangements and two empty ribboned chairs at the front, no people.", "m": "Petals on the flower arrangements stir slightly and light flickers softly. Static camera, no people, no hands."},
+      {"kind": "still", "p": "object", "img": "Two glossy locks of hair side by side on a cream cloth: one natural medium brown, one dark brown."},
+      {"kind": "still", "p": "object", "img": "A fan of hair color swatches on a salon counter, shades running from dark brown to light golden brown."},
+      {"kind": "clip", "p": "person", "img": "Full back view of the woman standing by a tall window in the pale pink jeogori and deep magenta skirt, natural brown hair in a low chignon, the whole outfit visible.", "m": "The skirt hem sways very slightly; she stands still and never turns."},
+      {"kind": "lock"}
+    ]
+  },
+  "13": {
+    "prefix": "S13",
+    "target": "p3-23",
+    "label": "P3·22",
+    "question": "아버지도 혼주 메이크업을 꼭 해야 할까?",
+    "hook": "혼주 메이크업\n얼마나 걸릴까요?",
+    "title": "혼주 메이크업 얼마나 걸릴까요? 여자 1시간 30분, 남자 30분 #혼주메이크업 #shorts",
+    "voice": {"chunks": "13_chunks", "files": ["00", "01", "02", "03", "04", "05", "06", "07", "08"]},
+    "cap": {
+      "0": "혼주 메이크업, 여자 혼주는 1시간 30분, 남자 혼주는 30분 걸립니다.",
+      "7": "남자 혼주는 색조 화장 대신 골격 화장 위주로 내추럴하게, 양복에 어울리는 헤어까지 30분."
+    },
+    "scenes": [
+      {"kind": "clip", "p": "object", "img": "A round wall clock with plain hands and a blank face (no numerals, no writing) above a makeup vanity with warm bulbs and brushes in a cup.", "m": "The second hand of the clock moves steadily and the bulbs glow softly. Static camera, no people, no hands."},
+      {"kind": "still", "p": "object", "img": "A small hourglass with sand falling on a salon counter beside a tail comb."},
+      {"kind": "still", "p": "person", "img": "Back view of the woman seated in a salon chair wearing a white salon cape over her shoulders, facing a plain softly lit wall (no mirror), dark brown hair loosely pinned."},
+      {"kind": "still", "p": "object", "img": "An early morning window with the sun just rising, a hanbok on a hanger beside it and a small bag ready on a chair."},
+      {"kind": "clip", "p": "object", "img": "A wide wedding banquet hall in the evening with round tables, flowers and warm lights, no people.", "m": "The warm lights twinkle gently. Static camera, no people, no hands."},
+      {"kind": "still", "p": "object", "img": "Makeup laid out in order on a vanity: foundation bottle, cushion compact, brushes, eyeshadow palette and lipstick, with hairpins and a tail comb at the side."},
+      {"kind": "still", "p": "object", "img": "A hair dryer and a round brush resting on a salon counter in soft light."},
+      {"kind": "clip", "p": "object", "img": "A dark navy men's suit jacket with a tie on a hanger in a salon, a comb and a small grooming kit on the counter beside it.", "m": "Soft light glides slowly across the suit fabric. Static camera, no people, no hands."},
+      {"kind": "lock"}
+    ]
+  },
+  "14": {
+    "prefix": "S14",
+    "target": "p2-04",
+    "label": "P2·04",
+    "question": "사전 컨설팅 갈 때 준비할 것은?",
+    "hook": "혼주 화장 잘 하려면\n가장 먼저 할 일",
+    "title": "혼주 화장 잘 하려면 가장 먼저 할 일, 사전 컨설팅 #혼주메이크업 #사전컨설팅 #shorts",
+    "voice": {"chunks": "14_chunks", "files": ["00", "01", "02", "03", "04", "05", "06", "07", "08"]},
+    "cap": {},
+    "scenes": [
+      {"kind": "clip", "p": "person", "img": "Back view of the woman seated at a small consultation table in a bright makeup studio, an open blank notebook and a cup of tea on the table, an empty chair across from her (no other people).", "m": "Steam rises gently from the tea cup; she stays still and never turns."},
+      {"kind": "still", "p": "object", "img": "A hand mirror lying face down on a vanity beside scattered hairpins, slightly disordered, cool morning light."},
+      {"kind": "still", "p": "object", "img": "A hanbok garment bag and a small handbag set by a front door in the early morning, ready to leave."},
+      {"kind": "clip", "p": "object", "img": "The entrance door of a small elegant makeup studio with a blank signboard (no text) and potted plants on both sides, soft daylight.", "m": "Leaves of the potted plants sway slightly in a breeze. Static camera, no people, no hands."},
+      {"kind": "still", "p": "object", "img": "An eyeshadow palette with soft coral and rose shades and two lipsticks on a cream cloth."},
+      {"kind": "still", "p": "person", "img": "Close back view of the woman's elegant voluminous low chignon with a small ornament, pale pink jeogori collar; strictly from behind."},
+      {"kind": "still", "p": "object", "img": "An open notebook with blank lined pages (no writing) and a pen beside a cup of tea on a wooden table."},
+      {"kind": "clip", "p": "object", "img": "A wedding hall lobby with tall flower stands and warm light, no people.", "m": "Light sparkles softly on the flowers. Static camera, no people, no hands."},
+      {"kind": "lock"}
+    ]
+  },
+  "15": {
+    "prefix": "S15",
+    "target": "p4-18",
+    "label": "P4·18",
+    "question": "뒤꽂이는 꼭 준비해야 할까?",
+    "hook": "혼주 한복 악세서리\n세 가지면 됩니다",
+    "title": "혼주 한복 악세서리, 세 가지면 됩니다 #혼주한복 #뒤꽂이 #진주귀걸이 #shorts",
+    "voice": {"chunks": "15_chunks", "files": ["00_c1", "01", "02", "03_c0", "04", "05", "06", "07", "08"]},
+    "cap": {
+      "1": "평소 악세서리를 안 하던 분도, 결혼식 날 몇 가지만 하면 2배 더 예뻐 보여요."
+    },
+    "scenes": [
+      {"kind": "clip", "p": "object", "img": "A cream silk tray holding three items: a Korean hanbok hair ornament pin with small jade and coral flowers, a pair of pearl earrings, and a single ring.", "m": "Soft light glides slowly across the pearls and the ornament. Static camera, no people, no hands."},
+      {"kind": "still", "p": "object", "img": "An empty jewelry box standing open on a vanity beside a neatly folded hanbok."},
+      {"kind": "still", "p": "object", "img": "A single traditional Korean hair ornament pin with small jade and coral flowers on a cream cloth, close-up."},
+      {"kind": "clip", "p": "person", "img": "Close back view of the woman's low chignon with a flower hair ornament pinned at the back, pale pink jeogori collar; strictly from behind, no profile.", "m": "Light glints softly on the hair ornament; she stays still and never turns."},
+      {"kind": "still", "p": "object", "img": "A pair of round pearl stud earrings resting on folded pastel hanbok silk."},
+      {"kind": "still", "p": "object", "img": "A pair of pearl earrings, each pearl ringed by a few tiny sparkling clear stones, on a cream cloth, close-up."},
+      {"kind": "clip", "p": "object", "img": "A green jade ring and a pearl ring side by side on a folded pale silk hanbok sleeve.", "m": "Light shifts softly over the two rings. Static camera, no people, no hands."},
+      {"kind": "still", "p": "object", "img": "A pair of white gloves folded and set aside at the edge of a table, with a single ring on a small dish in front."},
+      {"kind": "lock"}
+    ]
+  },
+  "16": {
+    "prefix": "S16",
+    "target": "p5-02",
+    "label": "P5·02",
+    "question": "양가 혼주 한복 색, 맞춰야 할까?",
+    "hook": "뒤꽂이 색\n어떻게 고를까요?",
+    "title": "혼주 뒤꽂이 색 고르는 법, 하얀 뒤꽂이는 피하세요 #뒤꽂이 #혼주올림머리 #shorts",
+    "voice": {"chunks": "16_chunks", "files": ["00", "01", "02", "03", "04", "05", "06", "07", "08_c0"]},
+    "cap": {},
+    "scenes": [
+      {"kind": "clip", "p": "object", "img": "A pale pink jeogori folded on a table with a hair ornament pin of pink flowers lying on it, the colors matching.", "m": "Soft light glides slowly over the silk and the ornament. Static camera, no people, no hands."},
+      {"kind": "still", "p": "object", "img": "Three hair ornament pins in similar shades of pink, rose and peach laid in a row on a cream cloth."},
+      {"kind": "still", "p": "person", "img": "Close back view of the woman's low chignon with a pink-flowered hair ornament pinned at the back, pale pink jeogori collar; strictly from behind."},
+      {"kind": "clip", "p": "object", "img": "A soft blue jeogori folded on a table with a hair ornament pin of blue and jade flowers lying on it.", "m": "Soft light glides slowly over the blue silk and the ornament. Static camera, no people, no hands."},
+      {"kind": "still", "p": "object", "img": "An ivory jeogori laid flat with a deep red skirt and a deep blue skirt folded beside it, and two hair ornaments on top, one red-toned and one blue-toned."},
+      {"kind": "still", "p": "object", "img": "A plain all-white hair ornament pin lying alone in a small box set at the edge of a table."},
+      {"kind": "still", "p": "object", "img": "A plain white hair ornament pin on a dark wooden table in dim cool light, quiet and somber."},
+      {"kind": "clip", "p": "object", "img": "A plain white hair ornament next to a colorful jade and coral hair ornament on a cream cloth; the colorful one looks richer.", "m": "Light glints gently on the colorful ornament. Static camera, no people, no hands."},
+      {"kind": "lock"}
+    ]
+  },
+  "17": {
+    "prefix": "S17",
+    "target": "p3-24",
+    "label": "P3·23",
+    "question": "평범한 것보다 나만의 개성을 살리고 싶다면?",
+    "hook": "뒤꽂이\n화려해도 될까요?",
+    "title": "혼주 뒤꽂이, 화려해도 될까요? #뒤꽂이 #혼주헤어 #혼주올림머리 #shorts",
+    "voice": {"chunks": "17_chunks", "files": ["00", "01", "02", "03", "04", "05", "06", "07", "08"]},
+    "cap": {},
+    "scenes": [
+      {"kind": "still", "p": "person", "img": "Close back view of the woman's voluminous updo with a large ornate gold and pearl hair ornament pinned at the back, pale pink jeogori collar; strictly from behind, no profile."},
+      {"kind": "still", "p": "object", "img": "Several hair ornament pins of different styles, from small and simple to large and ornate, arranged on a cream tray."},
+      {"kind": "still", "p": "object", "img": "A row of empty salon chairs in a bright makeup studio in the morning, a folded cape on each chair."},
+      {"kind": "still", "p": "object", "img": "Two hair ornaments side by side on silk: a small simple pearl pin and a large ornate gold flower pin."},
+      {"kind": "clip", "p": "person", "img": "Back view of the woman seated in a makeup studio, her dark brown hair in a glamorous updo with soft waves and volume, pale pink jeogori; strictly from behind.", "m": "She tilts her head very slightly and holds still; she never turns."},
+      {"kind": "clip", "p": "object", "img": "A large ornate hair ornament with gold filigree, pearls and red coral beads resting on silk, close-up.", "m": "Light glints softly across the gold and pearls. Static camera, no people, no hands."},
+      {"kind": "still", "p": "object", "img": "An elegant hanbok displayed on a stand in a refined quiet room, graceful mood."},
+      {"kind": "clip", "p": "object", "img": "A small lacquer jewelry box standing open with an ornate hair ornament resting on silk inside.", "m": "Soft light glides across the ornament in the box. Static camera, no people, no hands."},
+      {"kind": "lock"}
+    ]
+  },
+  "18": {
+    "prefix": "S18",
+    "target": "p3-04",
+    "label": "P3·04",
+    "question": "하루 종일 무너지지 않고 유지될까?",
+    "hook": "혼주 화장 전\n스킨은 일곱 번",
+    "title": "혼주 화장 전 스킨은 7번, 두드려 바르세요 #혼주메이크업 #혼주화장 #shorts",
+    "voice": {"chunks": "18_chunks", "files": ["00_c1", "01_c0", "02", "03", "04", "05", "06", "07", "08"]},
+    "cap": {
+      "0": "혼주 화장 전, 스킨을 7번 두드려 바르세요.",
+      "1": "혼주 화장은 최소 5시간 이상 유지돼야 합니다.",
+      "3": "방법은 패팅. 스킨을 바르고, 두드려서 흡수시키는 겁니다. 이걸 7번 되풀이하세요.",
+      "6": "스킨은 7번, 로션과 에센스는 3번. 수분 폭탄을 만드는 방법이에요."
+    },
+    "scenes": [
+      {"kind": "clip", "p": "object", "img": "A clear glass bottle of toner and a stack of cotton pads on a vanity in morning light, a few water drops on the glass.", "m": "A water drop slides slowly down the bottle and light shimmers. Static camera, no people, no hands."},
+      {"kind": "still", "p": "object", "img": "A sunlit wedding hall aisle with flower arrangements, calm and empty, no people."},
+      {"kind": "still", "p": "object", "img": "Dewy water droplets on a smooth peach-colored flower petal, close-up, softly glowing."},
+      {"kind": "still", "p": "object", "img": "A cotton pad soaked with toner resting on a small ceramic dish, with a few droplets around it."},
+      {"kind": "still", "p": "object", "img": "Gentle ripples spreading on the surface of clear water in a white ceramic bowl."},
+      {"kind": "still", "p": "object", "img": "A small standing vanity mirror turned away showing only its back, with a toner bottle and a folded hand towel beside it."},
+      {"kind": "clip", "p": "object", "img": "Three bottles in a row on a vanity in morning light: a toner, a lotion and an essence, with small water droplets on the surface in front.", "m": "Morning light moves slowly across the three bottles. Static camera, no people, no hands."},
+      {"kind": "clip", "p": "person", "img": "Full back view of the woman standing in a bright wedding hall lobby in the pale pink jeogori and deep magenta skirt, hair in a neat low chignon.", "m": "The skirt hem sways very slightly; she stands still and never turns."},
+      {"kind": "lock"}
+    ]
+  },
+  "20": {
+    "prefix": "S20",
+    "target": "p4-13",
+    "label": "P4·13",
+    "question": "빈약한 정수리 볼륨, 어떻게 살릴까?",
+    "hook": "혼주 머리 가르마\n어느 쪽이 예쁠까요?",
+    "title": "혼주 머리 가르마, 어느 쪽으로 탈까요? 기준 두 가지 #혼주헤어 #가르마 #shorts",
+    "voice": {"chunks": "20_chunks", "files": ["00", "01", "02", "03", "04", "05", "06", "07", "08"]},
+    "cap": {},
+    "scenes": [
+      {"kind": "clip", "p": "person", "img": "View from behind and slightly above the woman's head showing a clean side part in her dark brown hair leading down to a low chignon, pale pink jeogori collar; strictly from behind, no face.", "m": "Soft light moves gently across the part line in her hair; she stays still and never turns."},
+      {"kind": "still", "p": "object", "img": "A hand mirror lying face down and a tail comb on a vanity in soft light."},
+      {"kind": "still", "p": "object", "img": "A tail comb laid vertically in the center of a cream cloth, dividing it into left and right halves, one hairpin on each side."},
+      {"kind": "still", "p": "object", "img": "A smooth ceramic vase with a soft flowing curved outline in gentle side light on a cream background."},
+      {"kind": "clip", "p": "person", "img": "Close back view of the woman's head with side-parted dark brown hair swept smoothly behind the ear into a low chignon, pale pink jeogori collar; strictly from behind, no profile.", "m": "She raises one hand and smooths the hair behind her ear, then lowers it; she never turns."},
+      {"kind": "still", "p": "object", "img": "Two locks of dark brown hair on a cream cloth, one thick and full, one thin and sparse."},
+      {"kind": "clip", "p": "object", "img": "A round brush and a hair dryer on a salon counter beside a full, voluminous lock of dark brown hair.", "m": "Soft light glides slowly over the brush and the hair. Static camera, no people, no hands."},
+      {"kind": "still", "p": "object", "img": "A small dark brown hairpiece and a few volume clips on a tray beside a comb."},
+      {"kind": "lock"}
+    ]
+  }
+}
