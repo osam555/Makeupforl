@@ -1,0 +1,19 @@
+{
+  "name": "makeupforl-shorts-remotion",
+  "private": true,
+  "description": "100문100답 쇼츠 본편 틀 — scripts/video/top10_short.py 가 props 를 만들어 부른다",
+  "scripts": {
+    "studio": "remotion studio",
+    "render": "remotion render"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.447",
+    "remotion": "4.0.447",
+    "react": "19.2.3",
+    "react-dom": "19.2.3"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.7",
+    "typescript": "5.9.3"
+  }
+}

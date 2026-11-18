@@ -17,7 +17,7 @@ import {
   wed100Parts,
 } from '@/lib/wed100'
 import { getSiteImages } from '@/lib/siteImages'
-import { MEMBER_MONTHS, MEMBER_PRICE_LABEL, isFreeQuestion, isOpen } from '@/lib/wed100Access'
+import { MEMBER_MONTHS, MEMBER_PRICE_LABEL, isFreeQuestion, isOpen, passLine } from '@/lib/wed100Access'
 import { getWed100Access } from '@/lib/wed100Access.server'
 import { breadcrumbJsonLd, jsonLdScript, toKstIso } from '@/lib/seo'
 import { SITE_URL } from '@/lib/site'
@@ -138,6 +138,12 @@ export default async function Wed100Page() {
             <br />
             25년간 1만 명의 혼주님을 만난 원장이 가장 많이 받은 질문에 하나씩 답했습니다.
           </p>
+          {/* 값과 차감 조건을 첫 화면에서 — 쇼츠 프로필 링크로 온 사람이 문항을 하나 더 누르지 않아도 보게(passLine) */}
+          {access.paywall && (
+            <p className="mt-4 inline-block rounded-lg bg-[var(--w-card)] px-3 py-2 text-[15px] font-bold text-[var(--w-rose)]">
+              {passLine(items.filter((x) => x.part >= 1 && x.part <= 6 && !isOpen(access, x.slug)).length)}
+            </p>
+          )}
           <p className="mt-5 text-sm text-[var(--w-mut)]">
             {wed100Meta.author} · 예약 준비부터 예식 당일까지{' '}
             {wed100Parts.filter((p) => p.part >= 1 && p.part <= 6).length}개 파트

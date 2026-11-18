@@ -1,40 +1,23 @@
 'use client'
 
 import AdminGate from '@/components/admin/AdminGate'
+import AdminView, { getIdToken } from '@/components/admin/AdminView'
 import Overview from '@/components/admin/Overview'
-import type { DailyStat } from '@/lib/analytics'
-import type { Content, QnaRow } from '@/components/admin/Overview'
-import type { SeoFacts, SeoKeyword, SeoSnapshot } from '@/lib/seoKeywords'
 
-/** 서버가 모은 값을 로그인 확인 뒤에 화면으로 넘긴다 */
-export default function OverviewGate(props: {
-  days: DailyStat[]
-  facts: Record<string, SeoFacts>
-  keywords: SeoKeyword[]
-  content: Content
-  qna: QnaRow[]
-  history: SeoSnapshot[]
-}) {
+/**
+ * 첫 화면 값은 로그인을 확인한 뒤에 받는다.
+ *
+ * 전에는 서버 페이지가 모아 props 로 넘겼는데, 그러면 로그인 전 HTML 에도 방문 기록과
+ * 검색어 목록이 실린다. 게이트는 가리기만 할 뿐 막지 못한다.
+ */
+export default function OverviewGate() {
   return (
     <AdminGate title="관리자 대시보드">
-      {(ctx) => (
-        <Overview
-          {...props}
-          auth={async () =>
-            ctx.mode === 'google' && ctx.email
-              ? { idToken: await getIdToken() }
-              : { password: ctx.password }
-          }
-        />
+      {() => (
+        <AdminView view="overview">
+          {(data) => <Overview {...data} auth={async () => ({ idToken: await getIdToken() })} />}
+        </AdminView>
       )}
     </AdminGate>
   )
-}
-
-async function getIdToken(): Promise<string> {
-  const { getFirebaseApp } = await import('@/lib/firebase/client')
-  const app = getFirebaseApp()
-  if (!app) return ''
-  const { getAuth } = await import('firebase/auth')
-  return (await getAuth(app).currentUser?.getIdToken()) ?? ''
 }

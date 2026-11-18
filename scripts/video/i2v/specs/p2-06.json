@@ -1,0 +1,70 @@
+{
+  "slug": "p2-06",
+  "font_dir": "/Users/osam/dev/speed-listening/store/video/book-promo-3part/work-myeongsim25/fonts",
+  "dir": "video/work/i2v/p2-06/damchae",
+  "voice_dir": "video/work/i2v/p2-06/voice",
+  "out": "video/out/shorts/i2v/p2-06_v2.mp4",
+  "outro_seg": "zz-outro2",
+  "domain_seg": "zz-domain",
+  "scenes": [
+    {
+      "segs": [
+        "q"
+      ],
+      "clip": "clip-01.mp4",
+      "hook": "원하는 사진,\n가져가도 될까요?",
+      "caption": false
+    },
+    {
+      "segs": [
+        "c0-0"
+      ],
+      "still": "img-02.jpg",
+      "zoom": 0.07
+    },
+    {
+      "segs": [
+        "c1-0"
+      ],
+      "still": "img-03.jpg",
+      "zoom": 0.07
+    },
+    {
+      "segs": [
+        "c2-0"
+      ],
+      "still": "img-04.jpg",
+      "zoom": 0.07
+    },
+    {
+      "segs": [
+        "c3-0",
+        "c3-1"
+      ],
+      "clip": "clip-05.mp4"
+    },
+    {
+      "segs": [
+        "c4-0"
+      ],
+      "clip": "clip-06.mp4"
+    },
+    {
+      "segs": [
+        "zz-bridge-v2"
+      ],
+      "still": "img-04.jpg",
+      "blur": true,
+      "zoom": 0.03,
+      "caption": false,
+      "lock": [
+        "연예인 사진도 괜찮을까?",
+        "원장이 상담실에서만 하던 답 98개",
+        "3개월 이용권 55,000원",
+        "프로필 링크 → P2·06",
+        "신청 · 전화 02-323-3321"
+      ]
+    }
+  ],
+  "next": "p2-06"
+}

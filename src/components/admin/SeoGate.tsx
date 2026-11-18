@@ -1,56 +1,34 @@
 'use client'
 
 import AdminGate from '@/components/admin/AdminGate'
+import AdminView, { getIdToken } from '@/components/admin/AdminView'
 import SeoMonitor from '@/components/admin/SeoMonitor'
-import type { SeoConfig, SeoFacts, SeoKeyword, SeoSnapshot, SeoTodo } from '@/lib/seoKeywords'
 
 /**
  * 인증 껍데기.
  *
- * 서버 페이지가 사실을 모아 넘기고, 여기서 로그인을 확인한 뒤 화면에 건넨다.
- * AdminGate 가 넘겨주는 인증 정보를 저장 API 에 그대로 쓴다.
+ * 사실 수집은 여전히 서버가 한다 — 사이트를 읽어 세는 일이라 브라우저가 할 일이 아니다.
+ * 다만 서버 페이지가 props 로 넘기면 로그인 전 HTML 에 실리므로, 로그인을 확인한 뒤
+ * /api/admin/view 로 받는다. 같은 idToken 을 저장 API 에도 쓴다.
  */
-export default function SeoGate({
-  facts,
-  config,
-  keywords,
-  history,
-  todos,
-  linksCountedAt,
-}: {
-  facts: Record<string, SeoFacts>
-  config: SeoConfig
-  keywords: SeoKeyword[]
-  history: SeoSnapshot[]
-  /** null 이면 Firestore 를 못 읽은 것 — 빈 목록과 다르다 */
-  todos: SeoTodo[] | null
-  linksCountedAt: string
-}) {
+export default function SeoGate() {
   return (
     <AdminGate title="키워드">
-      {(ctx) => (
-        <SeoMonitor
-          facts={facts}
-          initial={config}
-          keywords={keywords}
-          history={history}
-          todos={todos}
-          linksCountedAt={linksCountedAt}
-          auth={async () =>
-            ctx.mode === 'google' && ctx.email
-              ? { idToken: await getIdToken() }
-              : { password: ctx.password }
-          }
-        />
+      {() => (
+        <AdminView view="seo">
+          {(d) => (
+            <SeoMonitor
+              facts={d.facts}
+              initial={d.config}
+              keywords={d.keywords}
+              history={d.history}
+              todos={d.todos}
+              linksCountedAt={d.linksCountedAt}
+              auth={async () => ({ idToken: await getIdToken() })}
+            />
+          )}
+        </AdminView>
       )}
     </AdminGate>
   )
-}
-
-async function getIdToken(): Promise<string> {
-  const { getFirebaseApp } = await import('@/lib/firebase/client')
-  const app = getFirebaseApp()
-  if (!app) return ''
-  const { getAuth } = await import('firebase/auth')
-  return (await getAuth(app).currentUser?.getIdToken()) ?? ''
 }

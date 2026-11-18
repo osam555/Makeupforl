@@ -42,6 +42,16 @@ export const MEMBER_PRICE_LABEL = `${MEMBER_PRICE.toLocaleString('ko-KR')}원`
  */
 export const MEMBER_CREDIT_NOTE = `메이크업 예약 시 이용권 값 ${MEMBER_PRICE_LABEL}을 빼 드립니다`
 
+/**
+ * /honjoo100 첫 화면 한 줄 (2026-11-14).
+ * 쇼츠는 채널 프로필 링크(/honjoo100?from=yt)로만 사이트에 온다 — 쇼츠 화면에선 설명란 링크가 안
+ * 눌린다. 그런데 값과 차감 조건은 잠긴 문항 페이지에만 있어서, 쇼츠를 보고 온 사람이 한 번 더
+ * 눌러야 값을 봤다. 쇼츠 끝 잠금 화면(scripts/video/i2v/lock_bridge.py)과 같은 말로 첫 화면에 둔다.
+ */
+export function passLine(lockedCount: number): string {
+  return `잠긴 답 ${lockedCount}개 · ${MEMBER_MONTHS}개월 이용권 ${MEMBER_PRICE_LABEL} · 메이크업 예약하면 전액 차감`
+}
+
 /** 오늘 (한국 시각). 서버가 어디서 돌든 기준이 흔들리면 안 된다 */
 export function todayKST(): string {
   return new Intl.DateTimeFormat('en-CA', {

@@ -34,3 +34,60 @@ Locked-off camera, no cuts, one continuous shot. No text, no captions, no other 
 1. 두 클립을 `~/Downloads` 에 둔다(파일 이름은 아무거나).
 2. 얼굴이 블록 ① 과 다르면(눈매·머리선·재킷) 버리고 다시 만든다 — 입맞춤으로는 고쳐지지 않는다.
 3. `scripts/video/mouth_blend.py` 로 블록 ① 과 같은 방식으로 입을 맞춘다.
+
+## 2026-11-04 — 블록 ③ 실제로 만든 것 (위 「대사를 넣지 않는다」는 낡은 방식)
+
+10-15 시험으로 **한국어 대사를 프롬프트에 그대로 넣는** 쪽이 맞다고 확정됐다 — 넣지 않으면 영어로 아무 말이나 하고,
+넣으면 영상 속 입이 같은 문장을 말해서 복제 음성을 입 박자에 맞추기만 하면 된다(`align_voice.py`, 입 선명도 손실 없음).
+
+- 계정 john.wu571 (`flow.google.com/u/1/`), 프로젝트 「Nov 04 - 17:26」, Frames → 첫 프레임 `video/work/ref-face.png`
+- Veo 3.1 - Quality · 9:16 · 8s · x1 = 100크레딧. 받기는 「1080p Upscaled」(무료)
+- 결과 `video/raw/flow/block3-flow-korean-1080p.mp4`(7.85초) — 얼굴·머리선·재킷이 ①② 와 같다, 끝에 미소
+
+```
+Same woman as in the start frame, exactly the same face, short black hair and black pinstripe jacket with white top.
+Solo shot, exactly one person in frame. Chest-up framing, facing the camera directly, eye level.
+She speaks sincerely and warmly to the camera in Korean, saying exactly:
+"결혼식 날, 품위와 아름다움 모두 놓치지 마세요. 혼주에 진심인, 메이크업포엘입니다."
+Natural mouth movement matching the Korean words, hands resting together in front, then she finishes with a warm,
+gracious smile and a small polite nod, holding the smile for the last second.
+Bright elegant wedding hall background, soft warm light, softly blurred, unchanged from the start frame.
+Locked-off camera, no cuts, one continuous shot. No text, no captions, no subtitles, no music, no other people.
+```
+
+입맞춤: whisper 낱말 11개가 양쪽에서 같았고, 늘인 비율이 최대 1.47배(혼주의 … 진심인)였지만 받아쓰기는 대본 그대로였다.
+Flow 화면에는 「생성 전 확인」 설정이 보이지 않았다(11-04) — 생성 단추는 한 번만 누른다.
+Aside REPL 은 세션 폴더 밖 파일을 올리지 못한다 → 이미지를 base64 로 넘겨 세션 폴더에 쓴 뒤 올렸다.
+
+## 2026-11-06 — ②③ 다시: 입을 작게 (「입이 너무 크게 벌어진다」)
+
+②③ 첫 판은 입 벌림이 ① 의 2.06배·2.00배였다(`scripts/video/mouth_size.py`, ① p90 0.102). 같은 첫 프레임에
+아래 문구를 넣어 다시 만들었다. 받은 뒤 반드시 `mouth_size.py` 로 ① 의 1.3배 안쪽인지 잰다.
+
+```
+Same woman as in the start frame, exactly the same face, short black hair and black pinstripe jacket with white top.
+Solo shot, exactly one person in frame. Chest-up framing, facing the camera directly, eye level.
+She speaks softly and calmly to the camera in Korean, saying exactly: "<대사>"
+Small, restrained mouth movements: lips only slightly parted while speaking, never opening the mouth wide,
+no big grin, teeth barely visible, no exaggerated expressions. Composed, elegant and gentle, like a refined senior professional.
+<② Hands resting together in front, one small calm nod. / ③ ... finishes with a soft closed-lip smile and a small polite nod, holding it for the last second.>
+Bright elegant wedding hall background, soft warm light, softly blurred, unchanged from the start frame.
+Locked-off camera, no cuts, one continuous shot. No text, no captions, no subtitles, no music, no other people.
+```
+② 대사: 우리 혼주님들이 가장 궁금해하시는 질문 백 가지를, 혼주메이크업 백문백답에 모두 담았습니다.
+③ 대사: 결혼식 날, 품위와 아름다움 모두 놓치지 마세요. 혼주에 진심인, 메이크업포엘입니다.
+
+## 2026-11-07 — 인기 문항 쇼츠 10편 원장님 한마디(`03-인기10편.json` 의 empathy)
+
+짧은 대사(3~4초)를 8초 클립에 주면 Veo 가 남은 시간에 말을 되풀이했다(p4-01 「꼭 해야하냐고」 두 번, p5-14 뒷부분 두 번).
+나머지 8편은 아래처럼 「한 번만, 되풀이 금지, 끝까지 조용히 미소」를 넣었더니 8편 모두 한 번만 말했다.
+
+```
+... She speaks softly and calmly to the camera in Korean, saying exactly once: "<대사>" She says the sentence only once and never repeats any words; after it she stays quiet.
+Small, restrained mouth movements: ... (11-06 판 그대로)
+... after speaking she gives a soft closed-lip smile and one small, understanding nod, holding it calmly and silently until the end.
+```
+
+입 벌림(`mouth_size.py`, 소개 ① 기준 p90 0.102, 쓰는 앞 5초만): 통과 p4-03 1.28 · p4-20 0.86 · p4-04 1.27 · p5-12 1.11,
+넘음 p4-01 1.31 · p5-14 1.43 · p3-06 1.46 · p4-22 1.34 · p6-01 1.50 · p4-02 1.45 — 원장님이 「그대로 쓰고 다시 만들 때는 묻는다」로 승인(800크레딧).
+p6-01·p4-22·p3-06 은 「1080p Upscaled」 받기가 두 번 다 시간 초과라 「720p Original size」로 받았다.

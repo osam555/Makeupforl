@@ -94,6 +94,7 @@ export const SOURCE_LABEL: Record<string, string> = {
   daum: '다음·카카오',
   sns: '인스타·페이스북',
   youtube: '유튜브',
+  'youtube-shorts': '유튜브 쇼츠 (프로필 링크)',
   internal: '사이트 내부',
 }
 
@@ -147,6 +148,7 @@ export const SOURCE_COLOR: Record<string, string> = {
   google: '#A63D5A',
   direct: '#B8ADA5',
   youtube: '#E0483B',
+  'youtube-shorts': '#F07A6E',
   sns: '#8E5BA6',
   daum: '#3D6BD8',
   internal: '#DDD3CB',

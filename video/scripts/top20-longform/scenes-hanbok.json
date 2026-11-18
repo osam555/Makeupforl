@@ -1,0 +1,443 @@
+{
+  "_설명": "탑20 롱폼 A편 「혼주 한복, 이것만 알면 됩니다」 장면 사양(2026-11-16). 가로 16:9 1920×1080. 소리는 narration-hanbok.json(토막 이름 「장 id-줄 번호」). video/scripts/top5/shorts-*.json 과 같은 생각: 장면 하나 = 토막 한두 개, kind 는 still(정지 그림에 느린 확대·이동)·clip(Veo 3.1 Fast 8초, 그림을 시작 프레임으로), p 는 object(사람·손 없음)·person(뒷모습만, 기준 그림을 참조로 올린다). 그림 파일은 장면 순서대로 img-01…, 움직이는 컷은 clip-NN. 장마다 제목 화면(title_seg 를 읽는 동안)과 한 줄 요약 화면(summary_seg 를 읽는 동안)이 붙는다 — 둘 다 그 장의 그림(bg)을 흐리게 깔고 글자만 얹어 새 그림을 그리지 않는다. cap 은 화면 글이 소리 글과 다른 줄만 적는다. 그림에 글자·숫자·옆얼굴·거울 속 얼굴·손을 그리지 않는다.",
+  "_narration": "narration-hanbok.json",
+  "size": "1920x1080",
+  "title": "혼주 한복, 이것만 알면 됩니다 — 저고리 색부터 속옷·귀걸이까지",
+  "hook": "혼주 한복 저고리\n왜 다 똑같은 아이보리일까요?",
+  "cap": {
+    "c4-01": "평소 악세서리를 하지 않던 혼주님도, 결혼식 당일에 몇 가지만 착용하면 2배 더 예뻐 보입니다.",
+    "e-06": "한복을 정하셨다면, 다음 질문은 이것입니다.",
+    "e-07": "설명란 링크 → 혼주메이크업 100문 100답 P5·07"
+  },
+  "voice": {
+    "picks": {"c1-00": "c1-00_c1", "c3-01": "c3-01_c0"}
+  },
+  "next": {
+    "slug": "p5-09",
+    "label": "P5·07",
+    "question": "저고리 색이 치마보다\n얼굴빛에 더 중요한 이유"
+  },
+  "end_lines": [
+    "설명란 링크 → 100문 100답 P5·07",
+    "3개월 이용권 55,000원",
+    "신청 · 전화 02-323-3321"
+  ],
+  "ai_note": "그림과 음성은 AI로 만들었습니다",
+  "recap": {
+    "segs": ["e-00", "e-01", "e-02", "e-03", "e-04", "e-05"],
+    "bg": "c2-6",
+    "head": "오늘의 정리",
+    "lines": {
+      "e-01": "저고리 — 피부 톤이 탁하다면 컬러감 있는 색",
+      "e-02": "하얀 저고리 — 화사한 치마 색으로 배색",
+      "e-03": "속옷 — 패드 없는 브래지어 · 살색 런닝 · 살색 스타킹",
+      "e-04": "악세서리 — 뒤꽂이 · 진주 귀걸이 · 반지",
+      "e-05": "귀걸이 — 화이트 진주 · 귀에 붙는 스타일"
+    }
+  },
+  "end": {
+    "segs": ["e-06", "e-07"],
+    "bg": "c5-1"
+  },
+  "chapters": [
+    {
+      "id": "h",
+      "scenes": [
+        {
+          "id": "h-1",
+          "segs": ["h-00"],
+          "kind": "clip",
+          "p": "object",
+          "img": "Inside a bright modern hanbok boutique, a long wooden rail with a row of seven nearly identical ivory-white silk jeogori (short Korean hanbok jackets) on wooden hangers, their long goreum ribbons hanging down, all the same pale ivory color, soft daylight from a side window.",
+          "m": "The long ribbons of the jackets sway very slightly as if in a faint breeze. Static camera, no people, no hands."
+        },
+        {
+          "id": "h-2",
+          "segs": ["h-01", "h-02"],
+          "kind": "still",
+          "p": "object",
+          "badge": "1  저고리와 치마 색",
+          "img": "Two silk jeogori laid side by side on a cream cloth: one pale ivory, one soft coral pink. Beside them two folded chima skirts, one warm yellow and one deep blue, the fabric folds catching the light."
+        },
+        {
+          "id": "h-3",
+          "segs": ["h-03"],
+          "kind": "still",
+          "p": "object",
+          "badge": "2  한복 속옷",
+          "img": "A half-open hanbok gift box lined with thin white tissue paper on a pale wooden floor, a folded silk hanbok just visible inside, a pink bojagi wrapping cloth loosely untied around the box, calm morning light."
+        },
+        {
+          "id": "h-4",
+          "segs": ["h-04"],
+          "kind": "still",
+          "p": "object",
+          "badge": "3  악세서리와 귀걸이",
+          "img": "A small lacquer tray on cream silk holding a Korean dwikkoji hair ornament with a jade flower, a pair of white pearl earrings and a single pearl ring, arranged with space between them."
+        },
+        {
+          "id": "h-5",
+          "segs": ["h-05"],
+          "kind": "clip",
+          "p": "person",
+          "img": "Wide back view of the woman seated on a stool in a bright makeup studio, facing a makeup counter with brushes and palettes; the mirror above the counter is draped with a pale cloth so nothing is reflected. Soft daylight from the left.",
+          "m": "Soft daylight shifts gently across her shoulders and hair; she stays still and never turns."
+        }
+      ]
+    },
+    {
+      "id": "c1",
+      "no": 1,
+      "title": "저고리 색",
+      "sub": "왜 다 똑같은 아이보리일까요?",
+      "title_seg": "c1-00",
+      "title_bg": "h-1",
+      "summary_seg": "c1-18",
+      "summary_bg": "c1-11",
+      "summary": "피부 톤이 탁한 편이라면 컬러감 있는 저고리\n트렌드는 따르지 않아도 됩니다",
+      "link": {"slug": "p5-09", "label": "P5·07", "question": "저고리 색이 치마보다 얼굴빛에 더 중요한 이유"},
+      "scenes": [
+        {
+          "id": "c1-1",
+          "segs": ["c1-01", "c1-02"],
+          "kind": "still",
+          "p": "object",
+          "img": "A single ivory silk jeogori on a wooden hanger in front of a large boutique window; outside the window, red and orange autumn maple leaves. Warm autumn afternoon light."
+        },
+        {
+          "id": "c1-2",
+          "segs": ["c1-03", "c1-04"],
+          "kind": "still",
+          "p": "object",
+          "img": "An ivory silk jeogori in the center on a cream cloth, with a folded rose-red chima skirt on its left and a folded deep blue chima skirt on its right, symmetrical composition."
+        },
+        {
+          "id": "c1-3",
+          "segs": ["c1-05"],
+          "kind": "still",
+          "p": "object",
+          "img": "A hanbok shop counter of pale wood with a neat stack of folded ivory silk jeogori, shelves of rolled silk fabric softly visible behind, no people."
+        },
+        {
+          "id": "c1-4",
+          "segs": ["c1-06", "c1-07"],
+          "kind": "clip",
+          "p": "object",
+          "img": "Three exactly identical ivory silk jeogori hanging side by side at equal spacing on a wooden rail against a plain cream wall, like matching uniforms, their goreum ribbons hanging straight.",
+          "m": "The three ribbons sway very slightly, one after another. Static camera, no people, no hands."
+        },
+        {
+          "id": "c1-5",
+          "segs": ["c1-08", "c1-09"],
+          "kind": "still",
+          "p": "object",
+          "img": "Two silk fabric swatches side by side on a plain table: one pale ivory, one dull muted yellowish beige. Flat overcast light, quiet and slightly dull mood."
+        },
+        {
+          "id": "c1-6",
+          "segs": ["c1-10"],
+          "kind": "still",
+          "p": "object",
+          "img": "A folded ivory silk jeogori on a grey stone table under flat cool light, the ivory looking pale and flat, a small empty ceramic dish beside it."
+        },
+        {
+          "id": "c1-7",
+          "segs": ["c1-11", "c1-12", "c1-13"],
+          "kind": "clip",
+          "p": "object",
+          "img": "A makeup artist's table with foundation bottles, a blush and eyeshadow palette in warm rosy tones and a jar of brushes; behind the table an ivory silk jeogori hangs on a wooden hanger. No mirror in view. Warm bright light.",
+          "m": "Warm light flickers softly across the brushes and the palette; the jacket ribbon moves very slightly. Static camera, no people, no hands."
+        },
+        {
+          "id": "c1-8",
+          "segs": ["c1-14"],
+          "kind": "still",
+          "p": "object",
+          "img": "Five folded silk jeogori in a neat row on a cream cloth, each a different soft color: peach pink, mint green, lavender, sky blue and pale apricot."
+        },
+        {
+          "id": "c1-9",
+          "segs": ["c1-15"],
+          "kind": "still",
+          "p": "object",
+          "img": "On a hanbok shop counter, an open flat gift box presenting a neatly folded ivory silk jeogori on tissue paper; rolls of colorful silk stand unnoticed on a shelf in the background."
+        },
+        {
+          "id": "c1-10",
+          "segs": ["c1-16"],
+          "kind": "clip",
+          "p": "person",
+          "img": "Back view of the woman standing by a tall bright window in a wedding hall lounge, her pale pink jeogori glowing softly in the light, waist-up framing, flowers on a side table.",
+          "m": "Sunlight shimmers softly on the pink silk and the curtain moves a little; she stands still and never turns."
+        },
+        {
+          "id": "c1-11",
+          "segs": ["c1-17"],
+          "kind": "still",
+          "p": "object",
+          "img": "A wooden clothes rail with silk jeogori in many gentle colors — coral, mint, lavender, soft yellow, sky blue — hanging in sunlight, cheerful and airy."
+        }
+      ]
+    },
+    {
+      "id": "c2",
+      "no": 2,
+      "title": "하얀 저고리가 밋밋할 때",
+      "sub": "치마 색으로 풀어 보세요",
+      "title_seg": "c2-00",
+      "title_bg": "c2-1",
+      "summary_seg": "c2-12",
+      "summary_bg": "c2-4",
+      "summary": "하얀 저고리가 고민이라면\n화사한 치마 색으로 배색",
+      "link": {"slug": "p5-06", "label": "P5·04", "question": "신랑 측 혼주(푸른색 계열)가 더 젊어 보이는 배색의 비밀"},
+      "scenes": [
+        {
+          "id": "c2-1",
+          "segs": ["c2-01", "c2-02"],
+          "kind": "still",
+          "p": "object",
+          "img": "A single plain white silk jeogori with no decoration, laid flat on a cream cloth, lots of empty space around it, quiet and a little plain."
+        },
+        {
+          "id": "c2-2",
+          "segs": ["c2-03", "c2-04"],
+          "kind": "still",
+          "p": "object",
+          "img": "Two folded silk chima skirts side by side on a wooden table: one in rose red tones, one in deep blue tones, traditional and dignified."
+        },
+        {
+          "id": "c2-3",
+          "segs": ["c2-05", "c2-06"],
+          "kind": "still",
+          "p": "object",
+          "img": "Close-up of a white silk jeogori sleeve and collar with delicate floral embroidery in pale silver and soft pink thread and a small decorative trim."
+        },
+        {
+          "id": "c2-4",
+          "segs": ["c2-07", "c2-08"],
+          "kind": "clip",
+          "p": "object",
+          "img": "A white silk jeogori and a bright warm yellow full chima skirt displayed together on a tall wooden hanbok rack beside a sunny wedding hall window, the yellow skirt falling in long pleats to the floor.",
+          "m": "The yellow skirt pleats sway very gently and sunlight ripples over the silk. Static camera, no people, no hands."
+        },
+        {
+          "id": "c2-5",
+          "segs": ["c2-09"],
+          "kind": "still",
+          "p": "object",
+          "img": "Close-up of bright yellow silk chima pleats filling most of the frame, with a folded deep blue chima set aside at the right edge."
+        },
+        {
+          "id": "c2-6",
+          "segs": ["c2-10", "c2-11"],
+          "kind": "clip",
+          "p": "object",
+          "img": "A bright, elegant modern wedding hall lobby with tall flower arrangements in white and yellow, warm chandelier light, polished floor, festive and welcoming, no people.",
+          "m": "Flower petals stir slightly and the warm light glimmers softly. Static camera, no people, no hands."
+        }
+      ]
+    },
+    {
+      "id": "c3",
+      "no": 3,
+      "title": "한복 속옷",
+      "sub": "보이지 않는 곳까지",
+      "title_seg": "c3-00",
+      "title_bg": "h-3",
+      "summary_seg": "c3-14",
+      "summary_bg": "c3-8",
+      "summary": "패드 없는 브래지어 · 살색 런닝 · 살색 스타킹",
+      "link": {"slug": "p6-01", "label": "P6·01", "question": "예식 당일 샵에 갈 때 입는 옷은?"},
+      "scenes": [
+        {
+          "id": "c3-1",
+          "segs": ["c3-01", "c3-02"],
+          "kind": "still",
+          "p": "object",
+          "img": "A hanbok bundle wrapped in a soft pink bojagi cloth with a neat knot, resting on a low wooden table in a quiet bedroom corner, morning light through a paper window."
+        },
+        {
+          "id": "c3-2",
+          "segs": ["c3-03"],
+          "kind": "still",
+          "p": "object",
+          "img": "A pale pink jeogori and a wide deep magenta chima laid flat together on a cream cloth, showing the loose, generous, flowing A-line shape of the hanbok."
+        },
+        {
+          "id": "c3-3",
+          "segs": ["c3-04", "c3-05"],
+          "kind": "still",
+          "p": "object",
+          "img": "Close-up of the lower hem of a pale pink jeogori lying smooth and flat over the high white waistband of a magenta chima, the goreum ribbon tied in a neat bow."
+        },
+        {
+          "id": "c3-4",
+          "segs": ["c3-06", "c3-07"],
+          "kind": "clip",
+          "p": "object",
+          "img": "A pale pink silk jeogori on a wooden hanger against a cream wall, its long goreum ribbon hanging down, soft window light from the side.",
+          "m": "The long ribbon sways very slightly and the light shifts softly. Static camera, no people, no hands."
+        },
+        {
+          "id": "c3-5",
+          "segs": ["c3-08"],
+          "kind": "still",
+          "p": "object",
+          "img": "A windowsill with two small ceramic vases: the left holds a branch of pink spring blossoms in warm light, the right holds a bare winter branch with a dusting of snow in cool light."
+        },
+        {
+          "id": "c3-6",
+          "segs": ["c3-09", "c3-10"],
+          "kind": "still",
+          "p": "object",
+          "img": "A sheer thin white silk jeogori sleeve laid over two fabric swatches on a table: a skin-toned beige swatch that almost disappears under the silk, and a dark navy swatch that clearly shows through it."
+        },
+        {
+          "id": "c3-7",
+          "segs": ["c3-11"],
+          "kind": "still",
+          "p": "object",
+          "img": "A pair of embroidered Korean flower shoes (kkotsin) placed neatly on a pale wooden floor beside the hem of a magenta silk chima."
+        },
+        {
+          "id": "c3-8",
+          "segs": ["c3-12", "c3-13"],
+          "kind": "clip",
+          "p": "object",
+          "img": "A complete hanbok set — pale pink jeogori and long deep magenta chima — displayed on a tall wooden hanbok rack in a bright quiet room, the skirt hem reaching the floor, dignified and formal.",
+          "m": "The skirt hem and the ribbon move very slightly; soft light drifts across the silk. Static camera, no people, no hands."
+        }
+      ]
+    },
+    {
+      "id": "c4",
+      "no": 4,
+      "title": "악세서리 세 가지",
+      "sub": "뒤꽂이 · 진주 귀걸이 · 반지",
+      "title_seg": "c4-00",
+      "title_bg": "h-4",
+      "summary_seg": "c4-10",
+      "summary_bg": "c4-1",
+      "summary": "뒤꽂이 · 진주 귀걸이 · 반지",
+      "link": {"slug": "p4-18", "label": "P4·18", "question": "뒤꽂이(헤어 장식)는 꼭 준비해야 하나요?"},
+      "scenes": [
+        {
+          "id": "c4-1",
+          "segs": ["c4-01"],
+          "kind": "clip",
+          "p": "object",
+          "img": "An open wooden jewelry box lined with cream silk on a dressing table, holding a dwikkoji hair ornament, a pair of white pearl earrings and a ring, soft warm light.",
+          "m": "Tiny glints of light move slowly over the pearls and the ornament. Static camera, no people, no hands."
+        },
+        {
+          "id": "c4-2",
+          "segs": ["c4-02"],
+          "kind": "still",
+          "p": "object",
+          "img": "Close-up of a single Korean dwikkoji hair ornament — a short pin topped with a jade flower and small pearls — lying on pale pink silk."
+        },
+        {
+          "id": "c4-3",
+          "segs": ["c4-03", "c4-04"],
+          "kind": "clip",
+          "p": "person",
+          "img": "Close back view of the woman's neat low chignon with a jade-and-pearl dwikkoji ornament pinned into it, the collar of her pale pink jeogori below, a softly blurred wedding hall behind.",
+          "m": "Light glints softly on the hair ornament and a few fine hairs stir; she stays still and never turns."
+        },
+        {
+          "id": "c4-4",
+          "segs": ["c4-05", "c4-06"],
+          "kind": "still",
+          "p": "object",
+          "img": "A pair of white pearl earrings in sharp focus on cream velvet in the foreground; behind them, softly blurred, earrings with red, blue and green gemstones."
+        },
+        {
+          "id": "c4-5",
+          "segs": ["c4-07"],
+          "kind": "still",
+          "p": "object",
+          "img": "Close-up of a pair of earrings, each a round white pearl ringed by a halo of tiny sparkling clear cubic stones, on cream silk."
+        },
+        {
+          "id": "c4-6",
+          "segs": ["c4-08"],
+          "kind": "still",
+          "p": "object",
+          "img": "A green jade ring and a white pearl ring resting side by side on folded pastel hanbok silk."
+        },
+        {
+          "id": "c4-7",
+          "segs": ["c4-09"],
+          "kind": "still",
+          "p": "object",
+          "img": "A pair of white formal gloves folded and set aside at the edge of a dressing table, with a small ceramic ring dish holding a jade ring in the foreground."
+        }
+      ]
+    },
+    {
+      "id": "c5",
+      "no": 5,
+      "title": "귀걸이 고르는 법",
+      "sub": "색 · 얼굴형 · 귀에 붙는 스타일",
+      "title_seg": "c5-00",
+      "title_bg": "c4-4",
+      "summary_seg": "c5-12",
+      "summary_bg": "c5-6",
+      "summary": "화이트 진주 · 얼굴형에 맞는 디자인 · 귀에 붙는 스타일",
+      "link": {"slug": "p5-11", "label": "P5·09", "question": "혼주 한복에 어울리는 안경테 선택법"},
+      "scenes": [
+        {
+          "id": "c5-1",
+          "segs": ["c5-01", "c5-02"],
+          "kind": "clip",
+          "p": "person",
+          "img": "Full-length back view of the woman standing in a bright wedding hall corridor in the pale pink jeogori and deep magenta chima, the graceful curved lines of the sleeves and the full skirt clearly visible.",
+          "m": "The skirt hem sways very slightly and light moves softly on the silk; she stands still and never turns."
+        },
+        {
+          "id": "c5-2",
+          "segs": ["c5-03", "c5-04"],
+          "kind": "still",
+          "p": "object",
+          "img": "Two pairs of pearl earrings side by side on a cream cloth: on the left a pair of dark black pearls, on the right a pair of bright white pearls that glow softly."
+        },
+        {
+          "id": "c5-3",
+          "segs": ["c5-05"],
+          "kind": "still",
+          "p": "object",
+          "img": "A small round table mirror seen from behind — only its wooden back and stand are visible — and in front of it on the table one white pearl earring and one black pearl earring lying apart."
+        },
+        {
+          "id": "c5-4",
+          "segs": ["c5-06", "c5-07"],
+          "kind": "still",
+          "p": "object",
+          "img": "A pair of slim elongated teardrop pearl earrings laid vertically on cream silk, next to a round white moon jar, the long shape contrasting with the round jar."
+        },
+        {
+          "id": "c5-5",
+          "segs": ["c5-08", "c5-09"],
+          "kind": "still",
+          "p": "object",
+          "img": "A pair of round button-shaped pearl earrings on cream silk, next to a tall slender celadon vase, the round shape contrasting with the long vase."
+        },
+        {
+          "id": "c5-6",
+          "segs": ["c5-10"],
+          "kind": "still",
+          "p": "object",
+          "img": "Close-up of a pair of simple white pearl stud earrings sitting on a small cream earring card stand, neat and close-fitting, soft light."
+        },
+        {
+          "id": "c5-7",
+          "segs": ["c5-11"],
+          "kind": "clip",
+          "p": "object",
+          "img": "A pair of long dangling drop earrings with small pearls hanging from a slender brass jewelry stand on a dressing table, plain cream background.",
+          "m": "The dangling earrings swing gently back and forth. Static camera, no people, no hands."
+        }
+      ]
+    }
+  ]
+}

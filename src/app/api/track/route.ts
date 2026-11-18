@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { fromTag } from '@/lib/trackSource'
 
 import { campaignSourceKey, cleanFrom } from '@/lib/campaign'
 
@@ -106,12 +107,14 @@ export async function POST(req: Request) {
     if (kind === 'view') {
       const isNewSession = body?.newSession === true
       /*
-        캠페인 꼬리표(?from=)가 있으면 referrer 대신 그것을 출처로 센다.
+        출처 꼬리표(?from=)가 있으면 referrer 대신 그것을 출처로 센다.
         쇼츠·광고 링크는 유튜브·인스타 앱, 카톡 안에서 눌려 referrer 가 비어 오므로 그대로 두면
         「직접 방문」에 섞인다. 화면이 거른 값이라도 여기서 다시 거른다 — 아무나 이 API 를 부를 수 있다.
+        쇼츠 프로필 링크의 yt 는 2026-11-14 부터 youtube-shorts 로 쌓아 왔으므로(trackSource.ts)
+        그 이름을 그대로 잇고, 그 밖의 캠페인 꼬리표만 from:… 칸으로 센다.
       */
       const from = cleanFrom(body?.from)
-      const src = key(from ? campaignSourceKey(from) : refSource(String(body?.ref ?? '')))
+      const src = key(fromTag(from ?? '') ?? (from ? campaignSourceKey(from) : refSource(String(body?.ref ?? ''))))
       await ref.set(
         {
           date: DAY(),

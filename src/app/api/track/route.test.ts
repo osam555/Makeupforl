@@ -23,6 +23,11 @@ describe('POST /api/track — 캠페인 꼬리표', () => {
     expect(saved().landings).toEqual({ 'from:yt-shorts-01___honjoo100': 1 })
   })
 
+  it('쇼츠 프로필 링크의 yt 는 11/14 부터 쌓아 온 youtube-shorts 이름을 잇는다', async () => {
+    await POST(req({ ...first, from: 'yt' }))
+    expect(saved().sources).toEqual({ 'youtube-shorts': 1 })
+  })
+
   it('허용하지 않는 from 은 버리고 referrer 로 돌아간다', async () => {
     await POST(req({ ...first, from: 'YT/../x' }))
     expect(saved().sources).toEqual({ direct: 1 })

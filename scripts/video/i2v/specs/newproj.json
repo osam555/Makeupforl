@@ -1,0 +1,36 @@
+{
+  "id": "wed100-i2v-free5",
+  "sources": [
+    "video/work/i2v/p4-07/damchae"
+  ],
+  "img_style": "Korean ink-and-wash illustration (damchae): fine, confident sumi ink linework with soft transparent watercolor washes, visible hanji mulberry-paper texture across the whole image, gentle color bleeding at the edges, generous empty paper space. Warm cream and muted gold palette with the pink and magenta of the hanbok as the only strong colors. Modern, elegant, refined — a contemporary wedding hall, not an old-fashioned folk painting. Single full-bleed illustration, no borders, no seal stamps, no calligraphy. Vertical 9:16; keep the upper 30% calm and airy for captions. Not photorealistic, not 3D, not anime.",
+  "banned": "Exactly one person in the frame, seen only from behind — her face is never visible, no profile, no mirror reflection. No text, letters, logos or signs anywhere. No kimono, no obi, no Chinese hanfu, no western church altar, no gold-foil patterns all over the hanbok. No rings, no nail art.",
+  "lines": [
+    {
+      "img": "Back view of the Korean mother of the bride seated in a salon chair, elegant updo, pale pink jeogori, soft light, no mirror visible. The woman: Korean mother of the bride in her late 50s, short pale pink silk jeogori with long goreum ribbon, deep magenta full chima, dark brown hair in a neat low chignon; seen only from behind, face never visible.",
+      "clip": "Static camera, no zoom, no cut. Keep exactly the same scene, person, hanbok and Korean ink-and-wash illustration style (fine ink lines, soft watercolor washes, hanji paper texture stay visible the whole time; never becomes photorealistic or 3D) as the start frame. An extremely slow push-in toward her updo; soft light glints on the hair. She stays perfectly still. Her face is never visible. Only small, natural movement. No new people, no new objects, no text, no camera shake."
+    },
+    {
+      "img": "Still life: a tail comb, hair pins and a small round hand mirror lying face down on a salon counter, soft light."
+    },
+    {
+      "img": "Close back view of the woman's updo filling the frame, soft lifted volume at the crown, pale pink jeogori collar. Close-up framing in a quiet makeup studio or bridal waiting room — NOT a wedding hall, no aisle, no guests. The woman: Korean mother of the bride in her late 50s, short pale pink silk jeogori with long goreum ribbon, deep magenta full chima, dark brown hair in a neat low chignon; seen only from behind, face never visible."
+    },
+    {
+      "img": "Close back view of the same woman's crown: one hand (natural nails, no rings) holds a tail comb lifting a small section of hair at the top of the head. The woman: Korean mother of the bride in her late 50s, short pale pink silk jeogori with long goreum ribbon, deep magenta full chima, dark brown hair in a neat low chignon; seen only from behind, face never visible.",
+      "clip": "Static camera, no zoom, no cut. Keep exactly the same scene, person, hanbok and Korean ink-and-wash illustration style (fine ink lines, soft watercolor washes, hanji paper texture stay visible the whole time; never becomes photorealistic or 3D) as the start frame. The hand slowly lifts the section with the tail comb to add volume, then rests; one action only, five natural fingers. Her face is never visible. Only small, natural movement. No new people, no new objects, no text, no camera shake."
+    },
+    {
+      "img": "Close back view of the woman's head and shoulders against a bright window, her updo tall at the crown, slender vertical line. Close-up framing in a quiet makeup studio or bridal waiting room — NOT a wedding hall, no aisle, no guests. The woman: Korean mother of the bride in her late 50s, short pale pink silk jeogori with long goreum ribbon, deep magenta full chima, dark brown hair in a neat low chignon; seen only from behind, face never visible."
+    },
+    {
+      "img": "Close back view of the woman's head: the hair above the ears smoothed flat and sleek, volume only at the top, neat low chignon. Close-up framing in a quiet makeup studio or bridal waiting room — NOT a wedding hall, no aisle, no guests. The woman: Korean mother of the bride in her late 50s, short pale pink silk jeogori with long goreum ribbon, deep magenta full chima, dark brown hair in a neat low chignon; seen only from behind, face never visible."
+    },
+    {
+      "img": "Back view of the woman standing by a bright window in the studio, elegant tall updo, calm posture. Close-up framing in a quiet makeup studio or bridal waiting room — NOT a wedding hall, no aisle, no guests. The woman: Korean mother of the bride in her late 50s, short pale pink silk jeogori with long goreum ribbon, deep magenta full chima, dark brown hair in a neat low chignon; seen only from behind, face never visible.",
+      "clip": "Static camera, no zoom, no cut. Keep exactly the same scene, person, hanbok and Korean ink-and-wash illustration style (fine ink lines, soft watercolor washes, hanji paper texture stay visible the whole time; never becomes photorealistic or 3D) as the start frame. She walks slowly away from the camera, skirt sways gently, candle flames flicker; she never turns. Her face is never visible. Only small, natural movement. No new people, no new objects, no text, no camera shake."
+    }
+  ],
+  "flow_project": "https://flow.google.com/project/fb733dd0-ed15-471e-8356-329c8da4f6b8",
+  "start_prefix": "I"
+}

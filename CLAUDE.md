@@ -129,6 +129,11 @@ Firestore 에서 고친 내용은 `scripts/wed100/sync_seed.py` 로 시드에 �
 - 자막 `cues` 는 답변 텍스트와 `syncCuesWithAnswer()` 로 맞춘다. 저장 시 이전 값은
   `wed100Versions.ts` 가 스냅샷으로 남긴다.
 - 사진은 `photoAuto: false` 면 자동 배정 스크립트가 건드리지 않는다.
+- **잠긴 답은 서버와 관리자만 읽는다**(2026-11-07, `docs/wed100-잠금-보안-설계.md`). `wed100_questions` 와
+  Storage `wed100/audio` 는 관리자만 읽기다 — 손님 화면은 Admin SDK, 구매자는 `/api/wed100/answer`.
+  시드 JSON(`src/data/wed100.json`)에는 전문이 있으므로 **클라이언트 컴포넌트에서 import 하지 말 것** —
+  공개 JS 파일에 통째로 실려 로그인 없이 받아졌다. 어드민 화면이 필요하면 `/api/admin/view` 로 받는다.
+  저장소도 이 때문에 비공개다(`book/`·`source.docx` 에도 원고 전문이 있다).
 
 ### SEO — 건드리면 유입이 사라지는 것들
 

@@ -11,9 +11,13 @@ service firebase.storage {
         && request.auth.token.email in ['makeupforl77@gmail.com', 'john.wu571@gmail.com'];
     }
 
-    // 100문100답 오디오: 공개 재생, 업로드는 관리자만 (20MB 이하 mp3)
+    // 100문100답 오디오: 읽기·업로드 모두 관리자만 (20MB 이하 mp3)
+    //
+    // 화면이 쓰는 주소는 전부 ?token= 이 붙은 다운로드 주소라 이 규칙과 상관없이 재생된다.
+    // 공개 읽기였을 때는 토큰 없이 파일 이름(= slug)만으로 잠긴 답변 음성을 받을 수 있었다
+    // (2026-11-07 확인). 이미 밖에 나간 토큰은 scripts/wed100/rotate_audio_tokens.py 로 바꾼다.
     match /wed100/audio/{file} {
-      allow read: if true;
+      allow read: if isAdmin();
       allow write: if isAdmin()
                    && request.resource.size < 20 * 1024 * 1024
                    && request.resource.contentType == 'audio/mpeg';

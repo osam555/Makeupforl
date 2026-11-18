@@ -1,10 +1,14 @@
 'use client'
 
 import AdminGate from '@/components/admin/AdminGate'
+import AdminView from '@/components/admin/AdminView'
 import VisitsView from '@/components/admin/VisitsView'
-import type { DailyStat } from '@/lib/analytics'
-import type { CampaignRow } from '@/lib/campaign'
 
-export default function VisitsGate({ days, campaigns }: { days: DailyStat[]; campaigns: CampaignRow[] }) {
-  return <AdminGate title="방문">{() => <VisitsView days={days} campaigns={campaigns} />}</AdminGate>
+/** 방문 기록은 로그인을 확인한 뒤에 /api/admin/view 로 받는다 — HTML 에 싣지 않는다 */
+export default function VisitsGate() {
+  return (
+    <AdminGate title="방문">
+      {() => <AdminView view="visits">{({ days, campaigns }) => <VisitsView days={days} campaigns={campaigns} />}</AdminView>}
+    </AdminGate>
+  )
 }

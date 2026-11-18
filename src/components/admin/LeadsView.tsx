@@ -5,6 +5,7 @@ import { Phone } from 'lucide-react'
 
 import { getDb } from '@/lib/firebase/client'
 import AdminGate from '@/components/admin/AdminGate'
+import AdminView from '@/components/admin/AdminView'
 import CampaignTable from '@/components/admin/CampaignTable'
 import PushOptIn from '@/components/admin/PushOptIn'
 import { Chips, Empty, Note, Panel, Stat } from '@/components/admin/AdminUI'
@@ -19,7 +20,7 @@ import {
   leadAge,
   leadStatusLabel,
 } from '@/lib/consultLeads'
-import { campaignOfLead, campaignRows } from '@/lib/campaign'
+import { campaignOfLead, campaignRows, campaignSourceKey } from '@/lib/campaign'
 
 type Filter = 'all' | 'new' | 'called' | 'booked' | 'done'
 const FILTERS = [
@@ -48,7 +49,7 @@ const TONE: Record<string, string> = {
  * 동의 문구에 "보관 1년" 이라고 적었다. 지난 것을 자동으로 지우는 일정 작업은 아직 없어서,
  * 기간이 지난 접수를 맨 위에 따로 띄우고 한 번에 지우는 단추를 둔다.
  */
-function AdminLeads({ arrivals }: { arrivals: Record<string, number> }) {
+function AdminLeads({ arrivals }: { arrivals?: Record<string, number> }) {
   const [leads, setLeads] = useState<ConsultLead[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<Filter>('all')
@@ -125,7 +126,6 @@ function AdminLeads({ arrivals }: { arrivals: Record<string, number> }) {
   const count = (s: string) => leads.filter((l) => l.status === s).length
   const overdue = leads.filter((l) => isLeadOverdue(l))
   const rate = bookingRate(leads)
-  const campaigns = campaignRows(arrivals, leads)
 
   return (
     <div className="space-y-5">
@@ -161,7 +161,21 @@ function AdminLeads({ arrivals }: { arrivals: Record<string, number> }) {
 
       <SurveyFunnel />
 
-      <CampaignTable rows={campaigns} />
+      {/*
+        「도착」은 방문 기록에서 온다. 서버 페이지가 props 로 넘기면 로그인 전 HTML 에 실리므로
+        (2026-11-07 방문 기록 유출과 같은 길) 로그인 뒤 /api/admin/view 로 받는다. 테스트만 직접 넘긴다.
+      */}
+      {arrivals ? (
+        <CampaignTable rows={campaignRows(arrivals, leads)} />
+      ) : (
+        <AdminView view="visits">
+          {({ campaigns }) => (
+            <CampaignTable
+              rows={campaignRows(Object.fromEntries(campaigns.map((c) => [campaignSourceKey(c.campaign), c.arrivals])), leads)}
+            />
+          )}
+        </AdminView>
+      )}
 
       {loading ? (
         <Empty>읽는 중…</Empty>
@@ -237,6 +251,6 @@ const btn =
   'rounded-lg border border-[var(--a-e0d6cc)] px-4 py-2 text-xs font-bold text-[var(--a-3a322e)] transition-colors hover:border-[var(--a-a63d5a)] hover:text-[var(--a-a63d5a)]'
 
 /** 도착 수는 서버에서 읽어 넘긴다 — 방문 기록(analytics_daily)은 보안 규칙상 화면에서 못 읽는다 */
-export default function LeadsGate({ arrivals }: { arrivals: Record<string, number> }) {
+export default function LeadsGate({ arrivals }: { arrivals?: Record<string, number> } = {}) {
   return <AdminGate title="상담 신청">{() => <AdminLeads arrivals={arrivals} />}</AdminGate>
 }

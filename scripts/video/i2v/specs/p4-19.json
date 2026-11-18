@@ -1,0 +1,16 @@
+{
+  "slug": "p4-19",
+  "font_dir": "/Users/osam/dev/speed-listening/store/video/book-promo-3part/work-myeongsim25/fonts",
+  "dir": "video/work/i2v/p4-19/damchae",
+  "voice_dir": "video/work/i2v/p4-19/voice",
+  "out": "video/out/shorts/i2v/p4-19_v1.mp4",
+  "scenes": [
+    {"segs": ["00-q"], "clip": "clip-01.mp4", "hook": "뒤꽂이,\n어떻게 고르세요?", "caption": false},
+    {"segs": ["01-a"], "clip": "clip-02.mp4"},
+    {"segs": ["02-a", "03-a"], "still": "img-03.jpg", "zoom": 0.08},
+    {"segs": ["04-a"], "still": "img-04.jpg", "zoom": 0.08},
+    {"segs": ["05-a"], "clip": "clip-05.mp4"},
+    {"segs": ["06-lock"], "still": "img-03.jpg", "blur": true, "zoom": 0.03, "caption": false,
+     "lock": ["둘째 스타일, 그리고", "저고리 색 맞추는 핵심은?", "정답은 100문 100답에서"]}
+  ]
+}

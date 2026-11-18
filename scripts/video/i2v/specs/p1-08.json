@@ -1,0 +1,53 @@
+{
+  "slug": "p1-08",
+  "font_dir": "/Users/osam/dev/speed-listening/store/video/book-promo-3part/work-myeongsim25/fonts",
+  "dir": "/Users/osam/dev/makeupforl/.claude/worktrees/wed100-i2v-plan-438f77/video/work/i2v/p1-08/damchae",
+  "voice_dir": "/Users/osam/dev/makeupforl/.claude/worktrees/wed100-i2v-plan-438f77/video/work/i2v/p1-08/voice",
+  "out": "/Users/osam/dev/makeupforl/.claude/worktrees/wed100-i2v-plan-438f77/video/out/shorts/i2v/p1-08_v2.mp4",
+  "outro_seg": "zz-outro",
+  "domain_seg": "zz-domain",
+  "scenes": [
+    {
+      "segs": [
+        "q"
+      ],
+      "clip": "clip-01.mp4",
+      "hook": "혼주 메이크업,\n언제 예약해요?",
+      "caption": false
+    },
+    {
+      "segs": [
+        "c0-0"
+      ],
+      "still": "img-02.jpg",
+      "zoom": 0.07
+    },
+    {
+      "segs": [
+        "c1-0"
+      ],
+      "clip": "clip-03.mp4"
+    },
+    {
+      "segs": [
+        "c2-0"
+      ],
+      "clip": "clip-04.mp4"
+    },
+    {
+      "segs": [
+        "lock-v2"
+      ],
+      "still": "img-02.jpg",
+      "blur": true,
+      "zoom": 0.03,
+      "caption": false,
+      "lock": [
+        "그래서 몇 달 전에 예약해야 할까요?",
+        "정답은 100문 100답에서",
+        "3개월 이용권 55,000원",
+        "신청 · 전화 02-323-3321"
+      ]
+    }
+  ]
+}

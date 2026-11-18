@@ -1,0 +1,71 @@
+<!doctype html>
+<!--
+  답의 결론 직전에 멈추는 4초 — 잠금 화면.
+  이번 10편은 유료 95개 안의 문항이라 결론을 들려주지 않는다(docs/video/쇼츠-100문100답-인기10편-기획.md 1절).
+  「여기서 끊긴다」가 화면에서 분명해야 끊김이 실수가 아니라 예고로 읽힌다.
+  가려진 줄은 실제 답 글자를 흐리게 한 것이 아니라 회색 막대다 — 흐림은 되돌려 읽힐 수 있어 잠금 답을 화면에 싣지 않는다.
+-->
+<html data-composition-variables='[
+  {"id":"question","type":"string","label":"질문","default":"혼주 한복에는 반드시 올림머리를 해야 하나요?"},
+  {"id":"lock","type":"string","label":"잠금 문구","default":"올림머리가 싫다면, 어떻게 할까요?"}
+]'>
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family: P; font-weight: 900; src: url(../assets/Pretendard-Black.otf); }
+  @font-face { font-family: P; font-weight: 700; src: url(../assets/Pretendard-Bold.otf); }
+  @font-face { font-family: P; font-weight: 600; src: url(../assets/Pretendard-SemiBold.otf); }
+  html, body { margin: 0; }
+  #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; font-family: P;
+          background: linear-gradient(to bottom, #F7F1E8, #EEE5D7); color: #2E2622; }
+  .bar { position: absolute; left: 0; right: 0; height: 14px; background: #B08D57; }
+  #question { position: absolute; left: 90px; right: 90px; top: 330px; text-align: center; font-weight: 700;
+              font-size: 50px; line-height: 1.35; color: #7A624A; word-break: keep-all; }
+  #card { position: absolute; left: 110px; right: 110px; top: 560px; height: 440px; border-radius: 36px;
+          background: rgba(255,255,255,.75); box-shadow: 0 10px 40px rgba(122,98,74,.12); }
+  .line { position: absolute; left: 70px; height: 34px; border-radius: 17px; background: #D8CCBB; }
+  #lockwrap { position: absolute; left: 50%; top: 680px; width: 200px; height: 200px; margin-left: -100px;
+              border-radius: 50%; background: #B08D57; box-shadow: 0 10px 30px rgba(176,141,87,.35); }
+  #lockwrap svg { position: absolute; left: 50px; top: 42px; }
+  #lock { position: absolute; left: 70px; right: 70px; top: 1090px; text-align: center; font-weight: 900;
+          font-size: 76px; line-height: 1.25; word-break: keep-all; text-wrap: balance; }
+  #pill { position: absolute; left: 50%; top: 1330px; transform: translateX(-50%); padding: 0 56px; height: 110px;
+          line-height: 110px; border-radius: 55px; background: #B08D57; color: #fff; font-weight: 700; font-size: 54px; white-space: nowrap; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="lock" data-width="1080" data-height="1920" data-duration="4">
+  <div class="bar" style="top:0"></div><div class="bar" style="bottom:0"></div>
+  <div id="question"></div>
+  <div id="card">
+    <div class="line" style="top:70px;  width:720px"></div>
+    <div class="line" style="top:150px; width:640px"></div>
+    <div class="line" style="top:230px; width:700px"></div>
+    <div class="line" style="top:310px; width:420px"></div>
+  </div>
+  <div id="lockwrap">
+    <svg width="100" height="116" viewBox="0 0 100 116" fill="none">
+      <path d="M24 50V34a26 26 0 0 1 52 0v16" stroke="#fff" stroke-width="12" stroke-linecap="round"/>
+      <rect x="6" y="50" width="88" height="62" rx="14" fill="#fff"/>
+      <circle cx="50" cy="78" r="9" fill="#B08D57"/>
+    </svg>
+  </div>
+  <div id="lock"></div>
+  <div id="pill">정답은 100문 100답에서</div>
+</div>
+<script src="../assets/gsap.min.js"></script>
+<script>
+  const v = window.__hyperframes.getVariables();
+  document.getElementById("question").textContent = "Q. " + v.question;
+  document.getElementById("lock").textContent = v.lock;
+  const tl = gsap.timeline({ paused: true });
+  tl.fromTo("#card", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, 0);
+  tl.fromTo(".line", { opacity: 0 }, { opacity: 1, duration: 0.3, stagger: 0.08 }, 0.15);
+  tl.fromTo("#lockwrap", { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.6)" }, 0.55);
+  tl.fromTo("#lock", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, 0.9);
+  tl.fromTo("#pill", { opacity: 0 }, { opacity: 1, duration: 0.35 }, 1.4);
+  window.__timelines = window.__timelines || {};
+  window.__timelines["lock"] = tl;
+</script>
+</body>
+</html>
