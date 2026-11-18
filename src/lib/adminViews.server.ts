@@ -1,5 +1,8 @@
 import type { AdminView, AdminViews, QnaHit } from '@/lib/adminViews'
+import { sum } from '@/lib/analytics'
 import { getDailyStats } from '@/lib/analytics.server'
+import { campaignRows } from '@/lib/campaign'
+import { getLeadTallies } from '@/lib/campaign.server'
 import { HUBS } from '@/lib/hubs'
 import {
   LINKS_COUNTED_AT,
@@ -68,7 +71,9 @@ export const ADMIN_LOADERS: { [K in AdminView]: () => Promise<AdminViews[K]> } =
     단위를 바꿀 때마다 서버를 다시 부르지 않아도 된다.
   */
   async visits() {
-    return { days: await getDailyStats(366) }
+    // 캠페인 표는 화면의 일·주·월 단추와 상관없이 1년 전체 — 신청은 건수만 읽는다(campaign.server.ts)
+    const [days, leads] = await Promise.all([getDailyStats(366), getLeadTallies()])
+    return { days, campaigns: campaignRows(sum(days).sources, leads) }
   },
 
   async seo() {

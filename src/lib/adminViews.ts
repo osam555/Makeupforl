@@ -12,6 +12,7 @@
  */
 import type { Content, QnaRow } from '@/components/admin/Overview'
 import type { QuestionRef } from '@/components/admin/Proposals'
+import type { CampaignRow } from '@/lib/campaign'
 import type { DailyStat } from '@/lib/analytics'
 import type { SeoConfig, SeoFacts, SeoKeyword, SeoSnapshot, SeoTodo } from '@/lib/seoKeywords'
 import type { RepoCommit, WorklogEntry } from '@/lib/worklog'
@@ -28,7 +29,8 @@ export interface AdminViews {
     qna: QnaRow[]
     history: SeoSnapshot[]
   }
-  visits: { days: DailyStat[] }
+  /** campaigns 는 1년 전체 — CampaignTable 주석 참고 */
+  visits: { days: DailyStat[]; campaigns: CampaignRow[] }
   seo: {
     facts: Record<string, SeoFacts>
     config: SeoConfig

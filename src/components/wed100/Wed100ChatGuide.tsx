@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 
+import { readFrom } from '@/lib/campaign'
 import { MEMBER_CREDIT_NOTE } from '@/lib/wed100Access'
 
 /**
@@ -164,10 +165,11 @@ export default function Wed100ChatGuide({
     if (!form.agree) return setErr('개인정보 수집·이용에 동의해 주셔야 연락드릴 수 있어요.')
     setSending(true)
     try {
+      // from: 이 탭이 처음 들어온 쇼츠·광고의 꼬리표(Track 이 붙들어 둔 것). 어느 영상이 신청을 냈는지 잇는 유일한 끈
       const r = await fetch('/api/consult-lead', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ ...form, who, worry: worry?.label ?? '' }),
+        body: JSON.stringify({ ...form, who, worry: worry?.label ?? '', from: readFrom() }),
       })
       const j = (await r.json().catch(() => ({}))) as { error?: string }
       if (!r.ok) return setErr(j.error ?? '접수하지 못했어요. 02-323-3321 로 전화 주세요.')

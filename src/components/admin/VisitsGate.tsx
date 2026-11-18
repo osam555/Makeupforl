@@ -8,7 +8,7 @@ import VisitsView from '@/components/admin/VisitsView'
 export default function VisitsGate() {
   return (
     <AdminGate title="방문">
-      {() => <AdminView view="visits">{({ days }) => <VisitsView days={days} />}</AdminView>}
+      {() => <AdminView view="visits">{({ days, campaigns }) => <VisitsView days={days} campaigns={campaigns} />}</AdminView>}
     </AdminGate>
   )
 }
